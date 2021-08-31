@@ -1,24 +1,57 @@
 # Very Recent Progress in 3D Hand [![Awesome](https://awesome.re/badge-flat.svg)](https://awesome.re)
 
+A complete paper list for hand pose can be found [here](https://github.com/xinghaochen/awesome-hand-pose-estimation). This repo focus on some subject areas and works. If there is any mistake or carelessness, please feel free to open an issue or send me email.
+
 ## Contents
-- [Overview](#overview)
-- [Dataset](#dataset)
-- [Papers](#papers)
-  - [Hand Mesh/Pose](#hand-meshpose)
-  - [Hand-Object Interaction](#hand-object-interaction)
-  - [Hand-Hand Interaction](#hand-hand-interaction)
-  - [Two-Hand-Object Interaction](#two-hand-object-interaction)
-  - [Full Body Reconstruction](#full-body-reconstruction)
+  - [Overview](#overview)
+  - [Dataset](#dataset)
+  - [Papers](#papers)
+    - [Hand Mesh/Pose](#hand-meshpose)
+      - [Regression](#regression)
+      - [Inverse Kinematics](#inverse-kinematics)
+      - [Graph](#graph)
+      - [Transformer](#transformer)
+      - [2.5D](#25d)
+      - [UV](#uv)
+      - [Weak Supervision](#weak-supervision)
+      - [Temporal](#temporal)
+      - [SDF](#sdf)
+    - [Hand-Object Interaction](#hand-object-interaction)
+      - [Regression](#regression-1)
+      - [GAN](#gan)
+      - [SDF](#sdf-1)
+      - [Weak Supervision](#weak-supervision-1)
+      - [Temporal](#temporal-1)
+      - [Joint Optimzation](#joint-optimzation)
+    - [Hand-Hand Interaction](#hand-hand-interaction)
+      - [Regression](#regression-2)
+      - [2.5D](#25d-1)
+    - [Two-Hand-Object Interaction](#two-hand-object-interaction)
+      - [Graph](#graph-1)
+      - [Transformer](#transformer-1)
+      - [GAN](#gan-1)
+    - [Full Body Reconstruction](#full-body-reconstruction)
+      - [Regression](#regression-3)
+      - [Inverse Kinematics](#inverse-kinematics-1)
+      - [Optimization](#optimization)
   - [Tools](#tools)
-- [benchmarks]()
+    - [Model](#model)
+    - [MoCap](#mocap)
+  - [Benchmarks](#benchmarks)
+
+## TODO
+- [x] Dtasets
+- [x] Papers
+- [x] Tools
+- [ ] Benchmarks
 
 ## Overview
 
 ![alt img](Hand3DResearch.png)
 
 ## Dataset
-
-|  Dataset   | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic | Link | 
+This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, and synthetic.
+|  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic |
 |  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- | 
 |H2O     | [link](https://arxiv.org/pdf/2104.11181.pdf)   | 571K   | ✅  | ✅  | ✅  | ✅ | |
 |HanCO   | [link](https://lmb.informatik.uni-freiburg.de/projects/contra-hand/)     | 860K   | ✅  |  |  | ✅ | |
@@ -39,15 +72,16 @@
 |MVHM    | [link](https://github.com/Kuzphi/MVHM) | 320K | ✅ | |  | | ✅ |
 |Dexter+Object|[link](https://handtracker.mpi-inf.mpg.de/projects/RealtimeHO/dexter+object.htm)| 3K   | | | ✅ |✅ | |
 |EgoDexter |[link](https://handtracker.mpi-inf.mpg.de/projects/OccludedHands/EgoDexter.htm) | 3K   | | | | ✅ | |
-|STB     | [link](https://handtracker.mpi-inf.mpg.de/projects/OccludedHands/EgoDexter.htm) | 36K  | ✅ | | | ✅ | |
+|STB     | [link](https://github.com/zhjwustc/icip17_stereo_hand_pose_dataset) | 36K  | ✅ | | | ✅ | |
 |FPHA    | [link](https://guiggh.github.io/publications/first-person-hands/) | 105K | | | | ✅ | |
 |Tzionas et al.|[link](https://github.com/dimtziwnas/HandObjectInteractionIJCV16_HandMotionViewer?utm_source=catalyzex.com)| 36K | | ✅ | | ✅ | |
-|Simon et al. | [link](https://github.com/laobaiswag/openpose1?utm_source=catalyzex.com) | 15K  | | ✅ | | ✅ | |
 |GANerated Hands|  [link](https://handtracker.mpi-inf.mpg.de/projects/GANeratedHands/) | 331K | | | ✅ | ✅  | |
 |SynthHands | [link](https://handtracker.mpi-inf.mpg.de/projects/OccludedHands/) | 220K | | | ✅ | | ✅ |
 
 
 ## Papers
+
+This list is a reference to the above [overview](#overview).
 
 ### Hand Mesh/Pose
 
@@ -479,16 +513,19 @@
   [[Code](https://github.com/vchoutas/smplify-x)] \
   *Georgios Pavlakos*, Vasileios Choutas*, Nima Ghorbani, Timo Bolkart, Ahmed A. A. Osman, Dimitrios Tzionas, Michael J. Black*
 
-### Tools
+## Tools
 
-#### Model
+### Model
 
 + [T.MD.3] [manotorch](https://github.com/lixiny/manotorch)
 + [T.MD.2] [manopth](https://github.com/hassony2/manopth)
 + [T.MD.1] [spheremesh](https://github.com/anastasia-tkach/hmodel-cpp-public)
 
-#### MoCap
+### MoCap
 
 + [T.MC.3] [frankmocap](https://github.com/facebookresearch/frankmocap)
 + [T.MC.2] [HandMotionViewer](https://github.com/dimtziwnas/HandObjectInteractionIJCV16_HandMotionViewer?utm_source=catalyzex.com)
 + [T.MC.1] [openpose](https://github.com/CMU-Perceptual-Computing-Lab/openpose)
+
+## Benchmarks
+coming soon.
