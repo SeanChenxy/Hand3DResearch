@@ -166,7 +166,7 @@ This list is a reference to the above [overview](#overview).
   *Shihao Zhou, Mengxi Jiang, Shanshan Cai, Yunqi Lei*
 
 + [H.GH.6] MVHM: A Large-Scale Multi-View Hand Mesh Benchmark for Accurate 3D Hand Pose Estimation. WACV21.
-  [[PDF](https://arxiv.org/abs/2012.03206)] \
+  [[PDF](https://arxiv.org/pdf/2012.03206.pdf)] \
   *Liangjian Chen, Shih-Yao Lin, Yusheng Xie, Yen-Yu Lin, Xiaohui Xie*
 
 + [H.GH.5] Camera-Space Hand Mesh Recovery via Semantic Aggregation and Adaptive 2D-1D Registration. CVPR21. 
@@ -226,7 +226,7 @@ This list is a reference to the above [overview](#overview).
   *Moran Li, Yuan Gao, Nong Sang*
 
 + [H.VX.3] I2L-MeshNet: Image-to-Lixel Prediction Network for Accurate 3D Human Pose and Mesh Estimation from a Single RGB Image. ECCV20.
-  [[PDF](https://arxiv.org/abs/2008.03713)]
+  [[PDF](https://arxiv.org/pdf/2008.03713.pdf)]
   [[Code](https://github.com/mks0601/I2L-MeshNet_RELEASE)] \
   *Gyeongsik Moon, Kyoung Mu Lee*
 
@@ -281,7 +281,7 @@ This list is a reference to the above [overview](#overview).
 #### Temporal
 
 + [H.TP.5] TravelNet: Self-supervised Physically Plausible Hand Motion Learning from Monocular Color Images. ICCV21.
-  [[PDF](https://www.yangangwang.com/papers/ZHAO-TRAVEL-2021-08.pdf)] \
+  \
   *Zimeng Zhao, Xi Zhao and Yangang Wang*
 
 + [H.TP.4] Beyond Static Features for Temporally Consistent 3D Human Pose and Shape from a Video. CVPR21
@@ -428,7 +428,6 @@ This list is a reference to the above [overview](#overview).
   *Zicong Fan, Adrian Spurr, Muhammed Kocabas, Siyu Tang, Michael J. Black, Otmar Hilliges*
 
 + [HH.VX.2] Interacting Two-Hand 3D Pose and Shape Reconstruction from Single Color Image. ICCV21.
-  [[PDF](https://www.yangangwang.com/papers/ZHANG-ITH-2021-08.pdf)]
   [[Project](https://baowenz.github.io/Intershape/)]
   [[Code](https://github.com/BaowenZ/Intershape)]
   *Baowen Zhang, Yangang Wang, Xiaoming Deng, Yinda Zhang, Ping Tan, Cuixia Ma and Hongan Wang*
