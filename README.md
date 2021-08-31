@@ -6,7 +6,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
   - [Overview](#overview)
   - [Dataset](#dataset)
   - [Papers](#papers)
-    - [Hand Mesh/Pose](#hand-meshpose)
+    - [Hand Shape/Pose](#hand-shapepose)
       - [Regression](#regression)
       - [Inverse Kinematics](#inverse-kinematics)
       - [Graph](#graph)
