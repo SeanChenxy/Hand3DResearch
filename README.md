@@ -99,7 +99,7 @@ This list is a reference to the above [overview](#overview).
 
 + [H.RG.7] DeepHandMesh: Weakly-supervised Deep Encoder-Decoder Framework for High-fidelity Hand Mesh Modeling from a Single RGB Image. ECCV20.
   [[PDF](http://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123470426.pdf)]
-  [[Project](https://mks0601.github.io/DeepHandMesh/)]
+  [[Project](https://mks0601.github.io/DeepHandMesh/)] \
   *Gyeongsik Moon, Takaaki Shiratori, Kyoung Mu Lee* 
 
 + [H.RG.6] Knowledge as Priors: Cross-Modal Knowledge Generalization for Datasets without Superior Knowledge. CVPR20. 
