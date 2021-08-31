@@ -429,7 +429,7 @@ This list is a reference to the above [overview](#overview).
 
 + [HH.VX.2] Interacting Two-Hand 3D Pose and Shape Reconstruction from Single Color Image. ICCV21.
   [[Project](https://baowenz.github.io/Intershape/)]
-  [[Code](https://github.com/BaowenZ/Intershape)]
+  [[Code](https://github.com/BaowenZ/Intershape)] \
   *Baowen Zhang, Yangang Wang, Xiaoming Deng, Yinda Zhang, Ping Tan, Cuixia Ma and Hongan Wang*
 
 
