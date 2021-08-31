@@ -10,31 +10,31 @@
 
 |  Dataset   | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic | Link | 
 |  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- | 
-|H2O        | 571K   | $\checkmark$  | $\checkmark$  | $\checkmark$  | $\checkmark$ | | [link](https://arxiv.org/pdf/2104.11181.pdf)
-|HanCO        | 860K   | $\checkmark$  |  |  | $\checkmark$ | | [link](https://lmb.informatik.uni-freiburg.de/projects/contra-hand/)
-|H2O          | 5M   | $\checkmark$  | $\checkmark$  | $\checkmark$  | $\checkmark$ | | [link](https://arxiv.org/pdf/2104.11466.pdf)
-|H2O-3D       | 62K  | $\checkmark$ | $\checkmark$ | $\checkmark$ | $\checkmark$ | | [link](https://arxiv.org/pdf/2104.14639.pdf)
-|GRAB         | 1.6M | $\checkmark$ | $\checkmark$ | $\checkmark$ | $\checkmark$ | | [link](https://grab.is.tue.mpg.de/)
-|DexYCB       | 528K | $\checkmark$ | | $\checkmark$ | $\checkmark$ | | [link](https://dex-ycb.github.io/?utm_source=catalyzex.com)
-|YoutubeHand  | 47K  | $\checkmark$ |  |  | | | [link](https://github.com/arielai/youtube_3d_hands)
-| YCB-Affordance | 134K  | $\checkmark$ | |$\checkmark$ | $\checkmark$ | | [link](https://github.com/enriccorona/YCB_Affordance)
-| HO3D        | 77K  | $\checkmark$ |  | $\checkmark$ | $\checkmark$ | | [link](https://github.com/shreyashampali/ho3d)
-|ContactPose  | 2.9M | $\checkmark$ | $\checkmark$ | $\checkmark$ | $\checkmark$ | | [link](https://contactpose.cc.gatech.edu/)
-| FreiHAND    | 134K | $\checkmark$ |  | | | | [link](https://lmb.informatik.uni-freiburg.de/projects/freihand/)
-|ObMan        | 154K | $\checkmark$ | | $\checkmark$ | | $\checkmark$ | [link](https://hassony2.github.io/obman.html)
-|Interhand2.6M| 2.6M  | $\checkmark$ | $\checkmark$   |  |$\checkmark$ | | [link](https://mks0601.github.io/InterHand2.6M)
-|RHD          | 44K  | | |  | | $\checkmark$ | [link](https://lmb.informatik.uni-freiburg.de/resources/datasets/RenderedHandposeDataset.en.html)
-|H3D          | 22K  | $\checkmark$ | |  | | | [link](https://www.yangangwang.com/papers/ZHAO-H3S-2020-02.html)
-|MHP          | 80K  |  | |  | | | [link](http://www.rovit.ua.es/dataset/mhpdataset)
-|MVHM         | 320K | $\checkmark$ | |  | | $\checkmark$ | [link](https://github.com/Kuzphi/MVHM)
-|Dexter+Object| 3K   | | | $\checkmark$ |$\checkmark$ | | [link](https://handtracker.mpi-inf.mpg.de/projects/RealtimeHO/dexter+object.htm)
-|EgoDexter    | 3K   | | | | $\checkmark$ | | [link](https://handtracker.mpi-inf.mpg.de/projects/OccludedHands/EgoDexter.htm)
-|STB          | 36K  | $\checkmark$ | | | $\checkmark$ | | [link](https://handtracker.mpi-inf.mpg.de/projects/OccludedHands/EgoDexter.htm)
-|FPHA         | 105K | | | | $\checkmark$ | | [link](https://guiggh.github.io/publications/first-person-hands/)
-|Tzionas et al.| 36K | | $\checkmark$ | | $\checkmark$ | | [link](https://github.com/dimtziwnas/HandObjectInteractionIJCV16_HandMotionViewer?utm_source=catalyzex.com)
-|Simon et al. | 15K  | | $\checkmark$ | | $\checkmark$ | | [link](https://github.com/laobaiswag/openpose1?utm_source=catalyzex.com)
-|GANerated Hands| 331K | | | $\checkmark$ | $\checkmark$  | | [link](https://handtracker.mpi-inf.mpg.de/projects/GANeratedHands/)
-|SynthHands   | 220K | | | $\checkmark$ | | $\checkmark$ | [link](https://handtracker.mpi-inf.mpg.de/projects/OccludedHands/)
+|H2O     | [link](https://arxiv.org/pdf/2104.11181.pdf)   | 571K   | ✅  | ✅  | ✅  | ✅ | |
+|HanCO   | [link](https://lmb.informatik.uni-freiburg.de/projects/contra-hand/)     | 860K   | ✅  |  |  | ✅ | |
+|H2O     | [link](https://arxiv.org/pdf/2104.11466.pdf)   | 5M   | ✅  | ✅  | ✅  | ✅ | |
+|H2O-3D  | [link](https://arxiv.org/pdf/2104.14639.pdf)     | 62K  | ✅ | ✅ | ✅ | ✅ | |
+|GRAB    | [link](https://grab.is.tue.mpg.de/)     | 1.6M | ✅ | ✅ | ✅ | ✅ | |
+|DexYCB  | [link](https://dex-ycb.github.io/?utm_source=catalyzex.com)     | 528K | ✅ | | ✅ | ✅ | |
+|YoutubeHand | [link](https://github.com/arielai/youtube_3d_hands) | 47K  | ✅ |  |  | | |
+| YCB-Affordance | [link](https://github.com/enriccorona/YCB_Affordance) | 134K  | ✅ | |✅ | ✅ | |
+| HO3D   | [link](https://github.com/shreyashampali/ho3d) | 77K  | ✅ |  | ✅ | ✅ | |
+|ContactPose | [link](https://contactpose.cc.gatech.edu/) | 2.9M | ✅ | ✅ | ✅ | ✅ | |
+| FreiHAND | [link](https://lmb.informatik.uni-freiburg.de/projects/freihand/) | 134K | ✅ |  | | | |
+|ObMan   | [link](https://hassony2.github.io/obman.html)  | 154K | ✅ | | ✅ | | ✅ |
+|Interhand2.6M| [link](https://mks0601.github.io/InterHand2.6M) | 2.6M  | ✅ | ✅   |  |✅ | |
+|RHD     | [link](https://lmb.informatik.uni-freiburg.de/resources/datasets/RenderedHandposeDataset.en.html) | 44K  | | |  | | ✅ |
+|H3D     | [link](https://www.yangangwang.com/papers/ZHAO-H3S-2020-02.html) | 22K  | ✅ | |  | | |
+|MHP     | [link](http://www.rovit.ua.es/dataset/mhpdataset) | 80K  |  | |  | | |
+|MVHM    | [link](https://github.com/Kuzphi/MVHM) | 320K | ✅ | |  | | ✅ |
+|Dexter+Object|[link](https://handtracker.mpi-inf.mpg.de/projects/RealtimeHO/dexter+object.htm)| 3K   | | | ✅ |✅ | |
+|EgoDexter |[link](https://handtracker.mpi-inf.mpg.de/projects/OccludedHands/EgoDexter.htm) | 3K   | | | | ✅ | |
+|STB     | [link](https://handtracker.mpi-inf.mpg.de/projects/OccludedHands/EgoDexter.htm) | 36K  | ✅ | | | ✅ | |
+|FPHA    | [link](https://guiggh.github.io/publications/first-person-hands/) | 105K | | | | ✅ | |
+|Tzionas et al.|[link](https://github.com/dimtziwnas/HandObjectInteractionIJCV16_HandMotionViewer?utm_source=catalyzex.com)| 36K | | ✅ | | ✅ | |
+|Simon et al. | [link](https://github.com/laobaiswag/openpose1?utm_source=catalyzex.com) | 15K  | | ✅ | | ✅ | |
+|GANerated Hands|  [link](https://handtracker.mpi-inf.mpg.de/projects/GANeratedHands/) | 331K | | | ✅ | ✅  | |
+|SynthHands | [link](https://handtracker.mpi-inf.mpg.de/projects/OccludedHands/) | 220K | | | ✅ | | ✅ |
 
 
 ## Papers
