@@ -83,7 +83,7 @@ This list presents recent datasets with properties of data size, shape annotatio
 
 This list is a reference to the above [overview](#overview).
 
-### Hand Mesh/Pose
+### Hand Shape/Pose
 
 #### Regression
 
@@ -104,7 +104,7 @@ This list is a reference to the above [overview](#overview).
 
 + [H.RG.6] Knowledge as Priors: Cross-Modal Knowledge Generalization for Datasets without Superior Knowledge. CVPR20. 
   [[PDF](https://arxiv.org/pdf/2004.00176.pdf)] \
-  Long Zhao, Xi Peng, Yuxiao Chen, Mubbasir Kapadia, Dimitris N. Metaxas
+  *Long Zhao, Xi Peng, Yuxiao Chen, Mubbasir Kapadia, Dimitris N. Metaxas*
 
 + [H.RG.5] FreiHAND: A Dataset for Markerless Capture of Hand Pose and Shape from Single RGB Images. ICCV19.
   [[PDF](https://arxiv.org/pdf/1909.04349.pdf)]
@@ -114,7 +114,7 @@ This list is a reference to the above [overview](#overview).
 + [H.RG.4] End-to-end Hand Mesh Recovery from a Monocular RGB Image. ICCV19.
   [[PDF](https://arxiv.org/pdf/1902.09305.pdf)]
   [[Code](https://github.com/MandyMo/HAMR)] \
-  Xiong Zhang*, Qiang Li*, Wenbo Zhang, Wen Zheng
+  *Xiong Zhang*, Qiang Li*, Wenbo Zhang, Wen Zheng*
 
 + [H.RG.3] 3D Hand Shape and Pose from Images in the Wild. CVPR19.
   [[PDF](https://openaccess.thecvf.com/content_CVPR_2019/papers/Boukhayma_3D_Hand_Shape_and_Pose_From_Images_in_the_Wild_CVPR_2019_paper.pdf)]
@@ -135,7 +135,7 @@ This list is a reference to the above [overview](#overview).
 
 + [H.IK.4] HandTailor: Towards High-Precision Monocular 3D Hand Recovery. arXiv21.
   [[PDF](https://arxiv.org/pdf/2102.09244.pdf)]
-  [Code](https://github.com/LyuJ1998/HandTailor) \
+  [[Code](https://github.com/LyuJ1998/HandTailor)] \
   *Jun Lv, Wenqiang Xu, Lixin Yang, Sucheng Qian, Chongzhao Mao, Cewu Lu*
   
 + [H.IK.3] HybrIK: A Hybrid Analytical-Neural Inverse Kinematics Solution for 3D Human Pose and Shape Estimation. CVPR21.
@@ -151,7 +151,7 @@ This list is a reference to the above [overview](#overview).
 + [H.IK.1] Monocular Real-time Hand Shape and Motion Capture using Multi-modal Data. CVPR20.
   [[PDF](https://arxiv.org/pdf/2003.09572.pdf)]
   [[Project](https://calciferzh.github.io/publications/zhou2020monocular)]
-  [[Code](https://github.com/CalciferZh/minimal-hand)]
+  [[Code](https://github.com/CalciferZh/minimal-hand)] \
   *Yuxiao Zhou, Marc Habermann, Weipeng Xu, Ikhsanul Habibie, Christian Theobalt, Feng Xu*
 
 #### Graph
@@ -161,7 +161,7 @@ This list is a reference to the above [overview](#overview).
   [[Code](https://github.com/clinplayer/Point2Skeleton?utm_source=catalyzex.com)] \
   *Cheng Lin, Changjian Li, Yuan Liu, Nenglun Chen, Yi-King Choi, Wenping Wang*
 
-+ [H.GH.7] DC-GNet: Deep Mesh Relation Capturing Graph Convolution Network for 3D Human Shape Reconstruction
++ [H.GH.7] DC-GNet: Deep Mesh Relation Capturing Graph Convolution Network for 3D Human Shape Reconstruction, MM21.
   [[PDF](https://arxiv.org/pdf/2108.12384.pdf)] \
   *Shihao Zhou, Mengxi Jiang, Shanshan Cai, Yunqi Lei*
 
@@ -191,7 +191,7 @@ This list is a reference to the above [overview](#overview).
 + [H.GH.1] 3D Hand Shape and Pose Estimation from a Single RGB Image. CVPR19.
   [[PDF](https://openaccess.thecvf.com/content_CVPR_2019/papers/Ge_3D_Hand_Shape_and_Pose_Estimation_From_a_Single_RGB_CVPR_2019_paper.pdf)]
   [[Project](https://sites.google.com/site/geliuhaontu/home/cvpr2019)]
-  [[Code](https://github.com/3d-hand-shape/hand-graph-cnn)]
+  [[Code](https://github.com/3d-hand-shape/hand-graph-cnn)] \
   *Liuhao Ge, Zhou Ren, Yuncheng Li, Zehao Xue, Yingying Wang, Jianfei Cai, Junsong Yuan*
 
 #### Transformer
@@ -216,7 +216,7 @@ This list is a reference to the above [overview](#overview).
 
 #### 2.5D
 
-+ [H.VX.5] HandVoxNet++: 3D Hand Shape and Pose Estimation using Voxel-Based Neural Networks.
++ [H.VX.5] HandVoxNet++: 3D Hand Shape and Pose Estimation using Voxel-Based Neural Networks. arXiv21.
   [[PDF](https://arxiv.org/pdf/2107.01205.pdf)] \
   *Jameel Malik, Soshi Shimada, Ahmed Elhayek, Sk Aziz Ali, Christian Theobalt, Vladislav Golyanik, Didier Stricker*
 
@@ -246,7 +246,7 @@ This list is a reference to the above [overview](#overview).
 
 + [H.UV.1] HTML: A Parametric Hand Texture Model for 3D Hand Reconstruction and Personalizationm. ECCV20.
   [[PDF](http://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123560052.pdf)]
-  [[Project](https://handtracker.mpi-inf.mpg.de/projects/HandTextureModel/)]
+  [[Project](https://handtracker.mpi-inf.mpg.de/projects/HandTextureModel/)] \
   *Neng Qian, Jiayi Wang, Franziska Mueller, Florian Bernard, Vladislav Golyanik, Christian Theobalt*
 
 #### Weak Supervision
@@ -276,7 +276,7 @@ This list is a reference to the above [overview](#overview).
 
 + [H.WS.1] Adaptive Wasserstein Hourglass for Weakly Supervised Hand Pose Estimation from Monocular RGB. MM20.
   [[PDF](https://arxiv.org/pdf/1909.05666.pdf)] \
-  Yumeng Zhang, Li Chen, Yufeng Liu, Junhai Yong, Wen Zheng
+  *Yumeng Zhang, Li Chen, Yufeng Liu, Junhai Yong, Wen Zheng*
 
 #### Temporal
 
@@ -291,7 +291,7 @@ This list is a reference to the above [overview](#overview).
  
 + [H.TP.3] Temporal-Aware Self-Supervised Learning for 3D Hand Pose and Mesh Estimation in Videos. WACV21.
   [[PDF](https://arxiv.org/pdf/2012.03205.pdf)] \
-  Liangjian Chen, Shih-Yao Lin, Yusheng Xie, Yen-Yu Lin, Xiaohui Xie
+  *Liangjian Chen, Shih-Yao Lin, Yusheng Xie, Yen-Yu Lin, Xiaohui Xie*
 
 + [H.TP.2] Adaptive Computationally Efficient Network for Monocular 3D Hand Pose Estimation. ECCV20.
   [[PDF](http://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123490120.pdf)] \
@@ -324,7 +324,7 @@ This list is a reference to the above [overview](#overview).
 
 + [HO.RG.5] HO-3D_v3: Improving the Accuracy of Hand-Object Annotations of the HO-3D Dataset. arXiv21.
   [[PDF](https://arxiv.org/pdf/2107.00887.pdf)] \
-  Shreyas Hampali, Sayan Deb Sarkar, Vincent Lepetit
+  *Shreyas Hampali, Sayan Deb Sarkar, Vincent Lepetit*
 
 + [HO.RG.4] Unsupervised Domain Adaptation with Temporal-Consistent Self-Training for 3D Hand-Object Joint Reconstruction. arXiv21.
   [[PDF](https://arxiv.org/pdf/2012.11260.pdf)] \
@@ -353,7 +353,7 @@ This list is a reference to the above [overview](#overview).
 + [HO.GAN.1] GanHand: Predicting Human Grasp Affordances in Multi-Object Scenes. CVPR20.
   [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Corona_GanHand_Predicting_Human_Grasp_Affordances_in_Multi-Object_Scenes_CVPR_2020_paper.pdf)]
   [[Code](https://github.com/enriccorona/GanHand)] \
-  Enric Corona, Albert Pumarola, Guillem Alenya, Francesc Moreno-Noguer, Gregory Rogez
+  *Enric Corona, Albert Pumarola, Guillem Alenya, Francesc Moreno-Noguer, Gregory Rogez*
 
 #### SDF
 
@@ -379,7 +379,7 @@ This list is a reference to the above [overview](#overview).
 + [HO.WS.1] Weakly-supervised Domain Adaptation via GAN and Mesh Model for Estimating 3D Hand Poses Interacting Objects. CVPR20.
   [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Baek_Weakly-Supervised_Domain_Adaptation_via_GAN_and_Mesh_Model_for_Estimating_CVPR_2020_paper.pdf)]
   [[Code](https://github.com/bsrvision/weak_da_hands)] \
-  Seungryul Baek, Kwang In Kim, Tae-Kyun Kim
+  *Seungryul Baek, Kwang In Kim, Tae-Kyun Kim*
 
 #### Temporal
 
