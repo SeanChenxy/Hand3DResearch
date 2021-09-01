@@ -1,6 +1,6 @@
 # Very Recent Progress in 3D Hand Tasks [![Awesome](https://awesome.re/badge-flat.svg)](https://awesome.re)
 
-A complete paper list for hand pose can be found [here](https://github.com/xinghaochen/awesome-hand-pose-estimation). This repo focus on some subject areas and works. If there is any mistake or carelessness, please feel free to open an issue or send me email.
+A complete paper list for hand pose can be found [here](https://github.com/xinghaochen/awesome-hand-pose-estimation). This repo focuses on some subject areas and works. If there is any mistake or carelessness, please feel free to open an issue or send me email.
 
 ## Contents
   - [Overview](#overview)
@@ -81,7 +81,7 @@ This list presents recent datasets with properties of data size, shape annotatio
 
 ## Papers
 
-This list is a reference to the above [overview](#overview).
+The below indices is a reference list to the above [overview](#overview).
 
 ### Hand Shape/Pose
 
