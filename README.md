@@ -81,7 +81,7 @@ This list presents recent datasets with properties of data size, shape annotatio
 
 ## Papers
 
-The below indices is a reference list to the above [overview](#overview).
+The below indices are references to the above [overview](#overview).
 
 ### Hand Shape/Pose
 
