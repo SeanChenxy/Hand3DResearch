@@ -87,6 +87,10 @@ The below indices are references to the above [overview](#overview).
 
 #### Regression
 
++ [H.RG.10] RealisticHands: A Hybrid Model for 3D Hand Reconstruction. arXiv21.
+  [[PDF](https://arxiv.org/pdf/2108.13995.pdf)] \
+  *Michael Seeber, Martin R. Oswald, Roi Poranne*
+
 + [H.RG.9] Contrastive Representation Learning for Hand Shape Estimation. arXiv21.
   [[PDF](https://arxiv.org/pdf/2106.04324.pdf)]
   [[Project](https://lmb.informatik.uni-freiburg.de/projects/contra-hand/)]
