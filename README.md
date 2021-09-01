@@ -15,11 +15,10 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [UV](#uv)
       - [Weak Supervision](#weak-supervision)
       - [Temporal](#temporal)
-      - [SDF](#sdf)
     - [Hand-Object Interaction](#hand-object-interaction)
       - [Regression](#regression-1)
       - [GAN](#gan)
-      - [SDF](#sdf-1)
+      - [SDF](#sdf)
       - [Weak Supervision](#weak-supervision-1)
       - [Temporal](#temporal-1)
       - [Joint Optimzation](#joint-optimzation)
@@ -34,6 +33,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [Regression](#regression-3)
       - [Inverse Kinematics](#inverse-kinematics-1)
       - [Optimization](#optimization)
+      - [SDF](#sdf-1)
   - [Tools](#tools)
     - [Model](#model)
     - [MoCap](#mocap)
@@ -301,23 +301,6 @@ This list is a reference to the above [overview](#overview).
   [[PDF](https://arxiv.org/pdf/2007.05168.pdf)] \
   *John Yang, Hyung Jin Chang, Seungeui Lee, Nojun Kwak*
 
-#### SDF
-
-+ [H.SDF.1] PIFu: Pixel-Aligned Implicit Function for High-Resolution Clothed Human Digitization. CVPR19
-  [[PDF](https://arxiv.org/pdf/1905.05172.pdf)]
-  [[Code]](https://github.com/shunsukesaito/PIFu) \
-  *Shunsuke Saito, Zeng Huang, Ryota Natsume, Shigeo Morishima, Angjoo Kanazawa, Hao Li*
-
-+ [H.SDF.2] PIFuHD: Multi-Level Pixel-Aligned Implicit Function for High-Resolution 3D Human Digitization. CVPR20.
-  [[PDF](https://arxiv.org/pdf/2004.00452.pdf)]
-  [[Code]](https://github.com/facebookresearch/pifuhd?utm_source=catalyzex.com) \
-  *Shunsuke Saito, Tomas Simon, Jason Saragih, Hanbyul Joo*
-
-+ [H.SDF.3] Geo-PIFu: Geometry and Pixel Aligned Implicit Functions for Single-view Human Reconstruction. NeurIPS20.
-  [[PDF](https://arxiv.org/pdf/2006.08072.pdf)]
-  [[Code](https://github.com/simpleig/Geo-PIFu)] \
-  *Tong He, John Collomosse, Hailin Jin, Stefano Soatto*
-
 ### Hand-Object Interaction
 
 #### Regression
@@ -511,6 +494,23 @@ This list is a reference to the above [overview](#overview).
   [[Project](https://smpl-x.is.tue.mpg.de/)]
   [[Code](https://github.com/vchoutas/smplify-x)] \
   *Georgios Pavlakos*, Vasileios Choutas*, Nima Ghorbani, Timo Bolkart, Ahmed A. A. Osman, Dimitrios Tzionas, Michael J. Black*
+
+#### SDF
+
++ [H.SDF.1] PIFu: Pixel-Aligned Implicit Function for High-Resolution Clothed Human Digitization. CVPR19
+  [[PDF](https://arxiv.org/pdf/1905.05172.pdf)]
+  [[Code]](https://github.com/shunsukesaito/PIFu) \
+  *Shunsuke Saito, Zeng Huang, Ryota Natsume, Shigeo Morishima, Angjoo Kanazawa, Hao Li*
+
++ [H.SDF.2] PIFuHD: Multi-Level Pixel-Aligned Implicit Function for High-Resolution 3D Human Digitization. CVPR20.
+  [[PDF](https://arxiv.org/pdf/2004.00452.pdf)]
+  [[Code]](https://github.com/facebookresearch/pifuhd?utm_source=catalyzex.com) \
+  *Shunsuke Saito, Tomas Simon, Jason Saragih, Hanbyul Joo*
+
++ [H.SDF.3] Geo-PIFu: Geometry and Pixel Aligned Implicit Functions for Single-view Human Reconstruction. NeurIPS20.
+  [[PDF](https://arxiv.org/pdf/2006.08072.pdf)]
+  [[Code](https://github.com/simpleig/Geo-PIFu)] \
+  *Tong He, John Collomosse, Hailin Jin, Stefano Soatto*
 
 ## Tools
 
