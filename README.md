@@ -160,6 +160,11 @@ The below indices are references to the above [overview](#overview).
 
 #### Graph
 
++ [H.GH.9] JGR-P2O: Joint Graph Reasoning based Pixel-to-Offset Prediction Network for 3D Hand Pose Estimation from a Single Depth Image. ECCV20
+  [[PDF](https://arxiv.org/pdf/2007.04646.pdf)]
+  [[Code](https://github.com/fanglinpu/JGR-P2O?utm_source=catalyzex.com)] \
+  *Linpu Fang, Xingyan Liu, Li Liu, Hang Xu, Wenxiong Kang*
+
 + [H.GH.8] Point2Skeleton: Learning Skeletal Representations from Point Clouds. CVPR21.
   [[PDF](https://arxiv.org/pdf/2012.00230.pdf)]
   [[Code](https://github.com/clinplayer/Point2Skeleton?utm_source=catalyzex.com)] \
@@ -220,6 +225,10 @@ The below indices are references to the above [overview](#overview).
 
 #### 2.5D
 
++ [H.VX.6] Weakly-Supervised 3D Human Pose Learning via Multi-view Images in the Wild. CVPR20.
+  [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Iqbal_Weakly-Supervised_3D_Human_Pose_Learning_via_Multi-View_Images_in_the_CVPR_2020_paper.pdf)] \
+  *Umar Iqbal, Pavlo Molchanov, Jan Kautz*
+
 + [H.VX.5] HandVoxNet++: 3D Hand Shape and Pose Estimation using Voxel-Based Neural Networks. arXiv21.
   [[PDF](https://arxiv.org/pdf/2107.01205.pdf)] \
   *Jameel Malik, Soshi Shimada, Ahmed Elhayek, Sk Aziz Ali, Christian Theobalt, Vladislav Golyanik, Didier Stricker*
@@ -254,6 +263,11 @@ The below indices are references to the above [overview](#overview).
   *Neng Qian, Jiayi Wang, Franziska Mueller, Florian Bernard, Vladislav Golyanik, Christian Theobalt*
 
 #### Weak Supervision
+
++ [H.WS.8] SO-HandNet: Self-Organizing Network for 3D Hand Pose Estimation with Semi-supervised Learning. ICCV19.
+  [[PDF](https://openaccess.thecvf.com/content_ICCV_2019/papers/Chen_SO-HandNet_Self-Organizing_Network_for_3D_Hand_Pose_Estimation_With_Semi-Supervised_ICCV_2019_paper.pdf)] \
+  *Yujin Chen, Zhigang Tu, Liuhao Ge, Dejun Zhang, Ruizhi Chen,
+Junsong Yuan*
 
 + [H.WS.7] Self-Supervised 3D Hand Pose Estimation from Monocular RGB via Contrastive Learning. arXiv21.
   [[PDF](https://arxiv.org/pdf/2106.05953.pdf)] \
@@ -336,13 +350,6 @@ The below indices are references to the above [overview](#overview).
   [[Code](https://github.com/hassony2/obman_train)] \
   *Yana Hasson, Gül Varol, Dimitris Tzionas, Igor Kalevatykh, Michael J. Black, Ivan Laptev, and Cordelia Schmid*
 
-#### GAN
-
-+ [HO.GAN.1] GanHand: Predicting Human Grasp Affordances in Multi-Object Scenes. CVPR20.
-  [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Corona_GanHand_Predicting_Human_Grasp_Affordances_in_Multi-Object_Scenes_CVPR_2020_paper.pdf)]
-  [[Code](https://github.com/enriccorona/GanHand)] \
-  *Enric Corona, Albert Pumarola, Guillem Alenya, Francesc Moreno-Noguer, Gregory Rogez*
-
 #### SDF
 
 + [HO.SDF.1] Grasping Field: Learning Implicit Representations for Human Grasps.
@@ -385,10 +392,15 @@ The below indices are references to the above [overview](#overview).
 
 #### Joint Optimzation
 
-+ [HO.OP.3] Perceiving 3D Human-Object Spatial Arrangements from a Single Image in the Wild. ECCV20.
++ [HO.OP.4] Perceiving 3D Human-Object Spatial Arrangements from a Single Image in the Wild. ECCV20.
   [[PDF](https://arxiv.org/pdf/2007.15649.pdf)]
   [[Code](https://github.com/facebookresearch/phosa?utm_source=catalyzex.com)] \
   *Jason Y. Zhang, Sam Pepose, Hanbyul Joo, Deva Ramanan, Jitendra Malik, Angjoo Kanazawa*
+
++ [HO.OP.3] GanHand: Predicting Human Grasp Affordances in Multi-Object Scenes. CVPR20.
+  [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Corona_GanHand_Predicting_Human_Grasp_Affordances_in_Multi-Object_Scenes_CVPR_2020_paper.pdf)]
+  [[Code](https://github.com/enriccorona/GanHand)] \
+  *Enric Corona, Albert Pumarola, Guillem Alenya, Francesc Moreno-Noguer, Gregory Rogez*
 
 + [HO.OP.2] Hand-Object Contact Consistency Reasoning for Human Grasps Generation. ICCV21.
   [[PDF](https://arxiv.org/pdf/2104.03304.pdf)]
