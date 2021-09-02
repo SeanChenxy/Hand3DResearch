@@ -1,6 +1,6 @@
 # Very Recent Progress in 3D Hand Tasks [![Awesome](https://awesome.re/badge-flat.svg)](https://awesome.re)
 
-A complete paper list for hand pose can be found [here](https://github.com/xinghaochen/awesome-hand-pose-estimation). This repo focuses on some subject areas and works. If there is any mistake or carelessness, please feel free to open an issue or send me email.
+A complete paper list for hand pose can be found [here](https://github.com/xinghaochen/awesome-hand-pose-estimation). This repo focuses on some subject areas, ideas, and works. If there is any mistake or carelessness, please feel free to open an issue or send me email.
 
 ## Contents
   - [Overview](#overview)
@@ -263,7 +263,8 @@ The below indices are references to the above [overview](#overview).
   [[PDF](https://arxiv.org/pdf/2106.05954.pdf)] \
   *Adrian Spurr, Pavlo Molchanov, Umar Iqbal, Jan Kautz, Otmar Hilliges*
 
-+ [H.WS.5] SemiHand: Semi-supervised Hand Pose Estimation with Consistency. ICCV21. \
++ [H.WS.5] SemiHand: Semi-supervised Hand Pose Estimation with Consistency. ICCV21.
+  [[PDF](https://www.mu4yang.com/files/project/semihand/semihand.pdf)] \
   *Linlin Yang, Shicheng Chen, Angela Yao*
 
 + [H.WS.4] Model-based 3D Hand Reconstruction via Self-Supervised Learning. CVPR21.
