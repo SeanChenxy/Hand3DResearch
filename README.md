@@ -543,4 +543,27 @@ Junsong Yuan*
 + [T.MC.1] [openpose](https://github.com/CMU-Perceptual-Computing-Lab/openpose)
 
 ## Benchmarks
-coming soon.
+
+### FreiHAND
+
+![freihand](benchmarks/freihand/FreiHAND.png)
+
+|  Method | Backbone  | PAMPJPE (mm) | PAMPVPE (mm) | F@5 | F@15 |
+|  ----  | ----  | ---- | ---- | ---- | ---- |
+Graphormer [[H.TR.4](#transformer)]      |Transformer| 5.9  | 6.0  | 0.765 | 0.987
+METRO [[H.TR.3](#transformer)]           |Transformer| 6.7  | 6.8  | 0.717 | 0.981
+I2UV-HandNet [[H.UV.2](#uv)]             | ResNet50  | 6.8  | 6.9  | 0.707 | 0.977
+CMR [[H.GH.5](#graph)]                   | ResNet50⏳ | 6.9  | 7.0  | 0.715 | 0.977
+HIU-DMTL [[H.RG.8](#regression)]         | Custom    | 0.71 |	0.73 | 0.699 |	0.974
+PeCLR [[H.WS.7](#weak-supervision)]      | ResNet152 | 7.3  | -  | - | -
+CMR [[H.GH.5](#graph)]                   | ResNet18⏳ | 7.4  | 7.5  | 0.687 | 0.973
+I2L-MeshNet [[H.VX.3](#25d)]             | ResNet50⏳ | 7.4  | 7.6  | 0.681 | 0.973
+Pose2Mesh [[H.GH.4](#graph)]             | −         | 7.7  | 7.8  | 0.674 | 0.969
+Pose2Pose [[FB.IK.2](#inverse-kinematics-1)]| ResNet50  | 7.8  | 7.8  | 0.661 | 0.970
+Li et al. [[H.VX.4](#25d)]               | Hourglass⏳| 8.0  |  -   | -     | -
+YotubeHand [[H.GH.3](#graph)]            | ResNet50  | 8.4  | 8.6  | 0.614 | 0.966
+Pose2Pose [[FB.IK.2](#inverse-kinematics-1)]            | ResNet18  | 8.6  | 8.6  | 0.621 | 0.962
+FreiHAND [[H.RG.5]((#regression))]       | ResNet50  | 11.0 | 10.9 | 0.516 | 0.934
+ObMan [[HO.RG.1](#regression-1)]         | ResNet18  | 13.3 | 13.3 | 0.429 | 0.907
+Boukhayma et al. [[H.RG.3](#regression)] | ResNet50 | 35.0 | 13.2 | 0.427 | 0.895
+⏳: Hourglass stacked structure
