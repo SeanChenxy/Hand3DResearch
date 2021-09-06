@@ -566,4 +566,4 @@ Pose2Pose [[FB.IK.2](#inverse-kinematics-1)]            | ResNet18  | 8.6  | 8.6
 FreiHAND [[H.RG.5]((#regression))]       | ResNet50  | 11.0 | 10.9 | 0.516 | 0.934
 ObMan [[HO.RG.1](#regression-1)]         | ResNet18  | 13.3 | 13.3 | 0.429 | 0.907
 Boukhayma et al. [[H.RG.3](#regression)] | ResNet50 | 35.0 | 13.2 | 0.427 | 0.895
-⏳: Hourglass stacked structure
+>⏳: Hourglass stacked structure
