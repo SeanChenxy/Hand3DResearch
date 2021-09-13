@@ -224,6 +224,11 @@ The below indices are references to the above [overview](#overview).
 
 #### 2.5D
 
++ [H.VX.7] Towards Accurate Alignment in Real-time 3D Hand-Mesh Reconstruction. ICCV21.
+  [[PDF](https://arxiv.org/pdf/2109.01723.pdf)] 
+  [[Code](https://github.com/wbstx/handAR)] \
+  *Xiao Tang, Tianyu Wang, Chi-Wing Fu*
+
 + [H.VX.6] Weakly-Supervised 3D Human Pose Learning via Multi-view Images in the Wild. CVPR20.
   [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Iqbal_Weakly-Supervised_3D_Human_Pose_Learning_via_Multi-View_Images_in_the_CVPR_2020_paper.pdf)] \
   *Umar Iqbal, Pavlo Molchanov, Jan Kautz*
@@ -551,10 +556,11 @@ Junsong Yuan*
 |  Method | Backbone  | PAMPJPE (mm) | PAMPVPE (mm) | F@5 | F@15 |
 |  ----  | ----  | ---- | ---- | ---- | ---- |
 Graphormer [[H.TR.4](#transformer)]      |Transformer| 5.9  | 6.0  | 0.765 | 0.987
+Tang et al. [[H.VX.7](#25d)]             | ResNet50  | 6.7  | 6.7  | 0.724 | 0.981
 METRO [[H.TR.3](#transformer)]           |Transformer| 6.7  | 6.8  | 0.717 | 0.981
 I2UV-HandNet [[H.UV.2](#uv)]             | ResNet50  | 6.8  | 6.9  | 0.707 | 0.977
-CMR [[H.GH.5](#graph)]                   | ResNet50⏳ | 6.9  | 7.0  | 0.715 | 0.977
-HIU-DMTL [[H.RG.8](#regression)]         | Custom    | 0.71 |	0.73 | 0.699 |	0.974
+CMR [[H.GH.5](#graph)]                   | ResNet50⏳ | 6.9 | 7.0  | 0.715 | 0.977
+HIU-DMTL [[H.RG.8](#regression)]         | Custom    | 7.1  | 7.3 | 0.699 |	0.974
 PeCLR [[H.WS.7](#weak-supervision)]      | ResNet152 | 7.3  | -  | - | -
 CMR [[H.GH.5](#graph)]                   | ResNet18⏳ | 7.4  | 7.5  | 0.687 | 0.973
 I2L-MeshNet [[H.VX.3](#25d)]             | ResNet50⏳ | 7.4  | 7.6  | 0.681 | 0.973
