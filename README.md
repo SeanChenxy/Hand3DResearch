@@ -396,6 +396,11 @@ Junsong Yuan*
 
 #### Joint Optimzation
 
++ [HO.OP.5] ArtiBoost: Boosting Articulated 3D Hand-Object Pose Estimation via Online Exploration and Synthesis. arXiv21.
+  [[PDF](https://arxiv.org/pdf/2109.05488.pdf)]
+  [[Code](https://github.com/MVIG-SJTU/ArtiBoost)] \
+  *Kailin Li, Lixin Yang, Xinyu Zhan, Jun Lv, Wenqiang Xu, Jiefeng Li, Cewu Lu*
+
 + [HO.OP.4] Perceiving 3D Human-Object Spatial Arrangements from a Single Image in the Wild. ECCV20.
   [[PDF](https://arxiv.org/pdf/2007.15649.pdf)]
   [[Code](https://github.com/facebookresearch/phosa?utm_source=catalyzex.com)] \
