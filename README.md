@@ -204,6 +204,11 @@ The below indices are references to the above [overview](#overview).
 
 #### Transformer
 
++ [H.TR.5] GraFormer: Graph Convolution Transformer for 3D Pose Estimation. arXiv21.
+  [[PDF](https://arxiv.org/pdf/2109.08364.pdf)]
+  [[Code](https://github.com/Graformer/GraFormer)] \
+  *Weixi Zhao, Yunjie Tian, Qixiang Ye, Jianbin Jiao and Weiqiang Wang*
+
 + [H.TR.4] Mesh Graphormer. ICCV21.
   [[PDF](https://arxiv.org/pdf/2104.00272.pdf)] \
   *Kevin Lin, Lijuan Wang, Zicheng Liu*
