@@ -52,6 +52,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
 This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, and synthetic.
 |  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic |
 |  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- | 
+|MuViHand| [link](https://github.com/LeylaKhaleghi/MuViHand)   | 402K   |   |  |  | ✅ | ✅ |
 |H2O     | [link](https://arxiv.org/pdf/2104.11181.pdf)   | 571K   | ✅  | ✅  | ✅  | ✅ | |
 |HanCO   | [link](https://lmb.informatik.uni-freiburg.de/projects/contra-hand/)     | 860K   | ✅  |  |  | ✅ | |
 |H2O     | [link](https://arxiv.org/pdf/2104.11466.pdf)   | 5M   | ✅  | ✅  | ✅  | ✅ | |
@@ -308,8 +309,13 @@ Junsong Yuan*
 
 #### Temporal
 
++ [H.TP.6] Multi-View Video-Based 3D Hand Pose Estimation. arXiv21.
+  [[PDF](https://arxiv.org/pdf/2109.11747.pdf)]
+  [[Code](https://github.com/LeylaKhaleghi/MuViHand)] \
+  *Leyla Khaleghi, Alireza Sepas Moghaddam, Joshua Marshall, Ali Etemad*
+
 + [H.TP.5] TravelNet: Self-supervised Physically Plausible Hand Motion Learning from Monocular Color Images. ICCV21.
-  \
+  [[PDF](https://www.yangangwang.com/papers/ZHAO-TRAVEL-2021-08.pdf)] \
   *Zimeng Zhao, Xi Zhao and Yangang Wang*
 
 + [H.TP.4] Beyond Static Features for Temporally Consistent 3D Human Pose and Shape from a Video. CVPR21
