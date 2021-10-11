@@ -343,7 +343,7 @@ Junsong Yuan*
 #### SDF
 
 + [H.SDF.1] A Skeleton-Driven Neural Occupancy Representation for Articulated Hands. arXiv21.
-  [[PDF](https://arxiv.org/pdf/2109.11399.pdf)]
+  [[PDF](https://arxiv.org/pdf/2109.11399.pdf)] \
   *Korrawe Karunratanakul, Adrian Spurr, Zicong Fan, Otmar Hilliges, Siyu Tang*
 
 
