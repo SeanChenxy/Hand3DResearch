@@ -274,12 +274,17 @@ The below indices are references to the above [overview](#overview).
 
 #### Weak Supervision
 
++ [H.WS.9] Self-supervised Transfer Learning for Hand Mesh Recovery from Binocular
+Images. ICCV21.
+  [[PDF](https://openaccess.thecvf.com/content/ICCV2021/papers/Chen_Self-Supervised_Transfer_Learning_for_Hand_Mesh_Recovery_From_Binocular_Images_ICCV_2021_paper.pdf)] \
+  *Zheng Chen, Sihan Wang, Yi Sun, Xiaohong Ma*
+
 + [H.WS.8] SO-HandNet: Self-Organizing Network for 3D Hand Pose Estimation with Semi-supervised Learning. ICCV19.
   [[PDF](https://openaccess.thecvf.com/content_ICCV_2019/papers/Chen_SO-HandNet_Self-Organizing_Network_for_3D_Hand_Pose_Estimation_With_Semi-Supervised_ICCV_2019_paper.pdf)] \
   *Yujin Chen, Zhigang Tu, Liuhao Ge, Dejun Zhang, Ruizhi Chen,
 Junsong Yuan*
 
-+ [H.WS.7] Self-Supervised 3D Hand Pose Estimation from Monocular RGB via Contrastive Learning. arXiv21.
++ [H.WS.7] Self-Supervised 3D Hand Pose Estimation from Monocular RGB via Contrastive Learning. ICCV21.
   [[PDF](https://arxiv.org/pdf/2106.05953.pdf)] \
   Adrian Spurr, Aneesh Dahiya, Xucong Zhang, Xi Wang, Otmar Hilliges
 
@@ -334,6 +339,13 @@ Junsong Yuan*
 + [H.TP.1] SeqHAND: RGB-Sequence-Based 3D Hand Pose and Shape Estimation. ECCV20.
   [[PDF](https://arxiv.org/pdf/2007.05168.pdf)] \
   *John Yang, Hyung Jin Chang, Seungeui Lee, Nojun Kwak*
+
+#### SDF
+
++ [H.SDF.1] A Skeleton-Driven Neural Occupancy Representation for Articulated Hands. arXiv21.
+  [[PDF](https://arxiv.org/pdf/2109.11399.pdf)]
+  *Korrawe Karunratanakul, Adrian Spurr, Zicong Fan, Otmar Hilliges, Siyu Tang*
+
 
 ### Hand-Object Interaction
 
@@ -534,20 +546,39 @@ Junsong Yuan*
 
 #### SDF
 
-+ [H.SDF.1] PIFu: Pixel-Aligned Implicit Function for High-Resolution Clothed Human Digitization. CVPR19
-  [[PDF](https://arxiv.org/pdf/1905.05172.pdf)]
-  [[Code]](https://github.com/shunsukesaito/PIFu) \
-  *Shunsuke Saito, Zeng Huang, Ryota Natsume, Shigeo Morishima, Angjoo Kanazawa, Hao Li*
++ [FBR.SDF.7] Locally Aware Piecewise Transformation Fields for 3D Human Mesh Registration. CVPR21 \
+  [[PDF](https://arxiv.org/pdf/2104.08160.pdf)]
+  [[Code](https://github.com/taconite/PTF)] \
+  *Shaofei Wang, Andreas Geiger, Siyu Tang*
+  
++ [FBR.SDF.6] LEAP: Learning Articulated Occupancy of People. CVPR21
+  [[PDF](https://openaccess.thecvf.com/content/CVPR2021/papers/Mihajlovic_LEAP_Learning_Articulated_Occupancy_of_People_CVPR_2021_paper.pdf)]
+  [[Code](https://github.com/neuralbodies/leap)] \
+  *Marko Mihajlovic, Yan Zhang, Michael J. Black, Siyu Tang*
 
-+ [H.SDF.2] PIFuHD: Multi-Level Pixel-Aligned Implicit Function for High-Resolution 3D Human Digitization. CVPR20.
++ [FBR.SDF.5] Monocular Real-Time Volumetric Performance Capture. ECCV20.
+  [[PDF](https://arxiv.org/pdf/2007.13988.pdf)] \
+  [[Code](https://github.com/Project-Splinter/MonoPort?utm_source=catalyzex.com)]
+  *Ruilong Li, Yuliang Xiu, Shunsuke Saito, Zeng Huang, Kyle Olszewski, Hao Li *
+
++ [FBR.SDF.4] ARCH: Animatable Reconstruction of Clothed Humans. CVPR20.
+  [[PDF](https://arxiv.org/pdf/2004.04572.pdf)] \
+  *Zeng Huang, Yuanlu Xu, Christoph Lassner, Hao Li, Tony Tung*
+
++ [FBR.SDF.3] Geo-PIFu: Geometry and Pixel Aligned Implicit Functions for Single-view Human Reconstruction. NeurIPS20.
+  [[PDF](https://arxiv.org/pdf/2006.08072.pdf)]
+  [[Code](https://github.com/simpleig/Geo-PIFu)] \
+  *Tong He, John Collomosse, Hailin Jin, Stefano Soatto*
+
++ [FBR.SDF.2] PIFuHD: Multi-Level Pixel-Aligned Implicit Function for High-Resolution 3D Human Digitization. CVPR20.
   [[PDF](https://arxiv.org/pdf/2004.00452.pdf)]
   [[Code]](https://github.com/facebookresearch/pifuhd?utm_source=catalyzex.com) \
   *Shunsuke Saito, Tomas Simon, Jason Saragih, Hanbyul Joo*
 
-+ [H.SDF.3] Geo-PIFu: Geometry and Pixel Aligned Implicit Functions for Single-view Human Reconstruction. NeurIPS20.
-  [[PDF](https://arxiv.org/pdf/2006.08072.pdf)]
-  [[Code](https://github.com/simpleig/Geo-PIFu)] \
-  *Tong He, John Collomosse, Hailin Jin, Stefano Soatto*
++ [FBR.SDF.1] PIFu: Pixel-Aligned Implicit Function for High-Resolution Clothed Human Digitization. CVPR19
+  [[PDF](https://arxiv.org/pdf/1905.05172.pdf)]
+  [[Code]](https://github.com/shunsukesaito/PIFu) \
+  *Shunsuke Saito, Zeng Huang, Ryota Natsume, Shigeo Morishima, Angjoo Kanazawa, Hao Li*
 
 ## Tools
 
