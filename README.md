@@ -391,7 +391,7 @@ Junsong Yuan*
   *Korrawe Karunratanakul, Jinlong Yang, Yan Zhang, Michael Black, Krikamol Muandet, Siyu Tang*
 
 #### Graph
-+ [HO.SDF.1] HOPE-Net: A Graph-based Model for Hand-Object Pose Estimation. CVPR20.
++ [HO.GH.1] HOPE-Net: A Graph-based Model for Hand-Object Pose Estimation. CVPR20.
   [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Doosti_HOPE-Net_A_Graph-Based_Model_for_Hand-Object_Pose_Estimation_CVPR_2020_paper.pdf)]
   [[Code](https://github.com/bardiadoosti/HOPE)] \
   *Bardia Doosti, Shujon Naha, Majid Mirbagheri, David Crandall*
