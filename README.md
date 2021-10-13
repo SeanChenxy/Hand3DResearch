@@ -3,6 +3,9 @@
 A complete paper list for hand pose can be found [here](https://github.com/xinghaochen/awesome-hand-pose-estimation). This repo focuses on some subject areas, ideas, and works. If there is any mistake or carelessness, please feel free to open an issue or send me email.
 
 ## Contents
+
+  - [Contents](#contents)
+  - [TODO](#todo)
   - [Overview](#overview)
   - [Datasets](#datasets)
   - [Papers](#papers)
@@ -15,9 +18,11 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [UV](#uv)
       - [Weak Supervision](#weak-supervision)
       - [Temporal](#temporal)
+      - [SDF](#sdf)
     - [Hand-Object Interaction](#hand-object-interaction)
       - [Regression](#regression-1)
-      - [SDF](#sdf)
+      - [SDF](#sdf-1)
+      - [Graph](#graph-1)
       - [Weak Supervision](#weak-supervision-1)
       - [Temporal](#temporal-1)
       - [Joint Optimzation](#joint-optimzation)
@@ -25,18 +30,19 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [Regression](#regression-2)
       - [2.5D](#25d-1)
     - [Two-Hand-Object Interaction](#two-hand-object-interaction)
-      - [Graph](#graph-1)
+      - [Graph](#graph-2)
       - [Transformer](#transformer-1)
       - [GAN](#gan)
     - [Full Body Reconstruction](#full-body-reconstruction)
       - [Regression](#regression-3)
       - [Inverse Kinematics](#inverse-kinematics-1)
       - [Optimization](#optimization)
-      - [SDF](#sdf-1)
+      - [SDF](#sdf-2)
   - [Tools](#tools)
     - [Model](#model)
     - [MoCap](#mocap)
   - [Benchmarks](#benchmarks)
+    - [FreiHAND](#freihand)
 
 ## TODO
 - [x] Dtasets
@@ -320,7 +326,7 @@ Junsong Yuan*
   *Leyla Khaleghi, Alireza Sepas Moghaddam, Joshua Marshall, Ali Etemad*
 
 + [H.TP.5] TravelNet: Self-supervised Physically Plausible Hand Motion Learning from Monocular Color Images. ICCV21.
-  [[PDF](https://www.yangangwang.com/papers/ZHAO-TRAVEL-2021-08.pdf)] \
+  [[PDF](https://openaccess.thecvf.com/content/ICCV2021/papers/Zhao_TravelNet_Self-Supervised_Physically_Plausible_Hand_Motion_Learning_From_Monocular_Color_ICCV_2021_paper.pdf)] \
   *Zimeng Zhao, Xi Zhao and Yangang Wang*
 
 + [H.TP.4] Beyond Static Features for Temporally Consistent 3D Human Pose and Shape from a Video. CVPR21
@@ -384,6 +390,11 @@ Junsong Yuan*
   [[Code](https://github.com/korrawe/grasping_field)] \
   *Korrawe Karunratanakul, Jinlong Yang, Yan Zhang, Michael Black, Krikamol Muandet, Siyu Tang*
 
+#### Graph
++ [HO.SDF.1] HOPE-Net: A Graph-based Model for Hand-Object Pose Estimation. CVPR20.
+  [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Doosti_HOPE-Net_A_Graph-Based_Model_for_Hand-Object_Pose_Estimation_CVPR_2020_paper.pdf)]
+  [[Code](https://github.com/bardiadoosti/HOPE)] \
+  *Bardia Doosti, Shujon Naha, Majid Mirbagheri, David Crandall*
 
 #### Weak Supervision
 
