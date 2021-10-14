@@ -474,7 +474,7 @@ Junsong Yuan*
 + [HH.VX.2] Interacting Two-Hand 3D Pose and Shape Reconstruction from Single Color Image. ICCV21.
   [[PDF](https://openaccess.thecvf.com/content/ICCV2021/papers/Zhang_Interacting_Two-Hand_3D_Pose_and_Shape_Reconstruction_From_Single_Color_ICCV_2021_paper.pdf)]
   [[Project](https://baowenz.github.io/Intershape/)]
-  [[Code](https://github.com/BaowenZ/Intershape)] \
+  [[Code](https://github.com/BaowenZ/Two-Hand-Shape-Pose)] \
   *Baowen Zhang, Yangang Wang, Xiaoming Deng, Yinda Zhang, Ping Tan, Cuixia Ma and Hongan Wang*
 
 + [HH.VX.1] InterHand2.6M: A New Large-scale Dataset and Baseline for 3D Single and Interacting Hand Pose Estimation from a Single RGB Image. ECCV20.
