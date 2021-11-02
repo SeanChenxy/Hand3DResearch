@@ -93,26 +93,26 @@ The below indices are references to the above [overview](#overview).
 
 #### Regression
 
-+ [H.RG.10] RealisticHands: A Hybrid Model for 3D Hand Reconstruction. arXiv21.
++ [H.MN.10] RealisticHands: A Hybrid Model for 3D Hand Reconstruction. arXiv21.
   [[PDF](https://arxiv.org/pdf/2108.13995.pdf)] \
   *Michael Seeber, Martin R. Oswald, Roi Poranne*
 
-+ [H.RG.9] Contrastive Representation Learning for Hand Shape Estimation. arXiv21.
++ [H.MN.9] Contrastive Representation Learning for Hand Shape Estimation. arXiv21.
   [[PDF](https://arxiv.org/pdf/2106.04324.pdf)]
   [[Project](https://lmb.informatik.uni-freiburg.de/projects/contra-hand/)]
   [[Code](https://github.com/lmb-freiburg/contra-hand)] \
   *Christian Zimmermann, Max Argus, Thomas Brox*
 
-+ [H.RG.8] Hand Image Understanding via Deep Multi-Task Learning. ICCV21.
++ [H.MN.8] Hand Image Understanding via Deep Multi-Task Learning. ICCV21.
   [[PDF](https://arxiv.org/pdf/2107.11646.pdf)] \
   *Xiong Zhang, Hongsheng Huang, Jianchao Tan, Hongmin Xu, Cheng Yang, Guozhu Peng, Lei Wang, Ji Liu*
 
-+ [H.RG.7] DeepHandMesh: Weakly-supervised Deep Encoder-Decoder Framework for High-fidelity Hand Mesh Modeling from a Single RGB Image. ECCV20.
++ [H.MN.7] DeepHandMesh: Weakly-supervised Deep Encoder-Decoder Framework for High-fidelity Hand Mesh Modeling from a Single RGB Image. ECCV20.
   [[PDF](http://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123470426.pdf)]
   [[Project](https://mks0601.github.io/DeepHandMesh/)] \
   *Gyeongsik Moon, Takaaki Shiratori, Kyoung Mu Lee* 
 
-+ [H.RG.6] Knowledge as Priors: Cross-Modal Knowledge Generalization for Datasets without Superior Knowledge. CVPR20. 
++ [H.MN.6] Knowledge as Priors: Cross-Modal Knowledge Generalization for Datasets without Superior Knowledge. CVPR20. 
   [[PDF](https://arxiv.org/pdf/2004.00176.pdf)] \
   *Long Zhao, Xi Peng, Yuxiao Chen, Mubbasir Kapadia, Dimitris N. Metaxas*
 
@@ -356,29 +356,29 @@ Junsong Yuan*
 
 ### Hand-Object Interaction
 
-#### Regression
+#### MANO
 
-+ [HO.RG.5] HO-3D_v3: Improving the Accuracy of Hand-Object Annotations of the HO-3D Dataset. arXiv21.
++ [HO.MN.5] HO-3D_v3: Improving the Accuracy of Hand-Object Annotations of the HO-3D Dataset. arXiv21.
   [[PDF](https://arxiv.org/pdf/2107.00887.pdf)] \
   *Shreyas Hampali, Sayan Deb Sarkar, Vincent Lepetit*
 
-+ [HO.RG.4] Unsupervised Domain Adaptation with Temporal-Consistent Self-Training for 3D Hand-Object Joint Reconstruction. arXiv21.
++ [HO.MN.4] Unsupervised Domain Adaptation with Temporal-Consistent Self-Training for 3D Hand-Object Joint Reconstruction. arXiv21.
   [[PDF](https://arxiv.org/pdf/2012.11260.pdf)] \
   *Mengshi Qi, Edoardo Remelli, Mathieu Salzmann, Pascal Fua*
 
-+ [HO.RG.3] DexYCB: A Benchmark for Capturing Hand Grasping of Objects. CVPR21.
++ [HO.MN.3] DexYCB: A Benchmark for Capturing Hand Grasping of Objects. CVPR21.
   [[PDF](https://dex-ycb.github.io/assets/chao_cvpr2021.pdf)]
   [[Project](https://dex-ycb.github.io/)]
   [[Code](https://github.com/NVlabs/dex-ycb-toolkit)] \
   *Yu-Wei Chao, Wei Yang, Yu Xiang, Pavlo Molchanov, Ankur Handa, Jonathan Tremblay, Yashraj S. Narang, Karl Van Wyk, Umar Iqbal, Stan Birchfield, Jan Kautz, Dieter Fox*
 
-+ [HO.RG.2] HOnnotate: A method for 3D Annotation of Hand and Objects Poses. CVPR20.
++ [HO.MN.2] HOnnotate: A method for 3D Annotation of Hand and Objects Poses. CVPR20.
   [[PDF](https://arxiv.org/pdf/1907.01481.pdf)]
   [[Project](https://www.tugraz.at/institute/icg/research/team-lepetit/research-projects/hand-object-3d-pose-annotation/)]
   [[Code](https://github.com/shreyashampali/ho3d)] \
   *Shreyas Hampali, Mahdi Rad, Markus Oberweger, Vincent Lepetit*
 
-+ [HO.RG.1] Learning joint reconstruction of hands and manipulated objects. CVPR19.
++ [HO.MN.1] Learning joint reconstruction of hands and manipulated objects. CVPR19.
   [[PDF](https://arxiv.org/pdf/1904.05767.pdf)]
   [[Project](https://hassony2.github.io/obman)]
   [[Code](https://github.com/hassony2/obman_train)] \
@@ -396,6 +396,12 @@ Junsong Yuan*
   [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Doosti_HOPE-Net_A_Graph-Based_Model_for_Hand-Object_Pose_Estimation_CVPR_2020_paper.pdf)]
   [[Code](https://github.com/bardiadoosti/HOPE)] \
   *Bardia Doosti, Shujon Naha, Majid Mirbagheri, David Crandall*
+
++ [HO.GH.2] H2O: Two Hands Manipulating Objects for First Person Interaction Recognition. ICCV21.
+  [[PDF](https://arxiv.org/pdf/2104.11181.pdf)]
+  [[Project](https://www.taeinkwon.com/projects/h2o)]
+  [[Code](https://github.com/taeinkwon/h2odataset)] \
+  *Taein Kwon, Bugra Tekin, Jan Stuhmer, Federica Bogo, Marc Pollefeys*
 
 #### Weak Supervision
 
@@ -456,11 +462,31 @@ Junsong Yuan*
   [[Code](https://github.com/lixiny/CPF)] \
   *Lixin Yang, Xinyu Zhan, Kailin Li, Wenqiang Xu, Jiefeng Li, Cewu Lu*
 
+#### GAN
+
++ [HO.GAN.2] H2O: A Benchmark for Visual Human-human Object Handover Analysis. arXiv21.
+  [[PDF](https://arxiv.org/pdf/2104.11466.pdf)] \
+  *Ruolin Ye, Wenqiang Xu, Zhendong Xue, Tutian Tang, Yanfeng Wang, Cewu Lu*
+
++ [HO.GAN.1] Body2Hands: Learning to Infer 3D Hands from Conversational Gesture Body Dynamics. CVPR21.
+  [[PDF](https://arxiv.org/pdf/2007.12287.pdf)]
+  [[Project](http://people.eecs.berkeley.edu/~evonne_ng/projects/body2hands/)] 
+  [[Code](https://github.com/facebookresearch/body2hands)] \
+  *Evonne Ng, Hanbyul Joo, Shiry Ginosar, Trevor Darrell*
+
 ### Hand-Hand Interaction
 
-#### Regression
+#### MANO
 
-+ [HH.RG.1] RGB2Hands: Real-Time Tracking of 3D Hand Interactions from Monocular RGB Video. SIGGRAPHAsia20
++ [HH.MN.2]
+Monocular 3D Reconstruction of Interacting Hands via Collision-Aware Factorized Refinements. 3DV21.
+  [[PDF](https://arxiv.org/pdf/2111.00763.pdf)]
+  [[Project](https://penincillin.github.io/ihmr_3dv2021)]
+  [[Code](https://github.com/penincillin/IHMR)] \
+  *Yu Rong, Jingbo Wang, Ziwei Liu, Chen Change Loy*
+
+
++ [HH.MN.1] RGB2Hands: Real-Time Tracking of 3D Hand Interactions from Monocular RGB Video. SIGGRAPHAsia20
   [[PDF](https://handtracker.mpi-inf.mpg.de/projects/RGB2Hands/content/RGB2Hands_author_version.pdf)]
   [[Project](https://handtracker.mpi-inf.mpg.de/projects/RGB2Hands/)] \
   *Jiayi Wang, Franziska Mueller, Florian Bernard, Suzanne Sorli, Oleksandr Sotnychenko, Neng Qian, Miguel A. Otaduy, Dan Casas, and Christian Theobalt*
@@ -483,33 +509,12 @@ Junsong Yuan*
   [[Code](https://github.com/facebookresearch/InterHand2.6M)] \
   *Gyeongsik Moon, Shoou-i Yu, He Wen, Takaaki Shiratori, Kyoung Mu Lee*
 
-### Two-Hand-Object Interaction
-
-#### Graph
-
-+ [THO.GH.1] H2O: Two Hands Manipulating Objects for First Person Interaction Recognition. ICCV21.
-  [[PDF](https://arxiv.org/pdf/2104.11181.pdf)]
-  [[Project](https://www.taeinkwon.com/projects/h2o)]
-  [[Code](https://github.com/taeinkwon/h2odataset)] \
-  *Taein Kwon, Bugra Tekin, Jan Stuhmer, Federica Bogo, Marc Pollefeys*
-
 #### Transformer
 
 + HandsFormer: Keypoint Transformer for Monocular 3D Pose Estimation ofHands and Object in Interaction. arXiv21.
   [[PDF](https://arxiv.org/pdf/2104.14639.pdf)] \
   *Shreyas Hampali, Sayan Deb Sarkar, Mahdi Rad, Vincent Lepetit*
 
-#### GAN
-
-+ [THO.GAN.2] H2O: A Benchmark for Visual Human-human Object Handover Analysis. arXiv21.
-  [[PDF](https://arxiv.org/pdf/2104.11466.pdf)] \
-  *Ruolin Ye, Wenqiang Xu, Zhendong Xue, Tutian Tang, Yanfeng Wang, Cewu Lu*
-
-+ [THO.GAN.1] Body2Hands: Learning to Infer 3D Hands from Conversational Gesture Body Dynamics. CVPR21.
-  [[PDF](https://arxiv.org/pdf/2007.12287.pdf)]
-  [[Project](http://people.eecs.berkeley.edu/~evonne_ng/projects/body2hands/)] 
-  [[Code](https://github.com/facebookresearch/body2hands)] \
-  *Evonne Ng, Hanbyul Joo, Shiry Ginosar, Trevor Darrell*
 
 ### Full Body Reconstruction
 
@@ -557,6 +562,11 @@ Junsong Yuan*
   *Georgios Pavlakos*, Vasileios Choutas*, Nima Ghorbani, Timo Bolkart, Ahmed A. A. Osman, Dimitrios Tzionas, Michael J. Black*
 
 #### SDF
+
++ [FBR.SDF.8] NASA: Neural Articulated Shape Approximation. ECCV20.
+  [[PDF](https://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123520596.pdf)]
+  [[Code]()] \
+  Boyang Deng, JP Lewis, Timothy Jeruzalski, Gerard Pons-Moll, Geoffrey Hinton, Mohammad Norouzi, Andrea Tagliasacchi
 
 + [FBR.SDF.7] Locally Aware Piecewise Transformation Fields for 3D Human Mesh Registration. CVPR21 \
   [[PDF](https://arxiv.org/pdf/2104.08160.pdf)]
