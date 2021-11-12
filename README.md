@@ -4,13 +4,11 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
 
 ## Contents
 
-  - [Contents](#contents)
-  - [TODO](#todo)
   - [Overview](#overview)
   - [Datasets](#datasets)
   - [Papers](#papers)
     - [Hand Shape/Pose](#hand-shapepose)
-      - [Regression](#regression)
+      - [MANO](#mano)
       - [Inverse Kinematics](#inverse-kinematics)
       - [Graph](#graph)
       - [Transformer](#transformer)
@@ -20,21 +18,19 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [Temporal](#temporal)
       - [SDF](#sdf)
     - [Hand-Object Interaction](#hand-object-interaction)
-      - [Regression](#regression-1)
+      - [MANO](#mano-1)
       - [SDF](#sdf-1)
       - [Graph](#graph-1)
       - [Weak Supervision](#weak-supervision-1)
       - [Temporal](#temporal-1)
       - [Joint Optimzation](#joint-optimzation)
-    - [Hand-Hand Interaction](#hand-hand-interaction)
-      - [Regression](#regression-2)
-      - [2.5D](#25d-1)
-    - [Two-Hand-Object Interaction](#two-hand-object-interaction)
-      - [Graph](#graph-2)
-      - [Transformer](#transformer-1)
       - [GAN](#gan)
+    - [Hand-Hand Interaction](#hand-hand-interaction)
+      - [MANO](#mano-2)
+      - [2.5D](#25d-1)
+      - [Transformer](#transformer-1)
     - [Full Body Reconstruction](#full-body-reconstruction)
-      - [Regression](#regression-3)
+      - [Regression](#regression)
       - [Inverse Kinematics](#inverse-kinematics-1)
       - [Optimization](#optimization)
       - [SDF](#sdf-2)
@@ -91,7 +87,7 @@ The below indices are references to the above [overview](#overview).
 
 ### Hand Shape/Pose
 
-#### Regression
+#### MANO
 
 + [H.MN.10] RealisticHands: A Hybrid Model for 3D Hand Reconstruction. arXiv21.
   [[PDF](https://arxiv.org/pdf/2108.13995.pdf)] \
@@ -629,7 +625,7 @@ Tang et al. [[H.VX.7](#25d)]             | ResNet50  | 6.7  | 6.7  | 0.724 | 0.9
 METRO [[H.TR.3](#transformer)]           |Transformer| 6.7  | 6.8  | 0.717 | 0.981
 I2UV-HandNet [[H.UV.2](#uv)]             | ResNet50  | 6.8  | 6.9  | 0.707 | 0.977
 CMR [[H.GH.5](#graph)]                   | ResNet50⏳ | 6.9 | 7.0  | 0.715 | 0.977
-HIU-DMTL [[H.RG.8](#regression)]         | Custom    | 7.1  | 7.3 | 0.699 |	0.974
+HIU-DMTL [[H.RG.8](#mano)]         | Custom    | 7.1  | 7.3 | 0.699 |	0.974
 PeCLR [[H.WS.7](#weak-supervision)]      | ResNet152 | 7.3  | -  | - | -
 CMR [[H.GH.5](#graph)]                   | ResNet18⏳ | 7.4  | 7.5  | 0.687 | 0.973
 I2L-MeshNet [[H.VX.3](#25d)]             | ResNet50⏳ | 7.4  | 7.6  | 0.681 | 0.973
@@ -638,7 +634,7 @@ Pose2Pose [[FB.IK.2](#inverse-kinematics-1)]| ResNet50  | 7.8  | 7.8  | 0.661 | 
 Li et al. [[H.VX.4](#25d)]               | Hourglass⏳| 8.0  |  -   | -     | -
 YotubeHand [[H.GH.3](#graph)]            | ResNet50  | 8.4  | 8.6  | 0.614 | 0.966
 Pose2Pose [[FB.IK.2](#inverse-kinematics-1)]            | ResNet18  | 8.6  | 8.6  | 0.621 | 0.962
-FreiHAND [[H.RG.5]((#regression))]       | ResNet50  | 11.0 | 10.9 | 0.516 | 0.934
-ObMan [[HO.RG.1](#regression-1)]         | ResNet18  | 13.3 | 13.3 | 0.429 | 0.907
-Boukhayma et al. [[H.RG.3](#regression)] | ResNet50 | 35.0 | 13.2 | 0.427 | 0.895
+FreiHAND [[H.MN.5](#mano)]       | ResNet50  | 11.0 | 10.9 | 0.516 | 0.934
+ObMan [[HO.MN.1](#mano-1)]         | ResNet18  | 13.3 | 13.3 | 0.429 | 0.907
+Boukhayma et al. [[H.MN.3](#mano)] | ResNet50 | 35.0 | 13.2 | 0.427 | 0.895
 >⏳: Hourglass stacked structure
