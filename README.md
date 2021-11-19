@@ -608,7 +608,7 @@ Monocular 3D Reconstruction of Interacting Hands via Collision-Aware Factorized 
 + [T.MD.1] [spheremesh](https://github.com/anastasia-tkach/hmodel-cpp-public)
 
 ### MoCap
-
++ [T.MC.4] [MediaPipe](https://mediapipe.dev/index.html)
 + [T.MC.3] [frankmocap](https://github.com/facebookresearch/frankmocap)
 + [T.MC.2] [HandMotionViewer](https://github.com/dimtziwnas/HandObjectInteractionIJCV16_HandMotionViewer?utm_source=catalyzex.com)
 + [T.MC.1] [openpose](https://github.com/CMU-Perceptual-Computing-Lab/openpose)
