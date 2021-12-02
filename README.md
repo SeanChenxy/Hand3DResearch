@@ -3,7 +3,6 @@
 A complete paper list for hand pose can be found [here](https://github.com/xinghaochen/awesome-hand-pose-estimation). This repo focuses on some subject areas, ideas, and works. If there is any mistake or carelessness, please feel free to open an issue or send me email.
 
 ## Contents
-
   - [Overview](#overview)
   - [Datasets](#datasets)
   - [Papers](#papers)
@@ -29,11 +28,12 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [MANO](#mano-2)
       - [2.5D](#25d-1)
       - [Transformer](#transformer-1)
+      - [SDF](#sdf-2)
     - [Full Body Reconstruction](#full-body-reconstruction)
       - [Regression](#regression)
       - [Inverse Kinematics](#inverse-kinematics-1)
       - [Optimization](#optimization)
-      - [SDF](#sdf-2)
+      - [SDF](#sdf-3)
   - [Tools](#tools)
     - [Model](#model)
     - [MoCap](#mocap)
@@ -182,7 +182,7 @@ The below indices are references to the above [overview](#overview).
 
 + [H.GH.5] Camera-Space Hand Mesh Recovery via Semantic Aggregation and Adaptive 2D-1D Registration. CVPR21. 
   [[PDF](https://arxiv.org/pdf/2103.02845.pdf)]
-  [[Code]](https://github.com/SeanChenxy/HandMesh) \
+  [[Code](https://github.com/SeanChenxy/HandMesh)] \
   *Xingyu Chen, Yufeng Liu, Chongyang Ma, Jianlong Chang, Huayan Wang, Tian Chen, Xiaoyan Guo, Pengfei Wan, Wen Zheng*
  
 + [H.GH.4] Pose2Mesh: Graph Convolutional Network for 3D Human Pose and Mesh Recovery from a 2D Human Pose. ECCV20.
@@ -276,6 +276,10 @@ The below indices are references to the above [overview](#overview).
   *Neng Qian, Jiayi Wang, Franziska Mueller, Florian Bernard, Vladislav Golyanik, Christian Theobalt*
 
 #### Weak Supervision
+
++ [H.WS.10] Semi-Supervised 3D Hand Shape and Pose Estimation with Label Propagation. arXiv21.
+  [[PDF](https://arxiv.org/pdf/2111.15199v1.pdf)] \
+  *Samira Kaviani, Amir Rahimi, Richard Hartley*
 
 + [H.WS.9] Self-supervised Transfer Learning for Hand Mesh Recovery from Binocular
 Images. ICCV21.
@@ -401,11 +405,6 @@ Junsong Yuan*
 
 #### Weak Supervision
 
-+ [HO.WS.3] Reconstructing Hand-Object Interactions in the Wild. ICCV21.
-  [[PDF](https://arxiv.org/pdf/2012.09856.pdf)]
-  [[Code]](https://people.eecs.berkeley.edu/~zhecao/rhoi/) \
-  *Zhe Cao*, Ilija Radosavovic*, Angjoo Kanazawa, Jitendra Malik*
-
 + [HO.WS.2] Semi-Supervised 3D Hand-Object Poses Estimation with Interactions in Time. CVPR21.
   [[PDF](https://arxiv.org/pdf/2106.05266.pdf)]
   [[Project](https://stevenlsw.github.io/Semi-Hand-Object/)]
@@ -432,6 +431,11 @@ Junsong Yuan*
   *Yana Hasson, Bugra Tekin, Federica Bogo, Ivan Laptev, Marc Pollefeys, Cordelia Schmid*
 
 #### Joint Optimzation
+
++ [HO.OP.6] Reconstructing Hand-Object Interactions in the Wild. ICCV21.
+  [[PDF](https://arxiv.org/pdf/2012.09856.pdf)]
+  [[Code]](https://people.eecs.berkeley.edu/~zhecao/rhoi/) \
+  *Zhe Cao*, Ilija Radosavovic*, Angjoo Kanazawa, Jitendra Malik*
 
 + [HO.OP.5] ArtiBoost: Boosting Articulated 3D Hand-Object Pose Estimation via Online Exploration and Synthesis. arXiv21.
   [[PDF](https://arxiv.org/pdf/2109.05488.pdf)]
@@ -507,10 +511,16 @@ Monocular 3D Reconstruction of Interacting Hands via Collision-Aware Factorized 
 
 #### Transformer
 
-+ HandsFormer: Keypoint Transformer for Monocular 3D Pose Estimation ofHands and Object in Interaction. arXiv21.
++ [HH.TR.1] HandsFormer: Keypoint Transformer for Monocular 3D Pose Estimation ofHands and Object in Interaction. arXiv21.
   [[PDF](https://arxiv.org/pdf/2104.14639.pdf)] \
   *Shreyas Hampali, Sayan Deb Sarkar, Mahdi Rad, Vincent Lepetit*
 
+#### SDF
++ [HH.SDF.1] Coherent Reconstruction of Multiple Humans from a Single Image. CVPR20
+  [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Jiang_Coherent_Reconstruction_of_Multiple_Humans_From_a_Single_Image_CVPR_2020_paper.pdf)]
+  [[Project](https://jiangwenpl.github.io/multiperson/)]
+  [[Code](https://github.com/JiangWenPL/multiperson)] \
+  *Wen Jiang, Nikos Kolotouros, Georgios Pavlakos, Xiaowei Zhou, Kostas Daniilidis*
 
 ### Full Body Reconstruction
 
