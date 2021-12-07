@@ -162,6 +162,11 @@ The below indices are references to the above [overview](#overview).
 
 #### Graph
 
++ [H.GH.10] MobRecon: Mobile-Friendly Hand Mesh Reconstruction from Monocular Image. arXiv21.
+  [[PDF](https://arxiv.org/pdf/2112.02753.pdf)]
+  [[Code](https://github.com/SeanChenxy/HandMesh)]\
+  *Xingyu Chen, Yufeng Liu, Yajiao Dong, Xiong Zhang, Chongyang Ma, Yanmin Xiong, Yuan Zhang, Xiaoyan Guo*
+
 + [H.GH.9] JGR-P2O: Joint Graph Reasoning based Pixel-to-Offset Prediction Network for 3D Hand Pose Estimation from a Single Depth Image. ECCV20
   [[PDF](https://arxiv.org/pdf/2007.04646.pdf)]
   [[Code](https://github.com/fanglinpu/JGR-P2O?utm_source=catalyzex.com)] \
@@ -631,6 +636,7 @@ Monocular 3D Reconstruction of Interacting Hands via Collision-Aware Factorized 
 
 |  Method | Backbone  | PAMPJPE (mm) | PAMPVPE (mm) | F@5 | F@15 |
 |  ----  | ----  | ---- | ---- | ---- | ---- |
+MobRecon [[H.GH.10](#graph)]             | ResNet50  | 5.7  | 5.9  | 0.784 | 0.986
 Graphormer [[H.TR.4](#transformer)]      |Transformer| 5.9  | 6.0  | 0.765 | 0.987
 Tang et al. [[H.VX.7](#25d)]             | ResNet50  | 6.7  | 6.7  | 0.724 | 0.981
 METRO [[H.TR.3](#transformer)]           |Transformer| 6.7  | 6.8  | 0.717 | 0.981
