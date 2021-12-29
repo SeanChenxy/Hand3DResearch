@@ -326,6 +326,10 @@ Junsong Yuan*
 
 #### Temporal
 
++ [H.TP.7] SmoothNet: A Plug-and-Play Network for Refining Human Poses in Videos. arXiv21.
+  [[PDF](https://arxiv.org/pdf/2112.13715.pdf)]
+  *Ailing Zeng, Lei Yang, Xuan Ju, Jiefeng Li, Jianyi Wang, Qiang Xu*
+  
 + [H.TP.6] Multi-View Video-Based 3D Hand Pose Estimation. arXiv21.
   [[PDF](https://arxiv.org/pdf/2109.11747.pdf)]
   [[Code](https://github.com/LeylaKhaleghi/MuViHand)] \
