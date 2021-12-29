@@ -327,7 +327,7 @@ Junsong Yuan*
 #### Temporal
 
 + [H.TP.7] SmoothNet: A Plug-and-Play Network for Refining Human Poses in Videos. arXiv21.
-  [[PDF](https://arxiv.org/pdf/2112.13715.pdf)]
+  [[PDF](https://arxiv.org/pdf/2112.13715.pdf)] \
   *Ailing Zeng, Lei Yang, Xuan Ju, Jiefeng Li, Jianyi Wang, Qiang Xu*
   
 + [H.TP.6] Multi-View Video-Based 3D Hand Pose Estimation. arXiv21.
@@ -577,6 +577,12 @@ Monocular 3D Reconstruction of Interacting Hands via Collision-Aware Factorized 
   *Georgios Pavlakos*, Vasileios Choutas*, Nima Ghorbani, Timo Bolkart, Ahmed A. A. Osman, Dimitrios Tzionas, Michael J. Black*
 
 #### SDF
+
++ [FBR.SDF.9] SNARF: Differentiable Forward Skinning for Animating Non-Rigid Neural Implicit Shapes. ICCV21.
+  [[PDF](https://arxiv.org/pdf/2104.03953.pdf)]
+  [[Code](https://github.com/xuchen-ethz/snarf)]
+  [[Project](https://xuchen-ethz.github.io/snarf/)]\
+  *Xu Chen, Yufeng Zheng, Michael J. Black, Otmar Hilliges, Andreas Geiger*
 
 + [FBR.SDF.8] NASA: Neural Articulated Shape Approximation. ECCV20.
   [[PDF](https://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123520596.pdf)]
