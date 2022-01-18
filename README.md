@@ -16,6 +16,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [Weak Supervision](#weak-supervision)
       - [Temporal](#temporal)
       - [SDF](#sdf)
+      - [Cross-Modal](#cross-modal)
     - [Hand-Object Interaction](#hand-object-interaction)
       - [MANO](#mano-1)
       - [SDF](#sdf-1)
@@ -23,12 +24,12 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [Weak Supervision](#weak-supervision-1)
       - [Temporal](#temporal-1)
       - [Joint Optimzation](#joint-optimzation)
-      - [GAN](#gan)
     - [Hand-Hand Interaction](#hand-hand-interaction)
       - [MANO](#mano-2)
       - [2.5D](#25d-1)
       - [Transformer](#transformer-1)
       - [SDF](#sdf-2)
+      - [GAN](#gan)
     - [Full Body Reconstruction](#full-body-reconstruction)
       - [Regression](#regression)
       - [Inverse Kinematics](#inverse-kinematics-1)
@@ -39,6 +40,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
     - [MoCap](#mocap)
   - [Benchmarks](#benchmarks)
     - [FreiHAND](#freihand)
+    - [RHD](#rhd)
 
 ## TODO
 - [x] Dtasets
@@ -112,26 +114,26 @@ The below indices are references to the above [overview](#overview).
   [[PDF](https://arxiv.org/pdf/2004.00176.pdf)] \
   *Long Zhao, Xi Peng, Yuxiao Chen, Mubbasir Kapadia, Dimitris N. Metaxas*
 
-+ [H.RG.5] FreiHAND: A Dataset for Markerless Capture of Hand Pose and Shape from Single RGB Images. ICCV19.
++ [H.MN.5] FreiHAND: A Dataset for Markerless Capture of Hand Pose and Shape from Single RGB Images. ICCV19.
   [[PDF](https://arxiv.org/pdf/1909.04349.pdf)]
   [[Project](https://lmb.informatik.uni-freiburg.de/projects/freihand/)][Code](https://github.com/lmb-freiburg/freihand)] \
   *Christian Zimmermann, Duygu Ceylan, Jimei Yang, Bryan Russell, Max Argus, Thomas Brox*
 
-+ [H.RG.4] End-to-end Hand Mesh Recovery from a Monocular RGB Image. ICCV19.
++ [H.MN.4] End-to-end Hand Mesh Recovery from a Monocular RGB Image. ICCV19.
   [[PDF](https://arxiv.org/pdf/1902.09305.pdf)]
   [[Code](https://github.com/MandyMo/HAMR)] \
   *Xiong Zhang*, Qiang Li*, Wenbo Zhang, Wen Zheng*
 
-+ [H.RG.3] 3D Hand Shape and Pose from Images in the Wild. CVPR19.
++ [H.MN.3] 3D Hand Shape and Pose from Images in the Wild. CVPR19.
   [[PDF](https://openaccess.thecvf.com/content_CVPR_2019/papers/Boukhayma_3D_Hand_Shape_and_Pose_From_Images_in_the_Wild_CVPR_2019_paper.pdf)]
   [[code](https://github.com/boukhayma/3dhand)] \
   *Adnane Boukhayma, Rodrigo de Bem, Philip H.S. Torr*
 
-+ [H.RG.2] Pushing the Envelope for RGB-based Dense 3D Hand Pose Estimation via Neural Rendering. CVPR19.
++ [H.MN.2] Pushing the Envelope for RGB-based Dense 3D Hand Pose Estimation via Neural Rendering. CVPR19.
   [[PDF](https://openaccess.thecvf.com/content_CVPR_2019/papers/Baek_Pushing_the_Envelope_for_RGB-Based_Dense_3D_Hand_Pose_Estimation_CVPR_2019_paper.pdf)] \
   *Seungryul Baek, Kwang In Kim, Tae-Kyun Kim*
   
-+ [H.RG.1] GANerated Hands for Real-Time 3D Hand Tracking from Monocular RGB. CVPR18.
++ [H.MN.1] GANerated Hands for Real-Time 3D Hand Tracking from Monocular RGB. CVPR18.
   [[PDF](http://handtracker.mpi-inf.mpg.de/projects/GANeratedHands/content/GANeratedHands_CVPR2018.pdf)]
   [[Supp](http://handtracker.mpi-inf.mpg.de/projects/GANeratedHands/content/GANeratedHands_CVPR2018_Supp.pdf)]
   [[Project](http://handtracker.mpi-inf.mpg.de/projects/GANeratedHands/)] \
@@ -280,7 +282,21 @@ The below indices are references to the above [overview](#overview).
   [[Project](https://handtracker.mpi-inf.mpg.de/projects/HandTextureModel/)] \
   *Neng Qian, Jiayi Wang, Franziska Mueller, Florian Bernard, Vladislav Golyanik, Christian Theobalt*
 
+#### SDF
+
++ [H.SDF.1] A Skeleton-Driven Neural Occupancy Representation for Articulated Hands. arXiv21.
+  [[PDF](https://arxiv.org/pdf/2109.11399.pdf)] \
+  *Korrawe Karunratanakul, Adrian Spurr, Zicong Fan, Otmar Hilliges, Siyu Tang*
+
 #### Weak Supervision
+
++ [H.WS.12] Weakly-supervised 3D Hand Pose Estimation from Monocular RGB Images. ECCV18.
+  [[PDF](https://openaccess.thecvf.com/content_ECCV_2018/papers/Yujun_Cai_Weakly-supervised_3D_Hand_ECCV_2018_paper.pdf#/)] \
+  *Yujun Cai, Liuhao Ge, Jianfei Cai, and Junsong Yuan*
+
++ [H.WS.11] Aligning Latent Spaces for 3D Hand Pose Estimation. ICCV19.
+  [[PDF](https://openaccess.thecvf.com/content_ICCV_2019/papers/Yang_Aligning_Latent_Spaces_for_3D_Hand_Pose_Estimation_ICCV_2019_paper.pdf#/)]\
+  *Linlin Yang, Shile Li, Dongheui Lee, Angela Yao*
 
 + [H.WS.10] Semi-Supervised 3D Hand Shape and Pose Estimation with Label Propagation. arXiv21.
   [[PDF](https://arxiv.org/pdf/2111.15199v1.pdf)] \
@@ -356,12 +372,15 @@ Junsong Yuan*
   [[PDF](https://arxiv.org/pdf/2007.05168.pdf)] \
   *John Yang, Hyung Jin Chang, Seungeui Lee, Nojun Kwak*
 
-#### SDF
+#### Cross-Modal
 
-+ [H.SDF.1] A Skeleton-Driven Neural Occupancy Representation for Articulated Hands. arXiv21.
-  [[PDF](https://arxiv.org/pdf/2109.11399.pdf)] \
-  *Korrawe Karunratanakul, Adrian Spurr, Zicong Fan, Otmar Hilliges, Siyu Tang*
++ [H.CM.2] Knowledge as Priors: Cross-Modal Knowledge Generalization for Datasets without Superior Knowledge. CVPR20.
+  [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Zhao_Knowledge_As_Priors_Cross-Modal_Knowledge_Generalization_for_Datasets_Without_Superior_CVPR_2020_paper.pdf#/)]\
+  *Long Zhao, Xi Peng, Yuxiao Chen, Mubbasir Kapadia, Dimitris N. Metaxas*
 
++ [H.CM.1] Cross-modal Deep Variational Hand Pose Estimation. CVPR18.
+  [[PDF](https://openaccess.thecvf.com/content_cvpr_2018/papers/Spurr_Cross-Modal_Deep_Variational_CVPR_2018_paper.pdf#/)]\
+  *Adrian Spurr, Jie Song, Seonwook Park, Otmar Hilliges*
 
 ### Hand-Object Interaction
 
@@ -441,6 +460,10 @@ Junsong Yuan*
 
 #### Joint Optimzation
 
++ [HO.OP.7] Understanding Egocentric Hand-Object Interactions from Hand Pose Estimation
+  [[PDF](https://arxiv.org/pdf/2109.14657.pdf#/)] \
+  Yao Lu, Walterio W. Mayol-Cuevas
+
 + [HO.OP.6] Reconstructing Hand-Object Interactions in the Wild. ICCV21.
   [[PDF](https://arxiv.org/pdf/2012.09856.pdf)]
   [[Code]](https://people.eecs.berkeley.edu/~zhecao/rhoi/) \
@@ -470,18 +493,6 @@ Junsong Yuan*
   [[PDF](https://arxiv.org/pdf/2012.00924.pdf)]
   [[Code](https://github.com/lixiny/CPF)] \
   *Lixin Yang, Xinyu Zhan, Kailin Li, Wenqiang Xu, Jiefeng Li, Cewu Lu*
-
-#### GAN
-
-+ [HO.GAN.2] H2O: A Benchmark for Visual Human-human Object Handover Analysis. arXiv21.
-  [[PDF](https://arxiv.org/pdf/2104.11466.pdf)] \
-  *Ruolin Ye, Wenqiang Xu, Zhendong Xue, Tutian Tang, Yanfeng Wang, Cewu Lu*
-
-+ [HO.GAN.1] Body2Hands: Learning to Infer 3D Hands from Conversational Gesture Body Dynamics. CVPR21.
-  [[PDF](https://arxiv.org/pdf/2007.12287.pdf)]
-  [[Project](http://people.eecs.berkeley.edu/~evonne_ng/projects/body2hands/)] 
-  [[Code](https://github.com/facebookresearch/body2hands)] \
-  *Evonne Ng, Hanbyul Joo, Shiry Ginosar, Trevor Darrell*
 
 ### Hand-Hand Interaction
 
@@ -530,6 +541,18 @@ Monocular 3D Reconstruction of Interacting Hands via Collision-Aware Factorized 
   [[Project](https://jiangwenpl.github.io/multiperson/)]
   [[Code](https://github.com/JiangWenPL/multiperson)] \
   *Wen Jiang, Nikos Kolotouros, Georgios Pavlakos, Xiaowei Zhou, Kostas Daniilidis*
+
+#### GAN
+
++ [HH.GAN.2] H2O: A Benchmark for Visual Human-human Object Handover Analysis. ICCV21.
+  [[PDF](https://arxiv.org/pdf/2104.11466.pdf)] \
+  *Ruolin Ye, Wenqiang Xu, Zhendong Xue, Tutian Tang, Yanfeng Wang, Cewu Lu*
+
++ [HH.GAN.1] Body2Hands: Learning to Infer 3D Hands from Conversational Gesture Body Dynamics. CVPR21.
+  [[PDF](https://arxiv.org/pdf/2007.12287.pdf)]
+  [[Project](http://people.eecs.berkeley.edu/~evonne_ng/projects/body2hands/)] 
+  [[Code](https://github.com/facebookresearch/body2hands)] \
+  *Evonne Ng, Hanbyul Joo, Shiry Ginosar, Trevor Darrell*
 
 ### Full Body Reconstruction
 
@@ -615,12 +638,12 @@ Monocular 3D Reconstruction of Interacting Hands via Collision-Aware Factorized 
 
 + [FBR.SDF.2] PIFuHD: Multi-Level Pixel-Aligned Implicit Function for High-Resolution 3D Human Digitization. CVPR20.
   [[PDF](https://arxiv.org/pdf/2004.00452.pdf)]
-  [[Code]](https://github.com/facebookresearch/pifuhd?utm_source=catalyzex.com) \
+  [[Code](https://github.com/facebookresearch/pifuhd?utm_source=catalyzex.com)] \
   *Shunsuke Saito, Tomas Simon, Jason Saragih, Hanbyul Joo*
 
 + [FBR.SDF.1] PIFu: Pixel-Aligned Implicit Function for High-Resolution Clothed Human Digitization. CVPR19
   [[PDF](https://arxiv.org/pdf/1905.05172.pdf)]
-  [[Code]](https://github.com/shunsukesaito/PIFu) \
+  [[Code](https://github.com/shunsukesaito/PIFu)] \
   *Shunsuke Saito, Zeng Huang, Ryota Natsume, Shigeo Morishima, Angjoo Kanazawa, Hao Li*
 
 ## Tools
@@ -665,3 +688,7 @@ FreiHAND [[H.MN.5](#mano)]       | ResNet50  | 11.0 | 10.9 | 0.516 | 0.934
 ObMan [[HO.MN.1](#mano-1)]         | ResNet18  | 13.3 | 13.3 | 0.429 | 0.907
 Boukhayma et al. [[H.MN.3](#mano)] | ResNet50 | 35.0 | 13.2 | 0.427 | 0.895
 >⏳: Hourglass stacked structure
+
+### RHD
+
+![rhd](benchmarks/rhd/RHD.png)
