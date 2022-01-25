@@ -290,6 +290,10 @@ The below indices are references to the above [overview](#overview).
 
 #### Weak Supervision
 
++ [H.WS.13] Consistent 3D Hand Reconstruction in Video via Self-Supervised Learning. arXiv22. \
+  [[PDF](https://arxiv.org/pdf/2201.09548v1.pdf)] \
+  *Zhigang Tu, Zhisheng Huang, Yujin Chen, Di Kang, Linchao Bao, Bisheng Yang, Junsong Yuan*
+
 + [H.WS.12] Weakly-supervised 3D Hand Pose Estimation from Monocular RGB Images. ECCV18.
   [[PDF](https://openaccess.thecvf.com/content_ECCV_2018/papers/Yujun_Cai_Weakly-supervised_3D_Hand_ECCV_2018_paper.pdf#/)] \
   *Yujun Cai, Liuhao Ge, Jianfei Cai, and Junsong Yuan*
@@ -462,7 +466,7 @@ Junsong Yuan*
 
 + [HO.OP.7] Understanding Egocentric Hand-Object Interactions from Hand Pose Estimation
   [[PDF](https://arxiv.org/pdf/2109.14657.pdf#/)] \
-  Yao Lu, Walterio W. Mayol-Cuevas
+  *Yao Lu, Walterio W. Mayol-Cuevas*
 
 + [HO.OP.6] Reconstructing Hand-Object Interactions in the Wild. ICCV21.
   [[PDF](https://arxiv.org/pdf/2012.09856.pdf)]
