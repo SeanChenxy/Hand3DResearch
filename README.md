@@ -653,6 +653,7 @@ Monocular 3D Reconstruction of Interacting Hands via Collision-Aware Factorized 
 ## Tools
 
 ### Model
++ [T.MD.6] [NIMBLE](https://arxiv.org/pdf/2202.04533v1.pdf)
 + [T.MD.5] [HTML](https://handtracker.mpi-inf.mpg.de/projects/HandTextureModel/)
 + [T.MD.4] [mano](https://github.com/otaheri/MANO)
 + [T.MD.3] [manotorch](https://github.com/lixiny/manotorch)
