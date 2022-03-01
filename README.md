@@ -20,6 +20,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
     - [Hand-Object Interaction](#hand-object-interaction)
       - [MANO](#mano-1)
       - [SDF](#sdf-1)
+      - [Neural Rendering](#neural-rendering)
       - [Graph](#graph-1)
       - [Weak Supervision](#weak-supervision-1)
       - [Temporal](#temporal-1)
@@ -35,7 +36,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [Inverse Kinematics](#inverse-kinematics-1)
       - [Optimization](#optimization)
       - [SDF](#sdf-3)
-      - [Neural Rendering](#neural-rendering)
+      - [Neural Rendering](#neural-rendering-1)
   - [Tools](#tools)
     - [Model](#model)
     - [MoCap](#mocap)
@@ -417,13 +418,6 @@ Junsong Yuan*
   [[Code](https://github.com/hassony2/obman_train)] \
   *Yana Hasson, Gül Varol, Dimitris Tzionas, Igor Kalevatykh, Michael J. Black, Ivan Laptev, and Cordelia Schmid*
 
-#### SDF
-
-+ [HO.SDF.1] Grasping Field: Learning Implicit Representations for Human Grasps. 3DV20.
-  [[PDF](https://arxiv.org/pdf/2008.04451.pdf)]
-  [[Code](https://github.com/korrawe/grasping_field)] \
-  *Korrawe Karunratanakul, Jinlong Yang, Yan Zhang, Michael Black, Krikamol Muandet, Siyu Tang*
-
 #### Graph
 + [HO.GH.1] HOPE-Net: A Graph-based Model for Hand-Object Pose Estimation. CVPR20.
   [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Doosti_HOPE-Net_A_Graph-Based_Model_for_Hand-Object_Pose_Estimation_CVPR_2020_paper.pdf)]
@@ -435,6 +429,18 @@ Junsong Yuan*
   [[Project](https://www.taeinkwon.com/projects/h2o)]
   [[Code](https://github.com/taeinkwon/h2odataset)] \
   *Taein Kwon, Bugra Tekin, Jan Stuhmer, Federica Bogo, Marc Pollefeys*
+
+#### SDF
++ [HO.SDF.1] Grasping Field: Learning Implicit Representations for Human Grasps. 3DV20.
+  [[PDF](https://arxiv.org/pdf/2008.04451.pdf)]
+  [[Code](https://github.com/korrawe/grasping_field)] \
+  *Korrawe Karunratanakul, Jinlong Yang, Yan Zhang, Michael Black, Krikamol Muandet, Siyu Tang*
+
+#### Neural Rendering
++ [HO.NR.1] NeuralFusion: Neural Volumetric Rendering under Human-object Interactions. arXiv22.
+  [[PDF](https://arxiv.org/pdf/2202.12825.pdf)] \
+  *Yuheng Jiang, Suyi Jiang, Guoxing Sun, Zhuo Su, Kaiwen Guo, Minye Wu, Jingyi Yu, Lan Xu*
+
 
 #### Weak Supervision
 
