@@ -35,6 +35,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [Inverse Kinematics](#inverse-kinematics-1)
       - [Optimization](#optimization)
       - [SDF](#sdf-3)
+      - [Neural Rendering](#neural-rendering)
   - [Tools](#tools)
     - [Model](#model)
     - [MoCap](#mocap)
@@ -284,7 +285,7 @@ The below indices are references to the above [overview](#overview).
 
 #### SDF
 
-+ [H.SDF.1] A Skeleton-Driven Neural Occupancy Representation for Articulated Hands. arXiv21.
++ [H.SDF.1] A Skeleton-Driven Neural Occupancy Representation for Articulated Hands. 3DV21.
   [[PDF](https://arxiv.org/pdf/2109.11399.pdf)] \
   *Korrawe Karunratanakul, Adrian Spurr, Zicong Fan, Otmar Hilliges, Siyu Tang*
 
@@ -418,7 +419,7 @@ Junsong Yuan*
 
 #### SDF
 
-+ [HO.SDF.1] Grasping Field: Learning Implicit Representations for Human Grasps.
++ [HO.SDF.1] Grasping Field: Learning Implicit Representations for Human Grasps. 3DV20.
   [[PDF](https://arxiv.org/pdf/2008.04451.pdf)]
   [[Code](https://github.com/korrawe/grasping_field)] \
   *Korrawe Karunratanakul, Jinlong Yang, Yan Zhang, Michael Black, Krikamol Muandet, Siyu Tang*
@@ -650,6 +651,26 @@ Monocular 3D Reconstruction of Interacting Hands via Collision-Aware Factorized 
   [[Code](https://github.com/shunsukesaito/PIFu)] \
   *Shunsuke Saito, Zeng Huang, Ryota Natsume, Shigeo Morishima, Angjoo Kanazawa, Hao Li*
 
+#### Neural Rendering
+
++ [FBR.NR.3] HumanNeRF: Free-viewpoint Rendering of Moving People from Monocular Video. arXiv22.
+  [[PDF](https://arxiv.org/abs/2201.04127)] \
+  [[Project](https://grail.cs.washington.edu/projects/humannerf/)] \
+  *Chung-Yi Weng, Brian Curless, Pratul P. Srinivasan, Jonathan T. Barron, Ira Kemelmacher-Shlizerman*
+
++ [FBR.NR.2] Animatable Neural Radiance Fields for Modeling Dynamic Human Bodies. ICCV21
+  [[PDF](https://arxiv.org/pdf/2105.02872.pdf)] \
+  [[Code](https://github.com/zju3dv/animatable_nerf)]
+  [[Project](https://zju3dv.github.io/animatable_nerf/?utm_source=catalyzex.com)] \
+  *Sida Peng, Junting Dong, Qianqian Wang, Shangzhan Zhang, Qing Shuai, Xiaowei Zhou, Hujun Bao*
+
++ [FBR.NR.1] Neural Body: Implicit Neural Representations with Structured Latent Codes for Novel View Synthesis of Dynamic Humans. CVPR21.
+  [[PDF](https://arxiv.org/pdf/2012.15838.pdf)] \
+  [[Code](https://github.com/zju3dv/neuralbody)] \
+  [[Project](https://zju3dv.github.io/neuralbody/)] \
+  *Sida Peng, Yuanqing Zhang, Yinghao Xu, Qianqian Wang, Qing Shuai, Hujun Bao, Xiaowei Zhou*
+
+
 ## Tools
 
 ### Model
@@ -661,6 +682,7 @@ Monocular 3D Reconstruction of Interacting Hands via Collision-Aware Factorized 
 + [T.MD.1] [spheremesh](https://github.com/anastasia-tkach/hmodel-cpp-public)
 
 ### MoCap
++ [T.MC.5] [EasyMocap](https://github.com/zju3dv/EasyMocap)
 + [T.MC.4] [MediaPipe](https://mediapipe.dev/index.html)
 + [T.MC.3] [frankmocap](https://github.com/facebookresearch/frankmocap)
 + [T.MC.2] [HandMotionViewer](https://github.com/dimtziwnas/HandObjectInteractionIJCV16_HandMotionViewer?utm_source=catalyzex.com)
