@@ -166,7 +166,7 @@ The below indices are references to the above [overview](#overview).
 
 #### Graph
 
-+ [H.GH.10] MobRecon: Mobile-Friendly Hand Mesh Reconstruction from Monocular Image. arXiv21.
++ [H.GH.10] MobRecon: Mobile-Friendly Hand Mesh Reconstruction from Monocular Image. CVPR22.
   [[PDF](https://arxiv.org/pdf/2112.02753.pdf)]
   [[Code](https://github.com/SeanChenxy/HandMesh)]\
   *Xingyu Chen, Yufeng Liu, Yajiao Dong, Xiong Zhang, Chongyang Ma, Yanmin Xiong, Yuan Zhang, Xiaoyan Guo*
@@ -480,7 +480,7 @@ Junsong Yuan*
   [[Code]](https://people.eecs.berkeley.edu/~zhecao/rhoi/) \
   *Zhe Cao*, Ilija Radosavovic*, Angjoo Kanazawa, Jitendra Malik*
 
-+ [HO.OP.5] ArtiBoost: Boosting Articulated 3D Hand-Object Pose Estimation via Online Exploration and Synthesis. arXiv21.
++ [HO.OP.5] ArtiBoost: Boosting Articulated 3D Hand-Object Pose Estimation via Online Exploration and Synthesis. CVPR22.
   [[PDF](https://arxiv.org/pdf/2109.05488.pdf)]
   [[Code](https://github.com/MVIG-SJTU/ArtiBoost)] \
   *Kailin Li, Lixin Yang, Xinyu Zhan, Jun Lv, Wenqiang Xu, Jiefeng Li, Cewu Lu*
@@ -658,6 +658,11 @@ Monocular 3D Reconstruction of Interacting Hands via Collision-Aware Factorized 
   *Shunsuke Saito, Zeng Huang, Ryota Natsume, Shigeo Morishima, Angjoo Kanazawa, Hao Li*
 
 #### Neural Rendering
+
++ [FBR.NR.4] HumanNeRF: Generalizable Neural Human Radiance Field from Sparse Inputs. arXiv21.
+  [[PDF](https://arxiv.org/pdf/2112.02789.pdf)] \
+  [[Project](https://zhaofuq.github.io/human-nerf/#code)] \
+  *Fuqiang Zhao, Wei Yang, Jiakai Zhang, Pei Lin, Yingliang Zhang, Jingyi Yu, Lan Xu*
 
 + [FBR.NR.3] HumanNeRF: Free-viewpoint Rendering of Moving People from Monocular Video. arXiv22.
   [[PDF](https://arxiv.org/abs/2201.04127)] \
