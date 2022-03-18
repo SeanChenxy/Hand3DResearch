@@ -58,6 +58,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
 This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, and synthetic.
 |  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic |
 |  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- | 
+|Sign-Language| [link](https://www.kaggle.com/ardamavi/27-class-sign-language-dataset)   | 22801   |   |  |  | | |
 |MuViHand| [link](https://github.com/LeylaKhaleghi/MuViHand)   | 402K   |   |  |  | ✅ | ✅ |
 |H2O     | [link](https://arxiv.org/pdf/2104.11181.pdf)   | 571K   | ✅  | ✅  | ✅  | ✅ | |
 |HanCO   | [link](https://lmb.informatik.uni-freiburg.de/projects/contra-hand/)     | 860K   | ✅  |  |  | ✅ | |
@@ -347,6 +348,11 @@ Junsong Yuan*
   *Yumeng Zhang, Li Chen, Yufeng Liu, Junhai Yong, Wen Zheng*
 
 #### Temporal
++ [H.TP.8] Capturing Humans in Motion: Temporal-Attentive 3D Human Pose and Shape Estimation from Monocular Video. CVPR22. \
+  [[PDF](https://arxiv.org/pdf/2203.08534.pdf)]
+  [[Project](https://mps-net.github.io/MPS-Net/)] \
+  *Wen-Li Wei, Jen-Chun Lin, Tyng-Luh Liu, Hong-Yuan Mark Liao*
+
 
 + [H.TP.7] SmoothNet: A Plug-and-Play Network for Refining Human Poses in Videos. arXiv21.
   [[PDF](https://arxiv.org/pdf/2112.13715.pdf)] \
@@ -565,6 +571,13 @@ Monocular 3D Reconstruction of Interacting Hands via Collision-Aware Factorized 
   [[Code](https://github.com/facebookresearch/body2hands)] \
   *Evonne Ng, Hanbyul Joo, Shiry Ginosar, Trevor Darrell*
 
+#### Graph
+
++ [HH.GH.1] Interacting Attention Graph for Single Image Two-Hand Reconstruction. CVPR22. \
+  [[PDF](https://arxiv.org/pdf/2203.09364.pdf)]
+  [[Code](https://github.com/Dw1010/IntagHand)] \
+  *Mengcheng Li, Liang An, Hongwen Zhang, Lianpeng Wu, Feng Chen, Tao Yu, Yebin Liu*
+  
 ### Full Body Reconstruction
 
 #### Regression
