@@ -29,6 +29,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [MANO](#mano-2)
       - [2.5D](#25d-1)
       - [Transformer](#transformer-1)
+      - [Graph](#graph-2)
       - [SDF](#sdf-2)
       - [GAN](#gan)
     - [Full Body Reconstruction](#full-body-reconstruction)
@@ -556,7 +557,7 @@ Monocular 3D Reconstruction of Interacting Hands via Collision-Aware Factorized 
   [[PDF](https://arxiv.org/pdf/2104.14639.pdf)] \
   *Shreyas Hampali, Sayan Deb Sarkar, Mahdi Rad, Vincent Lepetit*
 
-#### SDF
+graph#### SDF
 + [HH.SDF.1] Coherent Reconstruction of Multiple Humans from a Single Image. CVPR20
   [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Jiang_Coherent_Reconstruction_of_Multiple_Humans_From_a_Single_Image_CVPR_2020_paper.pdf)]
   [[Project](https://jiangwenpl.github.io/multiperson/)]
