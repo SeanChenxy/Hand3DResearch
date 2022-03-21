@@ -530,7 +530,11 @@ Monocular 3D Reconstruction of Interacting Hands via Collision-Aware Factorized 
 
 #### 2.5D
 
-+ [HH.VX.3] Learning to Disambiguate Strongly Interacting Hands via Probabilistic Per-pixel Part Segmentation. arXiv21.
++ [HH.VX.4] End-toend detection and pose estimation of two interacting hands. ICCV21.
+  [[PDF](https://openaccess.thecvf.com/content/ICCV2021/papers/Kim_End-to-End_Detection_and_Pose_Estimation_of_Two_Interacting_Hands_ICCV_2021_paper.pdf)]
+  Dong Uk Kim, Kwang In Kim, Seungryul Baek
+
++ [HH.VX.3] Learning to Disambiguate Strongly Interacting Hands via Probabilistic Per-pixel Part Segmentation. 3DV21.
   [[PDF](https://arxiv.org/pdf/2107.00434.pdf)] \
   *Zicong Fan, Adrian Spurr, Muhammed Kocabas, Siyu Tang, Michael J. Black, Otmar Hilliges*
 
@@ -611,11 +615,20 @@ Monocular 3D Reconstruction of Interacting Hands via Collision-Aware Factorized 
 
 #### Optimization
 
-+ [FBR.OP.2] Monocular Total Capture: Posing Face, Body, and Hands in the Wild. CVPR19.
++ [FBR.OP.4] Lightweight Multi-person Total Motion Capture
+Using Sparse Multi-view Cameras. ICCV21.
+  [[PDF](https://openaccess.thecvf.com/content/ICCV2021/papers/Zhang_Lightweight_Multi-Person_Total_Motion_Capture_Using_Sparse_Multi-View_Cameras_ICCV_2021_paper.pdf)] \
+  *Yuxiang Zhang, Zhe Li, Liang An, Mengcheng Li, Tao Yu, Yebin Liu*
+
++ [FBR.OP.3] Monocular Total Capture: Posing Face, Body, and Hands in the Wild. CVPR19.
   [[PDF](https://openaccess.thecvf.com/content_CVPR_2019/papers/Xiang_Monocular_Total_Capture_Posing_Face_Body_and_Hands_in_the_CVPR_2019_paper.pdf)]
   [[Project](http://domedb.perception.cs.cmu.edu/monototalcapture.html)]
   [[Code](https://github.com/CMU-Perceptual-Computing-Lab/MonocularTotalCapture)] \
   *Donglai Xiang, Hanbyul Joo, Yaser Sheikh*
+
++ [FBR.OP.2] Total Capture: A 3D Deformation Model for Tracking Faces, Hands, and Bodies
+  [[PDF](https://openaccess.thecvf.com/content_cvpr_2018/papers/Joo_Total_Capture_A_CVPR_2018_paper.pdf)] \
+  *Hanbyul Joo, Tomas Simon, Yaser Sheikh*
 
 + [FBR.OP.1] Expressive Body Capture: 3D Hands, Face, and Body from a Single Image. CVPR19.
   [[PDF](https://arxiv.org/pdf/1904.05866)]
