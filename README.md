@@ -59,6 +59,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
 This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, and synthetic.
 |  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic |
 |  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- | 
+|OakInk| [link](https://oakink.net/)   | 50K | ✅ |  | ✅ | ✅ | |
 |Sign-Language| [link](https://www.kaggle.com/ardamavi/27-class-sign-language-dataset)   | 22801   |   |  |  | | |
 |MuViHand| [link](https://github.com/LeylaKhaleghi/MuViHand)   | 402K   |   |  |  | ✅ | ✅ |
 |H2O     | [link](https://arxiv.org/pdf/2104.11181.pdf)   | 571K   | ✅  | ✅  | ✅  | ✅ | |
@@ -217,6 +218,11 @@ The below indices are references to the above [overview](#overview).
   *Liuhao Ge, Zhou Ren, Yuncheng Li, Zehao Xue, Yingying Wang, Jianfei Cai, Junsong Yuan*
 
 #### Transformer
+
++ [H.TR.6] HandOccNet: Occlusion-Robust 3D Hand Mesh Estimation Network. CVPR22.
+  [[PDF](https://arxiv.org/pdf/2203.14564v1.pdf)] \
+  [[Code](https://github.com/namepllet/HandOccNet)] \
+  *JoonKyu Park, Yeonguk Oh, Gyeongsik Moon, Hongsuk Choi, Kyoung Mu Lee*
 
 + [H.TR.5] GraFormer: Graph Convolution Transformer for 3D Pose Estimation. arXiv21.
   [[PDF](https://arxiv.org/pdf/2109.08364.pdf)]
@@ -478,13 +484,17 @@ Junsong Yuan*
 
 #### Joint Optimzation
 
++ [HO.OP.8] Stability-driven Contact Reconstruction From Monocular Color Images. CVPR22.
+  [[PDF](https://www.yangangwang.com/papers/ZZM-SCR-2022-03.pdf)] \
+  *Zimeng Zhao, Binghui Zuo, Wei Xie, Yangang Wang*
+
 + [HO.OP.7] Understanding Egocentric Hand-Object Interactions from Hand Pose Estimation
   [[PDF](https://arxiv.org/pdf/2109.14657.pdf#/)] \
   *Yao Lu, Walterio W. Mayol-Cuevas*
 
 + [HO.OP.6] Reconstructing Hand-Object Interactions in the Wild. ICCV21.
   [[PDF](https://arxiv.org/pdf/2012.09856.pdf)]
-  [[Code]](https://people.eecs.berkeley.edu/~zhecao/rhoi/) \
+  [[Code](https://people.eecs.berkeley.edu/~zhecao/rhoi/)] \
   *Zhe Cao*, Ilija Radosavovic*, Angjoo Kanazawa, Jitendra Malik*
 
 + [HO.OP.5] ArtiBoost: Boosting Articulated 3D Hand-Object Pose Estimation via Online Exploration and Synthesis. CVPR22.
@@ -686,15 +696,35 @@ Using Sparse Multi-view Cameras. ICCV21.
 
 #### Neural Rendering
 
-+ [FBR.NR.4] HumanNeRF: Generalizable Neural Human Radiance Field from Sparse Inputs. arXiv21.
++ [FBR.NR.8] Neural Actor: Neural Free-view Synthesis of Human Actors with Pose Control. SIGGRAPHAsia21.
+  [[PDF](https://arxiv.org/pdf/2106.02019.pdf)] \
+  [[Project](https://vcai.mpi-inf.mpg.de/projects/NeuralActor/)]
+  *Lingjie Liu, Marc Habermann, Viktor Rudnev, Kripasindhu Sarkar, Jiatao Gu, Christian Theobalt*
+
++ [FBR.NR.7] Editable Free-viewpoint Video Using a Layered Neural Representation. SIGGRAPH21.
+  [[PDF](https://arxiv.org/pdf/2104.14786.pdf)] \
+  [[Project](https://jiakai-zhang.github.io/st-nerf/)] \
+  [[Code](https://github.com/DarlingHang/ST-NeRF)] \
+  *Jiakai Zhang, Xinhang Liu, Xinyi Ye, Fuqiang Zhao, Yanshun Zhang, Minye Wu, Yingliang Zhang, Lan Xu, Jingyi Yu*
+
++ [FBR.NR.6] NeuMan: Neural Human Radiance Field from a Single Video. arXiv22.
+  [[PDF](https://arxiv.org/pdf/2203.12575.pdf)] \
+  *Wei Jiang, Kwang Moo Yi, Golnoosh Samei, Oncel Tuzel, Anurag Ranjan*
+
++ [FBR.NR.5] HumanNeRF: Generalizable Neural Human Radiance Field from Sparse Inputs. arXiv21.
   [[PDF](https://arxiv.org/pdf/2112.02789.pdf)] \
   [[Project](https://zhaofuq.github.io/human-nerf/#code)] \
   *Fuqiang Zhao, Wei Yang, Jiakai Zhang, Pei Lin, Yingliang Zhang, Jingyi Yu, Lan Xu*
 
-+ [FBR.NR.3] HumanNeRF: Free-viewpoint Rendering of Moving People from Monocular Video. arXiv22.
++ [FBR.NR.4] HumanNeRF: Free-viewpoint Rendering of Moving People from Monocular Video. arXiv22.
   [[PDF](https://arxiv.org/abs/2201.04127)] \
   [[Project](https://grail.cs.washington.edu/projects/humannerf/)] \
   *Chung-Yi Weng, Brian Curless, Pratul P. Srinivasan, Jonathan T. Barron, Ira Kemelmacher-Shlizerman*
+
++ [FBR.NR.3] Vid2Actor: Free-viewpoint Animatable Person Synthesis from Video in the Wild. arXiv20.
+  [[PDF](https://arxiv.org/pdf/2012.12884.pdf)] \
+  [[Project](https://grail.cs.washington.edu/projects/vid2actor/)] \
+  *Chung-Yi Weng, Brian Curless, Ira Kemelmacher-Shlizerman*
 
 + [FBR.NR.2] Animatable Neural Radiance Fields for Modeling Dynamic Human Bodies. ICCV21
   [[PDF](https://arxiv.org/pdf/2105.02872.pdf)] \
