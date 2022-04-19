@@ -22,6 +22,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [SDF](#sdf-1)
       - [Neural Rendering](#neural-rendering)
       - [Graph](#graph-1)
+      - [RL](#RL)
       - [Weak Supervision](#weak-supervision-1)
       - [Temporal](#temporal-1)
       - [Joint Optimzation](#joint-optimzation)
@@ -484,6 +485,16 @@ Junsong Yuan*
 
 #### Joint Optimzation
 
++ [HO.OP.10] ContactOpt: Optimizing Contact to Improve Grasps. CVPR21.
+  [[PDF](https://openaccess.thecvf.com/content/CVPR2021/papers/Grady_ContactOpt_Optimizing_Contact_To_Improve_Grasps_CVPR_2021_paper.pdf)] \
+  [[Code](https://github.com/facebookresearch/contactopt)] \
+  Patrick Grady, Chengcheng Tang, Christopher D. Twigg, Minh Vo, Samarth Brahmbhatt, Charles C. Kemp
+
+
++ [HO.OP.9] CHORE: Contact, Human and Object REconstruction from a single RGB image. arXiv22.
+  [[PDF](https://arxiv.org/pdf/2204.02445.pdf)] \
+  *Xianghui Xie, Bharat Lal Bhatnagar, Gerard Pons-Moll*
+
 + [HO.OP.8] Stability-driven Contact Reconstruction From Monocular Color Images. CVPR22.
   [[PDF](https://www.yangangwang.com/papers/ZZM-SCR-2022-03.pdf)] \
   *Zimeng Zhao, Binghui Zuo, Wei Xie, Yangang Wang*
@@ -521,6 +532,14 @@ Junsong Yuan*
   [[PDF](https://arxiv.org/pdf/2012.00924.pdf)]
   [[Code](https://github.com/lixiny/CPF)] \
   *Lixin Yang, Xinyu Zhan, Kailin Li, Wenqiang Xu, Jiefeng Li, Cewu Lu*
+
+#### RL
+
++ [HO.RL.1] DexMV: Imitation Learning for Dexterous Manipulation from Human Videos. ICCVW21.
+  [[PDF](https://arxiv.org/pdf/2108.05877.pdf)] \
+  [[Project](https://yzqin.github.io/dexmv/)] \
+  Yuzhe Qin, Yueh-Hua Wu, Shaowei Liu, Hanwen Jiang, Ruihan Yang, Yang Fu, Xiaolong Wang
+
 
 ### Hand-Hand Interaction
 
