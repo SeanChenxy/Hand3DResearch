@@ -545,8 +545,7 @@ Junsong Yuan*
 
 #### MANO
 
-+ [HH.MN.2]
-Monocular 3D Reconstruction of Interacting Hands via Collision-Aware Factorized Refinements. 3DV21.
++ [HH.MN.2] Monocular 3D Reconstruction of Interacting Hands via Collision-Aware Factorized Refinements. 3DV21.
   [[PDF](https://arxiv.org/pdf/2111.00763.pdf)]
   [[Project](https://penincillin.github.io/ihmr_3dv2021)]
   [[Code](https://github.com/penincillin/IHMR)] \
@@ -644,6 +643,12 @@ graph#### SDF
   *Yuxiao Zhou, Marc Habermann, Ikhsanul Habibie, Ayush Tewari, Christian Theobalt, Feng Xu*
 
 #### Optimization
+
++ [FBR.OP.5] Stochastic Whole-Body Grasping with Contact. arXiv22.
+  [[PDF](https://arxiv.org/pdf/2112.10103.pdf)] \
+  [[Project](https://jiahaoplus.github.io/SAGA/saga.html)] \
+  [[Code](https://github.com/JiahaoPlus/SAGA)] \
+  *Yan Wu, Jiahao Wang, Yan Zhang, Siwei Zhang, Otmar Hilliges, Fisher Yu, Siyu Tang*
 
 + [FBR.OP.4] Lightweight Multi-person Total Motion Capture
 Using Sparse Multi-view Cameras. ICCV21.
