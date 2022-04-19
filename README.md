@@ -644,7 +644,7 @@ graph#### SDF
 
 #### Optimization
 
-+ [FBR.OP.5] Stochastic Whole-Body Grasping with Contact. arXiv22.
++ [FBR.OP.5] Stochastic Whole-Body Grasping with Contact. arXiv21.
   [[PDF](https://arxiv.org/pdf/2112.10103.pdf)] \
   [[Project](https://jiahaoplus.github.io/SAGA/saga.html)] \
   [[Code](https://github.com/JiahaoPlus/SAGA)] \
