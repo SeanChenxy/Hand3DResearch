@@ -301,6 +301,10 @@ The below indices are references to the above [overview](#overview).
 
 #### Weak Supervision
 
++ [H.WS.14] End-to-end Weakly-supervised Multiple 3D Hand Mesh Reconstruction from Single Image. arXiv22. \
+  [[PDF](https://arxiv.org/pdf/2204.08154.pdf)] \
+  *Jinwei Ren, Jianke Zhu, Jialiang Zhang*
+
 + [H.WS.13] Consistent 3D Hand Reconstruction in Video via Self-Supervised Learning. arXiv22. \
   [[PDF](https://arxiv.org/pdf/2201.09548v1.pdf)] \
   *Zhigang Tu, Zhisheng Huang, Yujin Chen, Di Kang, Linchao Bao, Bisheng Yang, Junsong Yuan*
