@@ -22,7 +22,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [SDF](#sdf-1)
       - [Neural Rendering](#neural-rendering)
       - [Graph](#graph-1)
-      - [RL](#RL)
+      - [Physics Engine](#Physics-Engine)
       - [Weak Supervision](#weak-supervision-1)
       - [Temporal](#temporal-1)
       - [Joint Optimzation](#joint-optimzation)
@@ -39,6 +39,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [Optimization](#optimization)
       - [SDF](#sdf-3)
       - [Neural Rendering](#neural-rendering-1)
+      - [Grasp](#Grasp)
   - [Tools](#tools)
     - [Model](#model)
     - [MoCap](#mocap)
@@ -159,7 +160,7 @@ The below indices are references to the above [overview](#overview).
 
 + [H.IK.2] BiHand: Recovering Hand Mesh with Multi-stage Bisected Hourglass Networks. BMVC20.
   [[PDF](https://arxiv.org/pdf/2008.05079.pdf)]
-  [[Code](https://github.com/lixiny/bihand)]
+  [[Code](https://github.com/lixiny/bihand)] \
   *Lixin Yang, Jiasen Li, Wenqiang Xu, Yiqun Diao, Cewu Lu*
 
 + [H.IK.1] Monocular Real-time Hand Shape and Motion Capture using Multi-modal Data. CVPR20.
@@ -220,8 +221,12 @@ The below indices are references to the above [overview](#overview).
 
 #### Transformer
 
++ [H.TR.7] Spatial-Temporal Parallel Transformer for Arm-Hand Dynamic Estimation. CVPR22.
+  [[PDF](https://arxiv.org/pdf/2203.16202.pdf)] \
+  *Shuying Liu, Wenbin Wu, Jiaxian Wu, Yue Lin*
+
 + [H.TR.6] HandOccNet: Occlusion-Robust 3D Hand Mesh Estimation Network. CVPR22.
-  [[PDF](https://arxiv.org/pdf/2203.14564v1.pdf)] \
+  [[PDF](https://arxiv.org/pdf/2203.14564v1.pdf)]
   [[Code](https://github.com/namepllet/HandOccNet)] \
   *JoonKyu Park, Yeonguk Oh, Gyeongsik Moon, Hongsuk Choi, Kyoung Mu Lee*
 
@@ -295,17 +300,21 @@ The below indices are references to the above [overview](#overview).
 
 #### SDF
 
++ [H.SDF.2] LISA: Learning Implicit Shape and Appearance of Hands. CVPR22.
+  [[PDF](https://arxiv.org/pdf/2204.01695.pdf)] \
+  *Enric Corona, Tomas Hodan, Minh Vo, Francesc Moreno-Noguer, Chris Sweeney, Richard Newcombe, Lingni Ma*
+
 + [H.SDF.1] A Skeleton-Driven Neural Occupancy Representation for Articulated Hands. 3DV21.
   [[PDF](https://arxiv.org/pdf/2109.11399.pdf)] \
   *Korrawe Karunratanakul, Adrian Spurr, Zicong Fan, Otmar Hilliges, Siyu Tang*
 
 #### Weak Supervision
 
-+ [H.WS.14] End-to-end Weakly-supervised Multiple 3D Hand Mesh Reconstruction from Single Image. arXiv22. \
++ [H.WS.14] End-to-end Weakly-supervised Multiple 3D Hand Mesh Reconstruction from Single Image. arXiv22.
   [[PDF](https://arxiv.org/pdf/2204.08154.pdf)] \
   *Jinwei Ren, Jianke Zhu, Jialiang Zhang*
 
-+ [H.WS.13] Consistent 3D Hand Reconstruction in Video via Self-Supervised Learning. arXiv22. \
++ [H.WS.13] Consistent 3D Hand Reconstruction in Video via Self-Supervised Learning. arXiv22.
   [[PDF](https://arxiv.org/pdf/2201.09548v1.pdf)] \
   *Zhigang Tu, Zhisheng Huang, Yujin Chen, Di Kang, Linchao Bao, Bisheng Yang, Junsong Yuan*
 
@@ -360,7 +369,8 @@ Junsong Yuan*
   *Yumeng Zhang, Li Chen, Yufeng Liu, Junhai Yong, Wen Zheng*
 
 #### Temporal
-+ [H.TP.8] Capturing Humans in Motion: Temporal-Attentive 3D Human Pose and Shape Estimation from Monocular Video. CVPR22. \
+
++ [H.TP.8] Capturing Humans in Motion: Temporal-Attentive 3D Human Pose and Shape Estimation from Monocular Video. CVPR22.
   [[PDF](https://arxiv.org/pdf/2203.08534.pdf)]
   [[Project](https://mps-net.github.io/MPS-Net/)] \
   *Wen-Li Wei, Jen-Chun Lin, Tyng-Luh Liu, Hong-Yuan Mark Liao*
@@ -379,7 +389,7 @@ Junsong Yuan*
   [[PDF](https://openaccess.thecvf.com/content/ICCV2021/papers/Zhao_TravelNet_Self-Supervised_Physically_Plausible_Hand_Motion_Learning_From_Monocular_Color_ICCV_2021_paper.pdf)] \
   *Zimeng Zhao, Xi Zhao and Yangang Wang*
 
-+ [H.TP.4] Beyond Static Features for Temporally Consistent 3D Human Pose and Shape from a Video. CVPR21
++ [H.TP.4] Beyond Static Features for Temporally Consistent 3D Human Pose and Shape from a Video. CVPR21.
   [[PDF](https://arxiv.org/pdf/2011.08627.pdf)]
   [[Code](https://github.com/hongsukchoi/TCMR_RELEASE)] \
   *Hongsuk Choi, Gyeongsik Moon, Ju Yong Chang, Kyoung Mu Lee*
@@ -410,6 +420,11 @@ Junsong Yuan*
 
 #### MANO
 
++ [HO.MN.6] OakInk: A Large-scale Knowledge Repository for Understanding Hand-Object Interaction. CVPR22.
+  [[PDF](https://arxiv.org/pdf/2203.15709.pdf)] 
+  [[Code](https://github.com/lixiny/OakInk)] \
+  *Lixin Yang, Kailin Li Xinyu Zhan, Fei Wu, Anran Xu, Liu Liu, Cewu Lu*
+
 + [HO.MN.5] HO-3D_v3: Improving the Accuracy of Hand-Object Annotations of the HO-3D Dataset. arXiv21.
   [[PDF](https://arxiv.org/pdf/2107.00887.pdf)] \
   *Shreyas Hampali, Sayan Deb Sarkar, Vincent Lepetit*
@@ -437,6 +452,7 @@ Junsong Yuan*
   *Yana Hasson, Gül Varol, Dimitris Tzionas, Igor Kalevatykh, Michael J. Black, Ivan Laptev, and Cordelia Schmid*
 
 #### Graph
+
 + [HO.GH.1] HOPE-Net: A Graph-based Model for Hand-Object Pose Estimation. CVPR20.
   [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Doosti_HOPE-Net_A_Graph-Based_Model_for_Hand-Object_Pose_Estimation_CVPR_2020_paper.pdf)]
   [[Code](https://github.com/bardiadoosti/HOPE)] \
@@ -449,15 +465,33 @@ Junsong Yuan*
   *Taein Kwon, Bugra Tekin, Jan Stuhmer, Federica Bogo, Marc Pollefeys*
 
 #### SDF
+
 + [HO.SDF.1] Grasping Field: Learning Implicit Representations for Human Grasps. 3DV20.
   [[PDF](https://arxiv.org/pdf/2008.04451.pdf)]
   [[Code](https://github.com/korrawe/grasping_field)] \
   *Korrawe Karunratanakul, Jinlong Yang, Yan Zhang, Michael Black, Krikamol Muandet, Siyu Tang*
 
 #### Neural Rendering
+
 + [HO.NR.1] NeuralFusion: Neural Volumetric Rendering under Human-object Interactions. arXiv22.
   [[PDF](https://arxiv.org/pdf/2202.12825.pdf)] \
   *Yuheng Jiang, Suyi Jiang, Guoxing Sun, Zhuo Su, Kaiwen Guo, Minye Wu, Jingyi Yu, Lan Xu*
+
+#### Physics Engine
+
++ [HO.PE.3] D-Grasp: Physically Plausible Dynamic Grasp Synthesis for Hand-Object Interactions. CVPR22.
+  [[PDF](https://arxiv.org/pdf/2112.03028.pdf)]
+  [[Project](https://eth-ait.github.io/d-grasp/)] \
+  *Sammy Christen, Muhammed Kocabas, Emre Aksan,  Jemin Hwangbo,  Jie Song,  Otmar Hilliges*
+
++ [HO.PE.2] DexMV: Imitation Learning for Dexterous Manipulation from Human Videos. ICCVW21.
+  [[PDF](https://arxiv.org/pdf/2108.05877.pdf)]
+  [[Project](https://yzqin.github.io/dexmv/)] \
+  *Yuzhe Qin, Yueh-Hua Wu, Shaowei Liu, Hanwen Jiang, Ruihan Yang, Yang Fu, Xiaolong Wang*
+
++ [HO.PE.1] Stability-driven Contact Reconstruction From Monocular Color Images. CVPR22.
+  [[PDF](https://www.yangangwang.com/papers/ZZM-SCR-2022-03.pdf)] \
+  *Zimeng Zhao, Binghui Zuo, Wei Xie, Yangang Wang*
 
 
 #### Weak Supervision
@@ -489,19 +523,15 @@ Junsong Yuan*
 
 #### Joint Optimzation
 
-+ [HO.OP.10] ContactOpt: Optimizing Contact to Improve Grasps. CVPR21.
-  [[PDF](https://openaccess.thecvf.com/content/CVPR2021/papers/Grady_ContactOpt_Optimizing_Contact_To_Improve_Grasps_CVPR_2021_paper.pdf)] \
++ [HO.OP.9] ContactOpt: Optimizing Contact to Improve Grasps. CVPR21.
+  [[PDF](https://openaccess.thecvf.com/content/CVPR2021/papers/Grady_ContactOpt_Optimizing_Contact_To_Improve_Grasps_CVPR_2021_paper.pdf)]
   [[Code](https://github.com/facebookresearch/contactopt)] \
   Patrick Grady, Chengcheng Tang, Christopher D. Twigg, Minh Vo, Samarth Brahmbhatt, Charles C. Kemp
 
 
-+ [HO.OP.9] CHORE: Contact, Human and Object REconstruction from a single RGB image. arXiv22.
++ [HO.OP.8] CHORE: Contact, Human and Object REconstruction from a single RGB image. arXiv22.
   [[PDF](https://arxiv.org/pdf/2204.02445.pdf)] \
   *Xianghui Xie, Bharat Lal Bhatnagar, Gerard Pons-Moll*
-
-+ [HO.OP.8] Stability-driven Contact Reconstruction From Monocular Color Images. CVPR22.
-  [[PDF](https://www.yangangwang.com/papers/ZZM-SCR-2022-03.pdf)] \
-  *Zimeng Zhao, Binghui Zuo, Wei Xie, Yangang Wang*
 
 + [HO.OP.7] Understanding Egocentric Hand-Object Interactions from Hand Pose Estimation
   [[PDF](https://arxiv.org/pdf/2109.14657.pdf#/)] \
@@ -537,13 +567,6 @@ Junsong Yuan*
   [[Code](https://github.com/lixiny/CPF)] \
   *Lixin Yang, Xinyu Zhan, Kailin Li, Wenqiang Xu, Jiefeng Li, Cewu Lu*
 
-#### RL
-
-+ [HO.RL.1] DexMV: Imitation Learning for Dexterous Manipulation from Human Videos. ICCVW21.
-  [[PDF](https://arxiv.org/pdf/2108.05877.pdf)] \
-  [[Project](https://yzqin.github.io/dexmv/)] \
-  Yuzhe Qin, Yueh-Hua Wu, Shaowei Liu, Hanwen Jiang, Ruihan Yang, Yang Fu, Xiaolong Wang
-
 
 ### Hand-Hand Interaction
 
@@ -564,7 +587,7 @@ Junsong Yuan*
 #### 2.5D
 
 + [HH.VX.4] End-toend detection and pose estimation of two interacting hands. ICCV21.
-  [[PDF](https://openaccess.thecvf.com/content/ICCV2021/papers/Kim_End-to-End_Detection_and_Pose_Estimation_of_Two_Interacting_Hands_ICCV_2021_paper.pdf)]
+  [[PDF](https://openaccess.thecvf.com/content/ICCV2021/papers/Kim_End-to-End_Detection_and_Pose_Estimation_of_Two_Interacting_Hands_ICCV_2021_paper.pdf)] \
   Dong Uk Kim, Kwang In Kim, Seungryul Baek
 
 + [HH.VX.3] Learning to Disambiguate Strongly Interacting Hands via Probabilistic Per-pixel Part Segmentation. 3DV21.
@@ -610,7 +633,7 @@ graph#### SDF
 
 #### Graph
 
-+ [HH.GH.1] Interacting Attention Graph for Single Image Two-Hand Reconstruction. CVPR22. \
++ [HH.GH.1] Interacting Attention Graph for Single Image Two-Hand Reconstruction. CVPR22.
   [[PDF](https://arxiv.org/pdf/2203.09364.pdf)]
   [[Code](https://github.com/Dw1010/IntagHand)] \
   *Mengcheng Li, Liang An, Hongwen Zhang, Lianpeng Wu, Feng Chen, Tao Yu, Yebin Liu*
@@ -619,18 +642,32 @@ graph#### SDF
 
 #### Regression
 
-+ [FBR.RG.3] FrankMocap: A Monocular 3D Whole-Body Pose Estimation System via Regression and Integration. arXiv21.
++ [FBR.RG.2] FrankMocap: A Monocular 3D Whole-Body Pose Estimation System via Regression and Integration. arXiv21.
    [[PDF](https://arxiv.org/pdf/2108.06428.pdf)]
    [[Code](https://github.com/facebookresearch/frankmocap)] \
    *Yu Rong, Takaaki Shiratori, Hanbyul Joo*
 
-+ [FBR.RG.2] Monocular Expressive Body Regression through Body-Driven Attention. ECCV20.
++ [FBR.RG.1] Monocular Expressive Body Regression through Body-Driven Attention. ECCV20.
   [[PDF](http://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123550018.pdf)]
   [[Project](https://expose.is.tue.mpg.de/en)]
   [[Code](https://github.com/vchoutas/expose)] \
   *Vasileios Choutas, Georgios Pavlakos, Timo Bolkart, Dimitrios Tzionas , Michael J. Black*
 
-+ [FBR.RG.1] GRAB: A Dataset of Whole-Body Human Grasping of Objects. ECCV20
+
+#### Grasp
+
++ [FBR.RG.3] Stochastic Whole-Body Grasping with Contact. arXiv21.
+  [[PDF](https://arxiv.org/pdf/2112.10103.pdf)]
+  [[Project](https://jiahaoplus.github.io/SAGA/saga.html)]
+  [[Code](https://github.com/JiahaoPlus/SAGA)] \
+  *Yan Wu, Jiahao Wang, Yan Zhang, Siwei Zhang, Otmar Hilliges, Fisher Yu, Siyu Tang*
+
++ [FBR.RG.2] GOAL: Generating 4D Whole-Body Motion for Hand-Object Grasping. CVPR22.
+  [[PDF](https://arxiv.org/pdf/2112.11454.pdf)]
+  [[Project](https://goal.is.tuebingen.mpg.de)] \
+  *Omid Taheri, Vasileios Choutas, Michael J. Black, Dimitrios Tzionas*
+
++ [FBR.GP.1] GRAB: A Dataset of Whole-Body Human Grasping of Objects. ECCV20
   [[PDF](http://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123490562.pdf)]
   [[Project](https://grab.is.tue.mpg.de/)]
   [[Code](https://github.com/otaheri/GrabNet)] \
@@ -647,12 +684,6 @@ graph#### SDF
   *Yuxiao Zhou, Marc Habermann, Ikhsanul Habibie, Ayush Tewari, Christian Theobalt, Feng Xu*
 
 #### Optimization
-
-+ [FBR.OP.5] Stochastic Whole-Body Grasping with Contact. arXiv21.
-  [[PDF](https://arxiv.org/pdf/2112.10103.pdf)] \
-  [[Project](https://jiahaoplus.github.io/SAGA/saga.html)] \
-  [[Code](https://github.com/JiahaoPlus/SAGA)] \
-  *Yan Wu, Jiahao Wang, Yan Zhang, Siwei Zhang, Otmar Hilliges, Fisher Yu, Siyu Tang*
 
 + [FBR.OP.4] Lightweight Multi-person Total Motion Capture
 Using Sparse Multi-view Cameras. ICCV21.
@@ -688,7 +719,7 @@ Using Sparse Multi-view Cameras. ICCV21.
   [[Code]()] \
   Boyang Deng, JP Lewis, Timothy Jeruzalski, Gerard Pons-Moll, Geoffrey Hinton, Mohammad Norouzi, Andrea Tagliasacchi
 
-+ [FBR.SDF.7] Locally Aware Piecewise Transformation Fields for 3D Human Mesh Registration. CVPR21 \
++ [FBR.SDF.7] Locally Aware Piecewise Transformation Fields for 3D Human Mesh Registration. CVPR21.
   [[PDF](https://arxiv.org/pdf/2104.08160.pdf)]
   [[Code](https://github.com/taconite/PTF)] \
   *Shaofei Wang, Andreas Geiger, Siyu Tang*
@@ -699,9 +730,9 @@ Using Sparse Multi-view Cameras. ICCV21.
   *Marko Mihajlovic, Yan Zhang, Michael J. Black, Siyu Tang*
 
 + [FBR.SDF.5] Monocular Real-Time Volumetric Performance Capture. ECCV20.
-  [[PDF](https://arxiv.org/pdf/2007.13988.pdf)] \
-  [[Code](https://github.com/Project-Splinter/MonoPort?utm_source=catalyzex.com)]
-  *Ruilong Li, Yuliang Xiu, Shunsuke Saito, Zeng Huang, Kyle Olszewski, Hao Li *
+  [[PDF](https://arxiv.org/pdf/2007.13988.pdf)]
+  [[Code](https://github.com/Project-Splinter/MonoPort?utm_source=catalyzex.com)] \
+  *Ruilong Li, Yuliang Xiu, Shunsuke Saito, Zeng Huang, Kyle Olszewski, Hao Li*
 
 + [FBR.SDF.4] ARCH: Animatable Reconstruction of Clothed Humans. CVPR20.
   [[PDF](https://arxiv.org/pdf/2004.04572.pdf)] \
@@ -730,8 +761,8 @@ Using Sparse Multi-view Cameras. ICCV21.
   *Lingjie Liu, Marc Habermann, Viktor Rudnev, Kripasindhu Sarkar, Jiatao Gu, Christian Theobalt*
 
 + [FBR.NR.7] Editable Free-viewpoint Video Using a Layered Neural Representation. SIGGRAPH21.
-  [[PDF](https://arxiv.org/pdf/2104.14786.pdf)] \
-  [[Project](https://jiakai-zhang.github.io/st-nerf/)] \
+  [[PDF](https://arxiv.org/pdf/2104.14786.pdf)]
+  [[Project](https://jiakai-zhang.github.io/st-nerf/)]
   [[Code](https://github.com/DarlingHang/ST-NeRF)] \
   *Jiakai Zhang, Xinhang Liu, Xinyi Ye, Fuqiang Zhao, Yanshun Zhang, Minye Wu, Yingliang Zhang, Lan Xu, Jingyi Yu*
 
@@ -740,29 +771,29 @@ Using Sparse Multi-view Cameras. ICCV21.
   *Wei Jiang, Kwang Moo Yi, Golnoosh Samei, Oncel Tuzel, Anurag Ranjan*
 
 + [FBR.NR.5] HumanNeRF: Generalizable Neural Human Radiance Field from Sparse Inputs. arXiv21.
-  [[PDF](https://arxiv.org/pdf/2112.02789.pdf)] \
+  [[PDF](https://arxiv.org/pdf/2112.02789.pdf)]
   [[Project](https://zhaofuq.github.io/human-nerf/#code)] \
   *Fuqiang Zhao, Wei Yang, Jiakai Zhang, Pei Lin, Yingliang Zhang, Jingyi Yu, Lan Xu*
 
 + [FBR.NR.4] HumanNeRF: Free-viewpoint Rendering of Moving People from Monocular Video. arXiv22.
-  [[PDF](https://arxiv.org/abs/2201.04127)] \
+  [[PDF](https://arxiv.org/abs/2201.04127)]
   [[Project](https://grail.cs.washington.edu/projects/humannerf/)] \
   *Chung-Yi Weng, Brian Curless, Pratul P. Srinivasan, Jonathan T. Barron, Ira Kemelmacher-Shlizerman*
 
 + [FBR.NR.3] Vid2Actor: Free-viewpoint Animatable Person Synthesis from Video in the Wild. arXiv20.
-  [[PDF](https://arxiv.org/pdf/2012.12884.pdf)] \
+  [[PDF](https://arxiv.org/pdf/2012.12884.pdf)]
   [[Project](https://grail.cs.washington.edu/projects/vid2actor/)] \
   *Chung-Yi Weng, Brian Curless, Ira Kemelmacher-Shlizerman*
 
 + [FBR.NR.2] Animatable Neural Radiance Fields for Modeling Dynamic Human Bodies. ICCV21
-  [[PDF](https://arxiv.org/pdf/2105.02872.pdf)] \
+  [[PDF](https://arxiv.org/pdf/2105.02872.pdf)]
   [[Code](https://github.com/zju3dv/animatable_nerf)]
   [[Project](https://zju3dv.github.io/animatable_nerf/?utm_source=catalyzex.com)] \
   *Sida Peng, Junting Dong, Qianqian Wang, Shangzhan Zhang, Qing Shuai, Xiaowei Zhou, Hujun Bao*
 
 + [FBR.NR.1] Neural Body: Implicit Neural Representations with Structured Latent Codes for Novel View Synthesis of Dynamic Humans. CVPR21.
-  [[PDF](https://arxiv.org/pdf/2012.15838.pdf)] \
-  [[Code](https://github.com/zju3dv/neuralbody)] \
+  [[PDF](https://arxiv.org/pdf/2012.15838.pdf)]
+  [[Code](https://github.com/zju3dv/neuralbody)]
   [[Project](https://zju3dv.github.io/neuralbody/)] \
   *Sida Peng, Yuanqing Zhang, Yinghao Xu, Qianqian Wang, Qing Shuai, Hujun Bao, Xiaowei Zhou*
 
