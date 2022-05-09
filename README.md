@@ -584,6 +584,14 @@ Junsong Yuan*
 
 #### Kinematics
 
++ [HH.FK.5] Constraining Dense Hand Surface Tracking with Elasticity. TOG20.
+  [[PDF](https://scontent-hkt1-1.xx.fbcdn.net/v/t39.8562-6/10000000_1117938378951628_2483836343619479338_n.pdf?_nc_cat=108&ccb=1-6&_nc_sid=ad8a9d&_nc_ohc=E-CGcSm6_2AAX9oHwf8&_nc_ht=scontent-hkt1-1.xx&oh=00_AT8ahYWM3-pIw37AL_TmRSXwiORhlmJcKj7bz_-1rstTHg&oe=627E357B)]
+  *Breannan Smith, Chenglei Wu, He Wen, Patrick Peluse, Yaser Sheikh, Jessica Hodgins, Takaaki Shiratori*
+
++ [HH.FK.4] HandsFormer: Keypoint Transformer for Monocular 3D Pose Estimation ofHands and Object in Interaction. arXiv21.
+  [[PDF](https://arxiv.org/pdf/2104.14639.pdf)] \
+  *Shreyas Hampali, Sayan Deb Sarkar, Mahdi Rad, Vincent Lepetit*
+
 + [HH.FK.3] Coherent Reconstruction of Multiple Humans from a Single Image. CVPR20
   [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Jiang_Coherent_Reconstruction_of_Multiple_Humans_From_a_Single_Image_CVPR_2020_paper.pdf)]
   [[Project](https://jiangwenpl.github.io/multiperson/)]
@@ -625,9 +633,7 @@ Junsong Yuan*
 
 #### Transformer
 
-+ [HH.TR.1] HandsFormer: Keypoint Transformer for Monocular 3D Pose Estimation ofHands and Object in Interaction. arXiv21.
-  [[PDF](https://arxiv.org/pdf/2104.14639.pdf)] \
-  *Shreyas Hampali, Sayan Deb Sarkar, Mahdi Rad, Vincent Lepetit*
+
 
 #### GAN
 
