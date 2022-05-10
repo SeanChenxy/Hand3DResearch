@@ -458,16 +458,22 @@ Junsong Yuan*
 
 #### Graph
 
-+ [HO.GH.1] HOPE-Net: A Graph-based Model for Hand-Object Pose Estimation. CVPR20.
-  [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Doosti_HOPE-Net_A_Graph-Based_Model_for_Hand-Object_Pose_Estimation_CVPR_2020_paper.pdf)]
-  [[Code](https://github.com/bardiadoosti/HOPE)] \
-  *Bardia Doosti, Shujon Naha, Majid Mirbagheri, David Crandall*
++ [HO.GH.3] Collaborative Learning for Hand and Object Reconstruction with Attention-guided Graph Convolution. CVPR22.
+  [[PDF](https://arxiv.org/pdf/2204.13062.pdf)] \
+  *Tze Ho Elden Tse, Kwang In Kim, Ales Leonardis, Hyung Jin Chang*
 
 + [HO.GH.2] H2O: Two Hands Manipulating Objects for First Person Interaction Recognition. ICCV21.
   [[PDF](https://arxiv.org/pdf/2104.11181.pdf)]
   [[Project](https://www.taeinkwon.com/projects/h2o)]
   [[Code](https://github.com/taeinkwon/h2odataset)] \
   *Taein Kwon, Bugra Tekin, Jan Stuhmer, Federica Bogo, Marc Pollefeys*
+
++ [HO.GH.1] HOPE-Net: A Graph-based Model for Hand-Object Pose Estimation. CVPR20.
+  [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Doosti_HOPE-Net_A_Graph-Based_Model_for_Hand-Object_Pose_Estimation_CVPR_2020_paper.pdf)]
+  [[Code](https://github.com/bardiadoosti/HOPE)] \
+  *Bardia Doosti, Shujon Naha, Majid Mirbagheri, David Crandall*
+
+
 
 #### SDF
 
