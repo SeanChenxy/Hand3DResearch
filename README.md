@@ -69,7 +69,7 @@ This list presents recent datasets with properties of data size, shape annotatio
 |H2O     | [link](https://arxiv.org/pdf/2104.11181.pdf)   | 571K   | ✅  | ✅  | ✅  | ✅ | |
 |HanCO   | [link](https://lmb.informatik.uni-freiburg.de/projects/contra-hand/)     | 860K   | ✅  |  |  | ✅ | |
 |H2O     | [link](https://arxiv.org/pdf/2104.11466.pdf)   | 5M   | ✅  | ✅  | ✅  | ✅ | |
-|H2O-3D  | [link](https://arxiv.org/pdf/2104.14639.pdf)     | 62K  | ✅ | ✅ | ✅ | ✅ | |
+|H2O-3D  | [link](https://www.tugraz.at/index.php?id=57823)     | 62K  | ✅ | ✅ | ✅ | ✅ | |
 |GRAB    | [link](https://grab.is.tue.mpg.de/)     | 1.6M | ✅ | ✅ | ✅ | ✅ | |
 |DexYCB  | [link](https://dex-ycb.github.io/?utm_source=catalyzex.com)     | 528K | ✅ | | ✅ | ✅ | |
 |YoutubeHand | [link](https://github.com/arielai/youtube_3d_hands) | 47K  | ✅ |  |  | | |
@@ -312,6 +312,28 @@ The below indices are references to the above [overview](#overview).
   [[PDF](https://arxiv.org/pdf/2204.01695.pdf)] \
   *Enric Corona, Tomas Hodan, Minh Vo, Francesc Moreno-Noguer, Chris Sweeney, Richard Newcombe, Lingni Ma*
 
+#### Dynamics
+
++ [H.DN.4] Neural MoCon: Neural Motion Control for Physically Plausible Human Motion Capture. CVPR22.
+  [[PDF](https://www.yangangwang.com/papers/HBZ-NM-2022-03.pdf)]
+  [[Project](https://www.yangangwang.com/papers/HBZ-NM-2022-03.html)] \
+  *Buzhen Huang, Liang Pan, Yuan Yang, Jingyi Ju, Yangang Wang*
+
++ [H.DN.3] PoseTriplet: Co-evolving 3D Human Pose Estimation, Imitation, and Hallucination under Self-supervision. CVPR22.
+  [[PDF](https://arxiv.org/pdf/2203.15625.pdf)]
+  [[Code](https://github.com/Garfield-kh/PoseTriplet)] \
+  *Kehong Gong, Bingbing Li, Jianfeng Zhang, Tao Wang, Jing Huang, Michael Bi Mi, Jiashi Feng, Xinchao Wang*
+
++ [H.DN.2] SimPoE: Simulated Character Control for 3D Human Pose Estimation. ICCV21.
+  [[PDF](https://arxiv.org/pdf/2104.00683.pdf)]
+  [[Project](https://ye-yuan.com/simpoe)] \
+  *Ye Yuan, Shih-En Wei, Tomas Simon, Kris Kitani, Jason Saragih*
+
++ [H.DN.1] Residual Force Control for Agile Human Behavior Imitation and Extended Motion Synthesis. NeurIPS20.
+  [[PDF](https://arxiv.org/pdf/2006.07364.pdf)]
+  [[Project](https://ye-yuan.com/rfc/)]
+  [[Code](https://github.com/Khrylx/RFC)] \
+  *Ye Yuan, Kris Kitani*
 
 #### Weak Supervision
 
