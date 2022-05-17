@@ -1,6 +1,6 @@
 # Very Recent Progress in 3D Hand Tasks [![Awesome](https://awesome.re/badge-flat.svg)](https://awesome.re)
 
-A complete paper list for hand pose can be found [here](https://github.com/xinghaochen/awesome-hand-pose-estimation). This repo focuses on some subject areas, ideas, and works. If there is any mistake or carelessness, please feel free to open an issue or send me email.
+A complete paper list for hand pose can be found [here](https://github.com/xinghaochen/awesome-hand-pose-estimation). This repo focuses on some subject areas, ideas, and works. Although some papers invloved do not study towards 3D hand scope, they are conceived presenting relavent and inspiring ideas. If there is any mistake or carelessness, please feel free to open an issue or send me email.
 
 ## Contents
   - [Contents](#contents)
@@ -842,6 +842,24 @@ Using Sparse Multi-view Cameras. ICCV21.
   *Omid Taheri, Nima Ghorbani, Michael J. Black, Dimitrios Tzionas*
 
 #### In-Sence
+
++ [FBR.IS.5] Stochastic Scene-Aware Motion Prediction. ICCV21.
+  [[PDF](https://openaccess.thecvf.com/content/ICCV2021/papers/Hassan_Stochastic_Scene-Aware_Motion_Prediction_ICCV_2021_paper.pdf)]
+  [[Project](https://samp.is.tue.mpg.de/)]
+  [[Code](https://github.com/mohamedhassanmus/SAMP)] \
+  *Mohamed Hassan, Duygu Ceylan, Ruben Villegas, Jun Saito, Jimei Yang, Yi Zhou, Michael Black*
+
++ [FBR.IS.4] PLACE: Proximity Learning of Articulation and Contact in 3D Environments. 3DV20.
+  [[PDF](https://files.is.tue.mpg.de/black/papers/3DV_2020_BPSGen.pdf)]
+  [[Project](https://sanweiliti.github.io/PLACE/PLACE.html)]
+  [[Code](https://github.com/sanweiliti/PLACE)] \
+  *Siwei Zhang, Yan Zhang, Qianli Ma, Michael J. Black, Siyu Tang*
+
++ [FBR.IS.3] Populating 3D Scenes by Learning Human-Scene Interaction. CVPR21.
+  [[PDF](https://openaccess.thecvf.com/content/CVPR2021/papers/Hassan_Populating_3D_Scenes_by_Learning_Human-Scene_Interaction_CVPR_2021_paper.pdf)]
+  [[Project](https://posa.is.tue.mpg.de/)] 
+  [[Code](https://github.com/mohamedhassanmus/POSA)] \
+  *Mohamed Hassan, Partha Ghosh, Joachim Tesch, Dimitrios Tzionas, Michael J. Black*
 
 + [FBR.IS.2] The Wanderings of Odysseus in 3D Scenes. CVPR22.
   [[PDF](https://arxiv.org/pdf/2112.09251.pdf)]
