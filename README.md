@@ -882,6 +882,7 @@ Using Sparse Multi-view Cameras. ICCV21.
 + [T.MD.1] [spheremesh](https://github.com/anastasia-tkach/hmodel-cpp-public)
 
 ### MoCap
++ [T.MC.6] [AlphaPose](https://github.com/MVIG-SJTU/AlphaPose)
 + [T.MC.5] [EasyMocap](https://github.com/zju3dv/EasyMocap)
 + [T.MC.4] [MediaPipe](https://mediapipe.dev/index.html)
 + [T.MC.3] [frankmocap](https://github.com/facebookresearch/frankmocap)
