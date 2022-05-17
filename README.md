@@ -61,9 +61,10 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
 ![img](Hand3DResearch.png)
 
 ## Datasets
-This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, and synthetic.
-|  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic |
-|  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- | 
+This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, synthetic, and physical attributes (Phy. att.).
+|  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic | Phy. att. |
+|  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- |  ---- |
+|CBF| [link](https://pan.seu.edu.cn/#/link/49FA8AC060F9801261509D7ED207026E?path=)   | 25K | ✅ |  | ✅ | ✅ | | ✅ |
 |OakInk| [link](https://oakink.net/)   | 50K | ✅ |  | ✅ | ✅ | |
 |Sign-Language| [link](https://www.kaggle.com/ardamavi/27-class-sign-language-dataset)   | 22801   |   |  |  | | |
 |MuViHand| [link](https://github.com/LeylaKhaleghi/MuViHand)   | 402K   |   |  |  | ✅ | ✅ |
