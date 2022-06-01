@@ -780,6 +780,11 @@ Using Sparse Multi-view Cameras. ICCV21.
 
 #### Neural Rendering
 
++ [FBR.NR.9] Structured Local Radiance Fields for Human Avatar Modeling. CVPR22.
+  [[PDF](https://arxiv.org/pdf/2203.14478.pdf)]
+  [[Project](https://liuyebin.com/slrf/slrf.html)] \
+  *Zerong Zheng, Han Huang, Tao Yu, Hongwen Zhang, Yandong Guo, Yebin Liu*
+
 + [FBR.NR.8] Neural Actor: Neural Free-view Synthesis of Human Actors with Pose Control. SIGGRAPHAsia21.
   [[PDF](https://arxiv.org/pdf/2106.02019.pdf)] \
   [[Project](https://vcai.mpi-inf.mpg.de/projects/NeuralActor/)]
