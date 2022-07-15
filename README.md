@@ -37,7 +37,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [GAN](#gan)
       - [Graph](#graph-2)
     - [Full Body Reconstruction](#full-body-reconstruction)
-      - [Kinematics](#kinematics-2)
+      - [Forward Kinematics](#forward-kinematics-1)
       - [Inverse Kinematics](#inverse-kinematics-1)
       - [SDF](#sdf-2)
       - [Neural Rendering](#neural-rendering-2)
@@ -49,12 +49,6 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
   - [Benchmarks](#benchmarks)
     - [FreiHAND](#freihand)
     - [RHD](#rhd)
-
-## TODO
-- [x] Dtasets
-- [x] Papers
-- [x] Tools
-- [ ] Benchmarks
 
 ## Overview
 
@@ -687,10 +681,14 @@ Junsong Yuan*
   
 ### Full Body Reconstruction
 
-#### Kinematics
+#### Forward Kinematics
 
-+ [FBR.FK.6] Lightweight Multi-person Total Motion Capture
-Using Sparse Multi-view Cameras. ICCV21.
++ [FBR.FK.7] PyMAF-X: Towards Well-aligned Full-body Model Regression from Monocular Images. arXiv22.
+  [[PDF](https://arxiv.org/pdf/2207.06400.pdf)]
+  [[Project](https://www.liuyebin.com/pymaf-x/)] \
+  *Hongwen Zhang, Yating Tian, Yuxiang Zhang, Mengcheng Li, Liang An, Zhenan Sun, Yebin Liu*
+
++ [FBR.FK.6] Lightweight Multi-person Total Motion Capture Using Sparse Multi-view Cameras. ICCV21.
   [[PDF](https://openaccess.thecvf.com/content/ICCV2021/papers/Zhang_Lightweight_Multi-Person_Total_Motion_Capture_Using_Sparse_Multi-View_Cameras_ICCV_2021_paper.pdf)] \
   *Yuxiang Zhang, Zhe Li, Liang An, Mengcheng Li, Tao Yu, Yebin Liu*
 
@@ -732,6 +730,18 @@ Using Sparse Multi-view Cameras. ICCV21.
   *Yuxiao Zhou, Marc Habermann, Ikhsanul Habibie, Ayush Tewari, Christian Theobalt, Feng Xu*
 
 #### SDF
+
++ [FBR.SDF.11] COAP: Compositional Articulated Occupancy of People. CVPR22.
+  [[PDF](https://openaccess.thecvf.com/content/CVPR2022/papers/Mihajlovic_COAP_Compositional_Articulated_Occupancy_of_People_CVPR_2022_paper.pdf)]
+  [[Project](neuralbodies.github.io/COAP)]
+  [[Code](https://github.com/markomih/COAP)] \
+  *Marko Mihajlovic, Shunsuke Saito, Aayush Bansal, Michael Zollhoefer, Siyu Tang*
+
+
++ [FBR.SDF.10] SPAMs: Structured Implicit Parametric Models. CVPR22.
+  [[PDF](https://arxiv.org/pdf/2201.08141.pdf)]
+  [[Project](https://pablopalafox.github.io/spams/?utm_source=catalyzex.com)] \
+  *Pablo Palafox, Nikolaos Sarafianos, Tony Tung, Angela Dai*
 
 + [FBR.SDF.9] SNARF: Differentiable Forward Skinning for Animating Non-Rigid Neural Implicit Shapes. ICCV21.
   [[PDF](https://arxiv.org/pdf/2104.03953.pdf)]
