@@ -333,6 +333,11 @@ The below indices are references to the above [overview](#overview).
 
 #### Weak Supervision
 
++ [H.WS.15] Domain Adaptive Hand Keypoint and Pixel Localization in the Wild. ECCV22. 
+  [[PDF](https://arxiv.org/pdf/2203.08344.pdf)] 
+  [[Project](https://tkhkaeio.github.io/projects/22-hand-ps-da/)] \
+  Takehiko Ohkawa, Yu-Jhe Li, Qichen Fu, Ryosuke Furuta, Kris M. Kitani, and Yoichi Sato
+
 + [H.WS.14] End-to-end Weakly-supervised Multiple 3D Hand Mesh Reconstruction from Single Image. arXiv22.
   [[PDF](https://arxiv.org/pdf/2204.08154.pdf)] \
   *Jinwei Ren, Jianke Zhu, Jialiang Zhang*
@@ -608,14 +613,9 @@ Junsong Yuan*
 
 #### Kinematics
 
-+ [HH.FK.5] Constraining Dense Hand Surface Tracking with Elasticity. TOG20.
++ [HH.FK.4] Constraining Dense Hand Surface Tracking with Elasticity. TOG20.
   [[PDF](https://scontent-hkt1-1.xx.fbcdn.net/v/t39.8562-6/10000000_1117938378951628_2483836343619479338_n.pdf?_nc_cat=108&ccb=1-6&_nc_sid=ad8a9d&_nc_ohc=E-CGcSm6_2AAX9oHwf8&_nc_ht=scontent-hkt1-1.xx&oh=00_AT8ahYWM3-pIw37AL_TmRSXwiORhlmJcKj7bz_-1rstTHg&oe=627E357B)]
   *Breannan Smith, Chenglei Wu, He Wen, Patrick Peluse, Yaser Sheikh, Jessica Hodgins, Takaaki Shiratori*
-
-+ [HH.FK.4] Keypoint Transformer: Solving Joint Identification in Challenging Hands and Object Interactions for Accurate 3D Pose Estimation. CVPR22.
-  [[PDF](https://arxiv.org/pdf/2104.14639.pdf)] 
-  [[Project](https://www.tugraz.at/index.php?id=57823)] \
-  *Shreyas Hampali, Sayan Deb Sarkar, Mahdi Rad, Vincent Lepetit*
 
 + [HH.FK.3] Coherent Reconstruction of Multiple Humans from a Single Image. CVPR20
   [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Jiang_Coherent_Reconstruction_of_Multiple_Humans_From_a_Single_Image_CVPR_2020_paper.pdf)]
@@ -658,6 +658,15 @@ Junsong Yuan*
 
 #### Transformer
 
++ [HH.TR.2] 3D Interacting Hand Pose Estimation by Hand De-occlusion and Removal. ECCV22. 
+  [[PDF](https://arxiv.org/pdf/2207.11061.pdf)]
+  [[Project](https://menghao666.github.io/HDR/)] \
+  Hao Meng, Sheng Jin, Wentao Liu, Chen Qian, Mengxiang Lin, Wanli Ouyang, Ping Luo
+
++ [HH.TR.1] Keypoint Transformer: Solving Joint Identification in Challenging Hands and Object Interactions for Accurate 3D Pose Estimation. CVPR22.
+  [[PDF](https://arxiv.org/pdf/2104.14639.pdf)] 
+  [[Project](https://www.tugraz.at/index.php?id=57823)] \
+  *Shreyas Hampali, Sayan Deb Sarkar, Mahdi Rad, Vincent Lepetit*
 
 
 #### GAN
