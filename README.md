@@ -96,6 +96,10 @@ The below indices are references to the above [overview](#overview).
 
 #### Forward Kinematics
 
++ [H.FK.12] Identity-Aware Hand Mesh Estimation and Personalization from RGB Images. ECCV22.
+  [[Code](https://github.com/deyingk/PersonalizedHandMeshEstimation)] \
+  *Deying Kong, Linguang Zhang, Liangjian Chen, Haoyu Ma, Xiangyi Yan, Shanlin Sun, Xingwei Liu, Kun Han, Xiaohui Xie*
+
 + [H.FK.11] HandOccNet: Occlusion-Robust 3D Hand Mesh Estimation Network. CVPR22.
   [[PDF](https://arxiv.org/pdf/2203.14564v1.pdf)]
   [[Code](https://github.com/namepllet/HandOccNet)] \
@@ -481,6 +485,12 @@ Junsong Yuan*
 
 #### Graph
 
++ [HO.GH.4] S2Contact: Graph-based Network for 3D Hand-Object Contact Estimation with Semi-Supervised Learning. ECCV22.
+  [[PDF](https://arxiv.org/pdf/2208.00874.pdf)]
+  [[Project](https://eldentse.github.io/s2contact/)] 
+  [[Code](https://github.com/eldentse/s2contact)] \
+  *Takehiko Ohkawa, Yu-Jhe Li, Qichen Fu, Ryosuke Furuta, Kris M. Kitani, Yoichi Sato1*
+
 + [HO.GH.3] Collaborative Learning for Hand and Object Reconstruction with Attention-guided Graph Convolution. CVPR22.
   [[PDF](https://arxiv.org/pdf/2204.13062.pdf)] \
   *Tze Ho Elden Tse, Kwang In Kim, Ales Leonardis, Hyung Jin Chang*
@@ -497,8 +507,13 @@ Junsong Yuan*
   *Bardia Doosti, Shujon Naha, Majid Mirbagheri, David Crandall*
 
 
-
 #### SDF
+
++ [HO.SDF.3] AlignSDF: Pose-Aligned Signed Distance Fields for Hand-Object Reconstruction. ECCV22.
+  [[PDF](https://arxiv.org/pdf/2207.12909.pdf)]
+  [[Project](https://zerchen.github.io/projects/alignsdf.html)]
+  [[Code](https://github.com/zerchen/alignsdf)] \
+  *Zerui Chen, Yana Hasson, Cordelia Schmid, Ivan Laptev*
 
 + [HO.SDF.2] What’s in your hands? 3D Reconstruction of Generic Objects in Hands. CVPR22.
   [[PDF](https://arxiv.org/pdf/2204.07153.pdf)]
@@ -906,12 +921,16 @@ Junsong Yuan*
 + [T.MD.1] [spheremesh](https://github.com/anastasia-tkach/hmodel-cpp-public)
 
 ### MoCap
++ [T.MC.7] [Mediapipe-TFLite](https://github.com/Daming-TF/Mediapipe-hands)
 + [T.MC.6] [AlphaPose](https://github.com/MVIG-SJTU/AlphaPose)
 + [T.MC.5] [EasyMocap](https://github.com/zju3dv/EasyMocap)
 + [T.MC.4] [MediaPipe](https://mediapipe.dev/index.html)
 + [T.MC.3] [frankmocap](https://github.com/facebookresearch/frankmocap)
 + [T.MC.2] [HandMotionViewer](https://github.com/dimtziwnas/HandObjectInteractionIJCV16_HandMotionViewer?utm_source=catalyzex.com)
 + [T.MC.1] [openpose](https://github.com/CMU-Perceptual-Computing-Lab/openpose)
+
+## Data
++ [T.DA.1] [HandData](https://github.com/Daming-TF/HandData)
 
 ## Benchmarks
 ### FreiHAND
