@@ -372,8 +372,10 @@ Images. ICCV21.
   *Yujin Chen, Zhigang Tu, Liuhao Ge, Dejun Zhang, Ruizhi Chen,
 Junsong Yuan*
 
-+ [H.WS.7] Self-Supervised 3D Hand Pose Estimation from Monocular RGB via Contrastive Learning. ICCV21.
-  [[PDF](https://arxiv.org/pdf/2106.05953.pdf)] \
++ [H.WS.7] PeCLR: Self-Supervised 3D Hand Pose Estimation from Monocular RGB via Contrastive Learning. ICCV21.
+  [[PDF](https://arxiv.org/pdf/2106.05953.pdf)]
+  [[Project](https://ait.ethz.ch/projects/2021/peclr/)]
+  [[Code](https://github.com/dahiyaaneesh/peclr)] \
   Adrian Spurr, Aneesh Dahiya, Xucong Zhang, Xi Wang, Otmar Hilliges
 
 + [H.WS.6] Adversarial Motion Modelling helps Semi-supervised Hand Pose Estimation. arXiv21.
@@ -384,8 +386,10 @@ Junsong Yuan*
   [[PDF](https://www.mu4yang.com/files/project/semihand/semihand.pdf)] \
   *Linlin Yang, Shicheng Chen, Angela Yao*
 
-+ [H.WS.4] Model-based 3D Hand Reconstruction via Self-Supervised Learning. CVPR21.
-  [[PDF](https://arxiv.org/pdf/2103.11703.pdf)] \
++ [H.WS.4] S2HAND: Model-based 3D Hand Reconstruction via Self-Supervised Learning. CVPR21.
+  [[PDF](https://arxiv.org/pdf/2103.11703.pdf)]
+  [[Project](https://terencecyj.github.io/projects/CVPR2021/index.html)]
+  [[Code](https://github.com/TerenceCYJ/S2HAND)] \
   *Yujin Chen, Zhigang Tu, Di Kang, Linchao Bao, Ying Zhang, Xuefei Zhe, Ruizhi Chen, Junsong Yuan*
 
 + [H.WS.3] Weakly-Supervised 3D Hand Pose Estimation via Biomechanical Constraints. ECCV20.
@@ -954,9 +958,9 @@ Pose2Pose [[FB.IK.2](#inverse-kinematics-1)]| ResNet50  | 7.8  | 7.8  | 0.661 | 
 Li et al. [[H.VX.4](#25d)]               | Hourglass⏳| 8.0  |  -   | -     | -
 YotubeHand [[H.GH.3](#graph)]            | ResNet50  | 8.4  | 8.6  | 0.614 | 0.966
 Pose2Pose [[FB.IK.2](#inverse-kinematics-1)]            | ResNet18  | 8.6  | 8.6  | 0.621 | 0.962
-FreiHAND [[H.MN.5](#forward-kinematics)]       | ResNet50  | 11.0 | 10.9 | 0.516 | 0.934
-ObMan [[HO.MN.1](#kinematics)]         | ResNet18  | 13.3 | 13.3 | 0.429 | 0.907
-Boukhayma et al. [[H.MN.3](#forward-kinematics)] | ResNet50 | 35.0 | 13.2 | 0.427 | 0.895
+FreiHAND [[H.FK.5](#forward-kinematics)]       | ResNet50  | 11.0 | 10.9 | 0.516 | 0.934
+ObMan [[HO.FK.1](#kinematics)]         | ResNet18  | 13.3 | 13.3 | 0.429 | 0.907
+Boukhayma et al. [[H.FK.3](#forward-kinematics)] | ResNet50 | 35.0 | 13.2 | 0.427 | 0.895
 >⏳: Hourglass stacked structure
 
 ### RHD
