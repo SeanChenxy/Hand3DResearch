@@ -384,8 +384,10 @@ Junsong Yuan*
   [[PDF](https://www.mu4yang.com/files/project/semihand/semihand.pdf)] \
   *Linlin Yang, Shicheng Chen, Angela Yao*
 
-+ [H.WS.4] Model-based 3D Hand Reconstruction via Self-Supervised Learning. CVPR21.
-  [[PDF](https://arxiv.org/pdf/2103.11703.pdf)] \
++ [H.WS.4] S2HAND: Model-based 3D Hand Reconstruction via Self-Supervised Learning. CVPR21.
+  [[PDF](https://arxiv.org/pdf/2103.11703.pdf)]
+  [[Project](https://terencecyj.github.io/projects/CVPR2021/index.html)]
+  [[Code](https://github.com/TerenceCYJ/S2HAND)] \
   *Yujin Chen, Zhigang Tu, Di Kang, Linchao Bao, Ying Zhang, Xuefei Zhe, Ruizhi Chen, Junsong Yuan*
 
 + [H.WS.3] Weakly-Supervised 3D Hand Pose Estimation via Biomechanical Constraints. ECCV20.
