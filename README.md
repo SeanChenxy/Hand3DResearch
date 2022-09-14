@@ -956,9 +956,9 @@ Pose2Pose [[FB.IK.2](#inverse-kinematics-1)]| ResNet50  | 7.8  | 7.8  | 0.661 | 
 Li et al. [[H.VX.4](#25d)]               | Hourglass⏳| 8.0  |  -   | -     | -
 YotubeHand [[H.GH.3](#graph)]            | ResNet50  | 8.4  | 8.6  | 0.614 | 0.966
 Pose2Pose [[FB.IK.2](#inverse-kinematics-1)]            | ResNet18  | 8.6  | 8.6  | 0.621 | 0.962
-FreiHAND [[H.MN.5](#forward-kinematics)]       | ResNet50  | 11.0 | 10.9 | 0.516 | 0.934
-ObMan [[HO.MN.1](#kinematics)]         | ResNet18  | 13.3 | 13.3 | 0.429 | 0.907
-Boukhayma et al. [[H.MN.3](#forward-kinematics)] | ResNet50 | 35.0 | 13.2 | 0.427 | 0.895
+FreiHAND [[H.FK.5](#forward-kinematics)]       | ResNet50  | 11.0 | 10.9 | 0.516 | 0.934
+ObMan [[HO.FK.1](#kinematics)]         | ResNet18  | 13.3 | 13.3 | 0.429 | 0.907
+Boukhayma et al. [[H.FK.3](#forward-kinematics)] | ResNet50 | 35.0 | 13.2 | 0.427 | 0.895
 >⏳: Hourglass stacked structure
 
 ### RHD
