@@ -372,8 +372,10 @@ Images. ICCV21.
   *Yujin Chen, Zhigang Tu, Liuhao Ge, Dejun Zhang, Ruizhi Chen,
 Junsong Yuan*
 
-+ [H.WS.7] Self-Supervised 3D Hand Pose Estimation from Monocular RGB via Contrastive Learning. ICCV21.
-  [[PDF](https://arxiv.org/pdf/2106.05953.pdf)] \
++ [H.WS.7] PeCLR: Self-Supervised 3D Hand Pose Estimation from Monocular RGB via Contrastive Learning. ICCV21.
+  [[PDF](https://arxiv.org/pdf/2106.05953.pdf)]
+  [[Project](https://ait.ethz.ch/projects/2021/peclr/)]
+  [[Code](https://github.com/dahiyaaneesh/peclr)] \
   Adrian Spurr, Aneesh Dahiya, Xucong Zhang, Xi Wang, Otmar Hilliges
 
 + [H.WS.6] Adversarial Motion Modelling helps Semi-supervised Hand Pose Estimation. arXiv21.
