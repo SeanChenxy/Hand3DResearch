@@ -308,6 +308,27 @@ The below indices are references to the above [overview](#overview).
 
 #### Neural Rendering
 
++ [H.NR.5] Authentic Volumetric Avatars From a Phone Scan. SIGGRAPH22.
+  [[PDF](https://drive.google.com/file/d/1i4NJKAggS82wqMamCJ1OHRGgViuyoY6R/view)] \
+  *Chen Cao, Tomas Simon, Jin Kyu Kim, Gabe Schwartz, Michael Zollhoefer, Shunsuke Saito, Stephen Lombardi, Shih-En Wei, Danielle Belko, Shoou-I Yu, Yaser Sheikh, Jason Saragih*
+
++ [H.NR.4] Mixture of volumetric primitives for efficient neural rendering. SIGGRAPH21.
+  [[PDF](https://arxiv.org/pdf/2103.01954.pdf)]
+  [[Code](https://github.com/facebookresearch/mvp)] \
+  *Stephen Lombardi, Tomas Simon, Gabriel Schwartz, Michael Zollhoefer, Yaser Sheikh, Jason Saragih*
+
++ [H.NR.3] I M Avatar: Implicit Morphable Head Avatars from Videos. CVPR22.
+  [[PDF](https://openaccess.thecvf.com/content/CVPR2022/papers/Zheng_I_M_Avatar_Implicit_Morphable_Head_Avatars_From_Videos_CVPR_2022_paper.pdf)]
+  [[Project](https://ait.ethz.ch/projects/2022/IMavatar/)]
+  [[Code](https://github.com/zhengyuf/IMavatar)] \
+  *Yufeng Zheng, Victoria Fernández Abrevaya, Marcel C. Bühler, Xu Chen, Michael J. Black, Otmar Hilliges*
+
++ [H.NR.2] Neural Head Avatars From Monocular RGB Videos. CVPR22.
+  [[PDF](https://openaccess.thecvf.com/content/CVPR2022/papers/Grassal_Neural_Head_Avatars_From_Monocular_RGB_Videos_CVPR_2022_paper.pdf)]
+  [[Project](https://philgras.github.io/neural_head_avatars/neural_head_avatars.html)]
+  [[Code](https://github.com/philgras/neural-head-avatars)] \
+  *Philip-William Grassal, Malte Prinzler, Titus Leistner, Carsten Rother, Matthias Nießner, Justus Thies*
+
 + [H.NR.1] LISA: Learning Implicit Shape and Appearance of Hands. CVPR22.
   [[PDF](https://arxiv.org/pdf/2204.01695.pdf)] \
   *Enric Corona, Tomas Hodan, Minh Vo, Francesc Moreno-Noguer, Chris Sweeney, Richard Newcombe, Lingni Ma*
@@ -818,6 +839,12 @@ Junsong Yuan*
 
 #### Neural Rendering
 
++ [FBR.NR.10] Surface-Aligned Neural Radiance Fields for Controllable 3D Human Synthesis. CVPR22.
+  [[PDF](https://openaccess.thecvf.com/content/CVPR2022/papers/Xu_Surface-Aligned_Neural_Radiance_Fields_for_Controllable_3D_Human_Synthesis_CVPR_2022_paper.pdf)]
+  [[Project](https://pfnet-research.github.io/surface-aligned-nerf/)]
+  [[Code](https://github.com/pfnet-research/surface-aligned-nerf)] \
+  *Tianhan Xu, Yasuhiro Fujita, Eiichi Matsumoto*
+
 + [FBR.NR.9] Structured Local Radiance Fields for Human Avatar Modeling. CVPR22.
   [[PDF](https://arxiv.org/pdf/2203.14478.pdf)]
   [[Project](https://liuyebin.com/slrf/slrf.html)] \
@@ -825,7 +852,7 @@ Junsong Yuan*
 
 + [FBR.NR.8] Neural Actor: Neural Free-view Synthesis of Human Actors with Pose Control. SIGGRAPHAsia21.
   [[PDF](https://arxiv.org/pdf/2106.02019.pdf)] \
-  [[Project](https://vcai.mpi-inf.mpg.de/projects/NeuralActor/)]
+  [[Project](https://vcai.mpi-inf.mpg.de/projects/NeuralActor/)] \
   *Lingjie Liu, Marc Habermann, Viktor Rudnev, Kripasindhu Sarkar, Jiatao Gu, Christian Theobalt*
 
 + [FBR.NR.7] Editable Free-viewpoint Video Using a Layered Neural Representation. SIGGRAPH21.
@@ -838,12 +865,12 @@ Junsong Yuan*
   [[PDF](https://arxiv.org/pdf/2203.12575.pdf)] \
   *Wei Jiang, Kwang Moo Yi, Golnoosh Samei, Oncel Tuzel, Anurag Ranjan*
 
-+ [FBR.NR.5] HumanNeRF: Generalizable Neural Human Radiance Field from Sparse Inputs. arXiv21.
++ [FBR.NR.5] HumanNeRF: Generalizable Neural Human Radiance Field from Sparse Inputs. CVPR22.
   [[PDF](https://arxiv.org/pdf/2112.02789.pdf)]
   [[Project](https://zhaofuq.github.io/human-nerf/#code)] \
   *Fuqiang Zhao, Wei Yang, Jiakai Zhang, Pei Lin, Yingliang Zhang, Jingyi Yu, Lan Xu*
 
-+ [FBR.NR.4] HumanNeRF: Free-viewpoint Rendering of Moving People from Monocular Video. arXiv22.
++ [FBR.NR.4] HumanNeRF: Free-viewpoint Rendering of Moving People from Monocular Video. CVPR22.
   [[PDF](https://arxiv.org/abs/2201.04127)]
   [[Project](https://grail.cs.washington.edu/projects/humannerf/)] \
   *Chung-Yi Weng, Brian Curless, Pratul P. Srinivasan, Jonathan T. Barron, Ira Kemelmacher-Shlizerman*
