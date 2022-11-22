@@ -307,7 +307,7 @@ The below indices are references to the above [overview](#overview).
   *Korrawe Karunratanakul, Adrian Spurr, Zicong Fan, Otmar Hilliges, Siyu Tang*
 
 #### Neural Rendering
-
+z
 + [H.NR.5] Authentic Volumetric Avatars From a Phone Scan. SIGGRAPH22.
   [[PDF](https://drive.google.com/file/d/1i4NJKAggS82wqMamCJ1OHRGgViuyoY6R/view)] \
   *Chen Cao, Tomas Simon, Jin Kyu Kim, Gabe Schwartz, Michael Zollhoefer, Shunsuke Saito, Stephen Lombardi, Shih-En Wei, Danielle Belko, Shoou-I Yu, Yaser Sheikh, Jason Saragih*
@@ -357,6 +357,10 @@ The below indices are references to the above [overview](#overview).
   *Ye Yuan, Kris Kitani*
 
 #### Weak Supervision
+
++ [H.WS.16] Image-free Domain Generalization via CLIP for 3D Hand Pose Estimation. arXiv22.
+  [[PDF](https://arxiv.org/pdf/2210.16788.pdf)] \
+  *Seongyeong Lee, Hansoo Park, Dong Uk Kim, Jihyeon Kim, Muhammadjon Boboev, Seungryul Baek*
 
 + [H.WS.15] Domain Adaptive Hand Keypoint and Pixel Localization in the Wild. ECCV22. 
   [[PDF](https://arxiv.org/pdf/2203.08344.pdf)] 
@@ -653,8 +657,12 @@ Junsong Yuan*
 
 #### Kinematics
 
++ [HH.FK.5] UmeTrack: Unified multi-view end-to-end hand tracking for VR. SIGGRAPH Asia 2022.
+  [[PDF](https://arxiv.org/pdf/2211.00099.pdf)] \
+  *Shangchen Han, Po-chen Wu, Yubo Zhang, Beibei Liu, Linguang Zhang, Zheng Wang, Weiguang Si, Peizhao Zhang, Yujun Cai, Tomas Hodan, Randi Cabezas, Luan Tran, Muzaffer Akbay, Tsz-Ho Yu, Cem Keskin, Robert Wang*
+
 + [HH.FK.4] Constraining Dense Hand Surface Tracking with Elasticity. TOG20.
-  [[PDF](https://scontent-hkt1-1.xx.fbcdn.net/v/t39.8562-6/10000000_1117938378951628_2483836343619479338_n.pdf?_nc_cat=108&ccb=1-6&_nc_sid=ad8a9d&_nc_ohc=E-CGcSm6_2AAX9oHwf8&_nc_ht=scontent-hkt1-1.xx&oh=00_AT8ahYWM3-pIw37AL_TmRSXwiORhlmJcKj7bz_-1rstTHg&oe=627E357B)]
+  [[PDF](https://scontent-hkt1-1.xx.fbcdn.net/v/t39.8562-6/10000000_1117938378951628_2483836343619479338_n.pdf?_nc_cat=108&ccb=1-6&_nc_sid=ad8a9d&_nc_ohc=E-CGcSm6_2AAX9oHwf8&_nc_ht=scontent-hkt1-1.xx&oh=00_AT8ahYWM3-pIw37AL_TmRSXwiORhlmJcKj7bz_-1rstTHg&oe=627E357B)] \
   *Breannan Smith, Chenglei Wu, He Wen, Patrick Peluse, Yaser Sheikh, Jessica Hodgins, Takaaki Shiratori*
 
 + [HH.FK.3] Coherent Reconstruction of Multiple Humans from a Single Image. CVPR20
