@@ -58,6 +58,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
 This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, synthetic, and physical attributes (Phy. att.).
 |  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic | Phy. att. |
 |  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- |  ---- |
+|DART| [link](https://dart2022.github.io/)   | 800K | ✅ |  | ✅ | | ✅ | |
 |CBF| [link](https://pan.seu.edu.cn/#/link/49FA8AC060F9801261509D7ED207026E?path=)   | 25K | ✅ |  | ✅ | ✅ | | ✅ |
 |OakInk| [link](https://oakink.net/)   | 50K | ✅ |  | ✅ | ✅ | |
 |Sign-Language| [link](https://www.kaggle.com/ardamavi/27-class-sign-language-dataset)   | 22801   |   |  |  | | |
@@ -291,6 +292,11 @@ The below indices are references to the above [overview](#overview).
 
 #### UV
 
++ [H.UV.3] DART: Articulated Hand Model with Diverse Accessories and Rich Textures. NeurIPS22.
+  [[PDF](https://arxiv.org/pdf/2210.07650.pdf)] 
+  [[Project](https://dart2022.github.io/)] \
+  *Daiheng Gao, Yuliang Xiu, Kailin Li, Lixin Yang, Feng Wang, Peng Zhang, Bang Zhang, Cewu Lu, Ping Tan*
+
 + [H.UV.2] I2UV-HandNet: Image-to-UV Prediction Network for Accurate and High-fidelity 3D Hand Mesh Modeling. ICCV21.
   [[PDF](https://arxiv.org/pdf/2102.03725.pdf)] \
   *Ping Chen, Yujin Chen, Dong Yang, Fangyin Wu, Qin Li, Qingpei Xia, Yong Tan*
@@ -307,7 +313,12 @@ The below indices are references to the above [overview](#overview).
   *Korrawe Karunratanakul, Adrian Spurr, Zicong Fan, Otmar Hilliges, Siyu Tang*
 
 #### Neural Rendering
-z
+
++ [H.NR.6] Hand Avatar: Free-Pose Hand Animation and Rendering from Monocular Video. arXiv22.
+  [[PDF](https://arxiv.org/pdf/2211.12782.pdf)]
+  [[Project](https://seanchenxy.github.io/HandAvatarWeb/)] \
+  *Xingyu Chen, Baoyuan Wang Heung-Yeung, Shum*
+
 + [H.NR.5] Authentic Volumetric Avatars From a Phone Scan. SIGGRAPH22.
   [[PDF](https://drive.google.com/file/d/1i4NJKAggS82wqMamCJ1OHRGgViuyoY6R/view)] \
   *Chen Cao, Tomas Simon, Jin Kyu Kim, Gabe Schwartz, Michael Zollhoefer, Shunsuke Saito, Stephen Lombardi, Shih-En Wei, Danielle Belko, Shoou-I Yu, Yaser Sheikh, Jason Saragih*
@@ -357,6 +368,10 @@ z
   *Ye Yuan, Kris Kitani*
 
 #### Weak Supervision
++ [H.WS.17] CycleHand: Increasing 3D Pose Estimation Ability on In-the-wild Monocular Image through
+Cyclic Flow. MM22.
+  [[PDF](https://dl.acm.org/doi/pdf/10.1145/3503161.3547828?casa_token=g6mp8PnO2ucAAAAA:06WaeyA2j8oMFAPcW0uEvL2W79qBv3kUnT5XlOQUkkZ09qRR3F4dxL1LTvfJuah6ppe4NwdTFBBh5rw)] \
+  *Daiheng Gao, Xindi Zhang,  Xingyu Chen,  Andong Tan,  Bang Zhang, Pan Pan,  Ping Tan*
 
 + [H.WS.16] Image-free Domain Generalization via CLIP for 3D Hand Pose Estimation. arXiv22.
   [[PDF](https://arxiv.org/pdf/2210.16788.pdf)] \
