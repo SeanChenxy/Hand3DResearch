@@ -593,6 +593,10 @@ Junsong Yuan*
   [[PDF](https://www.yangangwang.com/papers/ZZM-SCR-2022-03.pdf)] \
   *Zimeng Zhao, Binghui Zuo, Wei Xie, Yangang Wang*
 
+# UV
+[HO.UV.1] UV-Based 3D Hand-Object Reconstruction with Grasp Optimization. BMVC22.
+  [[PDF](https://arxiv.org/pdf/2211.13429v1.pdf)] \
+  *Ziwei Yu,Linlin Yang,You Xie,Ping Chen,Angela Yao*
 
 #### Weak Supervision
 
