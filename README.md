@@ -313,6 +313,11 @@ The below indices are references to the above [overview](#overview).
   *Korrawe Karunratanakul, Adrian Spurr, Zicong Fan, Otmar Hilliges, Siyu Tang*
 
 #### Neural Rendering
++ [H.NR.7] Next3D: Generative Neural Texture Rasterization for 3D-Aware Head Avatars. arXiv22.
+  [[PDF](https://arxiv.org/pdf/2211.11208.pdf)] 
+  [[Project](https://mrtornado24.github.io/Next3D/)]
+  [[Code](https://github.com/MrTornado24/Next3D)] \
+  *Jingxiang Sun, Xuan Wang, Lizhen Wang, Xiaoyu Li, Yong Zhang, Hongwen Zhang, Yebin Liu*
 
 + [H.NR.6] Hand Avatar: Free-Pose Hand Animation and Rendering from Monocular Video. arXiv22.
   [[PDF](https://arxiv.org/pdf/2211.12782.pdf)]
