@@ -102,7 +102,7 @@ The below indices are references to the above [overview](#overview).
   *Deying Kong, Linguang Zhang, Liangjian Chen, Haoyu Ma, Xiangyi Yan, Shanlin Sun, Xingwei Liu, Kun Han, Xiaohui Xie*
 
 + [H.FK.11] HandOccNet: Occlusion-Robust 3D Hand Mesh Estimation Network. CVPR22.
-  [[PDF](https://arxiv.org/pdf/2203.14564v1.pdf)]
+  [[PDF](https://arxiv.org/pdf/2203.14564.pdf)]
   [[Code](https://github.com/namepllet/HandOccNet)] \
   *JoonKyu Park, Yeonguk Oh, Gyeongsik Moon, Hongsuk Choi, Kyoung Mu Lee*
 
@@ -392,7 +392,7 @@ Cyclic Flow. MM22.
   *Jinwei Ren, Jianke Zhu, Jialiang Zhang*
 
 + [H.WS.13] Consistent 3D Hand Reconstruction in Video via Self-Supervised Learning. arXiv22.
-  [[PDF](https://arxiv.org/pdf/2201.09548v1.pdf)] \
+  [[PDF](https://arxiv.org/pdf/2201.09548.pdf)] \
   *Zhigang Tu, Zhisheng Huang, Yujin Chen, Di Kang, Linchao Bao, Bisheng Yang, Junsong Yuan*
 
 + [H.WS.12] Weakly-supervised 3D Hand Pose Estimation from Monocular RGB Images. ECCV18.
@@ -404,7 +404,7 @@ Cyclic Flow. MM22.
   *Linlin Yang, Shile Li, Dongheui Lee, Angela Yao*
 
 + [H.WS.10] Semi-Supervised 3D Hand Shape and Pose Estimation with Label Propagation. arXiv21.
-  [[PDF](https://arxiv.org/pdf/2111.15199v1.pdf)] \
+  [[PDF](https://arxiv.org/pdf/2111.15199.pdf)] \
   *Samira Kaviani, Amir Rahimi, Richard Hartley*
 
 + [H.WS.9] Self-supervised Transfer Learning for Hand Mesh Recovery from Binocular
@@ -600,7 +600,7 @@ Junsong Yuan*
 
 # UV
 [HO.UV.1] UV-Based 3D Hand-Object Reconstruction with Grasp Optimization. BMVC22.
-  [[PDF](https://arxiv.org/pdf/2211.13429v1.pdf)] \
+  [[PDF](https://arxiv.org/pdf/2211.13429.pdf)] \
   *Ziwei Yu,Linlin Yang,You Xie,Ping Chen,Angela Yao*
 
 #### Weak Supervision
@@ -976,7 +976,7 @@ Junsong Yuan*
 ## Tools
 
 ### Model
-+ [T.MD.6] [NIMBLE](https://arxiv.org/pdf/2202.04533v1.pdf)
++ [T.MD.6] [NIMBLE](https://arxiv.org/pdf/2202.04533.pdf)
 + [T.MD.5] [HTML](https://handtracker.mpi-inf.mpg.de/projects/HandTextureModel/)
 + [T.MD.4] [mano](https://github.com/otaheri/MANO)
 + [T.MD.3] [manotorch](https://github.com/lixiny/manotorch)
