@@ -315,6 +315,16 @@ The below indices are references to the above [overview](#overview).
 
 #### Neural Rendering
 
++ [H.NR.20] NDF: Neural Deformable Fields for Dynamic Human Modelling. ECCV22.
+  [[PDF](https://arxiv.org/pdf/2207.09193.pdf)] \
+  *Ruiqi Zhang, Jie Chen*
+
++ [H.NR.19] ARAH: Animatable Volume Rendering of Articulated Human SDFs. ECCV22.
+  [[PDF](https://arxiv.org/pdf/2210.10036.pdf)] 
+  [[Project](https://neuralbodies.github.io/arah/)]
+  [[Code](https://github.com/taconite/arah-release)] \
+  *Shaofei Wang, Katja Schwarz, Andreas Geiger, Siyu Tang*
+
 + [H.NR.18] AvatarGen: a 3D Generative Model for Animatable Human Avatars. arXiv22.
   [[PDF](https://arxiv.org/pdf/2208.00561.pdf)]
   [[Code](https://github.com/jfzhang95/AvatarGen)] \
@@ -368,7 +378,7 @@ The below indices are references to the above [overview](#overview).
   *Zerong Zheng, Han Huang, Tao Yu, Hongwen Zhang, Yandong Guo, Yebin Liu*
 
 + [H.NR.8] Neural Actor: Neural Free-view Synthesis of Human Actors with Pose Control. SIGGRAPHAsia21.
-  [[PDF](https://arxiv.org/pdf/2106.02019.pdf)] \
+  [[PDF](https://arxiv.org/pdf/2106.02019.pdf)]
   [[Project](https://vcai.mpi-inf.mpg.de/projects/NeuralActor/)] \
   *Lingjie Liu, Marc Habermann, Viktor Rudnev, Kripasindhu Sarkar, Jiatao Gu, Christian Theobalt*
 
@@ -550,11 +560,11 @@ Junsong Yuan*
 #### Cross-Modal
 
 + [H.CM.2] Knowledge as Priors: Cross-Modal Knowledge Generalization for Datasets without Superior Knowledge. CVPR20.
-  [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Zhao_Knowledge_As_Priors_Cross-Modal_Knowledge_Generalization_for_Datasets_Without_Superior_CVPR_2020_paper.pdf#/)]\
+  [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Zhao_Knowledge_As_Priors_Cross-Modal_Knowledge_Generalization_for_Datasets_Without_Superior_CVPR_2020_paper.pdf#/)] \
   *Long Zhao, Xi Peng, Yuxiao Chen, Mubbasir Kapadia, Dimitris N. Metaxas*
 
 + [H.CM.1] Cross-modal Deep Variational Hand Pose Estimation. CVPR18.
-  [[PDF](https://openaccess.thecvf.com/content_cvpr_2018/papers/Spurr_Cross-Modal_Deep_Variational_CVPR_2018_paper.pdf#/)]\
+  [[PDF](https://openaccess.thecvf.com/content_cvpr_2018/papers/Spurr_Cross-Modal_Deep_Variational_CVPR_2018_paper.pdf#/)] \
   *Adrian Spurr, Jie Song, Seonwook Park, Otmar Hilliges*
 
 ### Hand-Object Interaction
