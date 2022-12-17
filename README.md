@@ -16,7 +16,8 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [2.5D](#25d)
       - [UV](#uv)
       - [Shape](#shape)
-      - [Neural Rendering](#neural-rendering)
+      - [Neural Rendering on Generation](#neural-rendering-on-generation)
+      - [Neural Rendering on Avatar](#neural-rendering-on-avatar)
       - [Dynamics](#dynamics)
       - [Weak Supervision](#weak-supervision)
       - [Temporal](#temporal)
@@ -313,107 +314,135 @@ The below indices are references to the above [overview](#overview).
   [[PDF](https://arxiv.org/pdf/2109.11399.pdf)] \
   *Korrawe Karunratanakul, Adrian Spurr, Zicong Fan, Otmar Hilliges, Siyu Tang*
 
-#### Neural Rendering
+#### Neural Rendering on Generation
 
-+ [H.NR.20] NDF: Neural Deformable Fields for Dynamic Human Modelling. ECCV22.
-  [[PDF](https://arxiv.org/pdf/2207.09193.pdf)] \
-  *Ruiqi Zhang, Jie Chen*
++ [H.GEN.6] 3DHumanGAN: Towards Photo-Realistic 3D-Aware Human Image Generation. arXiv22.
+  [[PDF](https://arxiv.org/pdf/2212.07378.pdf)]
+  [[Project](https://3dhumangan.github.io/)]
+  [[Code](https://github.com/3dhumangan/3DHumanGAN)] \
+  *Zhuoqian Yang, Shikai Li, Wayne Wu, Bo Dai*
 
-+ [H.NR.19] ARAH: Animatable Volume Rendering of Articulated Human SDFs. ECCV22.
-  [[PDF](https://arxiv.org/pdf/2210.10036.pdf)] 
-  [[Project](https://neuralbodies.github.io/arah/)]
-  [[Code](https://github.com/taconite/arah-release)] \
-  *Shaofei Wang, Katja Schwarz, Andreas Geiger, Siyu Tang*
++ [H.GEN.5] HumanGen: Generating Human Radiance Fields with Explicit Priors. arXiv22.
+  [[PDF](https://arxiv.org/pdf/2212.05321.pdf)]
+  *Suyi Jiang, Haoran Jiang, Ziyu Wang, Haimin Luo, Wenzheng Chen, Lan Xu*
 
-+ [H.NR.18] AvatarGen: a 3D Generative Model for Animatable Human Avatars. arXiv22.
++ [H.GEN.4] AvatarGen: a 3D Generative Model for Animatable Human Avatars. arXiv22.
   [[PDF](https://arxiv.org/pdf/2208.00561.pdf)]
   [[Code](https://github.com/jfzhang95/AvatarGen)] \
   *Jianfeng Zhang, Zihang Jiang, Dingdong Yang, Hongyi Xu, Yichun Shi, Guoxian Song, Zhongcong Xu, Xinchao Wang, Jiashi Feng*
 
-+ [H.NR.17] Next3D: Generative Neural Texture Rasterization for 3D-Aware Head Avatars. arXiv22.
++ [H.GEN.3] Next3D: Generative Neural Texture Rasterization for 3D-Aware Head Avatars. arXiv22.
   [[PDF](https://arxiv.org/pdf/2211.11208.pdf)] 
   [[Project](https://mrtornado24.github.io/Next3D/)]
   [[Code](https://github.com/MrTornado24/Next3D)] \
   *Jingxiang Sun, Xuan Wang, Lizhen Wang, Xiaoyu Li, Yong Zhang, Hongwen Zhang, Yebin Liu*
 
-+ [H.NR.16] Hand Avatar: Free-Pose Hand Animation and Rendering from Monocular Video. arXiv22.
++ [H.GEN.2] EVA3D: Compositional 3D Human Generation from 2D Image Collections. arXiv22.
+  [[PDF](https://arxiv.org/pdf/2210.04888.pdf)]
+  [[Project](https://hongfz16.github.io/projects/EVA3D.html)]
+  [[Code](https://github.com/hongfz16/EVA3D)] \
+  *Fangzhou Hong, Zhaoxi Chen, Yushi Lan, Liang Pan, Ziwei Liu*
+
++ [H.GEN.1] Efficient Geometry-aware 3D Generative Adversarial Networks. CVPR22.
+  [[PDF](https://arxiv.org/pdf/2112.07945.pdf)]
+  [[Project](https://nvlabs.github.io/eg3d/)]
+  [[Code](https://github.com/NVlabs/eg3d)] \
+  *Eric R. Chan, Connor Z. Lin, Matthew A. Chan, Koki Nagano, Boxiao Pan, Shalini De Mello, Orazio Gallo, Leonidas Guibas, Jonathan Tremblay, Sameh Khamis, Tero Karras, Gordon Wetzstein*
+
+#### Neural Rendering on Avatar
+
++ [H.AVA.19] One-shot Implicit Animatable Avatars with Model-based Priors. arXiv22.
+  [[PDF](https://arxiv.org/pdf/2212.02469.pdf)] \
+  *Yangyi Huang, Hongwei Yi, Weiyang Liu, Haofan Wang, Boxi Wu, Wenxiao Wang, Binbin Lin, Debing Zhang, Deng Cai*
+
++ [H.AVA.18] NDF: Neural Deformable Fields for Dynamic Human Modelling. ECCV22.
+  [[PDF](https://arxiv.org/pdf/2207.09193.pdf)] \
+  *Ruiqi Zhang, Jie Chen*
+
++ [H.AVA.17] ARAH: Animatable Volume Rendering of Articulated Human SDFs. ECCV22.
+  [[PDF](https://arxiv.org/pdf/2210.10036.pdf)] 
+  [[Project](https://neuralbodies.github.io/arah/)]
+  [[Code](https://github.com/taconite/arah-release)] \
+  *Shaofei Wang, Katja Schwarz, Andreas Geiger, Siyu Tang*
+
++ [H.AVA.16] Hand Avatar: Free-Pose Hand Animation and Rendering from Monocular Video. arXiv22.
   [[PDF](https://arxiv.org/pdf/2211.12782.pdf)]
   [[Project](https://seanchenxy.github.io/HandAvatarWeb/)] \
   *Xingyu Chen, Baoyuan Wang Heung-Yeung, Shum*
 
-+ [H.NR.15] Authentic Volumetric Avatars From a Phone Scan. SIGGRAPH22.
++ [H.AVA.15] Authentic Volumetric Avatars From a Phone Scan. SIGGRAPH22.
   [[PDF](https://drive.google.com/file/d/1i4NJKAggS82wqMamCJ1OHRGgViuyoY6R/view)] \
   *Chen Cao, Tomas Simon, Jin Kyu Kim, Gabe Schwartz, Michael Zollhoefer, Shunsuke Saito, Stephen Lombardi, Shih-En Wei, Danielle Belko, Shoou-I Yu, Yaser Sheikh, Jason Saragih*
 
-+ [H.NR.14] Mixture of volumetric primitives for efficient neural rendering. SIGGRAPH21.
++ [H.AVA.14] Mixture of volumetric primitives for efficient neural rendering. SIGGRAPH21.
   [[PDF](https://arxiv.org/pdf/2103.01954.pdf)]
   [[Code](https://github.com/facebookresearch/mvp)] \
   *Stephen Lombardi, Tomas Simon, Gabriel Schwartz, Michael Zollhoefer, Yaser Sheikh, Jason Saragih*
 
-+ [H.NR.13] I M Avatar: Implicit Morphable Head Avatars from Videos. CVPR22.
++ [H.AVA.13] I M Avatar: Implicit Morphable Head Avatars from Videos. CVPR22.
   [[PDF](https://openaccess.thecvf.com/content/CVPR2022/papers/Zheng_I_M_Avatar_Implicit_Morphable_Head_Avatars_From_Videos_CVPR_2022_paper.pdf)]
   [[Project](https://ait.ethz.ch/projects/2022/IMavatar/)]
   [[Code](https://github.com/zhengyuf/IMavatar)] \
   *Yufeng Zheng, Victoria Fernández Abrevaya, Marcel C. Bühler, Xu Chen, Michael J. Black, Otmar Hilliges*
 
-+ [H.NR.12] Neural Head Avatars From Monocular RGB Videos. CVPR22.
++ [H.AVA.12] Neural Head Avatars From Monocular RGB Videos. CVPR22.
   [[PDF](https://openaccess.thecvf.com/content/CVPR2022/papers/Grassal_Neural_Head_Avatars_From_Monocular_RGB_Videos_CVPR_2022_paper.pdf)]
   [[Project](https://philgras.github.io/neural_head_avatars/neural_head_avatars.html)]
   [[Code](https://github.com/philgras/neural-head-avatars)] \
   *Philip-William Grassal, Malte Prinzler, Titus Leistner, Carsten Rother, Matthias Nießner, Justus Thies*
 
-+ [H.NR.11] LISA: Learning Implicit Shape and Appearance of Hands. CVPR22.
++ [H.AVA.11] LISA: Learning Implicit Shape and Appearance of Hands. CVPR22.
   [[PDF](https://arxiv.org/pdf/2204.01695.pdf)] \
   *Enric Corona, Tomas Hodan, Minh Vo, Francesc Moreno-Noguer, Chris Sweeney, Richard Newcombe, Lingni Ma*
 
-+ [H.NR.10] Surface-Aligned Neural Radiance Fields for Controllable 3D Human Synthesis. CVPR22.
++ [H.AVA.10] Surface-Aligned Neural Radiance Fields for Controllable 3D Human Synthesis. CVPR22.
   [[PDF](https://openaccess.thecvf.com/content/CVPR2022/papers/Xu_Surface-Aligned_Neural_Radiance_Fields_for_Controllable_3D_Human_Synthesis_CVPR_2022_paper.pdf)]
   [[Project](https://pfnet-research.github.io/surface-aligned-nerf/)]
   [[Code](https://github.com/pfnet-research/surface-aligned-nerf)] \
   *Tianhan Xu, Yasuhiro Fujita, Eiichi Matsumoto*
 
-+ [H.NR.9] Structured Local Radiance Fields for Human Avatar Modeling. CVPR22.
++ [H.AVA.9] Structured Local Radiance Fields for Human Avatar Modeling. CVPR22.
   [[PDF](https://arxiv.org/pdf/2203.14478.pdf)]
   [[Project](https://liuyebin.com/slrf/slrf.html)] \
   *Zerong Zheng, Han Huang, Tao Yu, Hongwen Zhang, Yandong Guo, Yebin Liu*
 
-+ [H.NR.8] Neural Actor: Neural Free-view Synthesis of Human Actors with Pose Control. SIGGRAPHAsia21.
++ [H.AVA.8] Neural Actor: Neural Free-view Synthesis of Human Actors with Pose Control. SIGGRAPHAsia21.
   [[PDF](https://arxiv.org/pdf/2106.02019.pdf)]
   [[Project](https://vcai.mpi-inf.mpg.de/projects/NeuralActor/)] \
   *Lingjie Liu, Marc Habermann, Viktor Rudnev, Kripasindhu Sarkar, Jiatao Gu, Christian Theobalt*
 
-+ [H.NR.7] Editable Free-viewpoint Video Using a Layered Neural Representation. SIGGRAPH21.
++ [H.AVA.7] Editable Free-viewpoint Video Using a Layered Neural Representation. SIGGRAPH21.
   [[PDF](https://arxiv.org/pdf/2104.14786.pdf)]
   [[Project](https://jiakai-zhang.github.io/st-nerf/)]
   [[Code](https://github.com/DarlingHang/ST-NeRF)] \
   *Jiakai Zhang, Xinhang Liu, Xinyi Ye, Fuqiang Zhao, Yanshun Zhang, Minye Wu, Yingliang Zhang, Lan Xu, Jingyi Yu*
 
-+ [H.NR.6] NeuMan: Neural Human Radiance Field from a Single Video. arXiv22.
++ [H.AVA.6] NeuMan: Neural Human Radiance Field from a Single Video. arXiv22.
   [[PDF](https://arxiv.org/pdf/2203.12575.pdf)] \
   *Wei Jiang, Kwang Moo Yi, Golnoosh Samei, Oncel Tuzel, Anurag Ranjan*
 
-+ [H.NR.5] HumanNeRF: Generalizable Neural Human Radiance Field from Sparse Inputs. CVPR22.
++ [H.AVA.5] HumanNeRF: Generalizable Neural Human Radiance Field from Sparse Inputs. CVPR22.
   [[PDF](https://arxiv.org/pdf/2112.02789.pdf)]
   [[Project](https://zhaofuq.github.io/human-nerf/#code)] \
   *Fuqiang Zhao, Wei Yang, Jiakai Zhang, Pei Lin, Yingliang Zhang, Jingyi Yu, Lan Xu*
 
-+ [H.NR.4] HumanNeRF: Free-viewpoint Rendering of Moving People from Monocular Video. CVPR22.
++ [H.AVA.4] HumanNeRF: Free-viewpoint Rendering of Moving People from Monocular Video. CVPR22.
   [[PDF](https://arxiv.org/abs/2201.04127)]
   [[Project](https://grail.cs.washington.edu/projects/humannerf/)] \
   *Chung-Yi Weng, Brian Curless, Pratul P. Srinivasan, Jonathan T. Barron, Ira Kemelmacher-Shlizerman*
 
-+ [H.NR.3] Vid2Actor: Free-viewpoint Animatable Person Synthesis from Video in the Wild. arXiv20.
++ [H.AVA.3] Vid2Actor: Free-viewpoint Animatable Person Synthesis from Video in the Wild. arXiv20.
   [[PDF](https://arxiv.org/pdf/2012.12884.pdf)]
   [[Project](https://grail.cs.washington.edu/projects/vid2actor/)] \
   *Chung-Yi Weng, Brian Curless, Ira Kemelmacher-Shlizerman*
 
-+ [H.NR.2] Animatable Neural Radiance Fields for Modeling Dynamic Human Bodies. ICCV21
++ [H.AVA.2] Animatable Neural Radiance Fields for Modeling Dynamic Human Bodies. ICCV21
   [[PDF](https://arxiv.org/pdf/2105.02872.pdf)]
   [[Code](https://github.com/zju3dv/animatable_nerf)]
   [[Project](https://zju3dv.github.io/animatable_nerf/?utm_source=catalyzex.com)] \
   *Sida Peng, Junting Dong, Qianqian Wang, Shangzhan Zhang, Qing Shuai, Xiaowei Zhou, Hujun Bao*
 
-+ [H.NR.1] Neural Body: Implicit Neural Representations with Structured Latent Codes for Novel View Synthesis of Dynamic Humans. CVPR21.
++ [H.AVA.1] Neural Body: Implicit Neural Representations with Structured Latent Codes for Novel View Synthesis of Dynamic Humans. CVPR21.
   [[PDF](https://arxiv.org/pdf/2012.15838.pdf)]
   [[Code](https://github.com/zju3dv/neuralbody)]
   [[Project](https://zju3dv.github.io/neuralbody/)] \
@@ -894,6 +923,12 @@ Junsong Yuan*
   *Yuxiao Zhou, Marc Habermann, Ikhsanul Habibie, Ayush Tewari, Christian Theobalt, Feng Xu*
 
 #### Shape
+
++ [FBR.SP.12] ECON: Explicit Clothed humans Obtained from Normals. arXiv22.
+  [[PDF](https://arxiv.org/pdf/2212.07422.pdf)]
+  [[Project](https://xiuyuliang.cn/econ/)]
+  [[Code](https://github.com/YuliangXiu/ECON)] \
+  *Yuliang Xiu, Jinlong Yang, Xu Cao, Dimitrios Tzionas, Michael J. Black*
 
 + [FBR.SP.11] COAP: Compositional Articulated Occupancy of People. CVPR22.
   [[PDF](https://openaccess.thecvf.com/content/CVPR2022/papers/Mihajlovic_COAP_Compositional_Articulated_Occupancy_of_People_CVPR_2022_paper.pdf)]
