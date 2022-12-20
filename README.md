@@ -351,6 +351,10 @@ The below indices are references to the above [overview](#overview).
 
 #### Neural Rendering on Avatar
 
++ [H.AVA.20] HARP: Personalized Hand Reconstruction from a Monocular RGB Video. arXiv22.
+  [[PDF](https://arxiv.org/pdf/2212.09530.pdf)] \
+  *Korrawe Karunratanakul, Sergey Prokudin, Otmar Hilliges, Siyu Tang*
+
 + [H.AVA.19] One-shot Implicit Animatable Avatars with Model-based Priors. arXiv22.
   [[PDF](https://arxiv.org/pdf/2212.02469.pdf)] \
   *Yangyi Huang, Hongwei Yi, Weiyang Liu, Haofan Wang, Boxi Wu, Wenxiao Wang, Binbin Lin, Debing Zhang, Deng Cai*
