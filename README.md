@@ -316,6 +316,11 @@ The below indices are references to the above [overview](#overview).
 
 #### Neural Rendering on Generation
 
++ [H.GEN.7] Generative Neural Articulated Radiance Fields. NeurIPS22.
+  [[PDF](https://arxiv.org/pdf/2206.14314.pdf)]
+  [[Project](http://www.computationalimaging.org/publications/gnarf/)] \
+  *Alexander W. Bergman, Petr Kellnhofer, Wang Yifan, Eric R. Chan, David B. Lindell, Gordon Wetzstein*
+
 + [H.GEN.6] 3DHumanGAN: Towards Photo-Realistic 3D-Aware Human Image Generation. arXiv22.
   [[PDF](https://arxiv.org/pdf/2212.07378.pdf)]
   [[Project](https://3dhumangan.github.io/)]
@@ -636,6 +641,10 @@ Junsong Yuan*
   *Yana Hasson, Gül Varol, Dimitris Tzionas, Igor Kalevatykh, Michael J. Black, Ivan Laptev, and Cordelia Schmid*
 
 #### Graph
+
++ [HO.GH.5] Scene Synthesis from Human Motion. SIGGRAPH Asia22.
+  [[PDF](https://arxiv.org/pdf/2301.01424.pdf)] \
+  *Sifan Ye, Yixing Wang, Jiaman Li, Dennis Park, C. Karen Liu, Huazhe Xu, Jiajun Wu*
 
 + [HO.GH.4] S2Contact: Graph-based Network for 3D Hand-Object Contact Estimation with Semi-Supervised Learning. ECCV22.
   [[PDF](https://arxiv.org/pdf/2208.00874.pdf)]
