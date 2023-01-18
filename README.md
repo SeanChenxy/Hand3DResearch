@@ -99,14 +99,19 @@ The below indices are references to the above [overview](#overview).
 
 #### Forward Kinematics
 
-+ [H.FK.12] Identity-Aware Hand Mesh Estimation and Personalization from RGB Images. ECCV22.
++ [H.FK.13] Identity-Aware Hand Mesh Estimation and Personalization from RGB Images. ECCV22.
   [[Code](https://github.com/deyingk/PersonalizedHandMeshEstimation)] \
   *Deying Kong, Linguang Zhang, Liangjian Chen, Haoyu Ma, Xiangyi Yan, Shanlin Sun, Xingwei Liu, Kun Han, Xiaohui Xie*
 
-+ [H.FK.11] HandOccNet: Occlusion-Robust 3D Hand Mesh Estimation Network. CVPR22.
++ [H.FK.12] HandOccNet: Occlusion-Robust 3D Hand Mesh Estimation Network. CVPR22.
   [[PDF](https://arxiv.org/pdf/2203.14564.pdf)]
   [[Code](https://github.com/namepllet/HandOccNet)] \
   *JoonKyu Park, Yeonguk Oh, Gyeongsik Moon, Hongsuk Choi, Kyoung Mu Lee*
+
++ [H.FK.11] Locally Aware Piecewise Transformation Fields for 3D Human Mesh Registration. CVPR21.
+  [[PDF](https://arxiv.org/pdf/2104.08160.pdf)]
+  [[Code](https://github.com/taconite/PTF)] \
+  *Shaofei Wang, Andreas Geiger, Siyu Tang*
 
 + [H.FK.10] RealisticHands: A Hybrid Model for 3D Hand Reconstruction. arXiv21.
   [[PDF](https://arxiv.org/pdf/2108.13995.pdf)] \
@@ -310,9 +315,31 @@ The below indices are references to the above [overview](#overview).
 
 #### Shape
 
-+ [H.SP.1] A Skeleton-Driven Neural Occupancy Representation for Articulated Hands. 3DV21.
++ [H.SP.5] COAP: Compositional Articulated Occupancy of People. CVPR22.
+  [[PDF](https://openaccess.thecvf.com/content/CVPR2022/papers/Mihajlovic_COAP_Compositional_Articulated_Occupancy_of_People_CVPR_2022_paper.pdf)]
+  [[Project](neuralbodies.github.io/COAP)]
+  [[Code](https://github.com/markomih/COAP)] \
+  *Marko Mihajlovic, Shunsuke Saito, Aayush Bansal, Michael Zollhoefer, Siyu Tang*
+
++ [H.SP.4] A Skeleton-Driven Neural Occupancy Representation for Articulated Hands. 3DV21.
   [[PDF](https://arxiv.org/pdf/2109.11399.pdf)] \
   *Korrawe Karunratanakul, Adrian Spurr, Zicong Fan, Otmar Hilliges, Siyu Tang*
+
++ [H.SP.3] SNARF: Differentiable Forward Skinning for Animating Non-Rigid Neural Implicit Shapes. ICCV21.
+  [[PDF](https://arxiv.org/pdf/2104.03953.pdf)]
+  [[Code](https://github.com/xuchen-ethz/snarf)]
+  [[Project](https://xuchen-ethz.github.io/snarf/)]\
+  *Xu Chen, Yufeng Zheng, Michael J. Black, Otmar Hilliges, Andreas Geiger*
+
++ [H.SP.2] LEAP: Learning Articulated Occupancy of People. CVPR21
+  [[PDF](https://openaccess.thecvf.com/content/CVPR2021/papers/Mihajlovic_LEAP_Learning_Articulated_Occupancy_of_People_CVPR_2021_paper.pdf)]
+  [[Code](https://github.com/neuralbodies/leap)] \
+  *Marko Mihajlovic, Yan Zhang, Michael J. Black, Siyu Tang*
+
++ [H.SP.1] NASA: Neural Articulated Shape Approximation. ECCV20.
+  [[PDF](https://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123520596.pdf)]
+  [[Project](https://virtualhumans.mpi-inf.mpg.de/nasa/)] \
+  *Boyang Deng, JP Lewis, Timothy Jeruzalski, Gerard Pons-Moll, Geoffrey Hinton, Mohammad Norouzi, Andrea Tagliasacchi*
 
 #### Neural Rendering on Generation
 
@@ -458,6 +485,11 @@ The below indices are references to the above [overview](#overview).
   *Sida Peng, Yuanqing Zhang, Yinghao Xu, Qianqian Wang, Qing Shuai, Hujun Bao, Xiaowei Zhou*
 
 #### Dynamics
+
++ [H.DN.5] PhysDiff: Physics-Guided Human Motion Diffusion Model. arXiv22.
+  [[PDF](https://arxiv.org/pdf/2212.02500.pdf)]
+  [[Project](https://nvlabs.github.io/PhysDiff/)] \
+  *Ye Yuan, Jiaming Song, Umar Iqbal, Arash Vahdat, Jan Kautz*
 
 + [H.DN.4] Neural MoCon: Neural Motion Control for Physically Plausible Human Motion Capture. CVPR22.
   [[PDF](https://www.yangangwang.com/papers/HBZ-NM-2022-03.pdf)]
@@ -937,43 +969,16 @@ Junsong Yuan*
 
 #### Shape
 
-+ [FBR.SP.12] ECON: Explicit Clothed humans Obtained from Normals. arXiv22.
++ [FBR.SP.7] ECON: Explicit Clothed humans Obtained from Normals. arXiv22.
   [[PDF](https://arxiv.org/pdf/2212.07422.pdf)]
   [[Project](https://xiuyuliang.cn/econ/)]
   [[Code](https://github.com/YuliangXiu/ECON)] \
   *Yuliang Xiu, Jinlong Yang, Xu Cao, Dimitrios Tzionas, Michael J. Black*
 
-+ [FBR.SP.11] COAP: Compositional Articulated Occupancy of People. CVPR22.
-  [[PDF](https://openaccess.thecvf.com/content/CVPR2022/papers/Mihajlovic_COAP_Compositional_Articulated_Occupancy_of_People_CVPR_2022_paper.pdf)]
-  [[Project](neuralbodies.github.io/COAP)]
-  [[Code](https://github.com/markomih/COAP)] \
-  *Marko Mihajlovic, Shunsuke Saito, Aayush Bansal, Michael Zollhoefer, Siyu Tang*
-
-+ [FBR.SP.10] SPAMs: Structured Implicit Parametric Models. CVPR22.
++ [FBR.SP.6] SPAMs: Structured Implicit Parametric Models. CVPR22.
   [[PDF](https://arxiv.org/pdf/2201.08141.pdf)]
   [[Project](https://pablopalafox.github.io/spams/?utm_source=catalyzex.com)] \
   *Pablo Palafox, Nikolaos Sarafianos, Tony Tung, Angela Dai*
-
-+ [FBR.SP.9] SNARF: Differentiable Forward Skinning for Animating Non-Rigid Neural Implicit Shapes. ICCV21.
-  [[PDF](https://arxiv.org/pdf/2104.03953.pdf)]
-  [[Code](https://github.com/xuchen-ethz/snarf)]
-  [[Project](https://xuchen-ethz.github.io/snarf/)]\
-  *Xu Chen, Yufeng Zheng, Michael J. Black, Otmar Hilliges, Andreas Geiger*
-
-+ [FBR.SP.8] NASA: Neural Articulated Shape Approximation. ECCV20.
-  [[PDF](https://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123520596.pdf)]
-  [[Code]()] \
-  Boyang Deng, JP Lewis, Timothy Jeruzalski, Gerard Pons-Moll, Geoffrey Hinton, Mohammad Norouzi, Andrea Tagliasacchi
-
-+ [FBR.SP.7] Locally Aware Piecewise Transformation Fields for 3D Human Mesh Registration. CVPR21.
-  [[PDF](https://arxiv.org/pdf/2104.08160.pdf)]
-  [[Code](https://github.com/taconite/PTF)] \
-  *Shaofei Wang, Andreas Geiger, Siyu Tang*
-  
-+ [FBR.SP.6] LEAP: Learning Articulated Occupancy of People. CVPR21
-  [[PDF](https://openaccess.thecvf.com/content/CVPR2021/papers/Mihajlovic_LEAP_Learning_Articulated_Occupancy_of_People_CVPR_2021_paper.pdf)]
-  [[Code](https://github.com/neuralbodies/leap)] \
-  *Marko Mihajlovic, Yan Zhang, Michael J. Black, Siyu Tang*
 
 + [FBR.SP.5] Monocular Real-Time Volumetric Performance Capture. ECCV20.
   [[PDF](https://arxiv.org/pdf/2007.13988.pdf)]
