@@ -30,7 +30,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [Dynamics](#dynamics-1)
       - [Weak Supervision](#weak-supervision-1)
       - [Temporal](#temporal-1)
-      - [Joint Optimzation](#joint-optimzation)
+      - [Contact](#contact)
     - [Hand-Hand Interaction](#hand-hand-interaction)
       - [Kinematics](#kinematics-1)
       - [2.5D](#25d-1)
@@ -641,10 +641,20 @@ Junsong Yuan*
 
 #### Kinematics
 
-+ [HO.FK.6] OakInk: A Large-scale Knowledge Repository for Understanding Hand-Object Interaction. CVPR22.
++ [HO.FK.8] ArtiBoost: Boosting Articulated 3D Hand-Object Pose Estimation via Online Exploration and Synthesis. CVPR22.
+  [[PDF](https://arxiv.org/pdf/2109.05488.pdf)]
+  [[Code](https://github.com/MVIG-SJTU/ArtiBoost)] \
+  *Kailin Li, Lixin Yang, Xinyu Zhan, Jun Lv, Wenqiang Xu, Jiefeng Li, Cewu Lu*
+
++ [HO.FK.7] OakInk: A Large-scale Knowledge Repository for Understanding Hand-Object Interaction. CVPR22.
   [[PDF](https://arxiv.org/pdf/2203.15709.pdf)] 
   [[Code](https://github.com/lixiny/OakInk)] \
   *Lixin Yang, Kailin Li Xinyu Zhan, Fei Wu, Anran Xu, Liu Liu, Cewu Lu*
+
++ [HO.FK.6] CPF: Learning a Contact Potential Field to Model the Hand-object Interaction. ICCV21.
+  [[PDF](https://arxiv.org/pdf/2012.00924.pdf)]
+  [[Code](https://github.com/lixiny/CPF)] \
+  *Lixin Yang, Xinyu Zhan, Kailin Li, Wenqiang Xu, Jiefeng Li, Cewu Lu*
 
 + [HO.FK.5] HO-3D_v3: Improving the Accuracy of Hand-Object Annotations of the HO-3D Dataset. arXiv21.
   [[PDF](https://arxiv.org/pdf/2107.00887.pdf)] \
@@ -755,11 +765,6 @@ Junsong Yuan*
   [[PDF](https://www.yangangwang.com/papers/ZZM-SCR-2022-03.pdf)] \
   *Zimeng Zhao, Binghui Zuo, Wei Xie, Yangang Wang*
 
-# UV
-[HO.UV.1] UV-Based 3D Hand-Object Reconstruction with Grasp Optimization. BMVC22.
-  [[PDF](https://arxiv.org/pdf/2211.13429.pdf)] \
-  *Ziwei Yu,Linlin Yang,You Xie,Ping Chen,Angela Yao*
-
 #### Weak Supervision
 
 + [HO.WS.2] Semi-Supervised 3D Hand-Object Poses Estimation with Interactions in Time. CVPR21.
@@ -787,51 +792,44 @@ Junsong Yuan*
   [[Code](https://github.com/hassony2/handobjectconsist)] \
   *Yana Hasson, Bugra Tekin, Federica Bogo, Ivan Laptev, Marc Pollefeys, Cordelia Schmid*
 
-#### Joint Optimzation
+#### Contact
 
-+ [HO.OP.9] ContactOpt: Optimizing Contact to Improve Grasps. CVPR21.
++ [HO.Con.8] UV-Based 3D Hand-Object Reconstruction with Grasp Optimization. BMVC22.
+  [[PDF](https://arxiv.org/pdf/2211.13429.pdf)] \
+  *Ziwei Yu,Linlin Yang,You Xie,Ping Chen,Angela Yao*
+
++ [HO.Con.7] ContactOpt: Optimizing Contact to Improve Grasps. CVPR21.
   [[PDF](https://openaccess.thecvf.com/content/CVPR2021/papers/Grady_ContactOpt_Optimizing_Contact_To_Improve_Grasps_CVPR_2021_paper.pdf)]
   [[Code](https://github.com/facebookresearch/contactopt)] \
   Patrick Grady, Chengcheng Tang, Christopher D. Twigg, Minh Vo, Samarth Brahmbhatt, Charles C. Kemp
 
-
-+ [HO.OP.8] CHORE: Contact, Human and Object REconstruction from a single RGB image. arXiv22.
++ [HO.Con.6] CHORE: Contact, Human and Object REconstruction from a single RGB image. arXiv22.
   [[PDF](https://arxiv.org/pdf/2204.02445.pdf)] \
   *Xianghui Xie, Bharat Lal Bhatnagar, Gerard Pons-Moll*
 
-+ [HO.OP.7] Understanding Egocentric Hand-Object Interactions from Hand Pose Estimation
++ [HO.Con.5] Understanding Egocentric Hand-Object Interactions from Hand Pose Estimation
   [[PDF](https://arxiv.org/pdf/2109.14657.pdf#/)] \
   *Yao Lu, Walterio W. Mayol-Cuevas*
 
-+ [HO.OP.6] Reconstructing Hand-Object Interactions in the Wild. ICCV21.
++ [HO.Con.4] Reconstructing Hand-Object Interactions in the Wild. ICCV21.
   [[PDF](https://arxiv.org/pdf/2012.09856.pdf)]
   [[Code](https://people.eecs.berkeley.edu/~zhecao/rhoi/)] \
   *Zhe Cao*, Ilija Radosavovic*, Angjoo Kanazawa, Jitendra Malik*
 
-+ [HO.OP.5] ArtiBoost: Boosting Articulated 3D Hand-Object Pose Estimation via Online Exploration and Synthesis. CVPR22.
-  [[PDF](https://arxiv.org/pdf/2109.05488.pdf)]
-  [[Code](https://github.com/MVIG-SJTU/ArtiBoost)] \
-  *Kailin Li, Lixin Yang, Xinyu Zhan, Jun Lv, Wenqiang Xu, Jiefeng Li, Cewu Lu*
-
-+ [HO.OP.4] Perceiving 3D Human-Object Spatial Arrangements from a Single Image in the Wild. ECCV20.
++ [HO.Con.3] Perceiving 3D Human-Object Spatial Arrangements from a Single Image in the Wild. ECCV20.
   [[PDF](https://arxiv.org/pdf/2007.15649.pdf)]
   [[Code](https://github.com/facebookresearch/phosa?utm_source=catalyzex.com)] \
   *Jason Y. Zhang, Sam Pepose, Hanbyul Joo, Deva Ramanan, Jitendra Malik, Angjoo Kanazawa*
 
-+ [HO.OP.3] GanHand: Predicting Human Grasp Affordances in Multi-Object Scenes. CVPR20.
++ [HO.Con.2] GanHand: Predicting Human Grasp Affordances in Multi-Object Scenes. CVPR20.
   [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Corona_GanHand_Predicting_Human_Grasp_Affordances_in_Multi-Object_Scenes_CVPR_2020_paper.pdf)]
   [[Code](https://github.com/enriccorona/GanHand)] \
   *Enric Corona, Albert Pumarola, Guillem Alenya, Francesc Moreno-Noguer, Gregory Rogez*
 
-+ [HO.OP.2] Hand-Object Contact Consistency Reasoning for Human Grasps Generation. ICCV21.
++ [HO.Con.1] Hand-Object Contact Consistency Reasoning for Human Grasps Generation. ICCV21.
   [[PDF](https://arxiv.org/pdf/2104.03304.pdf)]
   [[Project](https://hwjiang1510.github.io/GraspTTA/)] \
   *Hanwen Jiang, Shaowei Liu, Jiashun Wang, Xiaolong Wang*
-
-+ [HO.OP.1] CPF: Learning a Contact Potential Field to Model the Hand-object Interaction. ICCV21.
-  [[PDF](https://arxiv.org/pdf/2012.00924.pdf)]
-  [[Code](https://github.com/lixiny/CPF)] \
-  *Lixin Yang, Xinyu Zhan, Kailin Li, Wenqiang Xu, Jiefeng Li, Cewu Lu*
 
 
 ### Hand-Hand Interaction
