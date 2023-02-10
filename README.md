@@ -383,6 +383,11 @@ The below indices are references to the above [overview](#overview).
 
 #### Neural Rendering on Avatar
 
++ [H.AVA.21] RelightableHands: Efficient Neural Relighting of Articulated Hand Models. arXiv23.
+  [[PDF](https://arxiv.org/pdf/2302.04866.pdf)]
+  [[Project](https://sh8.io/#/relightable_hands)] \
+  *Shun Iwase, Shunsuke Saito, Tomas Simon, Stephen Lombardi, Timur Bagautdinov, Rohan Joshi, Fabian Prada, Takaaki Shiratori, Yaser Sheikh, Jason Saragih*
+
 + [H.AVA.20] HARP: Personalized Hand Reconstruction from a Monocular RGB Video. arXiv22.
   [[PDF](https://arxiv.org/pdf/2212.09530.pdf)] \
   *Korrawe Karunratanakul, Sergey Prokudin, Otmar Hilliges, Siyu Tang*
