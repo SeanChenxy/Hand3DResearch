@@ -646,6 +646,10 @@ Junsong Yuan*
 
 #### Kinematics
 
++ [HH.FK.9] H2O: A Benchmark for Visual Human-human Object Handover Analysis. ICCV21.
+  [[PDF](https://arxiv.org/pdf/2104.11466.pdf)] \
+  *Ruolin Ye, Wenqiang Xu, Zhendong Xue, Tutian Tang, Yanfeng Wang, Cewu Lu*
+
 + [HO.FK.8] ArtiBoost: Boosting Articulated 3D Hand-Object Pose Estimation via Online Exploration and Synthesis. CVPR22.
   [[PDF](https://arxiv.org/pdf/2109.05488.pdf)]
   [[Code](https://github.com/MVIG-SJTU/ArtiBoost)] \
@@ -900,26 +904,26 @@ Junsong Yuan*
   [[Project](https://www.tugraz.at/index.php?id=57823)] \
   *Shreyas Hampali, Sayan Deb Sarkar, Mahdi Rad, Vincent Lepetit*
 
-
-#### GAN
-
-+ [HH.GAN.2] H2O: A Benchmark for Visual Human-human Object Handover Analysis. ICCV21.
-  [[PDF](https://arxiv.org/pdf/2104.11466.pdf)] \
-  *Ruolin Ye, Wenqiang Xu, Zhendong Xue, Tutian Tang, Yanfeng Wang, Cewu Lu*
-
-+ [HH.GAN.1] Body2Hands: Learning to Infer 3D Hands from Conversational Gesture Body Dynamics. CVPR21.
-  [[PDF](https://arxiv.org/pdf/2007.12287.pdf)]
-  [[Project](http://people.eecs.berkeley.edu/~evonne_ng/projects/body2hands/)] 
-  [[Code](https://github.com/facebookresearch/body2hands)] \
-  *Evonne Ng, Hanbyul Joo, Shiry Ginosar, Trevor Darrell*
-
 #### Graph
 
 + [HH.GH.1] Interacting Attention Graph for Single Image Two-Hand Reconstruction. CVPR22.
   [[PDF](https://arxiv.org/pdf/2203.09364.pdf)]
   [[Code](https://github.com/Dw1010/IntagHand)] \
   *Mengcheng Li, Liang An, Hongwen Zhang, Lianpeng Wu, Feng Chen, Tao Yu, Yebin Liu*
-  
+
+#### Gesture Prediction
+
++ [HH.GP.2] Diverse 3D Hand Gesture Prediction from Body Dynamics by Bilateral Hand Disentanglement. CVPR23.
+  [[PDF](https://arxiv.org/pdf/2303.01765.pdf)] \
+  *Xingqun Qi, Chen Liu, Muyi Sun, Lincheng Li, Changjie Fan, Xin Yu*
+
++ [HH.GP.1] Body2Hands: Learning to Infer 3D Hands from Conversational Gesture Body Dynamics. CVPR21.
+  [[PDF](https://arxiv.org/pdf/2007.12287.pdf)]
+  [[Project](http://people.eecs.berkeley.edu/~evonne_ng/projects/body2hands/)] 
+  [[Code](https://github.com/facebookresearch/body2hands)] \
+  *Evonne Ng, Hanbyul Joo, Shiry Ginosar, Trevor Darrell*
+
+
 ### Full Body Reconstruction
 
 #### Forward Kinematics
