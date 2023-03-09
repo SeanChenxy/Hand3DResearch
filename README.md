@@ -35,8 +35,8 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [Kinematics](#kinematics-1)
       - [2.5D](#25d-1)
       - [Transformer](#transformer-1)
-      - [GAN](#gan)
       - [Graph](#graph-2)
+      - [Gesture Prediction](#gesture-prediction)
     - [Full Body Reconstruction](#full-body-reconstruction)
       - [Forward Kinematics](#forward-kinematics-1)
       - [Inverse Kinematics](#inverse-kinematics-1)
@@ -1012,6 +1012,12 @@ Junsong Yuan*
   *Shunsuke Saito, Zeng Huang, Ryota Natsume, Shigeo Morishima, Angjoo Kanazawa, Hao Li*
 
 #### Neural Rendering
+
++ [FBR.NR.2] X-Avatar: Expressive Human Avatars. CVPR23.
+  [[PDF](https://arxiv.org/pdf/2303.04805.pdf)]
+  [[Code](https://github.com/Skype-line/X-Avatar)]
+  [[Project](https://skype-line.github.io/projects/X-Avatar/)] \
+  *Kaiyue Shen, Chen Guo, Manuel Kaufmann, Juan Jose Zarate, Julien Valentin, Jie Song, Otmar Hilliges*
 
 + [FBR.NR.1] TotalSelfScan: Learning Full-body Avatars from Self-Portrait Videos of Faces, Hands, and Bodies. NeurIPS22.
   [[PDF](https://openreview.net/pdf?id=lgj33-O1Ely)]
