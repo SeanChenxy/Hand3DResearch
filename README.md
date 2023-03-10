@@ -236,6 +236,10 @@ The below indices are references to the above [overview](#overview).
 
 #### Transformer
 
++ [H.TR.7] Deformer: Dynamic Fusion Transformer for Robust Hand Pose Estimation.
+  [[PDF](https://arxiv.org/pdf/2303.04991.pdf)] \
+  *Qichen Fu,Xingyu Liu,Ran Xu,Juan Carlos Niebles,Kris M. Kitani*
+
 + [H.TR.6] Spatial-Temporal Parallel Transformer for Arm-Hand Dynamic Estimation. CVPR22.
   [[PDF](https://arxiv.org/pdf/2203.16202.pdf)] \
   *Shuying Liu, Wenbin Wu, Jiaxian Wu, Yue Lin*
