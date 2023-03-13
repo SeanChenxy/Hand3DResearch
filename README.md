@@ -849,6 +849,11 @@ Junsong Yuan*
 
 #### Kinematics
 
++ [HH.FK.6] ACR: Attention Collaboration-based Regressor for Arbitrary Two-Hand Reconstruction. CVPR23.
+  [[PDF](https://arxiv.org/pdf/2303.05938.pdf)]
+  [[Code](https://github.com/ZhengdiYu/Arbitrary-Hands-3D-Reconstruction)] \
+  *Zhengdi Yu,Shaoli Huang,Chen Fang,Toby P. Breckon,Jue Wang*
+
 + [HH.FK.5] UmeTrack: Unified multi-view end-to-end hand tracking for VR. SIGGRAPH Asia 2022.
   [[PDF](https://arxiv.org/pdf/2211.00099.pdf)] \
   *Shangchen Han, Po-chen Wu, Yubo Zhang, Beibei Liu, Linguang Zhang, Zheng Wang, Weiguang Si, Peizhao Zhang, Yujun Cai, Tomas Hodan, Randi Cabezas, Luan Tran, Muzaffer Akbay, Tsz-Ho Yu, Cem Keskin, Robert Wang*
