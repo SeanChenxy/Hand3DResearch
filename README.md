@@ -14,7 +14,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [Graph](#graph)
       - [Transformer](#transformer)
       - [2.5D](#25d)
-      - [UV](#uv)
+      - [Texture](#texture)
       - [Shape](#shape)
       - [Neural Rendering on Generation](#neural-rendering-on-generation)
       - [Neural Rendering on Avatar](#neural-rendering-on-avatar)
@@ -301,7 +301,11 @@ The below indices are references to the above [overview](#overview).
   [[PDF](https://openaccess.thecvf.com/content_ECCV_2018/papers/Umar_Iqbal_Hand_Pose_Estimation_ECCV_2018_paper.pdf)] \
   *Umar Iqbal, Pavlo Molchanov, Thomas Breuel, Juergen Gall, Jan Kautz*
 
-#### UV
+#### Texture
+
++ [H.UV.4] Semi-supervised Hand Appearance Recovery via Structure Disentanglement and Dual Adversarial Discrimination. CVPR23.
+  [[PDF](https://arxiv.org/pdf/2303.06380.pdf)] \
+  *Zimeng Zhao, Binghui Zuo, Zhiyu Long, Yangang Wang*
 
 + [H.UV.3] DART: Articulated Hand Model with Diverse Accessories and Rich Textures. NeurIPS22.
   [[PDF](https://arxiv.org/pdf/2210.07650.pdf)] 
