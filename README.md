@@ -415,7 +415,7 @@ The below indices are references to the above [overview](#overview).
   [[Code](https://github.com/taconite/arah-release)] \
   *Shaofei Wang, Katja Schwarz, Andreas Geiger, Siyu Tang*
 
-+ [H.AVA.16] Hand Avatar: Free-Pose Hand Animation and Rendering from Monocular Video. arXiv22.
++ [H.AVA.16] Hand Avatar: Free-Pose Hand Animation and Rendering from Monocular Video. CVPR23.
   [[PDF](https://arxiv.org/pdf/2211.12782.pdf)]
   [[Project](https://seanchenxy.github.io/HandAvatarWeb/)] \
   *Xingyu Chen, Baoyuan Wang Heung-Yeung, Shum*
@@ -652,6 +652,8 @@ Junsong Yuan*
   [[PDF](https://openaccess.thecvf.com/content_cvpr_2018/papers/Spurr_Cross-Modal_Deep_Variational_CVPR_2018_paper.pdf#/)] \
   *Adrian Spurr, Jie Song, Seonwook Park, Otmar Hilliges*
 
+[\[back to top\]](#contents)
+
 ### Hand-Object Interaction
 
 #### Kinematics
@@ -850,6 +852,7 @@ Junsong Yuan*
   [[Project](https://hwjiang1510.github.io/GraspTTA/)] \
   *Hanwen Jiang, Shaowei Liu, Jiashun Wang, Xiaolong Wang*
 
+[\[back to top\]](#contents)
 
 ### Hand-Hand Interaction
 
@@ -927,6 +930,7 @@ Junsong Yuan*
   *Mengcheng Li, Liang An, Hongwen Zhang, Lianpeng Wu, Feng Chen, Tao Yu, Yebin Liu*
 
 #### Shape
+
 + [HH.SP.1] Im2Hands: Learning Attentive Implicit Representation of Interacting Two-Hand Shapes. CVPR23.
   [[PDF]](https://arxiv.org/pdf/2302.14348)
   [[Project]](https://jyunlee.github.io/projects/implicit-two-hands/)
@@ -945,6 +949,7 @@ Junsong Yuan*
   [[Code](https://github.com/facebookresearch/body2hands)] \
   *Evonne Ng, Hanbyul Joo, Shiry Ginosar, Trevor Darrell*
 
+[\[back to top\]](#contents)
 
 ### Full Body Reconstruction
 
@@ -1095,6 +1100,8 @@ Junsong Yuan*
   [[Code](https://github.com/yz-cnsdqz/PSI-release)] \
   *Yan Zhang, Mohamed Hassan, Heiko Neumann, Michael J. Black, Siyu Tang*
 
+[\[back to top\]](#contents)
+
 ## Tools
 
 ### Model
@@ -1116,6 +1123,8 @@ Junsong Yuan*
 
 ## Data
 + [T.DA.1] [HandData](https://github.com/Daming-TF/HandData)
+
+[\[back to top\]](#contents)
 
 <!-- ## Benchmarks
 ### FreiHAND
