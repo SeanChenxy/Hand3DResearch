@@ -36,11 +36,12 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [2.5D](#25d-1)
       - [Transformer](#transformer-1)
       - [Graph](#graph-2)
+      - [Shape](#shape-2)
       - [Gesture Prediction](#gesture-prediction)
     - [Full Body Reconstruction](#full-body-reconstruction)
       - [Forward Kinematics](#forward-kinematics-1)
       - [Inverse Kinematics](#inverse-kinematics-1)
-      - [Shape](#shape-2)
+      - [Shape](#shape-3)
       - [Neural Rendering](#neural-rendering-2)
       - [Grasp](#grasp)
       - [In-Sence](#in-sence)
@@ -526,6 +527,7 @@ The below indices are references to the above [overview](#overview).
   *Ye Yuan, Kris Kitani*
 
 #### Weak Supervision
+
 + [H.WS.17] CycleHand: Increasing 3D Pose Estimation Ability on In-the-wild Monocular Image through
 Cyclic Flow. MM22.
   [[PDF](https://dl.acm.org/doi/pdf/10.1145/3503161.3547828?casa_token=g6mp8PnO2ucAAAAA:06WaeyA2j8oMFAPcW0uEvL2W79qBv3kUnT5XlOQUkkZ09qRR3F4dxL1LTvfJuah6ppe4NwdTFBBh5rw)] \
@@ -654,7 +656,7 @@ Junsong Yuan*
 
 #### Kinematics
 
-+ [HH.FK.9] H2O: A Benchmark for Visual Human-human Object Handover Analysis. ICCV21.
++ [HO.FK.9] H2O: A Benchmark for Visual Human-human Object Handover Analysis. ICCV21.
   [[PDF](https://arxiv.org/pdf/2104.11466.pdf)] \
   *Ruolin Ye, Wenqiang Xu, Zhendong Xue, Tutian Tang, Yanfeng Wang, Cewu Lu*
 
@@ -923,6 +925,13 @@ Junsong Yuan*
   [[PDF](https://arxiv.org/pdf/2203.09364.pdf)]
   [[Code](https://github.com/Dw1010/IntagHand)] \
   *Mengcheng Li, Liang An, Hongwen Zhang, Lianpeng Wu, Feng Chen, Tao Yu, Yebin Liu*
+
+#### Shape
++ [HH.SP.1] Im2Hands: Learning Attentive Implicit Representation of Interacting Two-Hand Shapes. CVPR23.
+  [[PDF]](https://arxiv.org/pdf/2302.14348)
+  [[Project]](https://jyunlee.github.io/projects/implicit-two-hands/)
+  [[Code]](https://github.com/jyunlee/Im2Hands)
+  *Jihyun Lee, Minhyuk Sung, Honggyu Choi, Tae-Kyun Kim*
 
 #### Gesture Prediction
 
