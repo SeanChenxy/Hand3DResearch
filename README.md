@@ -393,7 +393,7 @@ The below indices are references to the above [overview](#overview).
 #### Neural Rendering on Avatar
 
 + [H.AVA.22] SHERF: Generalizable Human NeRF from a Single Image. arXiv23.
-  [[PDF](https://arxiv.org/pdf/2303.12791.pdf)] \
+  [[PDF](https://arxiv.org/pdf/2303.12791.pdf)]
   [[Project](https://skhu101.github.io/SHERF/)] \
   *Shoukang Hu, Fangzhou Hong, Liang Pan, Haiyi Mei, Lei Yang, Ziwei Liu*
 
