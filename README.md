@@ -364,7 +364,7 @@ The below indices are references to the above [overview](#overview).
   *Zhuoqian Yang, Shikai Li, Wayne Wu, Bo Dai*
 
 + [H.GEN.5] HumanGen: Generating Human Radiance Fields with Explicit Priors. arXiv22.
-  [[PDF](https://arxiv.org/pdf/2212.05321.pdf)]
+  [[PDF](https://arxiv.org/pdf/2212.05321.pdf)] \
   *Suyi Jiang, Haoran Jiang, Ziyu Wang, Haimin Luo, Wenzheng Chen, Lan Xu*
 
 + [H.GEN.4] AvatarGen: a 3D Generative Model for Animatable Human Avatars. arXiv22.
@@ -378,7 +378,7 @@ The below indices are references to the above [overview](#overview).
   [[Code](https://github.com/MrTornado24/Next3D)] \
   *Jingxiang Sun, Xuan Wang, Lizhen Wang, Xiaoyu Li, Yong Zhang, Hongwen Zhang, Yebin Liu*
 
-+ [H.GEN.2] EVA3D: Compositional 3D Human Generation from 2D Image Collections. arXiv22.
++ [H.GEN.2] EVA3D: Compositional 3D Human Generation from 2D Image Collections. ICLR23.
   [[PDF](https://arxiv.org/pdf/2210.04888.pdf)]
   [[Project](https://hongfz16.github.io/projects/EVA3D.html)]
   [[Code](https://github.com/hongfz16/EVA3D)] \
@@ -391,6 +391,11 @@ The below indices are references to the above [overview](#overview).
   *Eric R. Chan, Connor Z. Lin, Matthew A. Chan, Koki Nagano, Boxiao Pan, Shalini De Mello, Orazio Gallo, Leonidas Guibas, Jonathan Tremblay, Sameh Khamis, Tero Karras, Gordon Wetzstein*
 
 #### Neural Rendering on Avatar
+
++ [H.AVA.23] Structured 3D Features for Reconstructing Relightable and Animatable Avatars. CVPR23.
+  [[PDF](https://arxiv.org/pdf/2212.06820.pdf)]
+  [[Project](https://enriccorona.github.io/s3f/)] \
+  *Enric Corona, Mihai Zanfir, Thiemo Alldieck, Eduard Gabriel Bazavan, Andrei Zanfir, Cristian Sminchisescu*
 
 + [H.AVA.22] SHERF: Generalizable Human NeRF from a Single Image. arXiv23.
   [[PDF](https://arxiv.org/pdf/2303.12791.pdf)]
