@@ -37,6 +37,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [Transformer](#transformer-1)
       - [Graph](#graph-2)
       - [Shape](#shape-2)
+      - [Neural Rendering](#neural-rendering-1)
       - [Gesture Prediction](#gesture-prediction)
     - [Full Body Reconstruction](#full-body-reconstruction)
       - [Forward Kinematics](#forward-kinematics-1)
@@ -61,6 +62,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
 This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, synthetic, and physical attributes (Phy. att.).
 |  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic | Phy. att. |
 |  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- |  ---- |
+|BlurHand | [link](https://github.com/JaehaKim97/BlurHand_RELEASE) | 155K | ✅ | ✅ | | ✅ | | 
 |DART| [link](https://dart2022.github.io/)   | 800K | ✅ |  | ✅ | | ✅ | |
 |CBF| [link](https://pan.seu.edu.cn/#/link/49FA8AC060F9801261509D7ED207026E?path=)   | 25K | ✅ |  | ✅ | ✅ | | ✅ |
 |OakInk| [link](https://oakink.net/)   | 50K | ✅ |  | ✅ | ✅ | |
@@ -236,6 +238,11 @@ The below indices are references to the above [overview](#overview).
   *Liuhao Ge, Zhou Ren, Yuncheng Li, Zehao Xue, Yingying Wang, Jianfei Cai, Junsong Yuan*
 
 #### Transformer
+
++ [H.TR.8] Recovering 3D Hand Mesh Sequence from a Single Blurry Image: A New Dataset and Temporal Unfolding. CVPR23.
+  [[PDF](https://arxiv.org/pdf/2303.15417.pdf)]
+  [[Code](https://github.com/JaehaKim97/BlurHand_RELEASE)] \
+  *Yeonguk Oh, JoonKyu Park, Jaeha Kim, Gyeongsik Moon, Kyoung Mu Lee*
 
 + [H.TR.7] Deformer: Dynamic Fusion Transformer for Robust Hand Pose Estimation.
   [[PDF](https://arxiv.org/pdf/2303.04991.pdf)] \
@@ -825,6 +832,11 @@ Junsong Yuan*
 
 #### Contact
 
++ [HO.Con.9] Visual-Tactile Sensing for In-Hand Object Reconstruction. CVPR23.
+  [[PDF](https://arxiv.org/pdf/2303.14498.pdf)]
+  [[Project](https://sites.google.com/view/vtaco/)] \
+  *Wenqiang Xu, Zhenjun Yu, Han Xue, Ruolin Ye, Siqiong Yao, Cewu Lu*
+
 + [HO.Con.8] UV-Based 3D Hand-Object Reconstruction with Grasp Optimization. BMVC22.
   [[PDF](https://arxiv.org/pdf/2211.13429.pdf)] \
   *Ziwei Yu,Linlin Yang,You Xie,Ping Chen,Angela Yao*
@@ -900,6 +912,11 @@ Junsong Yuan*
 
 #### 2.5D
 
++ [HH.VX.5] Bringing Inputs to Shared Domains for 3D Interacting Hands Recovery in the Wild. CVPR23.
+  [[PDF](https://arxiv.org/pdf/2303.13652.pdf)]
+  [[Code](https://github.com/facebookresearch/InterWild)] \
+  *Gyeongsik Moon*
+
 + [HH.VX.4] End-toend detection and pose estimation of two interacting hands. ICCV21.
   [[PDF](https://openaccess.thecvf.com/content/ICCV2021/papers/Kim_End-to-End_Detection_and_Pose_Estimation_of_Two_Interacting_Hands_ICCV_2021_paper.pdf)] \
   Dong Uk Kim, Kwang In Kim, Seungryul Baek
@@ -946,6 +963,11 @@ Junsong Yuan*
   [[Project]](https://jyunlee.github.io/projects/implicit-two-hands/)
   [[Code]](https://github.com/jyunlee/Im2Hands)
   *Jihyun Lee, Minhyuk Sung, Honggyu Choi, Tae-Kyun Kim*
+
+#### Neural Rendering
++ [HH.NR.1] HandNeRF: Neural Radiance Fields for Animatable Interacting Hands. CVPR23.
+  [[PDF](https://arxiv.org/pdf/2303.13825.pdf)]
+  *Zhiyang Guo, Wengang Zhou, Min Wang, Li Li, Houqiang Li*
 
 #### Gesture Prediction
 
