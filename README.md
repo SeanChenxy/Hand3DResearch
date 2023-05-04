@@ -62,6 +62,8 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
 This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, synthetic, and physical attributes (Phy. att.).
 |  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic | Phy. att. |
 |  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- |  ---- |
+| AssemblyHands| [link](https://assemblyhands.github.io/) | 3.0M | | | ✅ | ✅ | |
+| ARCTIC | [link](https://arctic.is.tue.mpg.de/) | 2.1M | ✅ | | ✅ | ✅ | |✅ |
 |BlurHand | [link](https://github.com/JaehaKim97/BlurHand_RELEASE) | 155K | ✅ | ✅ | | ✅ | | 
 |DART| [link](https://dart2022.github.io/)   | 800K | ✅ |  | ✅ | | ✅ | |
 |CBF| [link](https://pan.seu.edu.cn/#/link/49FA8AC060F9801261509D7ED207026E?path=)   | 25K | ✅ |  | ✅ | ✅ | | ✅ |
@@ -101,6 +103,11 @@ The below indices are references to the above [overview](#overview).
 ### Hand Shape/Pose
 
 #### Forward Kinematics
+
++ [H.FK.14] Overcoming the Trade-off Between Accuracy and Plausibility
+in 3D Hand Shape Reconstruction. CVPR23.
+  [[PDF](https://arxiv.org/pdf/2305.00646.pdf)] \
+  *Ziwei Yu, Chen Li, Linlin Yang, Xiaoxu Zheng, Michael Bi Mi, Gim Hee Lee, Angela Yao*
 
 + [H.FK.13] Identity-Aware Hand Mesh Estimation and Personalization from RGB Images. ECCV22.
   [[Code](https://github.com/deyingk/PersonalizedHandMeshEstimation)] \
@@ -189,6 +196,10 @@ The below indices are references to the above [overview](#overview).
 
 #### Graph
 
++ [H.GH.11] High Fidelity 3D Hand Shape Reconstruction via Scalable Graph Frequency Decomposition. CVPR23.
+  [[PDF](https://cse.buffalo.edu/~jsyuan/papers/2023/6034_high_fidelity_3d_hand_shape_re-Camera-ready%20PDF.pdf)]
+  *Tianyu Luan, Yuanhao Zhai, Jingjing Meng, Zhong Li, Zhang Chen, Yi Xu, and Junsong Yuan*
+
 + [H.GH.10] MobRecon: Mobile-Friendly Hand Mesh Reconstruction from Monocular Image. CVPR22.
   [[PDF](https://arxiv.org/pdf/2112.02753.pdf)]
   [[Code](https://github.com/SeanChenxy/HandMesh)]\
@@ -238,6 +249,11 @@ The below indices are references to the above [overview](#overview).
   *Liuhao Ge, Zhou Ren, Yuncheng Li, Zehao Xue, Yingying Wang, Jianfei Cai, Junsong Yuan*
 
 #### Transformer
+
++ [H.TR.9] POEM: Reconstructing Hand in a Point Embedded Multi-view Stereo. CVPR23. 
+  [[PDF](https://arxiv.org/pdf/2304.04038.pdf)]
+  [[Code](https://github.com/lixiny/POEM)] \
+  *Lixin Yang, Jian Xu, Licheng Zhong, Xinyu Zhan, Zhicheng Wang, Kejian Wu, Cewu Lu*
 
 + [H.TR.8] Recovering 3D Hand Mesh Sequence from a Single Blurry Image: A New Dataset and Temporal Unfolding. CVPR23.
   [[PDF](https://arxiv.org/pdf/2303.15417.pdf)]
@@ -409,12 +425,12 @@ The below indices are references to the above [overview](#overview).
   [[Project](https://skhu101.github.io/SHERF/)] \
   *Shoukang Hu, Fangzhou Hong, Liang Pan, Haiyi Mei, Lei Yang, Ziwei Liu*
 
-+ [H.AVA.21] RelightableHands: Efficient Neural Relighting of Articulated Hand Models. arXiv23.
++ [H.AVA.21] RelightableHands: Efficient Neural Relighting of Articulated Hand Models. CVPR23.
   [[PDF](https://arxiv.org/pdf/2302.04866.pdf)]
   [[Project](https://sh8.io/#/relightable_hands)] \
   *Shun Iwase, Shunsuke Saito, Tomas Simon, Stephen Lombardi, Timur Bagautdinov, Rohan Joshi, Fabian Prada, Takaaki Shiratori, Yaser Sheikh, Jason Saragih*
 
-+ [H.AVA.20] HARP: Personalized Hand Reconstruction from a Monocular RGB Video. arXiv22.
++ [H.AVA.20] HARP: Personalized Hand Reconstruction from a Monocular RGB Video. CVPR23.
   [[PDF](https://arxiv.org/pdf/2212.09530.pdf)] \
   *Korrawe Karunratanakul, Sergey Prokudin, Otmar Hilliges, Siyu Tang*
 
@@ -750,6 +766,11 @@ Junsong Yuan*
 
 #### Shape
 
++ [HO.SP.4] gSDF: Geometry-Driven Signed Distance Functions for 3D Hand-Object Reconstruction. CVPR23.
+  [[PDF](https://zerchen.github.io/contents/CVPR_gSDF_Paper.pdf)] 
+  [[Project](https://zerchen.github.io/projects/gsdf.html)] \
+  *Zerui Chen, Shizhe Chen, Cordelia Schmid, Ivan Laptev*
+
 + [HO.SP.3] AlignSDF: Pose-Aligned Signed Distance Fields for Hand-Object Reconstruction. ECCV22.
   [[PDF](https://arxiv.org/pdf/2207.12909.pdf)]
   [[Project](https://zerchen.github.io/projects/alignsdf.html)]
@@ -939,6 +960,15 @@ Junsong Yuan*
 
 #### Transformer
 
++ [HH.TR.8] MeMaHand: Exploiting Mesh-Mano Interaction for Single Image Two-Hand Reconstruction. CVPR23.
+  [[PDF](https://arxiv.org/pdf/2303.15718.pdf)] \
+  *Congyi Wang, Feida Zhu, Shilei Wen*
+
++ [HH.TR.3] A2J-Transformer: Anchor-to-Joint Transformer Network for 3D Interacting Hand Pose Estimation from a Single RGB Image. CVPR23.
+  [[PDF](https://arxiv.org/pdf/2304.03635.pdf)]
+  [[Code](https://github.com/ChanglongJiangGit/A2J-Transformer)] \
+  *Changlong Jiang, Yang Xiao, Cunlin Wu, Mingyang Zhang, Jinghong Zheng, Zhiguo Cao, Joey Tianyi Zhou*
+
 + [HH.TR.2] 3D Interacting Hand Pose Estimation by Hand De-occlusion and Removal. ECCV22. 
   [[PDF](https://arxiv.org/pdf/2207.11061.pdf)]
   [[Project](https://menghao666.github.io/HDR/)] \
@@ -1096,13 +1126,17 @@ Junsong Yuan*
   [[Project](https://goal.is.tuebingen.mpg.de)] \
   *Omid Taheri, Vasileios Choutas, Michael J. Black, Dimitrios Tzionas*
 
-+ [FBR.GR.1] GRAB: A Dataset of Whole-Body Human Grasping of Objects. ECCV20
++ [FBR.GR.1] GRAB: A Dataset of Whole-Body Human Grasping of Objects. ECCV20.
   [[PDF](http://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123490562.pdf)]
   [[Project](https://grab.is.tue.mpg.de/)]
   [[Code](https://github.com/otaheri/GrabNet)] \
   *Omid Taheri, Nima Ghorbani, Michael J. Black, Dimitrios Tzionas*
 
 #### In-Sence
+
++ [FBR.IS.6] Generating Continual Human Motion in Diverse 3D Scenes. arXiv23.
+  [[PDF](https://arxiv.org/pdf/2304.02061.pdf)] \
+  *Aymen Mir, Xavier Puig, Angjoo Kanazawa, Gerard Pons-Moll*
 
 + [FBR.IS.5] Stochastic Scene-Aware Motion Prediction. ICCV21.
   [[PDF](https://openaccess.thecvf.com/content/ICCV2021/papers/Hassan_Stochastic_Scene-Aware_Motion_Prediction_ICCV_2021_paper.pdf)]
