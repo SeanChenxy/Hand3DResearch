@@ -738,6 +738,16 @@ Junsong Yuan*
 
 #### Graph
 
++ [HO.GH.7] THOR-Net: End-to-end Graformer-based Realistic Two Hands and Object Reconstruction with Self-supervision. WACV23.
+  [[PDF](https://openaccess.thecvf.com/content/WACV2023/papers/Aboukhadra_THOR-Net_End-to-End_Graformer-Based_Realistic_Two_Hands_and_Object_Reconstruction_With_WACV_2023_paper.pdf)] 
+  [[Code](https://github.com/rongakowang/DenseMutualAttention)] \
+  *Ahmed Tawfik Aboukhadra, Jameel Malik, Ahmed Elhayek, Nadia Robertini, Didier Stricker*
+
++ [HO.GH.6] Interacting Hand-Object Pose Estimation via Dense Mutual Attention. WACV23.
+  [[PDF](https://openaccess.thecvf.com/content/WACV2023/papers/Wang_Interacting_Hand-Object_Pose_Estimation_via_Dense_Mutual_Attention_WACV_2023_paper.pdf)] 
+  [[Code](https://github.com/rongakowang/DenseMutualAttention)] \
+  *Rong Wang Wei Mao Hongdong Li*
+
 + [HO.GH.5] Scene Synthesis from Human Motion. SIGGRAPH Asia22.
   [[PDF](https://arxiv.org/pdf/2301.01424.pdf)] \
   *Sifan Ye, Yixing Wang, Jiaman Li, Dennis Park, C. Karen Liu, Huazhe Xu, Jiajun Wu*
