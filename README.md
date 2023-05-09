@@ -347,6 +347,11 @@ in 3D Hand Shape Reconstruction. CVPR23.
 
 #### Shape
 
++ [H.SP.6] Neural Voting Field for Camera-Space 3D Hand Pose Estimation. CVPR23.
+  [[PDF](https://arxiv.org/pdf/2305.04328.pdf)] 
+  [[Project](https://linhuang17.github.io/NVF/)] \
+  *Lin Huang, Chung-Ching Lin, Kevin Lin, Lin Liang, Lijuan Wang, Junsong Yuan, Zicheng Liu*
+
 + [H.SP.5] COAP: Compositional Articulated Occupancy of People. CVPR22.
   [[PDF](https://openaccess.thecvf.com/content/CVPR2022/papers/Mihajlovic_COAP_Compositional_Articulated_Occupancy_of_People_CVPR_2022_paper.pdf)]
   [[Project](neuralbodies.github.io/COAP)]
@@ -1111,6 +1116,12 @@ Junsong Yuan*
   *Shunsuke Saito, Zeng Huang, Ryota Natsume, Shigeo Morishima, Angjoo Kanazawa, Hao Li*
 
 #### Neural Rendering
+
++ [FBR.NR.3] AvatarReX: Real-time Expressive Full-body Avatars. SIGGRAPH23.
+  [[PDF](https://arxiv.org/pdf/2305.04789.pdf)]
+  [[Project](https://liuyebin.com/AvatarRex/)] \
+  *Zerong Zheng, Xiaochen Zhao, Hongwen Zhang, Boning Liu, Yebin Liu*
+
 
 + [FBR.NR.2] X-Avatar: Expressive Human Avatars. CVPR23.
   [[PDF](https://arxiv.org/pdf/2303.04805.pdf)]
