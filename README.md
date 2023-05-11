@@ -380,6 +380,12 @@ in 3D Hand Shape Reconstruction. CVPR23.
 
 #### Neural Rendering on Generation
 
++ [H.GEN.8] AG3D: Learning to Generate 3D Avatars from 2D Image Collections. arXiv23.
+  [[PDF](https://zj-dong.github.io/AG3D/assets/paper.pdf)]
+  [[Project](https://zj-dong.github.io/AG3D/)] 
+  [[Code](https://github.com/zj-dong/AG3D)] \
+  *Zijian Dong, Xu Chen, Jinlong Yang3, Michael J. Black3, Otmar Hilliges1, Andreas Geiger*
+
 + [H.GEN.7] Generative Neural Articulated Radiance Fields. NeurIPS22.
   [[PDF](https://arxiv.org/pdf/2206.14314.pdf)]
   [[Project](http://www.computationalimaging.org/publications/gnarf/)] \
@@ -419,6 +425,10 @@ in 3D Hand Shape Reconstruction. CVPR23.
   *Eric R. Chan, Connor Z. Lin, Matthew A. Chan, Koki Nagano, Boxiao Pan, Shalini De Mello, Orazio Gallo, Leonidas Guibas, Jonathan Tremblay, Sameh Khamis, Tero Karras, Gordon Wetzstein*
 
 #### Neural Rendering on Avatar
+
++ [H.AVA.24] HumanRF: High-Fidelity Neural Radiance Fields for Humans in Motion. arXiv23. 
+  [[PDF](https://arxiv.org/pdf/2305.06356.pdf)]
+  *Mustafa Işık, Martin Rünz, Markos Georgopoulos, Taras Khakhulin, Jonathan Starck, Lourdes Agapito, Matthias Nießner*
 
 + [H.AVA.23] Structured 3D Features for Reconstructing Relightable and Animatable Avatars. CVPR23.
   [[PDF](https://arxiv.org/pdf/2212.06820.pdf)]
