@@ -1,4 +1,4 @@
-# Very Recent Progress in 3D Hand Tasks [![Awesome](https://awesome.re/badge-flat.svg)](https://awesome.re)
+# Recent Progress in 3D Hand Tasks [![Awesome](https://awesome.re/badge-flat.svg)](https://awesome.re)
 
 A complete paper list for hand pose can be found [here](https://github.com/xinghaochen/awesome-hand-pose-estimation). This repo focuses on some subject areas, ideas, and works. Although some papers invloved do not study towards 3D hand scope, they are conceived presenting relavent and inspiring ideas. If there is any mistake or carelessness, please feel free to open an issue or send me email.
 
@@ -104,8 +104,7 @@ The below indices are references to the above [overview](#overview).
 
 #### Forward Kinematics
 
-+ [H.FK.14] Overcoming the Trade-off Between Accuracy and Plausibility
-in 3D Hand Shape Reconstruction. CVPR23.
++ [H.FK.14] Overcoming the Trade-off Between Accuracy and Plausibility in 3D Hand Shape Reconstruction. CVPR23.
   [[PDF](https://arxiv.org/pdf/2305.00646.pdf)] \
   *Ziwei Yu, Chen Li, Linlin Yang, Xiaoxu Zheng, Michael Bi Mi, Gim Hee Lee, Angela Yao*
 
@@ -154,7 +153,7 @@ in 3D Hand Shape Reconstruction. CVPR23.
 + [H.FK.4] End-to-end Hand Mesh Recovery from a Monocular RGB Image. ICCV19.
   [[PDF](https://arxiv.org/pdf/1902.09305.pdf)]
   [[Code](https://github.com/MandyMo/HAMR)] \
-  *Xiong Zhang*, Qiang Li*, Wenbo Zhang, Wen Zheng*
+  *Xiong Zhang, Qiang Li, Wenbo Zhang, Wen Zheng*
 
 + [H.FK.3] 3D Hand Shape and Pose from Images in the Wild. CVPR19.
   [[PDF](https://openaccess.thecvf.com/content_CVPR_2019/papers/Boukhayma_3D_Hand_Shape_and_Pose_From_Images_in_the_Wild_CVPR_2019_paper.pdf)]
@@ -290,7 +289,7 @@ in 3D Hand Shape Reconstruction. CVPR23.
 + [H.TR.1] Epipolar Transformers. CVPR20.
   [[PDF](https://arxiv.org/pdf/2005.04551.pdf)]
   [[Code](https://github.com/yihui-he/epipolar-transformers)] \
-  *Yihui He*, Rui Yan*, Shoou-I Yu, Katerina Fragkiadaki*
+  *Yihui He, Rui Yan, Shoou-I Yu, Katerina Fragkiadaki*
 
 #### 2.5D
 
@@ -598,7 +597,7 @@ Cyclic Flow. MM22.
 + [H.WS.15] Domain Adaptive Hand Keypoint and Pixel Localization in the Wild. ECCV22. 
   [[PDF](https://arxiv.org/pdf/2203.08344.pdf)] 
   [[Project](https://tkhkaeio.github.io/projects/22-hand-ps-da/)] \
-  Takehiko Ohkawa, Yu-Jhe Li, Qichen Fu, Ryosuke Furuta, Kris M. Kitani, and Yoichi Sato
+  *Takehiko Ohkawa, Yu-Jhe Li, Qichen Fu, Ryosuke Furuta, Kris M. Kitani, and Yoichi Sato*
 
 + [H.WS.14] End-to-end Weakly-supervised Multiple 3D Hand Mesh Reconstruction from Single Image. arXiv22.
   [[PDF](https://arxiv.org/pdf/2204.08154.pdf)] \
@@ -620,8 +619,7 @@ Cyclic Flow. MM22.
   [[PDF](https://arxiv.org/pdf/2111.15199.pdf)] \
   *Samira Kaviani, Amir Rahimi, Richard Hartley*
 
-+ [H.WS.9] Self-supervised Transfer Learning for Hand Mesh Recovery from Binocular
-Images. ICCV21.
++ [H.WS.9] Self-supervised Transfer Learning for Hand Mesh Recovery from Binocular Images. ICCV21.
   [[PDF](https://openaccess.thecvf.com/content/ICCV2021/papers/Chen_Self-Supervised_Transfer_Learning_for_Hand_Mesh_Recovery_From_Binocular_Images_ICCV_2021_paper.pdf)] \
   *Zheng Chen, Sihan Wang, Yi Sun, Xiaohong Ma*
 
@@ -796,7 +794,7 @@ Junsong Yuan*
   [[PDF](https://arxiv.org/pdf/2208.00874.pdf)]
   [[Project](https://eldentse.github.io/s2contact/)] 
   [[Code](https://github.com/eldentse/s2contact)] \
-  *Takehiko Ohkawa, Yu-Jhe Li, Qichen Fu, Ryosuke Furuta, Kris M. Kitani, Yoichi Sato1*
+  *Takehiko Ohkawa, Yu-Jhe Li, Qichen Fu, Ryosuke Furuta, Kris M. Kitani, Yoichi Sato*
 
 + [HO.GH.3] Collaborative Learning for Hand and Object Reconstruction with Attention-guided Graph Convolution. CVPR22.
   [[PDF](https://arxiv.org/pdf/2204.13062.pdf)] \
@@ -930,7 +928,7 @@ Junsong Yuan*
   [[PDF](https://arxiv.org/pdf/2204.02445.pdf)] \
   *Xianghui Xie, Bharat Lal Bhatnagar, Gerard Pons-Moll*
 
-+ [HO.Con.5] Understanding Egocentric Hand-Object Interactions from Hand Pose Estimation
++ [HO.Con.5] Understanding Egocentric Hand-Object Interactions from Hand Pose Estimation. arXiv21.
   [[PDF](https://arxiv.org/pdf/2109.14657.pdf#/)] \
   *Yao Lu, Walterio W. Mayol-Cuevas*
 
