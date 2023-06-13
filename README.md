@@ -26,7 +26,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [Kinematics](#kinematics)
       - [Graph](#graph-1)
       - [Shape](#shape-1)
-      - [Neural Rendering](#neural-rendering-1)
+      - [Neural Rendering](#neural-rendering)
       - [Dynamics](#dynamics-1)
       - [Weak Supervision](#weak-supervision-1)
       - [Temporal](#temporal-1)
@@ -197,7 +197,7 @@ in 3D Hand Shape Reconstruction. CVPR23.
 #### Graph
 
 + [H.GH.11] High Fidelity 3D Hand Shape Reconstruction via Scalable Graph Frequency Decomposition. CVPR23.
-  [[PDF](https://cse.buffalo.edu/~jsyuan/papers/2023/6034_high_fidelity_3d_hand_shape_re-Camera-ready%20PDF.pdf)]
+  [[PDF](https://cse.buffalo.edu/~jsyuan/papers/2023/6034_high_fidelity_3d_hand_shape_re-Camera-ready%20PDF.pdf)] \
   *Tianyu Luan, Yuanhao Zhai, Jingjing Meng, Zhong Li, Zhang Chen, Yi Xu, and Junsong Yuan*
 
 + [H.GH.10] MobRecon: Mobile-Friendly Hand Mesh Reconstruction from Monocular Image. CVPR22.
@@ -326,6 +326,16 @@ in 3D Hand Shape Reconstruction. CVPR23.
   *Umar Iqbal, Pavlo Molchanov, Thomas Breuel, Juergen Gall, Jan Kautz*
 
 #### Texture
+
++ [H.UV.6] A Probabilistic Attention Model with Occlusion-aware Texture Regression for 3D Hand Reconstruction from a Single RGB Image. CVPR23.
+  [[PDF](https://openaccess.thecvf.com/content/CVPR2023/papers/Jiang_A_Probabilistic_Attention_Model_With_Occlusion-Aware_Texture_Regression_for_3D_CVPR_2023_paper.pdf)]
+  [[Code](https://github.com/ZhehengJiangLancaster/AMVUR)] \
+  *Zheheng Jiang, Hossein Rahmani, Sue Black, Bryan M. Williams*
+
++ [H.UV.5] Handy: Towards a high fidelity 3D hand shape and appearance model. CVPR23.
+  [[PDF](https://openaccess.thecvf.com/content/CVPR2023/papers/Potamias_Handy_Towards_a_High_Fidelity_3D_Hand_Shape_and_Appearance_CVPR_2023_paper.pdf)]
+  [[Code](https://github.com/rolpotamias/handy)] \
+  *Rolandos Potamias Potamias, Stylianos Ploumpis, Stylianos Moschoglou, Vasileios Triantafyllou, Stefanos Zafeiriou*
 
 + [H.UV.4] Semi-supervised Hand Appearance Recovery via Structure Disentanglement and Dual Adversarial Discrimination. CVPR23.
   [[PDF](https://arxiv.org/pdf/2303.06380.pdf)] \
@@ -654,6 +664,12 @@ Junsong Yuan*
 
 #### Temporal
 
++ [H.TP.9] Hierarchical Temporal Transformer for 3D Hand Pose Estimation and Action Recognition from Egocentric RGB Videos. CVPR23.
+  [[PDF](https://arxiv.org/pdf/2209.09484.pdf)] 
+  [[Project](https://fylwen.github.io/htt.html)]
+  [[Code](https://github.com/fylwen/HTT)] \
+  *Yilin Wen, Hao Pan, Lei Yang, Jia Pan, Taku Komura, Wenping Wang*
+
 + [H.TP.8] Capturing Humans in Motion: Temporal-Attentive 3D Human Pose and Shape Estimation from Monocular Video. CVPR22.
   [[PDF](https://arxiv.org/pdf/2203.08534.pdf)]
   [[Project](https://mps-net.github.io/MPS-Net/)] \
@@ -692,6 +708,10 @@ Junsong Yuan*
 
 #### Cross-Modal
 
++ [H.CM.3] Cross-domain 3D Hand Pose Estimation with Dual Modalities. CVPR23.
+  [[PDF](https://www.mu4yang.com/files/papers/cross_domain.pdf)] \
+  *Qiuxia Lin, Linlin Yang, Angela Yao*
+
 + [H.CM.2] Knowledge as Priors: Cross-Modal Knowledge Generalization for Datasets without Superior Knowledge. CVPR20.
   [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Zhao_Knowledge_As_Priors_Cross-Modal_Knowledge_Generalization_for_Datasets_Without_Superior_CVPR_2020_paper.pdf#/)] \
   *Long Zhao, Xi Peng, Yuxiao Chen, Mubbasir Kapadia, Dimitris N. Metaxas*
@@ -705,6 +725,11 @@ Junsong Yuan*
 ### Hand-Object Interaction
 
 #### Kinematics
+
++ [HO.FK.10] Harmonious Feature Learning for Interactive Hand-Object Pose Estimation. CVPR23.
+  [[PDF](https://openaccess.thecvf.com/content/CVPR2023/papers/Lin_Harmonious_Feature_Learning_for_Interactive_Hand-Object_Pose_Estimation_CVPR_2023_paper.pdf)]
+  [[Code](https://github.com/lzfff12/HFL-Net)] \
+  *Zhifeng Lin, Changxing Ding, Huan Yao, Zengsheng Kuang, Shaoli Huang*
 
 + [HO.FK.9] H2O: A Benchmark for Visual Human-human Object Handover Analysis. ICCV21.
   [[PDF](https://arxiv.org/pdf/2104.11466.pdf)] \
@@ -815,6 +840,11 @@ Junsong Yuan*
 
 #### Neural Rendering
 
++ [HO.NR.5] Affordance Diffusion: Synthesizing Hand-Object Interactions. CVPR23.
+  [[PDF](https://arxiv.org/pdf/2303.12538.pdf)]
+  [[Project](https://judyye.github.io/affordiffusion-www/)] \
+  *Yufei Ye, Xueting Li, Abhinav Gupta, Shalini De Mello, Stan Birchfield, Jiaming Song, Shubham Tulsiani, Sifei Liu*
+
 + [HO.NR.4] Hand-Object Interaction Image Generation. NeurIPS22.
   [[PDF](https://arxiv.org/pdf/2211.15663.pdf)]
   [[Project](https://play-with-hoi-generation.github.io/)] \
@@ -877,6 +907,10 @@ Junsong Yuan*
   *Yana Hasson, Bugra Tekin, Federica Bogo, Ivan Laptev, Marc Pollefeys, Cordelia Schmid*
 
 #### Contact
+
++ [HO.Con.10] Transformer-based Unified Recognition of Two Hands Manipulating Objects. CVPR23.
+  [[PDF](https://openaccess.thecvf.com/content/CVPR2023/papers/Cho_Transformer-Based_Unified_Recognition_of_Two_Hands_Manipulating_Objects_CVPR_2023_paper.pdf)]
+  *Hoseong Cho, Chanwoo Kim, Jihyeon Kim, Seongyeong Lee, Elkhan Ismayilzada, Seungryul Baek*
 
 + [HO.Con.9] Visual-Tactile Sensing for In-Hand Object Reconstruction. CVPR23.
   [[PDF](https://arxiv.org/pdf/2303.14498.pdf)]
