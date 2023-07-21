@@ -794,7 +794,7 @@ Junsong Yuan*
   [[PDF](https://arxiv.org/pdf/2208.00874.pdf)]
   [[Project](https://eldentse.github.io/s2contact/)] 
   [[Code](https://github.com/eldentse/s2contact)] \
-  *Takehiko Ohkawa, Yu-Jhe Li, Qichen Fu, Ryosuke Furuta, Kris M. Kitani, Yoichi Sato*
+  *Tze Ho Elden Tse, Zhongqun Zhang, Kwang In Kim, Ales Leonardis, Feng Zheng, Hyung Jin Chang*
 
 + [HO.GH.3] Collaborative Learning for Hand and Object Reconstruction with Attention-guided Graph Convolution. CVPR22.
   [[PDF](https://arxiv.org/pdf/2204.13062.pdf)] \
