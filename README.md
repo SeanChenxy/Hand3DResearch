@@ -1159,6 +1159,10 @@ Junsong Yuan*
 
 #### Neural Rendering
 
++ [FBR.NR.4] UnitedHuman: Harnessing Multi-Source Data for High-Resolution Human Generation. ICCV23.
+  [[Project](https://unitedhuman.github.io/)] \
+  *Jianglin Fu, Shikai Li, Yuming Jiang, Kwan-Yee Lin, Ziwei Liu, and Wayne Wu*
+
 + [FBR.NR.3] AvatarReX: Real-time Expressive Full-body Avatars. SIGGRAPH23.
   [[PDF](https://arxiv.org/pdf/2305.04789.pdf)]
   [[Project](https://liuyebin.com/AvatarRex/)] \
