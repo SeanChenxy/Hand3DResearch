@@ -62,6 +62,9 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
 This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, synthetic, and physical attributes (Phy. att.).
 |  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic | Phy. att. |
 |  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- |  ---- |
+| Two-hand 500K | [link](https://www.yangangwang.com/papers/iccv2023_interprior/BinghuiZuo-ICCV2023_InterPrior.html) | 500K | ✅ | ✅ |  |  | ✅ |
+| AffordPose | [link](https://github.com/GentlesJan/AffordPose) | 26K | ✅ |  | ✅ |  | ✅ |
+| RenderIH| [link](https://github.com/adwardlee/RenderIH) | 1.0M | ✅ | ✅ | |  | ✅ |
 | AssemblyHands| [link](https://assemblyhands.github.io/) | 3.0M | | | ✅ | ✅ | |
 | ARCTIC | [link](https://arctic.is.tue.mpg.de/) | 2.1M | ✅ | | ✅ | ✅ | |✅ |
 |BlurHand | [link](https://github.com/JaehaKim97/BlurHand_RELEASE) | 155K | ✅ | ✅ | | ✅ | | 
@@ -195,6 +198,19 @@ The below indices are references to the above [overview](#overview).
 
 #### Graph
 
++ [H.GH.13] HandR2N2: Iterative 3D Hand Pose Estimation Using a Residual Recurrent Neural Network. ICCV23.
+  [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Cheng_HandR2N2_Iterative_3D_Hand_Pose_Estimation_Using_a_Residual_Recurrent_ICCV_2023_paper.pdf)]
+  [[Code](https://github.com/cwc1260/HandR2N2)] \
+  *Wencan Cheng, Jong Hwan Ko*
+
++ [H.GH.12] HaMuCo: Hand Pose Estimation via Multiview Collaborative
+Self-Supervised Learning. ICCV23.
+  [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Zheng_HaMuCo_Hand_Pose_Estimation_via_Multiview_Collaborative_Self-Supervised_Learning_ICCV_2023_paper.pdf)]
+  [[Project](https://zxz267.github.io/HaMuCo/)] \
+  [[Code](https://github.com/zxz267/HaMuCo)] \
+  *Xiaozheng Zheng, Chao Wen, Zhou Xue, Pengfei Ren, Jingyu Wang*
+
+
 + [H.GH.11] High Fidelity 3D Hand Shape Reconstruction via Scalable Graph Frequency Decomposition. CVPR23.
   [[PDF](https://cse.buffalo.edu/~jsyuan/papers/2023/6034_high_fidelity_3d_hand_shape_re-Camera-ready%20PDF.pdf)] \
   *Tianyu Luan, Yuanhao Zhai, Jingjing Meng, Zhong Li, Zhang Chen, Yi Xu, and Junsong Yuan*
@@ -248,6 +264,10 @@ The below indices are references to the above [overview](#overview).
   *Liuhao Ge, Zhou Ren, Yuncheng Li, Zehao Xue, Yingying Wang, Jianfei Cai, Junsong Yuan*
 
 #### Transformer
+
++ [H.TR.10] Deformer: Dynamic Fusion Transformer for Robust Hand Pose Estimation. ICCV23.
+  [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Fu_Deformer_Dynamic_Fusion_Transformer_for_Robust_Hand_Pose_Estimation_ICCV_2023_paper.pdf)] \
+  *Qichen Fu, Xingyu Liu, Ran Xu, Juan Carlos Niebles, Kris M. Kitani*
 
 + [H.TR.9] POEM: Reconstructing Hand in a Point Embedded Multi-view Stereo. CVPR23. 
   [[PDF](https://arxiv.org/pdf/2304.04038.pdf)]
@@ -349,12 +369,16 @@ The below indices are references to the above [overview](#overview).
   [[PDF](https://arxiv.org/pdf/2102.03725.pdf)] \
   *Ping Chen, Yujin Chen, Dong Yang, Fangyin Wu, Qin Li, Qingpei Xia, Yong Tan*
 
-+ [H.UV.1] HTML: A Parametric Hand Texture Model for 3D Hand Reconstruction and Personalizationm. ECCV20.
++ [H.UV.1] HTML: A Parametric Hand Texture Model for 3D Hand Reconstruction and Personalization. ECCV20.
   [[PDF](http://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123560052.pdf)]
   [[Project](https://handtracker.mpi-inf.mpg.de/projects/HandTextureModel/)] \
   *Neng Qian, Jiayi Wang, Franziska Mueller, Florian Bernard, Vladislav Golyanik, Christian Theobalt*
 
 #### Shape
+
++ [H.SP.7] PHRIT: Parametric Hand Representation with Implicit Template. ICCV23.
+  [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Huang_PHRIT_Parametric_Hand_Representation_with_Implicit_Template_ICCV_2023_paper.pdf)] \
+  *Zhisheng Huang, Yujin Chen, Di Kang, Jinlu Zhang, Zhigang Tu*
 
 + [H.SP.6] Neural Voting Field for Camera-Space 3D Hand Pose Estimation. CVPR23.
   [[PDF](https://arxiv.org/pdf/2305.04328.pdf)] 
@@ -434,6 +458,12 @@ The below indices are references to the above [overview](#overview).
   *Eric R. Chan, Connor Z. Lin, Matthew A. Chan, Koki Nagano, Boxiao Pan, Shalini De Mello, Orazio Gallo, Leonidas Guibas, Jonathan Tremblay, Sameh Khamis, Tero Karras, Gordon Wetzstein*
 
 #### Neural Rendering on Avatar
+
++ [H.AVA.25] LiveHand: Real-time and Photorealistic Neural Hand Rendering. ICCV23.
+  [[PDF](https://browse.arxiv.org/pdf/2302.07672.pdf)]
+  [[Project](https://vcai.mpi-inf.mpg.de/projects/LiveHand/)]
+  [[Code](https://github.com/amundra15/livehand)] \
+  *Akshay Mundra, Mallikarjun B R, Jiayi Wang, Marc Habermann, Christian Theobalt, Mohamed Elgharib*
 
 + [H.AVA.24] HumanRF: High-Fidelity Neural Radiance Fields for Humans in Motion. arXiv23. 
   [[PDF](https://arxiv.org/pdf/2305.06356.pdf)]
@@ -724,6 +754,18 @@ Junsong Yuan*
 
 #### Kinematics
 
++ [HO.FK.12] Diffusion-Guided Reconstruction of Everyday Hand-Object Interaction Clips. ICCV23.
+  [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Ye_Diffusion-Guided_Reconstruction_of_Everyday_Hand-Object_Interaction_Clips_ICCV_2023_paper.pdf)] 
+  [[Project](https://judyye.github.io/diffhoi-www/)] 
+  [[Code](https://github.com/JudyYe/diffhoi)] \
+  *Yufei Ye, Poorvi Hebbar, Abhinav Gupta, Shubham Tulsiani*
+
++ [HO.FK.11] Chord: Category-level Hand-held Object Reconstruction via Shape Deformation. ICCV23.
+[[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Li_CHORD_Category-level_Hand-held_Object_Reconstruction_via_Shape_Deformation_ICCV_2023_paper.pdf)]
+[[Project](https://kailinli.github.io/CHORD/)] \
+*Kailin Li, Lixin Yang, Haoyu Zhen, Zenan Lin, Xinyu Zhan, Licheng Zhong, Jian Xu, Kejian Wu, Cewu Lu*
+
+
 + [HO.FK.10] Harmonious Feature Learning for Interactive Hand-Object Pose Estimation. CVPR23.
   [[PDF](https://openaccess.thecvf.com/content/CVPR2023/papers/Lin_Harmonious_Feature_Learning_for_Interactive_Hand-Object_Pose_Estimation_CVPR_2023_paper.pdf)]
   [[Code](https://github.com/lzfff12/HFL-Net)] \
@@ -775,6 +817,10 @@ Junsong Yuan*
   *Yana Hasson, Gül Varol, Dimitris Tzionas, Igor Kalevatykh, Michael J. Black, Ivan Laptev, and Cordelia Schmid*
 
 #### Graph
+
++ [HO.GH.7] Dynamic Hyperbolic Attention Network for Fine Hand-object Reconstruction. ICCV23.
+  [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Leng_Dynamic_Hyperbolic_Attention_Network_for_Fine_Hand-object_Reconstruction_ICCV_2023_paper.pdf)] \
+  *Zhiying Leng, Shun-Cheng Wu, Mahdi Saleh, Antonio Montanaro, Hao Yu, Yin Wang, Nassir Navab, Xiaohui Liang, Federico Tombari*
 
 + [HO.GH.7] THOR-Net: End-to-end Graformer-based Realistic Two Hands and Object Reconstruction with Self-supervision. WACV23.
   [[PDF](https://openaccess.thecvf.com/content/WACV2023/papers/Aboukhadra_THOR-Net_End-to-End_Graformer-Based_Realistic_Two_Hands_and_Object_Reconstruction_With_WACV_2023_paper.pdf)] 
@@ -906,6 +952,12 @@ Junsong Yuan*
 
 #### Contact
 
++ [HO.Con.11] ContactGen: Generative Contact Modeling for Grasp Generation. ICCV23.
+  [[PDF](https://browse.arxiv.org/pdf/2310.03740.pdf)]
+  [[Project](https://stevenlsw.github.io/contactgen/)]
+  [[Code](https://github.com/stevenlsw/contactgen)] \
+  *Shaowei Liu, Yang Zhou, Jimei Yang, Saurabh Gupta, Shenlong Wang*
+
 + [HO.Con.10] Transformer-based Unified Recognition of Two Hands Manipulating Objects. CVPR23.
   [[PDF](https://openaccess.thecvf.com/content/CVPR2023/papers/Cho_Transformer-Based_Unified_Recognition_of_Two_Hands_Manipulating_Objects_CVPR_2023_paper.pdf)]
   *Hoseong Cho, Chanwoo Kim, Jihyeon Kim, Seongyeong Lee, Elkhan Ismayilzada, Seungryul Baek*
@@ -1017,6 +1069,18 @@ Junsong Yuan*
 
 #### Transformer
 
++ [HH.TR.10] Spectral Graphormer: Spectral Graph-based Transformer for Egocentric Two-Hand Reconstruction using Multi-View Color Images. ICCV23.
+  [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Tse_Spectral_Graphormer_Spectral_Graph-Based_Transformer_for_Egocentric_Two-Hand_Reconstruction_using_ICCV_2023_paper.pdf)]
+  [[Project](https://eldentse.github.io/Spectral-Graphormer/)]
+  [[Code](https://github.com/google-research/google-research/tree/master/spectral_graphormer)] \
+  *Tze Ho Elden Tse, Franziska Mueller, Zhengyang Shen, Danhang Tang, Thabo Beeler, Mingsong Dou, Yinda Zhang, Sasa Petrovic, Hyung Jin Chang, Jonathan Taylor, Bardia Doosti*
+
++ [HH.TR.9] Reconstructing Interacting Hands with Interaction Prior from Monocular Images. ICCV23.
+  [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Zuo_Reconstructing_Interacting_Hands_with_Interaction_Prior_from_Monocular_Images_ICCV_2023_paper.pdf)]
+  [[Project](https://www.yangangwang.com/papers/iccv2023_interprior/BinghuiZuo-ICCV2023_InterPrior.html)]
+  [[Code](https://github.com/binghui-z/InterPrior_pytorch)]
+  *Binghui Zuo, Zimeng Zhao, Wenqian Sun, Wei Xie, Zhou Xue, Yangang Wang*
+
 + [HH.TR.8] MeMaHand: Exploiting Mesh-Mano Interaction for Single Image Two-Hand Reconstruction. CVPR23.
   [[PDF](https://arxiv.org/pdf/2303.15718.pdf)] \
   *Congyi Wang, Feida Zhu, Shilei Wen*
@@ -1037,6 +1101,12 @@ Junsong Yuan*
   *Shreyas Hampali, Sayan Deb Sarkar, Mahdi Rad, Vincent Lepetit*
 
 #### Graph
+
++ [HH.GH.2] Decoupled Iterative Refinement Framework for Interacting Hands Reconstruction from a Single RGB Image. ICCV23.
+  [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Ren_Decoupled_Iterative_Refinement_Framework_for_Interacting_Hands_Reconstruction_from_a_ICCV_2023_paper.pdf)]
+  [[Project](https://pengfeiren96.github.io/DIR/)]
+  [[Code](https://github.com/PengfeiRen96/DIR)] \
+  *Pengfei Ren, Chao Wen, Xiaozheng Zheng, Zhou Xue, Haifeng Sun, Qi Qi, Jingyu Wang, Jianxin Liao*
 
 + [HH.GH.1] Interacting Attention Graph for Single Image Two-Hand Reconstruction. CVPR22.
   [[PDF](https://arxiv.org/pdf/2203.09364.pdf)]
