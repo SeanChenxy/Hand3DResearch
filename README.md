@@ -909,6 +909,11 @@ Junsong Yuan*
 
 #### Dynamics
 
++ [HO.DN.4] DeepSimHO: Stable Pose Estimation for Hand-Object Interaction via Physics Simulation. NeurIPS23.
+  [[PDF](https://arxiv.org/pdf/2310.07206.pdf)]
+  [[Code](https://github.com/rongakowang/DeepSimHO)] \
+  *Rong Wang, Wei Mao, Hongdong Li*
+
 + [HO.DN.3] D-Grasp: Physically Plausible Dynamic Grasp Synthesis for Hand-Object Interactions. CVPR22.
   [[PDF](https://arxiv.org/pdf/2112.03028.pdf)]
   [[Project](https://eth-ait.github.io/d-grasp/)] \
@@ -1127,6 +1132,10 @@ Junsong Yuan*
   *Zhiyang Guo, Wengang Zhou, Min Wang, Li Li, Houqiang Li*
 
 #### Gesture Prediction
+
++ [HH.GP.3] BodyFormer: Semantics-guided 3D Body Gesture Synthesis with Transformer. arXiv23.
+  [[PDF](https://arxiv.org/pdf/2310.06851.pdf)] \
+  *Kunkun Pang, Dafei Qin, Yingruo Fan, Julian Habekost, Takaaki Shiratori, Junichi Yamagishi, Taku Komura*
 
 + [HH.GP.2] Diverse 3D Hand Gesture Prediction from Body Dynamics by Bilateral Hand Disentanglement. CVPR23.
   [[PDF](https://arxiv.org/pdf/2303.01765.pdf)] \
