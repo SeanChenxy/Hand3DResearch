@@ -265,10 +265,6 @@ Self-Supervised Learning. ICCV23.
 
 #### Transformer
 
-+ [H.TR.10] Deformer: Dynamic Fusion Transformer for Robust Hand Pose Estimation. ICCV23.
-  [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Fu_Deformer_Dynamic_Fusion_Transformer_for_Robust_Hand_Pose_Estimation_ICCV_2023_paper.pdf)] \
-  *Qichen Fu, Xingyu Liu, Ran Xu, Juan Carlos Niebles, Kris M. Kitani*
-
 + [H.TR.9] POEM: Reconstructing Hand in a Point Embedded Multi-view Stereo. CVPR23. 
   [[PDF](https://arxiv.org/pdf/2304.04038.pdf)]
   [[Code](https://github.com/lixiny/POEM)] \
@@ -279,8 +275,8 @@ Self-Supervised Learning. ICCV23.
   [[Code](https://github.com/JaehaKim97/BlurHand_RELEASE)] \
   *Yeonguk Oh, JoonKyu Park, Jaeha Kim, Gyeongsik Moon, Kyoung Mu Lee*
 
-+ [H.TR.7] Deformer: Dynamic Fusion Transformer for Robust Hand Pose Estimation.
-  [[PDF](https://arxiv.org/pdf/2303.04991.pdf)] \
++ [H.TR.7] Deformer: Dynamic Fusion Transformer for Robust Hand Pose Estimation. ICCV23
+  [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Fu_Deformer_Dynamic_Fusion_Transformer_for_Robust_Hand_Pose_Estimation_ICCV_2023_paper.pdf)] \
   *Qichen Fu,Xingyu Liu,Ran Xu,Juan Carlos Niebles,Kris M. Kitani*
 
 + [H.TR.6] Spatial-Temporal Parallel Transformer for Arm-Hand Dynamic Estimation. CVPR22.
