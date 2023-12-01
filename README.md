@@ -1119,12 +1119,19 @@ Junsong Yuan*
 + [HH.SP.1] Im2Hands: Learning Attentive Implicit Representation of Interacting Two-Hand Shapes. CVPR23.
   [[PDF]](https://arxiv.org/pdf/2302.14348)
   [[Project]](https://jyunlee.github.io/projects/implicit-two-hands/)
-  [[Code]](https://github.com/jyunlee/Im2Hands)
+  [[Code]](https://github.com/jyunlee/Im2Hands) \
   *Jihyun Lee, Minhyuk Sung, Honggyu Choi, Tae-Kyun Kim*
 
 #### Neural Rendering
+
++ [HH.NR.2] HandRefiner: Refining Malformed Hands in Generated Images by Diffusion-based Conditional Inpainting. arXiv23.
+  [[PDF](https://arxiv.org/pdf/2311.17957.pdf)]
+  [[Code](https://github.com/wenquanlu/HandRefiner)] \
+  *Wenquan Lu, Yufei Xu, Jing Zhang, Chaoyue Wang, Dacheng Tao*
+
+
 + [HH.NR.1] HandNeRF: Neural Radiance Fields for Animatable Interacting Hands. CVPR23.
-  [[PDF](https://arxiv.org/pdf/2303.13825.pdf)]
+  [[PDF](https://arxiv.org/pdf/2303.13825.pdf)] \
   *Zhiyang Guo, Wengang Zhou, Min Wang, Li Li, Houqiang Li*
 
 #### Gesture Prediction
