@@ -62,6 +62,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
 This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, synthetic, and physical attributes (Phy. att.).
 |  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic | Phy. att. |
 |  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- |  ---- |
+| HandDiffuse12.5M | [link](https://handdiffuse.github.io/) | 12.5M | ✅ | ✅ | | ✅ |  |
 | Two-hand 500K | [link](https://www.yangangwang.com/papers/iccv2023_interprior/BinghuiZuo-ICCV2023_InterPrior.html) | 500K | ✅ | ✅ |  |  | ✅ |
 | AffordPose | [link](https://github.com/GentlesJan/AffordPose) | 26K | ✅ |  | ✅ |  | ✅ |
 | RenderIH| [link](https://github.com/adwardlee/RenderIH) | 1.0M | ✅ | ✅ | |  | ✅ |
@@ -264,6 +265,12 @@ Self-Supervised Learning. ICCV23.
   *Liuhao Ge, Zhou Ren, Yuncheng Li, Zehao Xue, Yingying Wang, Jianfei Cai, Junsong Yuan*
 
 #### Transformer
+
++ [H.TR.10] Reconstructing Hands in 3D with Transformers. arXiv23.
+  [[PDF](https://arxiv.org/pdf/2312.05251.pdf)]
+  [[Project](https://geopavlakos.github.io/hamer/)]
+  [[Code](https://github.com/geopavlakos/hamer)] \
+  *Georgios Pavlakos, Dandan Shan, Ilija Radosavovic, Angjoo Kanazawa, David Fouhey, Jitendra Malik*
 
 + [H.TR.9] POEM: Reconstructing Hand in a Point Embedded Multi-view Stereo. CVPR23. 
   [[PDF](https://arxiv.org/pdf/2304.04038.pdf)]
@@ -1129,12 +1136,16 @@ Junsong Yuan*
   [[Code](https://github.com/wenquanlu/HandRefiner)] \
   *Wenquan Lu, Yufei Xu, Jing Zhang, Chaoyue Wang, Dacheng Tao*
 
-
 + [HH.NR.1] HandNeRF: Neural Radiance Fields for Animatable Interacting Hands. CVPR23.
   [[PDF](https://arxiv.org/pdf/2303.13825.pdf)] \
   *Zhiyang Guo, Wengang Zhou, Min Wang, Li Li, Houqiang Li*
 
 #### Gesture Prediction
+
++ [HH.GP.4] HandDiffuse: Generative Controllers for Two-Hand Interactions via Diffusion Models. arXiv23.
+  [[PDF](https://arxiv.org/pdf/2312.04867.pdf)]
+  [[Project](https://handdiffuse.github.io/)] \
+  *Pei Lin, Sihang Xu, Hongdi Yang, Yiran Liu, Xin Chen, Jingya Wang, Jingyi Yu, Lan Xu*
 
 + [HH.GP.3] BodyFormer: Semantics-guided 3D Body Gesture Synthesis with Transformer. arXiv23.
   [[PDF](https://arxiv.org/pdf/2310.06851.pdf)] \
@@ -1282,6 +1293,10 @@ Junsong Yuan*
   *Omid Taheri, Nima Ghorbani, Michael J. Black, Dimitrios Tzionas*
 
 #### In-Sence
+
++ [FBR.IS.7] Controllable Human-Object Interaction Synthesis. arXiv23.
+  [[PDF](https://arxiv.org/pdf/2312.03913.pdf)] \
+  *Jiaman Li, Alexander Clegg, Roozbeh Mottaghi, Jiajun Wu, Xavier Puig, C. Karen Liu*
 
 + [FBR.IS.6] Generating Continual Human Motion in Diverse 3D Scenes. arXiv23.
   [[PDF](https://arxiv.org/pdf/2304.02061.pdf)] \
