@@ -108,6 +108,12 @@ The below indices are references to the above [overview](#overview).
 
 #### Forward Kinematics
 
++ [H.FK.14] HMP: Hand Motion Priors for Pose and Shape Estimation from Video. WACV24.
+  [[PDF](https://arxiv.org/pdf/2312.16737.pdf)] 
+  [[Project](https://hmp.is.tue.mpg.de/)] 
+  [[Code](https://github.com/enesduran/HMP)] \
+  *Enes Duran, Muhammed Kocabas, Vasileios Choutas, Zicong Fan, Michael J. Black*
+
 + [H.FK.14] Overcoming the Trade-off Between Accuracy and Plausibility in 3D Hand Shape Reconstruction. CVPR23.
   [[PDF](https://arxiv.org/pdf/2305.00646.pdf)] \
   *Ziwei Yu, Chen Li, Linlin Yang, Xiaoxu Zheng, Michael Bi Mi, Gim Hee Lee, Angela Yao*
@@ -964,6 +970,11 @@ Junsong Yuan*
   *Yana Hasson, Bugra Tekin, Federica Bogo, Ivan Laptev, Marc Pollefeys, Cordelia Schmid*
 
 #### Contact
+
++ [HO.Con.12] In-Hand 3D Object Reconstruction from a Monocular RGB Video. AAAI24.
+  [[PDF](https://arxiv.org/pdf/2312.16425.pdf)] 
+  [[Project](https://east-j.github.io/ihor)] \
+  *Shijian Jiang, Qi Ye, Rengan Xie, Yuchi Huo, Xiang Li, Yang Zhou, Jiming Chen*
 
 + [HO.Con.11] ContactGen: Generative Contact Modeling for Grasp Generation. ICCV23.
   [[PDF](https://browse.arxiv.org/pdf/2310.03740.pdf)]
