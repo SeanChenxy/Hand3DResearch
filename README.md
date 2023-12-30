@@ -912,6 +912,11 @@ Junsong Yuan*
 
 #### Dynamics
 
++ [HO.DN.5] MACS: Mass Conditioned 3D Hand and Object Motion Synthesis. 3DV24.
+  [[PDF](https://arxiv.org/pdf/2312.14929.pdf)] 
+  [[Project](https://vcai.mpi-inf.mpg.de/projects/MACS/)]
+  *Soshi Shimada, Franziska Mueller, Jan Bednarik, Bardia Doosti, Bernd Bickel, Danhang Tang, Vladislav Golyanik, Jonathan Taylor, Christian Theobalt, Thabo Beeler*
+
 + [HO.DN.4] DeepSimHO: Stable Pose Estimation for Hand-Object Interaction via Physics Simulation. NeurIPS23.
   [[PDF](https://arxiv.org/pdf/2310.07206.pdf)]
   [[Code](https://github.com/rongakowang/DeepSimHO)] \
@@ -1017,6 +1022,16 @@ Junsong Yuan*
 ### Hand-Hand Interaction
 
 #### Kinematics
+
++ [HH.FK.7] Monocular 3D Hand Mesh Recovery via Dual Noise Estimation. AAAI24.
+  [[PDF](https://arxiv.org/pdf/2312.15916.pdf)]
+  [[Code](https://github.com/hanhuili/DNE4Hand)] \
+  *Hanhui Li, Xiaojian Lin, Xuan Huang, Zejun Yang, Zhisheng Wang, Xiaodan Liang*
+
++ [HH.FK.6] 3D Pose Estimation of Two Interacting Hands from a Monocular Event Camera. 3DV24.
+  [[PDF](https://arxiv.org/pdf/2312.14157.pdf)]
+  [[Project](https://4dqv.mpi-inf.mpg.de/Ev2Hands/)] \
+  *Christen Millerdurai, Diogo Luvizon, Viktor Rudnev, André Jonas3, Jiayi Wang, Christian Theobalt, Vladislav Golyanik*
 
 + [HH.FK.6] ACR: Attention Collaboration-based Regressor for Arbitrary Two-Hand Reconstruction. CVPR23.
   [[PDF](https://arxiv.org/pdf/2303.05938.pdf)]
@@ -1323,7 +1338,7 @@ Junsong Yuan*
 + [FBR.IS.2] The Wanderings of Odysseus in 3D Scenes. CVPR22.
   [[PDF](https://arxiv.org/pdf/2112.09251.pdf)]
   [[Project](https://yz-cnsdqz.github.io/eigenmotion/GAMMA/)] \
-  *Yan Zhang Siyu Tang*
+  *Yan Zhang, Siyu Tang*
 
 + [FBR.IS.1] Generating 3D People in Scenes without People. CVPR20.
   [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Zhang_Generating_3D_People_in_Scenes_Without_People_CVPR_2020_paper.pdf)]
