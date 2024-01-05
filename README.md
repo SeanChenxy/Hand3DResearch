@@ -1157,6 +1157,11 @@ Junsong Yuan*
 
 #### Neural Rendering
 
++ [HH.NR.3] 3D Visibility-aware Generalizable Neural Radiance Fields for Interacting Hands. AAAI24
+  [[PDF](https://arxiv.org/pdf/2401.00979.pdf)]
+  [[Code](https://github.com/XuanHuang0/VANeRF)] \
+  *Xuan Huang, Hanhui Li, Zejun Yang, Zhisheng Wang, Xiaodan Liang*
+
 + [HH.NR.2] HandRefiner: Refining Malformed Hands in Generated Images by Diffusion-based Conditional Inpainting. arXiv23.
   [[PDF](https://arxiv.org/pdf/2311.17957.pdf)]
   [[Code](https://github.com/wenquanlu/HandRefiner)] \
@@ -1168,6 +1173,34 @@ Junsong Yuan*
 
 #### Gesture Prediction
 
++ [HH.GP.9] From Audio to Photoreal Embodiment: Synthesizing Humans in Conversations. arXiv23.
+  [[PDF](https://arxiv.org/pdf/2401.01885.pdf)]
+  [[Project](https://people.eecs.berkeley.edu/~evonne_ng/projects/audio2photoreal/)]
+  [[Code](https://github.com/facebookresearch/audio2photoreal)] \
+  *Evonne Ng, Javier Romero, Timur Bagautdinov, Shaojie Bai, Trevor Darrell, Angjoo Kanazawa, Alexander Richard*
+
++ [HH.GP.8] Taming Diffusion Models for Audio-Driven Co-Speech Gesture Generation. CVPR23.
+  [[PDF](https://arxiv.org/pdf/2303.09119.pdf)] 
+  [[Code](https://github.com/Advocate99/DiffGesture?tab=readme-ov-file)] \
+  *Lingting Zhu, Xian Liu, Xuanyu Liu, Rui Qian, Ziwei Liu, Lequan Yu*
+
++ [HH.GP.7] Learning Hierarchical Cross-Modal Association for Co-Speech Gesture Generation. CVPR22.
+  [[PDF](https://arxiv.org/pdf/2203.13161.pdf)]
+  [[Project](https://alvinliu0.github.io/projects/HA2G)]
+  [[Code](https://github.com/alvinliu0/HA2G)] \
+  *Xian Liu, Qianyi Wu, Hang Zhou, Yinghao Xu, Rui Qian, Xinyi Lin, Xiaowei Zhou, Wayne Wu, Bo Dai, Bolei Zhou*
+
++ [HH.GP.6] GestureDiffuCLIP: Gesture Diffusion Model with CLIP Latents. SIGGRAPH23.
+  [[PDF](https://arxiv.org/pdf/2303.14613.pdf)]
+  [[Project](https://pku-mocca.github.io/GestureDiffuCLIP-Page/)] \
+  *Tenglong Ao, Zeyi Zhang, Libin Liu*
+
++ [HH.GP.5] Rhythmic Gesticulator: Rhythm-Aware Co-Speech Gesture Synthesis with Hierarchical Neural Embeddings. SIGGRAPH22.
+  [[PDF](https://arxiv.org/pdf/2210.01448.pdf)]
+  [[Project](https://pku-mocca.github.io/Rhythmic-Gesticulator-Page/)] 
+  [[Code](https://github.com/Aubrey-ao/HumanBehaviorAnimation?tab=readme-ov-file)] \
+  *Tenglong Ao, Qingzhe Gao, Yuke Lou, Baoquan Chen, Libin Liu*
+
 + [HH.GP.4] HandDiffuse: Generative Controllers for Two-Hand Interactions via Diffusion Models. arXiv23.
   [[PDF](https://arxiv.org/pdf/2312.04867.pdf)]
   [[Project](https://handdiffuse.github.io/)] \
@@ -1178,7 +1211,8 @@ Junsong Yuan*
   *Kunkun Pang, Dafei Qin, Yingruo Fan, Julian Habekost, Takaaki Shiratori, Junichi Yamagishi, Taku Komura*
 
 + [HH.GP.2] Diverse 3D Hand Gesture Prediction from Body Dynamics by Bilateral Hand Disentanglement. CVPR23.
-  [[PDF](https://arxiv.org/pdf/2303.01765.pdf)] \
+  [[PDF](https://arxiv.org/pdf/2303.01765.pdf)]
+  [[Code](https://github.com/XingqunQi-lab/Diverse-3D-Hand-Gesture-Prediction)] \
   *Xingqun Qi, Chen Liu, Muyi Sun, Lincheng Li, Changjie Fan, Xin Yu*
 
 + [HH.GP.1] Body2Hands: Learning to Infer 3D Hands from Conversational Gesture Body Dynamics. CVPR21.
@@ -1355,6 +1389,32 @@ Junsong Yuan*
   [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Zhang_Generating_3D_People_in_Scenes_Without_People_CVPR_2020_paper.pdf)]
   [[Code](https://github.com/yz-cnsdqz/PSI-release)] \
   *Yan Zhang, Mohamed Hassan, Heiko Neumann, Michael J. Black, Siyu Tang*
+
+#### Text-to-Motion
+
++ [FBR.Tex.1] GUESS: GradUally Enriching SyntheSis for Text-Driven Human Motion Generation. TVCG24.
+  [[PDF](https://arxiv.org/pdf/2401.02142.pdf)] 
+  [[Code](https://github.com/Xuehao-Gao/GUESS)] \
+  *Xuehao Gao, Yang Yang, Zhenyu Xie, Shaoyi Du, Zhongqian Sun, Yang Wu*
+
++ [FBR.Tex.2] MotionGPT: Human Motion as a Foreign Language. NeurIPS23.
+  [[PDF](https://arxiv.org/pdf/2306.14795.pdf)]
+  [[Project](https://motion-gpt.github.io/)] 
+  [[Code](https://github.com/OpenMotionLab/MotionGPT)] \
+  *Biao Jiang, Xin Chen, Wen Liu, Jingyi Yu, Gang Yu, Tao Chen*
+
++ [FBR.Tex.3] MotionGPT: Finetuned LLMs are General-Purpose Motion Generators. arXiv23.
+  [[PDF](https://arxiv.org/pdf/2306.10900.pdf)]
+  [[Project](https://qiqiapink.github.io/MotionGPT/)]
+  [[Code](https://github.com/qiqiApink/MotionGPT)] \
+  *Yaqi Zhang, Di Huang, Bin Liu, Shixiang Tang, Yan Lu, Lu Chen, Lei Bai, Qi Chu, Nenghai Yu, Wanli Ouyang*
+
++ [FBR.Tex.4] UDE: A Unified Driving Engine for Human Motion Generation. CVPR23.
+  [[PDF](https://arxiv.org/pdf/2211.16016.pdf)]
+  [[Project](https://zixiangzhou916.github.io/UDE/)]
+  [[Code](https://github.com/zixiangzhou916/UDE/?tab=readme-ov-file)] \
+  *Zixiang Zhou, Baoyuan Wang*
+
 
 [\[back to top\]](#contents)
 
