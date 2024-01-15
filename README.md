@@ -468,6 +468,11 @@ Self-Supervised Learning. ICCV23.
 
 #### Neural Rendering on Avatar
 
++ [H.AVA.26] URHand: Universal Relightable Hands. arXiv24.
+  [[PDF](https://arxiv.org/abs/2401.05334)]
+  [[Project](https://frozenburning.github.io/projects/urhand/)] \
+  *Zhaoxi Chen, Gyeongsik Moon, Kaiwen Guo, etal.*
+
 + [H.AVA.25] LiveHand: Real-time and Photorealistic Neural Hand Rendering. ICCV23.
   [[PDF](https://browse.arxiv.org/pdf/2302.07672.pdf)]
   [[Project](https://vcai.mpi-inf.mpg.de/projects/LiveHand/)]
@@ -1172,6 +1177,17 @@ Junsong Yuan*
   *Zhiyang Guo, Wengang Zhou, Min Wang, Li Li, Houqiang Li*
 
 #### Gesture Prediction
+
++ [HH.GP.11] Generating Holistic 3D Human Motion from Speech. CVPR23.
+  [[PDF](https://openaccess.thecvf.com/content/CVPR2023/papers/Yi_Generating_Holistic_3D_Human_Motion_From_Speech_CVPR_2023_paper.pdf)]
+  [[Project](https://talkshow.is.tue.mpg.de/)]
+  [[Code](https://github.com/yhw-yhw/TalkSHOW)] \
+  *Hongwei Yi, Hualin Liang, Yifei Liu, Qiong Cao, Yandong Wen, Timo Bolkart, Dacheng Tao, Michael J. Black*
+
++ [HH.GP.10] LivelySpeaker: Towards Semantic-Aware Co-Speech Gesture Generation. ICCV23.
+  [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Zhi_LivelySpeaker_Towards_Semantic-Aware_Co-Speech_Gesture_Generation_ICCV_2023_paper.pdf)]
+  [[Code](https://github.com/zyhbili/LivelySpeaker)] \
+  *Yihao Zhi, Xiaodong Cun, Xuelin Chen, Xi Shen, Wen Guo, Shaoli Huang, Shenghua Gao*
 
 + [HH.GP.9] From Audio to Photoreal Embodiment: Synthesizing Humans in Conversations. arXiv23.
   [[PDF](https://arxiv.org/pdf/2401.01885.pdf)]
