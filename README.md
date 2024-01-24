@@ -1370,6 +1370,17 @@ Junsong Yuan*
 
 #### In-Sence
 
++ [FBR.IS.9] GenZI: Zero-Shot 3D Human-Scene Interaction Generation. arXiv23.
+  [[PDF](https://arxiv.org/pdf/2311.17737.pdf)]
+  [[Project](https://craigleili.github.io/projects/genzi/)] \
+  *Lei Li, Angela Dai*
+
++ [FBR.IS.8] Compositional Human-Scene Interaction Synthesis with Semantic Control. ECCV22.
+  [[PDF](https://www.ecva.net/papers/eccv_2022/papers_ECCV/papers/136660305.pdf)]
+  [[Project](https://zkf1997.github.io/COINS/index.html)] 
+  [[Code](https://github.com/zkf1997/COINS)] \
+  *Kaifeng Zhao, Shaofei Wang, Yan Zhang, Thabo Beeler, Siyu Tang*
+
 + [FBR.IS.7] Controllable Human-Object Interaction Synthesis. arXiv23.
   [[PDF](https://arxiv.org/pdf/2312.03913.pdf)] \
   *Jiaman Li, Alexander Clegg, Roozbeh Mottaghi, Jiajun Wu, Xavier Puig, C. Karen Liu*
@@ -1408,16 +1419,35 @@ Junsong Yuan*
 
 #### Text-to-Motion
 
-+ [FBR.Tex.1] GUESS: GradUally Enriching SyntheSis for Text-Driven Human Motion Generation. TVCG24.
-  [[PDF](https://arxiv.org/pdf/2401.02142.pdf)] 
-  [[Code](https://github.com/Xuehao-Gao/GUESS)] \
-  *Xuehao Gao, Yang Yang, Zhenyu Xie, Shaoyi Du, Zhongqian Sun, Yang Wu*
++ [FBR.Tex.8] TMR: Text-to-Motion Retrieval Using Contrastive 3D Human Motion Synthesis. ICCV23.
+  [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Petrovich_TMR_Text-to-Motion_Retrieval_Using_Contrastive_3D_Human_Motion_Synthesis_ICCV_2023_paper.pdf)]
+  [[Project](https://mathis.petrovich.fr/tmr/)]
+  [[Code](https://github.com/Mathux/TMR)] \
+  *Mathis Petrovich, Michael J. Black, Gül Varol*
 
-+ [FBR.Tex.2] MotionGPT: Human Motion as a Foreign Language. NeurIPS23.
-  [[PDF](https://arxiv.org/pdf/2306.14795.pdf)]
-  [[Project](https://motion-gpt.github.io/)] 
-  [[Code](https://github.com/OpenMotionLab/MotionGPT)] \
-  *Biao Jiang, Xin Chen, Wen Liu, Jingyi Yu, Gang Yu, Tao Chen*
++ [FBR.Tex.7] HumanTOMATO: Text-aligned Whole-body Motion Generation. arXiv23.
+  [[PDF](https://arxiv.org/pdf/2310.12978.pdf)]
+  [[Project](https://lhchen.top/HumanTOMATO/)]
+  [[Code](https://github.com/IDEA-Research/HumanTOMATO)] \
+  *Shunlin Lu, Ling-Hao Chen, Ailing Zeng, Jing Lin, Ruimao Zhang, Lei Zhang, Heung-Yeung Shum*
+
++ [FBR.Tex.6] Motion-X: A Large-scale 3D Expressive Whole-body Human Motion Dataset. NeurIPS23.
+  [[PDF](https://arxiv.org/pdf/2307.00818.pdf)]
+  [[Project](https://motion-x-dataset.github.io/)]
+  [[Code](https://github.com/IDEA-Research/Motion-X?tab=readme-ov-file)] \
+  *Jing Lin, Ailing Zeng, Shunlin Lu, Yuanhao Cai, Ruimao Zhang, Haoqian Wang, Lei Zhang*
+
++ [FBR.Tex.5] MotionDiffuse: Text-Driven Human Motion Generation with Diffusion Model. arXiv22.
+  [[PDF](https://arxiv.org/pdf/2208.15001.pdf)]
+  [[Project](https://mingyuan-zhang.github.io/projects/MotionDiffuse.html)]
+  [[Code](https://github.com/mingyuan-zhang/MotionDiffuse?tab=readme-ov-file)] \
+  *Mingyuan Zhang, Zhongang Cai, Liang Pan, Fangzhou Hong, Xinying Guo, Lei Yang, Ziwei Liu*
+
++ [FBR.Tex.4] UDE: A Unified Driving Engine for Human Motion Generation. CVPR23.
+  [[PDF](https://arxiv.org/pdf/2211.16016.pdf)]
+  [[Project](https://zixiangzhou916.github.io/UDE/)]
+  [[Code](https://github.com/zixiangzhou916/UDE/?tab=readme-ov-file)] \
+  *Zixiang Zhou, Baoyuan Wang*
 
 + [FBR.Tex.3] MotionGPT: Finetuned LLMs are General-Purpose Motion Generators. arXiv23.
   [[PDF](https://arxiv.org/pdf/2306.10900.pdf)]
@@ -1425,11 +1455,16 @@ Junsong Yuan*
   [[Code](https://github.com/qiqiApink/MotionGPT)] \
   *Yaqi Zhang, Di Huang, Bin Liu, Shixiang Tang, Yan Lu, Lu Chen, Lei Bai, Qi Chu, Nenghai Yu, Wanli Ouyang*
 
-+ [FBR.Tex.4] UDE: A Unified Driving Engine for Human Motion Generation. CVPR23.
-  [[PDF](https://arxiv.org/pdf/2211.16016.pdf)]
-  [[Project](https://zixiangzhou916.github.io/UDE/)]
-  [[Code](https://github.com/zixiangzhou916/UDE/?tab=readme-ov-file)] \
-  *Zixiang Zhou, Baoyuan Wang*
++ [FBR.Tex.2] MotionGPT: Human Motion as a Foreign Language. NeurIPS23.
+  [[PDF](https://arxiv.org/pdf/2306.14795.pdf)]
+  [[Project](https://motion-gpt.github.io/)] 
+  [[Code](https://github.com/OpenMotionLab/MotionGPT)] \
+  *Biao Jiang, Xin Chen, Wen Liu, Jingyi Yu, Gang Yu, Tao Chen*
+
++ [FBR.Tex.1] GUESS: GradUally Enriching SyntheSis for Text-Driven Human Motion Generation. TVCG24.
+  [[PDF](https://arxiv.org/pdf/2401.02142.pdf)] 
+  [[Code](https://github.com/Xuehao-Gao/GUESS)] \
+  *Xuehao Gao, Yang Yang, Zhenyu Xie, Shaoyi Du, Zhongqian Sun, Yang Wu*
 
 
 [\[back to top\]](#contents)
