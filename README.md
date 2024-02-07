@@ -108,6 +108,10 @@ The below indices are references to the above [overview](#overview).
 
 #### Forward Kinematics
 
++ [H.FK.15] SiMA-Hand: Boosting 3D Hand-Mesh Reconstruction by Single-to-Multi-View Adaptation. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2402.01389.pdf)] \
+  *Yinqiao Wang, Hao Xu, Pheng-Ann Heng, Chi-Wing Fu*
+
 + [H.FK.14] HMP: Hand Motion Priors for Pose and Shape Estimation from Video. WACV24.
   [[PDF](https://arxiv.org/pdf/2312.16737.pdf)] 
   [[Project](https://hmp.is.tue.mpg.de/)] 
@@ -1328,6 +1332,12 @@ Junsong Yuan*
 
 #### Neural Rendering
 
++ [FBR.NR.5] XAGen: 3D Expressive Human Avatars Generation. NeurIPS23.
+  [[PDF](https://arxiv.org/pdf/2311.13574.pdf)]
+  [[Project](https://showlab.github.io/xagen/)]
+  [[Code](https://github.com/magic-research/xagen)] \
+  *Zhongcong Xu, Jianfeng Zhang, Jun Hao Liew, Jiashi Feng, Mike Zheng Shou*
+
 + [FBR.NR.4] UnitedHuman: Harnessing Multi-Source Data for High-Resolution Human Generation. ICCV23.
   [[Project](https://unitedhuman.github.io/)] \
   *Jianglin Fu, Shikai Li, Yuming Jiang, Kwan-Yee Lin, Ziwei Liu, and Wayne Wu*
@@ -1336,7 +1346,6 @@ Junsong Yuan*
   [[PDF](https://arxiv.org/pdf/2305.04789.pdf)]
   [[Project](https://liuyebin.com/AvatarRex/)] \
   *Zerong Zheng, Xiaochen Zhao, Hongwen Zhang, Boning Liu, Yebin Liu*
-
 
 + [FBR.NR.2] X-Avatar: Expressive Human Avatars. CVPR23.
   [[PDF](https://arxiv.org/pdf/2303.04805.pdf)]
