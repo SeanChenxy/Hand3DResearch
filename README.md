@@ -902,6 +902,10 @@ Junsong Yuan*
 
 #### Neural Rendering
 
++ [HO.NR.6] InterFusion: Text-Driven Generation of 3D Human-Object Interaction. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2403.15612.pdf)] \
+  *Sisi Dai, Wenhao Li, Haowen Sun, Haibin Huang, Chongyang Ma, Hui Huang, Kai Xu, Ruizhen Hu*
+
 + [HO.NR.5] Affordance Diffusion: Synthesizing Hand-Object Interactions. CVPR23.
   [[PDF](https://arxiv.org/pdf/2303.12538.pdf)]
   [[Project](https://judyye.github.io/affordiffusion-www/)] \
