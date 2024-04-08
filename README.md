@@ -62,6 +62,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
 This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, synthetic, and physical attributes (Phy. att.).
 |  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic | Phy. att. |
 |  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- |  ---- |
+|OakInk2| [link](https://oakink.net/v2/)   | 4M | ✅ | ✅ | ✅ | ✅ | |
 | HandDiffuse12.5M | [link](https://handdiffuse.github.io/) | 12.5M | ✅ | ✅ | | ✅ |  |
 | Two-hand 500K | [link](https://www.yangangwang.com/papers/iccv2023_interprior/BinghuiZuo-ICCV2023_InterPrior.html) | 500K | ✅ | ✅ |  |  | ✅ |
 | AffordPose | [link](https://github.com/GentlesJan/AffordPose) | 26K | ✅ |  | ✅ |  | ✅ |
@@ -931,6 +932,12 @@ Junsong Yuan*
 
 #### Dynamics
 
++ [HO.DN.6] InterDiff: Generating 3D Human-Object Interactions with Physics-Informed Diffusion. ICCV23.
+  [[PDF](https://arxiv.org/pdf/2308.16905.pdf)]
+  [[Project](https://sirui-xu.github.io/InterDiff/)]
+  [[Code](https://github.com/Sirui-Xu/InterDiff)]
+  *Sirui Xu, Zhengyuan Li, Yu-Xiong Wang, Liang-Yan Gui*
+
 + [HO.DN.5] MACS: Mass Conditioned 3D Hand and Object Motion Synthesis. 3DV24.
   [[PDF](https://arxiv.org/pdf/2312.14929.pdf)] 
   [[Project](https://vcai.mpi-inf.mpg.de/projects/MACS/)]
@@ -983,6 +990,12 @@ Junsong Yuan*
   *Yana Hasson, Bugra Tekin, Federica Bogo, Ivan Laptev, Marc Pollefeys, Cordelia Schmid*
 
 #### Contact
+
++ [HO.Con.13] HOI-Diff: Text-Driven Synthesis of 3D Human-Object Interactions using Diffusion Models. arXiv23.
+  [[PDF](https://arxiv.org/pdf/2312.06553.pdf)]
+  [[Project](https://neu-vi.github.io/HOI-Diff/)]
+  [[Code](https://github.com/neu-vi/HOI-Diff?tab=readme-ov-file)] \
+  *Xiaogang Peng, Yiming Xie, Zizhao Wu, Varun Jampani, Deqing Sun, Huaizu Jiang*
 
 + [HO.Con.12] In-Hand 3D Object Reconstruction from a Monocular RGB Video. AAAI24.
   [[PDF](https://arxiv.org/pdf/2312.16425.pdf)] 
