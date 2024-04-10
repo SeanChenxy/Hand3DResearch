@@ -46,6 +46,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [Neural Rendering](#neural-rendering-2)
       - [Grasp](#grasp)
       - [In-Sence](#in-sence)
+      - [Text-to-Motion](#text-to-motion)
   - [Tools](#tools)
     - [Model](#model)
     - [MoCap](#mocap)
@@ -472,6 +473,17 @@ Self-Supervised Learning. ICCV23.
   *Eric R. Chan, Connor Z. Lin, Matthew A. Chan, Koki Nagano, Boxiao Pan, Shalini De Mello, Orazio Gallo, Leonidas Guibas, Jonathan Tremblay, Sameh Khamis, Tero Karras, Gordon Wetzstein*
 
 #### Neural Rendering on Avatar
+
++ [H.AVA.28] PhysAvatar: Learning the Physics of Dressed 3D Avatars from Visual Observations. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2404.04421.pdf)]
+  [[Project](https://qingqing-zhao.github.io/PhysAvatar)] \
+  *Yang Zheng, Qingqing Zhao, Guandao Yang, Wang Yifan, Donglai Xiang, Florian Dubost, Dmitry Lagun, Thabo Beeler, Federico Tombari, Leonidas Guibas, Gordon Wetzstein*
+
++ [H.AVA.27] InstructHumans: Editing Animated 3D Human Textures with Instructions. arXiv24.
+  [[PDF](https://jyzhu.top/instruct-humans/data/InstructHumans.pdf)]
+  [[Project](https://jyzhu.top/instruct-humans/)]
+  [[Code](https://github.com/viridityzhu/InstructHumans)] \
+  *Jiayin Zhu, Linlin Yang, Angela Yao*
 
 + [H.AVA.26] URHand: Universal Relightable Hands. arXiv24.
   [[PDF](https://arxiv.org/abs/2401.05334)]
@@ -991,6 +1003,11 @@ Junsong Yuan*
 
 #### Contact
 
++ [HO.Con.14] Joint Reconstruction of 3D Human and Object via Contact-Based Refinement Transformer. CVPR24.
+  [[PDF](https://arxiv.org/pdf/2404.04819.pdf)]
+  [[Code](https://github.com/dqj5182/CONTHO_RELEASE)] \
+  *Hyeongjin Nam, Daniel Sungho Jung, Gyeongsik Moon, Kyoung Mu Lee*
+
 + [HO.Con.13] HOI-Diff: Text-Driven Synthesis of 3D Human-Object Interactions using Diffusion Models. arXiv23.
   [[PDF](https://arxiv.org/pdf/2312.06553.pdf)]
   [[Project](https://neu-vi.github.io/HOI-Diff/)]
@@ -1198,6 +1215,18 @@ Junsong Yuan*
   *Zhiyang Guo, Wengang Zhou, Min Wang, Li Li, Houqiang Li*
 
 #### Gesture Prediction
+
++ [HH.GP.13] EMAGE: Towards Unified Holistic Co-Speech Gesture Generation via Expressive Masked Audio Gesture Modeling. CVPR24.
+  [[PDF](https://arxiv.org/pdf/2401.00374.pdf)]
+  [[Project](https://pantomatrix.github.io/EMAGE/)]
+  [[Code](https://github.com/PantoMatrix/PantoMatrix/tree/main/scripts/EMAGE_2024)] \
+  *Haiyang Liu, Zihao Zhu, Giorgio Becherini, Yichen Peng, Mingyang Su, You Zhou, Xuefei Zhe, Naoya Iwamoto, Bo Zheng, Michael J. Black*
+
++ [HH.GP.12] BEAT: A Large-Scale Semantic and Emotional Multi-Modal Dataset for Conversational Gestures Synthesis. ECCV22.
+  [[PDF](https://www.ecva.net/papers/eccv_2022/papers_ECCV/papers/136670605.pdf)]
+  [[Project](https://pantomatrix.github.io/BEAT/)]
+  [[Code](https://github.com/PantoMatrix/PantoMatrix/tree/main/scripts/BEAT_2022)] \
+  *Haiyang Liu, Zihao Zhu, Naoya Iwamoto, Yichen Peng, Zhengqing Li, You Zhou, Elif Bozkurt, Bo Zheng*
 
 + [HH.GP.11] Generating Holistic 3D Human Motion from Speech. CVPR23.
   [[PDF](https://openaccess.thecvf.com/content/CVPR2023/papers/Yi_Generating_Holistic_3D_Human_Motion_From_Speech_CVPR_2023_paper.pdf)]
