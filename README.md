@@ -1146,6 +1146,11 @@ Junsong Yuan*
 
 #### Transformer
 
++ [HH.TR.11] Extract-and-Adaptation Network for 3D Interacting Hand Mesh Recovery. ICCVW23.
+  [[PDF](https://openaccess.thecvf.com/content/ICCV2023W/CV4Metaverse/papers/Park_Extract-and-Adaptation_Network_for_3D_Interacting_Hand_Mesh_Recovery_ICCVW_2023_paper.pdf)]
+  [[Code](https://github.com/jkpark0825/EANet)] \
+  *JoonKyu Park, Daniel Sungho Jung, Gyeongsik Moon, Kyoung Mu Lee*
+  
 + [HH.TR.10] Spectral Graphormer: Spectral Graph-based Transformer for Egocentric Two-Hand Reconstruction using Multi-View Color Images. ICCV23.
   [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Tse_Spectral_Graphormer_Spectral_Graph-Based_Transformer_for_Egocentric_Two-Hand_Reconstruction_using_ICCV_2023_paper.pdf)]
   [[Project](https://eldentse.github.io/Spectral-Graphormer/)]
