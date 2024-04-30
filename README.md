@@ -278,6 +278,24 @@ Self-Supervised Learning. ICCV23.
 
 #### Transformer
 
++ [H.TR.13] SMPLer: Taming Transformers for Monocular 3D
+Human Shape and Pose Estimation. TPAMI24.
+  [[PDF](https://arxiv.org/pdf/2404.15276)]
+  [[Code](https://github.com/xuxy09/SMPLer)] \
+  *Xiangyu Xu, Lijuan Liu, Shuicheng Yan*
+
++ [H.TR.12] ChatPose: Chatting about 3D Human Pose. CVPR24.
+  [[PDF](https://arxiv.org/pdf/2311.18836)]
+  [[Project](https://yfeng95.github.io/ChatPose/)]
+  *Yao Feng, Jing Lin, Sai Kumar Dwivedi, Yu Sun, Priyanka Patel, Michael J. Black*
+
++ [H.TR.11] TokenHMR: Advancing Human Mesh Recovery with
+a Tokenized Pose Representation. CVPR24.
+  [[PDF](https://arxiv.org/pdf/2404.16752)]
+  [[Project](https://tokenhmr.is.tue.mpg.de/)]
+  [[Code](https://github.com/saidwivedi/TokenHMR)] \
+  *Sai Kumar Dwivedi, Yu Sun, Priyanka Patel, Yao Feng, Michael J. Black*
+
 + [H.TR.10] Reconstructing Hands in 3D with Transformers. arXiv23.
   [[PDF](https://arxiv.org/pdf/2312.05251.pdf)]
   [[Project](https://geopavlakos.github.io/hamer/)]
@@ -1478,6 +1496,13 @@ Junsong Yuan*
   *Yan Zhang, Mohamed Hassan, Heiko Neumann, Michael J. Black, Siyu Tang*
 
 #### Text-to-Motion
+
++ [FBR.Tex.9] MoMask: Generative Masked Modeling of 3D Human Motions. 
+  [[PDF](https://arxiv.org/pdf/2312.00063)]
+  [[Project](https://ericguo5513.github.io/momask/)]
+  [[Code](https://github.com/EricGuo5513/momask-codes)] \
+  *Chuan Guo, Yuxuan Mu, Muhammad Gohar Javed, Sen Wang, Li Cheng*
+
 
 + [FBR.Tex.8] TMR: Text-to-Motion Retrieval Using Contrastive 3D Human Motion Synthesis. ICCV23.
   [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Petrovich_TMR_Text-to-Motion_Retrieval_Using_Contrastive_3D_Human_Motion_Synthesis_ICCV_2023_paper.pdf)]
