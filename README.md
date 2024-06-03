@@ -1164,6 +1164,11 @@ Junsong Yuan*
 
 #### Transformer
 
++ [HH.TR.12] 4DHands: Reconstructing Interactive Hands in 4D with Transformers. arXiv24. 
+  [[PDF](https://arxiv.org/pdf/2405.20330)]
+  [[Proejct](https://4dhands.github.io/)] \
+  *Dixuan Lin, Yuxiang Zhang, Mengcheng Li, Yebin Liu, Wei Jing, Qi Yan, Qianying Wang, Hongwen Zhang*
+
 + [HH.TR.11] Extract-and-Adaptation Network for 3D Interacting Hand Mesh Recovery. ICCVW23.
   [[PDF](https://openaccess.thecvf.com/content/ICCV2023W/CV4Metaverse/papers/Park_Extract-and-Adaptation_Network_for_3D_Interacting_Hand_Mesh_Recovery_ICCVW_2023_paper.pdf)]
   [[Code](https://github.com/jkpark0825/EANet)] \
