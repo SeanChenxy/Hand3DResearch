@@ -1220,6 +1220,11 @@ Junsong Yuan*
 
 #### Shape
 
++ [HH.SP.2] MultiPly: Reconstruction of Multiple People from Monocular Video in the Wild. CVPR24.
+  [[PDF](https://arxiv.org/pdf/2406.01595)]
+  [[Project](https://eth-ait.github.io/MultiPly/)] \
+  *Zeren Jiang, Chen Guo, Manuel Kaufmann, Tianjian Jiang, Julien Valentin, Otmar Hilliges, Jie Song*
+
 + [HH.SP.1] Im2Hands: Learning Attentive Implicit Representation of Interacting Two-Hand Shapes. CVPR23.
   [[PDF]](https://arxiv.org/pdf/2302.14348)
   [[Project]](https://jyunlee.github.io/projects/implicit-two-hands/)
