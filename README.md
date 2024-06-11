@@ -1021,6 +1021,11 @@ Junsong Yuan*
 
 #### Contact
 
++ [HO.Con.15] GenHeld: Generating and Editing Handheld Objects. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2406.05059)] 
+  [[Code](https://ivl.cs.brown.edu/research/genheld.html)] \
+  *Chaerin Min, Srinath Sridhar*
+
 + [HO.Con.14] Joint Reconstruction of 3D Human and Object via Contact-Based Refinement Transformer. CVPR24.
   [[PDF](https://arxiv.org/pdf/2404.04819.pdf)]
   [[Code](https://github.com/dqj5182/CONTHO_RELEASE)] \
