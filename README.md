@@ -446,6 +446,12 @@ a Tokenized Pose Representation. CVPR24.
 
 #### Neural Rendering on Generation
 
++ [H.GEN.9] Human 3Diffusion: Realistic Avatar Creation via Explicit 3D Consistent Diffusion Models. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2406.08475)]
+  [[Project](https://yuxuan-xue.com/human-3diffusion/)]
+  [[Code](https://github.com/YuxuanSnow/Human3Diffusion/)] \
+  *Yuxuan Xue, Xianghui Xie, Riccardo Marin, Gerard Pons-Moll*
+
 + [H.GEN.8] AG3D: Learning to Generate 3D Avatars from 2D Image Collections. arXiv23.
   [[PDF](https://zj-dong.github.io/AG3D/assets/paper.pdf)]
   [[Project](https://zj-dong.github.io/AG3D/)] 
