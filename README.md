@@ -1469,6 +1469,11 @@ Junsong Yuan*
 
 #### In-Sence
 
++ [FBR.IS.10] Human-Aware 3D Scene Generation with Spatially-constrained Diffusion Models. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2406.18159)]
+  [[Project](https://hong-xl.github.io/SHADE/)] \
+  *Xiaolin Hong, Hongwei Yi, Fazhi He, Qiong Cao*
+
 + [FBR.IS.9] GenZI: Zero-Shot 3D Human-Scene Interaction Generation. arXiv23.
   [[PDF](https://arxiv.org/pdf/2311.17737.pdf)]
   [[Project](https://craigleili.github.io/projects/genzi/)] \
