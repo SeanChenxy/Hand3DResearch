@@ -1027,6 +1027,17 @@ Junsong Yuan*
 
 #### Contact
 
++ [HO.Con.17] DexGraspNet: A Large-Scale Robotic Dexterous Grasp Dataset for General Objects Based on Simulation. ICRA23.
+  [[PDF](https://arxiv.org/pdf/2210.02697)]
+  [[Project](https://pku-epic.github.io/DexGraspNet/)]
+  [[Code](https://github.com/PKU-EPIC/DexGraspNet)] \
+  *Ruicheng Wang, Jialiang Zhang, Jiayi Chen, Yinzhen Xu, Puhao Li, Tengyu Liu, He Wang*
+
++ [HO.Con.16] SemGrasp: Semantic Grasp Generation via Language Aligned Discretization. ECCV24.
+  [[PDF](https://arxiv.org/pdf/2404.03590)]
+  [[Project](https://kailinli.github.io/SemGrasp/)]
+  *Kailin Li, Jingbo Wang,Lixin Yang, Cewu Lu, Bo Dai*
+
 + [HO.Con.15] GenHeld: Generating and Editing Handheld Objects. arXiv24.
   [[PDF](https://arxiv.org/pdf/2406.05059)] 
   [[Code](https://ivl.cs.brown.edu/research/genheld.html)] \
@@ -1431,6 +1442,12 @@ Junsong Yuan*
 + [FBR.NR.4] UnitedHuman: Harnessing Multi-Source Data for High-Resolution Human Generation. ICCV23.
   [[Project](https://unitedhuman.github.io/)] \
   *Jianglin Fu, Shikai Li, Yuming Jiang, Kwan-Yee Lin, Ziwei Liu, and Wayne Wu*
+
++ [FBR,NR,4] Expressive Gaussian Human Avatars from Monocular RGB Video. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2407.03204)]
+  [[Project](https://evahuman.github.io/)]
+  [[Code](https://github.com/evahuman/EVA)] \
+  *Hezhen Hu, Zhiwen Fan, Tianhao Wu, Yihan Xi, Seoyoung Lee, Georgios Pavlakos, Zhangyang Wang*
 
 + [FBR.NR.3] AvatarReX: Real-time Expressive Full-body Avatars. SIGGRAPH23.
   [[PDF](https://arxiv.org/pdf/2305.04789.pdf)]
