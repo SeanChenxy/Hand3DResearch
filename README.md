@@ -61,15 +61,20 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
 
 ## Datasets
 This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, synthetic, and physical attributes (Phy. att.).
-|  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic | Phy. att. |
-|  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- |  ---- |
-|OakInk2| [link](https://oakink.net/v2/)   | 4M | ✅ | ✅ | ✅ | ✅ | |
+|  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic | Phy. att. | Affordacne |
+|  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- |  ---- | ---- |
+|Assembly101| [link](https://github.com/WeiXie-wx/HMDO)   | 111M |  | ✅ | ✅ | ✅ | |
+|HMDO| [link](https://github.com/WeiXie-wx/HMDO)   | 21K | ✅ | ✅ | ✅ | ✅ | |
+|HOI4D| [link](https://www.hoi4d.top/)   | 2.4M | ✅ |  | ✅ | ✅ | | | ✅ |
+|TACO| [link](https://taco2024.github.io/)   | 5.2M | ✅ | ✅ | ✅ | ✅ | | | ✅ |
+|KIT| [link](https://bimanual-actions.humanoids.kit.edu/)   | 4M |  | ✅ | ✅ | ✅ | | | ✅ |
+|OakInk2| [link](https://oakink.net/v2/)   |  | ✅ | ✅ | ✅ | ✅ | | | ✅ |
 | HandDiffuse12.5M | [link](https://handdiffuse.github.io/) | 12.5M | ✅ | ✅ | | ✅ |  |
 | Two-hand 500K | [link](https://www.yangangwang.com/papers/iccv2023_interprior/BinghuiZuo-ICCV2023_InterPrior.html) | 500K | ✅ | ✅ |  |  | ✅ |
-| AffordPose | [link](https://github.com/GentlesJan/AffordPose) | 26K | ✅ |  | ✅ |  | ✅ |
+| AffordPose | [link](https://github.com/GentlesJan/AffordPose) | 26K | ✅ |  | ✅ |  | ✅ | | ✅ |
 | RenderIH| [link](https://github.com/adwardlee/RenderIH) | 1.0M | ✅ | ✅ | |  | ✅ |
 | AssemblyHands| [link](https://assemblyhands.github.io/) | 3.0M | | | ✅ | ✅ | |
-| ARCTIC | [link](https://arctic.is.tue.mpg.de/) | 2.1M | ✅ | | ✅ | ✅ | |✅ |
+| ARCTIC | [link](https://arctic.is.tue.mpg.de/) | 2.1M | ✅ | ✅ | ✅ | ✅ | |✅ |
 |BlurHand | [link](https://github.com/JaehaKim97/BlurHand_RELEASE) | 155K | ✅ | ✅ | | ✅ | | 
 |DART| [link](https://dart2022.github.io/)   | 800K | ✅ |  | ✅ | | ✅ | |
 |CBF| [link](https://pan.seu.edu.cn/#/link/49FA8AC060F9801261509D7ED207026E?path=)   | 25K | ✅ |  | ✅ | ✅ | | ✅ |
@@ -968,6 +973,12 @@ Junsong Yuan*
 
 #### Dynamics
 
++ [HO.DN.7] ArtiGrasp: Physically Plausible Synthesis of Bi-Manual Dexterous Grasping and Articulation. 3DV24.
+  [[PDF](https://arxiv.org/pdf/2309.03891)]
+  [[Project](https://eth-ait.github.io/artigrasp/)]
+  [[Code](https://github.com/zdchan/artigrasp)] \
+  *Hui Zhang, Sammy Christen, Zicong Fan, Luocheng Zheng, Jemin Hwangbo, Jie Song, Otmar Hilliges*
+
 + [HO.DN.6] InterDiff: Generating 3D Human-Object Interactions with Physics-Informed Diffusion. ICCV23.
   [[PDF](https://arxiv.org/pdf/2308.16905.pdf)]
   [[Project](https://sirui-xu.github.io/InterDiff/)]
@@ -1026,6 +1037,28 @@ Junsong Yuan*
   *Yana Hasson, Bugra Tekin, Federica Bogo, Ivan Laptev, Marc Pollefeys, Cordelia Schmid*
 
 #### Contact
+
++ [HO.Con.21] TOCH: Spatio-Temporal Object-to-Hand Correspondence for Motion Refinement. ECCV22.
+  [[PDF](https://virtualhumans.mpi-inf.mpg.de/papers/zhou22toch/toch.pdf)]
+  [[Project](https://virtualhumans.mpi-inf.mpg.de/toch/)]
+  [[Code](https://github.com/kzhou23/toch)] \
+  *Keyang Zhou, Bharat Lal Bhatnagar, Jan Eric Lenssen, Gerard Pons-Moll*
+
++ [HO.Con.20] CAMS: CAnonicalized Manipulation Spaces for Category-Level Functional Hand-Object Manipulation Synthesis. CVPR23.
+  [[PDF](https://openaccess.thecvf.com/content/CVPR2023/papers/Zheng_CAMS_CAnonicalized_Manipulation_Spaces_for_Category-Level_Functional_Hand-Object_Manipulation_Synthesis_CVPR_2023_paper.pdf)]
+  [[Project](https://cams-hoi.github.io/)]
+  [[Code](https://github.com/cams-hoi/CAMS)] \
+  *Juntian Zheng, Lixing Fang, Qingyuan Zheng, Yun Liu, Li Yi*
+
++ [HO.Con.19] ContactArt: Learning 3D Interaction Priors for Category-level Articulated Object and Hand Poses Estimation. 3DV24.
+  [[PDF](https://arxiv.org/pdf/2305.01618)]
+  [[Project](https://zehaozhu.github.io/ContactArt/)] \
+  *Zehao Zhu, Jiashun Wang, Yuzhe Qin, Deqing Sun, Varun Jampani, Xiaolong Wang*
+
++ [HO.Con.18] HMDO: Markerless multi-view hand manipulation capture with deformable objects. Graphical Models23.
+  [[PDF](https://arxiv.org/pdf/2301.07652)]
+  [[Code](https://github.com/WeiXie-wx/HMDO)] \
+  *Wei Xie, Zhipeng Yu, Zimeng Zhao, Binghui Zuo, Yangang Wang*
 
 + [HO.Con.17] DexGraspNet: A Large-Scale Robotic Dexterous Grasp Dataset for General Objects Based on Simulation. ICRA23.
   [[PDF](https://arxiv.org/pdf/2210.02697)]
