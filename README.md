@@ -1500,6 +1500,9 @@ Junsong Yuan*
 
 #### Grasp
 
++ [FBR.GR.4] HIMO: A New Benchmark for Full-Body Human Interacting with Multiple Objects. ECCV24.
+  *Xintao Lv, Liang Xu, Yichao Yan, Xin Jin, Congsheng Xu, Shuwen Wu, Yifan Liu, Lincheng Li, Mengxiao Bi, Wenjun Zeng, Xiaokang Yang*
+
 + [FBR.GR.3] Stochastic Whole-Body Grasping with Contact. arXiv21.
   [[PDF](https://arxiv.org/pdf/2112.10103.pdf)]
   [[Project](https://jiahaoplus.github.io/SAGA/saga.html)]
@@ -1572,6 +1575,18 @@ Junsong Yuan*
   *Yan Zhang, Mohamed Hassan, Heiko Neumann, Michael J. Black, Siyu Tang*
 
 #### Text-to-Motion
+
++ [FBR.Tex.11] InterGen: Diffusion-based Multi-human Motion Generation under Complex Interactions. IJCV24.
+  [[PDF](https://arxiv.org/pdf/2304.05684)]
+  [[Project](https://tr3e.github.io/intergen-page/)]
+  [[Code](https://github.com/tr3e/InterGen)] \
+  *Han Liang, Wenqian Zhang, Wenxuan Li, Jingyi Yu, Lan Xu*
+
++ [FBR.Tex.10] Inter-X: Towards Versatile Human-Human Interaction Analysis. CVPR24.
+  [[PDF](https://arxiv.org/pdf/2312.16051)]
+  [[Project](https://liangxuy.github.io/inter-x/)]
+  [[Code](https://github.com/liangxuy/Inter-X)] \
+  *Liang Xu, Xintao Lv, Yichao Yan, Xin Jin, Shuwen Wu, Congsheng Xu, Yifan Liu, Yizhou Zhou, Fengyun Rao, Xingdong Sheng, Yunhui Liu, Wenjun Zeng, Xiaokang Yang*
 
 + [FBR.Tex.9] MoMask: Generative Masked Modeling of 3D Human Motions. 
   [[PDF](https://arxiv.org/pdf/2312.00063)]
