@@ -63,12 +63,13 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
 This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, synthetic, and physical attributes (Phy. att.).
 |  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic | Phy. att. | Affordacne |
 |  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- |  ---- | ---- |
-|Assembly101| [link](https://github.com/WeiXie-wx/HMDO)   | 111M |  | ✅ | ✅ | ✅ | |
+|HIMO| [link](https://lvxintao.github.io/himo/)   | 4.1M | ✅ | ✅ | ✅ | ✅ | | | ✅
+|Assembly101| [link](https://assembly-101.github.io/)   | 111M |  | ✅ | ✅ | ✅ | |
 |HMDO| [link](https://github.com/WeiXie-wx/HMDO)   | 21K | ✅ | ✅ | ✅ | ✅ | |
 |HOI4D| [link](https://www.hoi4d.top/)   | 2.4M | ✅ |  | ✅ | ✅ | | | ✅ |
 |TACO| [link](https://taco2024.github.io/)   | 5.2M | ✅ | ✅ | ✅ | ✅ | | | ✅ |
 |KIT| [link](https://bimanual-actions.humanoids.kit.edu/)   | 4M |  | ✅ | ✅ | ✅ | | | ✅ |
-|OakInk2| [link](https://oakink.net/v2/)   |  | ✅ | ✅ | ✅ | ✅ | | | ✅ |
+|OakInk2| [link](https://oakink.net/v2/)   | 4M | ✅ | ✅ | ✅ | ✅ | | | ✅ |
 | HandDiffuse12.5M | [link](https://handdiffuse.github.io/) | 12.5M | ✅ | ✅ | | ✅ |  |
 | Two-hand 500K | [link](https://www.yangangwang.com/papers/iccv2023_interprior/BinghuiZuo-ICCV2023_InterPrior.html) | 500K | ✅ | ✅ |  |  | ✅ |
 | AffordPose | [link](https://github.com/GentlesJan/AffordPose) | 26K | ✅ |  | ✅ |  | ✅ | | ✅ |
@@ -1501,6 +1502,9 @@ Junsong Yuan*
 #### Grasp
 
 + [FBR.GR.4] HIMO: A New Benchmark for Full-Body Human Interacting with Multiple Objects. ECCV24.
+  [[PDF](https://arxiv.org/pdf/2407.12371)]
+  [[Project](https://lvxintao.github.io/himo/)]
+  [[Code](https://github.com/LvXinTao/HIMO_dataset)] \
   *Xintao Lv, Liang Xu, Yichao Yan, Xin Jin, Congsheng Xu, Shuwen Wu, Yifan Liu, Lincheng Li, Mengxiao Bi, Wenjun Zeng, Xiaokang Yang*
 
 + [FBR.GR.3] Stochastic Whole-Body Grasping with Contact. arXiv21.
