@@ -217,6 +217,11 @@ The below indices are references to the above [overview](#overview).
 
 #### Graph
 
++ [H.GH.14] HandDGP: Camera-Space Hand Mesh Prediction with Differentiable Global Positioning. ECCV24.
+  [[Code](https://arxiv.org/pdf/2407.15844)]
+  [[Project][https://nianticlabs.github.io/handdgp/]] \
+  *Eugene Valassakis, Guillermo Garcia-Hernando*
+
 + [H.GH.13] HandR2N2: Iterative 3D Hand Pose Estimation Using a Residual Recurrent Neural Network. ICCV23.
   [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Cheng_HandR2N2_Iterative_3D_Hand_Pose_Estimation_Using_a_Residual_Recurrent_ICCV_2023_paper.pdf)]
   [[Code](https://github.com/cwc1260/HandR2N2)] \
