@@ -63,6 +63,8 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
 This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, synthetic, and physical attributes (Phy. att.).
 |  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic | Phy. att. | Affordacne |
 |  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- |  ---- | ---- |
+|HInt| [link](https://lvxintao.github.io/himo/)   | 40.4K |  | ✅ | ✅ |  | | | 
+|HANDS23| [link](https://lvxintao.github.io/himo/)   | 257K |  | ✅ | ✅ |  | | | ✅
 |HIMO| [link](https://lvxintao.github.io/himo/)   | 4.1M | ✅ | ✅ | ✅ | ✅ | | | ✅
 |Assembly101| [link](https://assembly-101.github.io/)   | 111M |  | ✅ | ✅ | ✅ | |
 |HMDO| [link](https://github.com/WeiXie-wx/HMDO)   | 21K | ✅ | ✅ | ✅ | ✅ | |
@@ -289,8 +291,7 @@ Self-Supervised Learning. ICCV23.
 
 #### Transformer
 
-+ [H.TR.13] SMPLer: Taming Transformers for Monocular 3D
-Human Shape and Pose Estimation. TPAMI24.
++ [H.TR.13] SMPLer: Taming Transformers for Monocular 3D Human Shape and Pose Estimation. TPAMI24.
   [[PDF](https://arxiv.org/pdf/2404.15276)]
   [[Code](https://github.com/xuxy09/SMPLer)] \
   *Xiangyu Xu, Lijuan Liu, Shuicheng Yan*
@@ -300,14 +301,13 @@ Human Shape and Pose Estimation. TPAMI24.
   [[Project](https://yfeng95.github.io/ChatPose/)]
   *Yao Feng, Jing Lin, Sai Kumar Dwivedi, Yu Sun, Priyanka Patel, Michael J. Black*
 
-+ [H.TR.11] TokenHMR: Advancing Human Mesh Recovery with
-a Tokenized Pose Representation. CVPR24.
++ [H.TR.11] TokenHMR: Advancing Human Mesh Recovery with a Tokenized Pose Representation. CVPR24.
   [[PDF](https://arxiv.org/pdf/2404.16752)]
   [[Project](https://tokenhmr.is.tue.mpg.de/)]
   [[Code](https://github.com/saidwivedi/TokenHMR)] \
   *Sai Kumar Dwivedi, Yu Sun, Priyanka Patel, Yao Feng, Michael J. Black*
 
-+ [H.TR.10] Reconstructing Hands in 3D with Transformers. arXiv23.
++ [H.TR.10] Reconstructing Hands in 3D with Transformers. CVPR24.
   [[PDF](https://arxiv.org/pdf/2312.05251.pdf)]
   [[Project](https://geopavlakos.github.io/hamer/)]
   [[Code](https://github.com/geopavlakos/hamer)] \
