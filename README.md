@@ -1387,6 +1387,12 @@ Junsong Yuan*
 
 #### Forward Kinematics
 
++ [FBR.FK.8] AiOS: All-in-One-Stage Expressive Human Pose and Shape Estimation. CVPR24.
+  [[PDF](https://arxiv.org/pdf/2403.17934)]
+  [[Project](https://ttxskk.github.io/AiOS/)]
+  [[Code](https://github.com/ttxskk/AiOS)] \
+  *Qingping Sun, Yanjun Wang, Ailing Zeng, Wanqi Yin, Chen Wei, Wenjia Wang, Haiyi Mei, Chi Sing Leung, Ziwei Liu, Lei Yang, Zhongang Cai*
+
 + [FBR.FK.7] PyMAF-X: Towards Well-aligned Full-body Model Regression from Monocular Images. arXiv22.
   [[PDF](https://arxiv.org/pdf/2207.06400.pdf)]
   [[Project](https://www.liuyebin.com/pymaf-x/)] \
