@@ -509,6 +509,12 @@ Self-Supervised Learning. ICCV23.
 
 #### Neural Rendering on Avatar
 
++ [H.AVA.29] XHand: Real-time Expressive Hand Avatar. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2407.21002)]
+  [[Project](https://agnjason.github.io/XHand-page/)]
+  [[Code](https://github.com/agnJason/XHand)] \
+  *Qijun Gan, Zijie Zhou, Jianke Zhu*
+
 + [H.AVA.28] PhysAvatar: Learning the Physics of Dressed 3D Avatars from Visual Observations. arXiv24.
   [[PDF](https://arxiv.org/pdf/2404.04421.pdf)]
   [[Project](https://qingqing-zhao.github.io/PhysAvatar)] \
@@ -802,6 +808,10 @@ Junsong Yuan*
 
 #### Cross-Modal
 
++ [H.CM.4] HandDAGT: A Denoising Adaptive Graph Transformer for 3D Hand Pose Estimation. ECCV24.
+  [[PDF](https://arxiv.org/pdf/2407.20542)]
+  *Wencan Cheng, Eunji Kim, Jong Hwan Ko*
+ 
 + [H.CM.3] Cross-domain 3D Hand Pose Estimation with Dual Modalities. CVPR23.
   [[PDF](https://www.mu4yang.com/files/papers/cross_domain.pdf)] \
   *Qiuxia Lin, Linlin Yang, Angela Yao*
