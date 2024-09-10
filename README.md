@@ -63,6 +63,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
 This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, synthetic, and physical attributes (Phy. att.).
 |  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic | Phy. att. | Affordacne |
 |  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- |  ---- | ---- |
+|HOGraspNet| [link](https://hograspnet2024.github.io/) | 1.5M | ✅ | | ✅ | ✅ | | ✅ | ✅
 |HInt| [link](https://lvxintao.github.io/himo/)   | 40.4K |  | ✅ | ✅ |  | | | 
 |HANDS23| [link](https://lvxintao.github.io/himo/)   | 257K |  | ✅ | ✅ |  | | | ✅
 |HIMO| [link](https://lvxintao.github.io/himo/)   | 4.1M | ✅ | ✅ | ✅ | ✅ | | | ✅
@@ -830,6 +831,11 @@ Junsong Yuan*
 
 #### Kinematics
 
++ [HO.FK.13] HOGraspNet with Full Grasping Taxonomy and Dynamics. ECCV24.
+  [[PDF](https://arxiv.org/pdf/2409.04033)]
+  [[Project](https://hograspnet2024.github.io/)]
+  [[Code](https://github.com/UVR-WJCHO/HOGraspNet)]
+
 + [HO.FK.12] Diffusion-Guided Reconstruction of Everyday Hand-Object Interaction Clips. ICCV23.
   [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Ye_Diffusion-Guided_Reconstruction_of_Everyday_Hand-Object_Interaction_Clips_ICCV_2023_paper.pdf)] 
   [[Project](https://judyye.github.io/diffhoi-www/)] 
@@ -1487,6 +1493,11 @@ Junsong Yuan*
   *Shunsuke Saito, Zeng Huang, Ryota Natsume, Shigeo Morishima, Angjoo Kanazawa, Hao Li*
 
 #### Neural Rendering
+
++ [FBR.NR.6] Expressive Whole-Body 3D Gaussian Avatar. ECCV24.
+  [[PDF](https://arxiv.org/pdf/2407.21686)]
+  [[Project](https://mks0601.github.io/ExAvatar/)]
+  *Gyeongsik Moon, Takaaki Shiratori, Shunsuke Saito*
 
 + [FBR.NR.5] XAGen: 3D Expressive Human Avatars Generation. NeurIPS23.
   [[PDF](https://arxiv.org/pdf/2311.13574.pdf)]
