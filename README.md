@@ -966,6 +966,12 @@ Junsong Yuan*
 
 #### Neural Rendering
 
++ [HO.NR.7] Color-NeuS: Reconstructing Neural Implicit Surfaces with Color. 3DV24.
+  [[PDF](https://arxiv.org/pdf/2308.06962)]
+  [[Code](https://zlicheng.com/color_neus/)]
+  [[Project](https://github.com/Colmar-zlicheng/Color-NeuS)] \
+  *Licheng Zhong, Lixin Yang, Kailin Li, Haoyu Zhen, Mei Han, Cewu Lu*
+
 + [HO.NR.6] InterFusion: Text-Driven Generation of 3D Human-Object Interaction. arXiv24.
   [[PDF](https://arxiv.org/pdf/2403.15612.pdf)] \
   *Sisi Dai, Wenhao Li, Haowen Sun, Haibin Huang, Chongyang Ma, Hui Huang, Kai Xu, Ruizhen Hu*
