@@ -966,6 +966,12 @@ Junsong Yuan*
 
 #### Neural Rendering
 
++ [HO.NR.8] DreamHOI: Subject-Driven Generation of 3D Human-Object Interactions with Diffusion Priors. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2409.08278)]
+  [[Project](https://dreamhoi.github.io/)]
+  [[Code](https://github.com/hanwenzhu/dreamhoi)]
+  *Thomas Zhu, Ruining Li, Tomas Jakab*
+
 + [HO.NR.7] Color-NeuS: Reconstructing Neural Implicit Surfaces with Color. 3DV24.
   [[PDF](https://arxiv.org/pdf/2308.06962)]
   [[Code](https://zlicheng.com/color_neus/)]
