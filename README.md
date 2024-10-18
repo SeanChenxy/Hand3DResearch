@@ -1328,6 +1328,11 @@ Junsong Yuan*
 
 #### Neural Rendering
 
++ [HH.NR.4] Learning Interaction-aware 3D Gaussian Splatting for One-shot Hand Avatars. NeurIPS24.
+  [[PDF](https://arxiv.org/pdf/2410.08840)]
+  [[Code](https://github.com/XuanHuang0/GuassianHand)] \
+  *Xuan Huang, Hanhui Li, Wanquan Liu, Xiaodan Liang, Yiqiang Yan, Yuhao Cheng, Chengqiang Gao*
+
 + [HH.NR.3] 3D Visibility-aware Generalizable Neural Radiance Fields for Interacting Hands. AAAI24
   [[PDF](https://arxiv.org/pdf/2401.00979.pdf)]
   [[Code](https://github.com/XuanHuang0/VANeRF)] \
