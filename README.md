@@ -292,6 +292,12 @@ Self-Supervised Learning. ICCV23.
 
 #### Transformer
 
++ [H.TR.14] Hamba: Single-view 3D Hand Reconstruction with Graph-guided Bi-Scanning Mamba. NuerIPS24.
+  [[PDF](https://arxiv.org/pdf/2407.09646)] \
+  [[Project](https://humansensinglab.github.io/Hamba/)] \
+  [[Code](https://github.com/humansensinglab/Hamba)]
+  *Haoye Dong, Aviral Chharia, Wenbo Gou, Francisco Vicente Carrasco, Fernando De la Torre*
+
 + [H.TR.13] SMPLer: Taming Transformers for Monocular 3D Human Shape and Pose Estimation. TPAMI24.
   [[PDF](https://arxiv.org/pdf/2404.15276)]
   [[Code](https://github.com/xuxy09/SMPLer)] \
