@@ -780,6 +780,11 @@ Junsong Yuan*
 
 #### Temporal
 
++ [H.TP.10] DGTR: Dual-Branch Graph Transformer Network for 3D Human Mesh Reconstruction from Video. IROS24.
+  [[PDF](https://arxiv.org/pdf/2412.01179)]
+  [[Code](https://github.com/TangTao-PKU/DGTR)] \
+  *Tao Tang, Hong Liu, Yingxuan You, Ti Wang, Wenhao Li*
+
 + [H.TP.9] Hierarchical Temporal Transformer for 3D Hand Pose Estimation and Action Recognition from Egocentric RGB Videos. CVPR23.
   [[PDF](https://arxiv.org/pdf/2209.09484.pdf)] 
   [[Project](https://fylwen.github.io/htt.html)]
@@ -790,7 +795,6 @@ Junsong Yuan*
   [[PDF](https://arxiv.org/pdf/2203.08534.pdf)]
   [[Project](https://mps-net.github.io/MPS-Net/)] \
   *Wen-Li Wei, Jen-Chun Lin, Tyng-Luh Liu, Hong-Yuan Mark Liao*
-
 
 + [H.TP.7] SmoothNet: A Plug-and-Play Network for Refining Human Poses in Videos. arXiv21.
   [[PDF](https://arxiv.org/pdf/2112.13715.pdf)] \
