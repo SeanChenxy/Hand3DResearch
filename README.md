@@ -298,9 +298,9 @@ Self-Supervised Learning. ICCV23.
   *Xingyu Chen, Zhuheng Song, Xiaoke Jiang, Yaoqing Hu, Junzhi Yu, Lei Zhang*
 
 + [H.TR.14] Hamba: Single-view 3D Hand Reconstruction with Graph-guided Bi-Scanning Mamba. NuerIPS24.
-  [[PDF](https://arxiv.org/pdf/2407.09646)] \
-  [[Project](https://humansensinglab.github.io/Hamba/)] \
-  [[Code](https://github.com/humansensinglab/Hamba)]
+  [[PDF](https://arxiv.org/pdf/2407.09646)]
+  [[Project](https://humansensinglab.github.io/Hamba/)]
+  [[Code](https://github.com/humansensinglab/Hamba)] \
   *Haoye Dong, Aviral Chharia, Wenbo Gou, Francisco Vicente Carrasco, Fernando De la Torre*
 
 + [H.TR.13] SMPLer: Taming Transformers for Monocular 3D Human Shape and Pose Estimation. TPAMI24.
@@ -310,7 +310,7 @@ Self-Supervised Learning. ICCV23.
 
 + [H.TR.12] ChatPose: Chatting about 3D Human Pose. CVPR24.
   [[PDF](https://arxiv.org/pdf/2311.18836)]
-  [[Project](https://yfeng95.github.io/ChatPose/)]
+  [[Project](https://yfeng95.github.io/ChatPose/)] \
   *Yao Feng, Jing Lin, Sai Kumar Dwivedi, Yu Sun, Priyanka Patel, Michael J. Black*
 
 + [H.TR.11] TokenHMR: Advancing Human Mesh Recovery with a Tokenized Pose Representation. CVPR24.
