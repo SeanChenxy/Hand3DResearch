@@ -292,6 +292,11 @@ Self-Supervised Learning. ICCV23.
 
 #### Transformer
 
++ [H.TR.15] HandOS: 3D Hand Reconstruction in One Stage. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2412.01537)]
+  [[Project](https://idea-research.github.io/HandOSweb/)] \
+  *Xingyu Chen, Zhuheng Song, Xiaoke Jiang, Yaoqing Hu, Junzhi Yu, Lei Zhang*
+
 + [H.TR.14] Hamba: Single-view 3D Hand Reconstruction with Graph-guided Bi-Scanning Mamba. NuerIPS24.
   [[PDF](https://arxiv.org/pdf/2407.09646)] \
   [[Project](https://humansensinglab.github.io/Hamba/)] \
@@ -515,6 +520,10 @@ Self-Supervised Learning. ICCV23.
   *Eric R. Chan, Connor Z. Lin, Matthew A. Chan, Koki Nagano, Boxiao Pan, Shalini De Mello, Orazio Gallo, Leonidas Guibas, Jonathan Tremblay, Sameh Khamis, Tero Karras, Gordon Wetzstein*
 
 #### Neural Rendering on Avatar
+
++ [H.AVA.30] Volume Rendering of Human Hand Anatomy. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2411.18630)]
+  *Jingtao Huang, Bohan Wang, Zhiyuan Gao, Mianlun Zheng, George Matcuk, Jernej Barbic*
 
 + [H.AVA.29] XHand: Real-time Expressive Hand Avatar. arXiv24.
   [[PDF](https://arxiv.org/pdf/2407.21002)]
@@ -837,6 +846,11 @@ Junsong Yuan*
 
 #### Kinematics
 
++ [HO.FK.14] FastGrasp: Efficient Grasp Synthesis with Diffusion. 3DV25.
+  [[PDF](https://arxiv.org/pdf/2411.14786)]
+  [[Code](https://github.com/wuxiaofei01/FastGrasp)] \
+  *Xiaofei Wu, Tao Liu, Caoji Li, Yuexin Ma, Yujiao Shi, Xuming He*
+
 + [HO.FK.13] HOGraspNet with Full Grasping Taxonomy and Dynamics. ECCV24.
   [[PDF](https://arxiv.org/pdf/2409.04033)]
   [[Project](https://hograspnet2024.github.io/)]
@@ -1012,6 +1026,11 @@ Junsong Yuan*
   *Yuheng Jiang, Suyi Jiang, Guoxing Sun, Zhuo Su, Kaiwen Guo, Minye Wu, Jingyi Yu, Lan Xu*
 
 #### Dynamics
+
++ [HO.DN.8] Bimanual Grasp Synthesis for Dexterous Robot Hands. RAL24.
+  [[PDF](https://arxiv.org/pdf/2411.15903)]
+  [[Project](https://bimangrasp.github.io/)] \
+  *Yanming Shao, Chenxi Xiao*
 
 + [HO.DN.7] ArtiGrasp: Physically Plausible Synthesis of Bi-Manual Dexterous Grasping and Articulation. 3DV24.
   [[PDF](https://arxiv.org/pdf/2309.03891)]
@@ -1634,6 +1653,22 @@ Junsong Yuan*
   *Yan Zhang, Mohamed Hassan, Heiko Neumann, Michael J. Black, Siyu Tang*
 
 #### Text-to-Motion
+
++ [FBR.Tex.14] Human Motion Instruction Tuning. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2411.16805)] \
+  *Lei Li, Sen Jia, Wang Jianhao, Zhongyu Jiang, Feng Zhou, Ju Dai, Tianfang Zhang, Wu Zongkai, Jenq-Neng Hwang*
+
++ [FBR.Tex.13] MotionCLR: Motion Generation and Training-free Editing via Understanding Attention Mechanisms. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2410.18977)]
+  [[Project](https://lhchen.top/MotionCLR/)]
+  [[Code](https://github.com/IDEA-Research/MotionCLR)] \
+  *Ling-Hao Chen, Wenxun Dai, Xuan Ju, Shunlin Lu, Lei Zhang*
+
++ [FBR.Tex.12] MotionLLM: Understanding Human Behaviors from Human Motions and Videos. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2405.20340)]
+  [[Project](https://lhchen.top/MotionLLM/)]
+  [[Code](https://github.com/IDEA-Research/MotionLLM)] \
+  *Ling-Hao Chen, Shunlin Lu, Ailing Zeng, Hao Zhang, Benyou Wang, Ruimao Zhang, Lei Zhang*
 
 + [FBR.Tex.11] InterGen: Diffusion-based Multi-human Motion Generation under Complex Interactions. IJCV24.
   [[PDF](https://arxiv.org/pdf/2304.05684)]
