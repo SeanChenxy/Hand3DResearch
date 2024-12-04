@@ -469,6 +469,11 @@ Self-Supervised Learning. ICCV23.
 
 #### Neural Rendering on Generation
 
++ [H.GEN.10] FoundHand: Large-Scale Domain-Specific Learning for Controllable Hand Image Generation.
+  [[PDF](https://arxiv.org/pdf/2412.02690)]
+  [[Project](https://ivl.cs.brown.edu/research/foundhand.html)] \
+  *Kefan Chen, Chaerin Min, Linguang Zhang, Shreyas Hampali, Cem Keskin, Srinath Sridhar*
+
 + [H.GEN.9] Human 3Diffusion: Realistic Avatar Creation via Explicit 3D Consistent Diffusion Models. arXiv24.
   [[PDF](https://arxiv.org/pdf/2406.08475)]
   [[Project](https://yuxuan-xue.com/human-3diffusion/)]
