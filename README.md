@@ -63,6 +63,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
 This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, synthetic, and physical attributes (Phy. att.).
 |  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic | Phy. att. | Affordacne |
 |  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- |  ---- | ---- |
+|GigaHands | [link](https://ivl.cs.brown.edu/research/gigahands.html) | 183M | ✅ | ✅ | ✅ | ✅ | | | ✅
 |HOGraspNet| [link](https://hograspnet2024.github.io/) | 1.5M | ✅ | | ✅ | ✅ | | ✅ | ✅
 |HInt| [link](https://lvxintao.github.io/himo/)   | 40.4K |  | ✅ | ✅ |  | | | 
 |HANDS23| [link](https://lvxintao.github.io/himo/)   | 257K |  | ✅ | ✅ |  | | | ✅
@@ -1447,6 +1448,19 @@ Junsong Yuan*
   [[Project](http://people.eecs.berkeley.edu/~evonne_ng/projects/body2hands/)] 
   [[Code](https://github.com/facebookresearch/body2hands)] \
   *Evonne Ng, Hanbyul Joo, Shiry Ginosar, Trevor Darrell*
+
+#### Manipulation
++ [HH.Mani.2] GigaHands: A Massive Annotated Dataset of Bimanual Hand Activities. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2412.04244)]
+  [[Project](https://ivl.cs.brown.edu/research/gigahands.html)] \
+  *Rao Fu, Dingxi Zhang, Alex Jiang, Wanjia Fu, Austin Funk, Daniel Ritchie, Srinath Sridhar*
+
++ [HH.Mani.1] OAKINK2: A Dataset of Bimanual Hands-Object Manipulation in Complex Task Completion. CVPR24.
+  [[PDF](https://arxiv.org/pdf/2403.19417)]
+  [[Project](https://oakink.net/v2/)]
+  [[Code](https://github.com/oakink/OakInk2)] \
+  *Xinyu Zhan, Lixin Yang, Yifei Zhao, Kangrui Mao, Hanlin Xu, Zenan Lin, Kailin Li, Cewu Lu*
+
 
 [\[back to top\]](#contents)
 
