@@ -1,4 +1,4 @@
-# Recent Progress in 3D Hand Tasks [![Awesome](https://awesome.re/badge-flat.svg)](https://awesome.re)
+# Recent Progress in 3D Hand Tasks ![Awesome](https://awesome.re/badge-flat.svg)
 
 A complete paper list for hand pose can be found [here](https://github.com/xinghaochen/awesome-hand-pose-estimation). This repo focuses on some subject areas, ideas, and works. Although some papers invloved do not study towards 3D hand scope, they are conceived presenting relavent and inspiring ideas. If there is any mistake or carelessness, please feel free to open an issue or send me email.
 
@@ -7,7 +7,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
 
 <!-- code_chunk_output -->
 
-- [Recent Progress in 3D Hand Tasks ![Awesome](https://awesome.re)](#recent-progress-in-3d-hand-tasks-awesomehttpsawesomerebadge-flatsvghttpsawesomere)
+- [Recent Progress in 3D Hand Tasks ![Awesome](https://awesome.re/badge-flat.svg)](#recent-progress-in-3d-hand-tasks-awesomehttpsawesomerebadge-flatsvg)
   - [Overview](#overview)
   - [Datasets](#datasets)
   - [Papers](#papers)
