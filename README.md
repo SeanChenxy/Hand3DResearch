@@ -2,9 +2,12 @@
 
 A complete paper list for hand pose can be found [here](https://github.com/xinghaochen/awesome-hand-pose-estimation). This repo focuses on some subject areas, ideas, and works. Although some papers invloved do not study towards 3D hand scope, they are conceived presenting relavent and inspiring ideas. If there is any mistake or carelessness, please feel free to open an issue or send me email.
 
-## Contents
 
-  - [Contents](#contents)
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [Recent Progress in 3D Hand Tasks ![Awesome](https://awesome.re)](#recent-progress-in-3d-hand-tasks-awesomehttpsawesomerebadge-flatsvghttpsawesomere)
   - [Overview](#overview)
   - [Datasets](#datasets)
   - [Papers](#papers)
@@ -15,49 +18,52 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [Transformer](#transformer)
       - [2.5D](#25d)
       - [Texture](#texture)
-      - [Shape](#shape)
+      - [Implicit Shape](#implicit-shape)
       - [Neural Rendering on Generation](#neural-rendering-on-generation)
       - [Neural Rendering on Avatar](#neural-rendering-on-avatar)
       - [Dynamics](#dynamics)
       - [Weak Supervision](#weak-supervision)
       - [Temporal](#temporal)
-      - [Cross-Modal](#cross-modal)
     - [Hand-Object Interaction](#hand-object-interaction)
       - [Kinematics](#kinematics)
       - [Graph](#graph-1)
-      - [Shape](#shape-1)
+      - [Implicit Shape](#implicit-shape-1)
       - [Neural Rendering](#neural-rendering)
       - [Dynamics](#dynamics-1)
-      - [Weak Supervision](#weak-supervision-1)
-      - [Temporal](#temporal-1)
       - [Contact](#contact)
     - [Hand-Hand Interaction](#hand-hand-interaction)
       - [Kinematics](#kinematics-1)
       - [2.5D](#25d-1)
-      - [Transformer](#transformer-1)
       - [Graph](#graph-2)
-      - [Shape](#shape-2)
+      - [Transformer](#transformer-1)
+      - [Implicit Shape](#implicit-shape-2)
       - [Neural Rendering](#neural-rendering-1)
       - [Gesture Prediction](#gesture-prediction)
+      - [Manipulation](#manipulation)
     - [Full Body Reconstruction](#full-body-reconstruction)
       - [Forward Kinematics](#forward-kinematics-1)
       - [Inverse Kinematics](#inverse-kinematics-1)
-      - [Shape](#shape-3)
+      - [Implicit Shape](#implicit-shape-3)
       - [Neural Rendering](#neural-rendering-2)
       - [Grasp](#grasp)
-      - [In-Sence](#in-sence)
-      - [Text-to-Motion](#text-to-motion)
+    - [Multi-Modal Motion](#multi-modal-motion)
+      - [In Sence](#in-sence)
+      - [Text to Motion](#text-to-motion)
+    - [Dexterous Robot Hand](#dexterous-robot-hand)
+      - [Dynamics](#dynamics-2)
+      - [Generation](#generation)
   - [Tools](#tools)
     - [Model](#model)
     - [MoCap](#mocap)
-    - [Data](#data)
-  <!-- - [Benchmarks](#benchmarks)
-    - [FreiHAND](#freihand)
-    - [RHD](#rhd) -->
+  - [Data](#data)
+
+<!-- /code_chunk_output -->
+
+
 
 ## Overview
 
-![img](Hand3DResearch.png)
+![img](Hand.png)
 
 ## Datasets
 This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, synthetic, and physical attributes (Phy. att.).
@@ -309,10 +315,9 @@ Self-Supervised Learning. ICCV23.
   [[Code](https://github.com/xuxy09/SMPLer)] \
   *Xiangyu Xu, Lijuan Liu, Shuicheng Yan*
 
-+ [H.TR.12] ChatPose: Chatting about 3D Human Pose. CVPR24.
-  [[PDF](https://arxiv.org/pdf/2311.18836)]
-  [[Project](https://yfeng95.github.io/ChatPose/)] \
-  *Yao Feng, Jing Lin, Sai Kumar Dwivedi, Yu Sun, Priyanka Patel, Michael J. Black*
++ [H.TR.12] HandDAGT: A Denoising Adaptive Graph Transformer for 3D Hand Pose Estimation. ECCV24.
+  [[PDF](https://arxiv.org/pdf/2407.20542)]
+  *Wencan Cheng, Eunji Kim, Jong Hwan Ko*
 
 + [H.TR.11] TokenHMR: Advancing Human Mesh Recovery with a Tokenized Pose Representation. CVPR24.
   [[PDF](https://arxiv.org/pdf/2404.16752)]
@@ -431,7 +436,7 @@ Self-Supervised Learning. ICCV23.
   [[Project](https://handtracker.mpi-inf.mpg.de/projects/HandTextureModel/)] \
   *Neng Qian, Jiayi Wang, Franziska Mueller, Florian Bernard, Vladislav Golyanik, Christian Theobalt*
 
-#### Shape
+#### Implicit Shape
 
 + [H.SP.7] PHRIT: Parametric Hand Representation with Implicit Template. ICCV23.
   [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Huang_PHRIT_Parametric_Hand_Representation_with_Implicit_Template_ICCV_2023_paper.pdf)] \
@@ -832,89 +837,93 @@ Junsong Yuan*
   [[PDF](https://arxiv.org/pdf/2007.05168.pdf)] \
   *John Yang, Hyung Jin Chang, Seungeui Lee, Nojun Kwak*
 
-#### Cross-Modal
-
-+ [H.CM.4] HandDAGT: A Denoising Adaptive Graph Transformer for 3D Hand Pose Estimation. ECCV24.
-  [[PDF](https://arxiv.org/pdf/2407.20542)]
-  *Wencan Cheng, Eunji Kim, Jong Hwan Ko*
- 
-+ [H.CM.3] Cross-domain 3D Hand Pose Estimation with Dual Modalities. CVPR23.
-  [[PDF](https://www.mu4yang.com/files/papers/cross_domain.pdf)] \
-  *Qiuxia Lin, Linlin Yang, Angela Yao*
-
-+ [H.CM.2] Knowledge as Priors: Cross-Modal Knowledge Generalization for Datasets without Superior Knowledge. CVPR20.
-  [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Zhao_Knowledge_As_Priors_Cross-Modal_Knowledge_Generalization_for_Datasets_Without_Superior_CVPR_2020_paper.pdf#/)] \
-  *Long Zhao, Xi Peng, Yuxiao Chen, Mubbasir Kapadia, Dimitris N. Metaxas*
-
-+ [H.CM.1] Cross-modal Deep Variational Hand Pose Estimation. CVPR18.
-  [[PDF](https://openaccess.thecvf.com/content_cvpr_2018/papers/Spurr_Cross-Modal_Deep_Variational_CVPR_2018_paper.pdf#/)] \
-  *Adrian Spurr, Jie Song, Seonwook Park, Otmar Hilliges*
-
 [\[back to top\]](#contents)
 
 ### Hand-Object Interaction
 
 #### Kinematics
 
-+ [HO.FK.14] FastGrasp: Efficient Grasp Synthesis with Diffusion. 3DV25.
++ [HO.FK.18] FastGrasp: Efficient Grasp Synthesis with Diffusion. 3DV25.
   [[PDF](https://arxiv.org/pdf/2411.14786)]
   [[Code](https://github.com/wuxiaofei01/FastGrasp)] \
   *Xiaofei Wu, Tao Liu, Caoji Li, Yuexin Ma, Yujiao Shi, Xuming He*
 
-+ [HO.FK.13] HOGraspNet with Full Grasping Taxonomy and Dynamics. ECCV24.
++ [HO.FK.17] HOGraspNet with Full Grasping Taxonomy and Dynamics. ECCV24.
   [[PDF](https://arxiv.org/pdf/2409.04033)]
   [[Project](https://hograspnet2024.github.io/)]
   [[Code](https://github.com/UVR-WJCHO/HOGraspNet)]
 
-+ [HO.FK.12] Diffusion-Guided Reconstruction of Everyday Hand-Object Interaction Clips. ICCV23.
++ [HO.FK.16] Diffusion-Guided Reconstruction of Everyday Hand-Object Interaction Clips. ICCV23.
   [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Ye_Diffusion-Guided_Reconstruction_of_Everyday_Hand-Object_Interaction_Clips_ICCV_2023_paper.pdf)] 
   [[Project](https://judyye.github.io/diffhoi-www/)] 
   [[Code](https://github.com/JudyYe/diffhoi)] \
   *Yufei Ye, Poorvi Hebbar, Abhinav Gupta, Shubham Tulsiani*
 
-+ [HO.FK.11] Chord: Category-level Hand-held Object Reconstruction via Shape Deformation. ICCV23.
++ [HO.FK.15] Chord: Category-level Hand-held Object Reconstruction via Shape Deformation. ICCV23.
 [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Li_CHORD_Category-level_Hand-held_Object_Reconstruction_via_Shape_Deformation_ICCV_2023_paper.pdf)]
 [[Project](https://kailinli.github.io/CHORD/)] \
 *Kailin Li, Lixin Yang, Haoyu Zhen, Zenan Lin, Xinyu Zhan, Licheng Zhong, Jian Xu, Kejian Wu, Cewu Lu*
 
-
-+ [HO.FK.10] Harmonious Feature Learning for Interactive Hand-Object Pose Estimation. CVPR23.
++ [HO.FK.14] Harmonious Feature Learning for Interactive Hand-Object Pose Estimation. CVPR23.
   [[PDF](https://openaccess.thecvf.com/content/CVPR2023/papers/Lin_Harmonious_Feature_Learning_for_Interactive_Hand-Object_Pose_Estimation_CVPR_2023_paper.pdf)]
   [[Code](https://github.com/lzfff12/HFL-Net)] \
   *Zhifeng Lin, Changxing Ding, Huan Yao, Zengsheng Kuang, Shaoli Huang*
 
-+ [HO.FK.9] H2O: A Benchmark for Visual Human-human Object Handover Analysis. ICCV21.
++ [HO.FK.13] H2O: A Benchmark for Visual Human-human Object Handover Analysis. ICCV21.
   [[PDF](https://arxiv.org/pdf/2104.11466.pdf)] \
   *Ruolin Ye, Wenqiang Xu, Zhendong Xue, Tutian Tang, Yanfeng Wang, Cewu Lu*
 
-+ [HO.FK.8] ArtiBoost: Boosting Articulated 3D Hand-Object Pose Estimation via Online Exploration and Synthesis. CVPR22.
++ [HO.FK.12] ArtiBoost: Boosting Articulated 3D Hand-Object Pose Estimation via Online Exploration and Synthesis. CVPR22.
   [[PDF](https://arxiv.org/pdf/2109.05488.pdf)]
   [[Code](https://github.com/MVIG-SJTU/ArtiBoost)] \
   *Kailin Li, Lixin Yang, Xinyu Zhan, Jun Lv, Wenqiang Xu, Jiefeng Li, Cewu Lu*
 
-+ [HO.FK.7] OakInk: A Large-scale Knowledge Repository for Understanding Hand-Object Interaction. CVPR22.
++ [HO.FK.11] OakInk: A Large-scale Knowledge Repository for Understanding Hand-Object Interaction. CVPR22.
   [[PDF](https://arxiv.org/pdf/2203.15709.pdf)] 
   [[Code](https://github.com/lixiny/OakInk)] \
   *Lixin Yang, Kailin Li Xinyu Zhan, Fei Wu, Anran Xu, Liu Liu, Cewu Lu*
 
-+ [HO.FK.6] CPF: Learning a Contact Potential Field to Model the Hand-object Interaction. ICCV21.
++ [HO.FK.10] CPF: Learning a Contact Potential Field to Model the Hand-object Interaction. ICCV21.
   [[PDF](https://arxiv.org/pdf/2012.00924.pdf)]
   [[Code](https://github.com/lixiny/CPF)] \
   *Lixin Yang, Xinyu Zhan, Kailin Li, Wenqiang Xu, Jiefeng Li, Cewu Lu*
 
-+ [HO.FK.5] HO-3D_v3: Improving the Accuracy of Hand-Object Annotations of the HO-3D Dataset. arXiv21.
++ [HO.FK.9] HO-3D_v3: Improving the Accuracy of Hand-Object Annotations of the HO-3D Dataset. arXiv21.
   [[PDF](https://arxiv.org/pdf/2107.00887.pdf)] \
   *Shreyas Hampali, Sayan Deb Sarkar, Vincent Lepetit*
 
-+ [HO.FK.4] Unsupervised Domain Adaptation with Temporal-Consistent Self-Training for 3D Hand-Object Joint Reconstruction. arXiv21.
++ [HO.FK.8] Unsupervised Domain Adaptation with Temporal-Consistent Self-Training for 3D Hand-Object Joint Reconstruction. arXiv21.
   [[PDF](https://arxiv.org/pdf/2012.11260.pdf)] \
   *Mengshi Qi, Edoardo Remelli, Mathieu Salzmann, Pascal Fua*
 
-+ [HO.FK.3] DexYCB: A Benchmark for Capturing Hand Grasping of Objects. CVPR21.
++ [HO.FK.7] DexYCB: A Benchmark for Capturing Hand Grasping of Objects. CVPR21.
   [[PDF](https://dex-ycb.github.io/assets/chao_cvpr2021.pdf)]
   [[Project](https://dex-ycb.github.io/)]
   [[Code](https://github.com/NVlabs/dex-ycb-toolkit)] \
   *Yu-Wei Chao, Wei Yang, Yu Xiang, Pavlo Molchanov, Ankur Handa, Jonathan Tremblay, Yashraj S. Narang, Karl Van Wyk, Umar Iqbal, Stan Birchfield, Jan Kautz, Dieter Fox*
+
++ [HO.TP.6] Towards unconstrained joint hand-object reconstruction from RGB videos. arXiv21.
+  [[PDF](https://arxiv.org/pdf/2108.07044.pdf)]
+  [[Project](https://hassony2.github.io/homan.html)]
+  [[Code](https://github.com/hassony2/homan)] \
+  *Yana Hasson, Gül Varol, Ivan Laptev, Cordelia Schmid*
+
++ [HO.TP.5] Leveraging Photometric Consistency over Time for Sparsely Supervised Hand-Object Reconstruction. CVPR20.
+  [[PDF](https://arxiv.org/pdf/2004.13449.pdf)]
+  [[Project](https://hassony2.github.io/handobjectconsist.html)]
+  [[Code](https://github.com/hassony2/handobjectconsist)] \
+  *Yana Hasson, Bugra Tekin, Federica Bogo, Ivan Laptev, Marc Pollefeys, Cordelia Schmid*
+
++ [HO.FK.4] Semi-Supervised 3D Hand-Object Poses Estimation with Interactions in Time. CVPR21.
+  [[PDF](https://arxiv.org/pdf/2106.05266.pdf)]
+  [[Project](https://stevenlsw.github.io/Semi-Hand-Object/)]
+  [[Code](https://github.com/stevenlsw/Semi-Hand-Object)] \
+  *Shaowei Liu*, Hanwen Jiang*, Jiarui Xu, Sifei Liu, Xiaolong Wang*
+
++ [HO.FK.3] Weakly-supervised Domain Adaptation via GAN and Mesh Model for Estimating 3D Hand Poses Interacting Objects. CVPR20.
+  [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Baek_Weakly-Supervised_Domain_Adaptation_via_GAN_and_Mesh_Model_for_Estimating_CVPR_2020_paper.pdf)]
+  [[Code](https://github.com/bsrvision/weak_da_hands)] \
+  *Seungryul Baek, Kwang In Kim, Tae-Kyun Kim*
 
 + [HO.FK.2] HOnnotate: A method for 3D Annotation of Hand and Objects Poses. CVPR20.
   [[PDF](https://arxiv.org/pdf/1907.01481.pdf)]
@@ -970,7 +979,7 @@ Junsong Yuan*
   *Bardia Doosti, Shujon Naha, Majid Mirbagheri, David Crandall*
 
 
-#### Shape
+#### Implicit Shape
 
 + [HO.SP.4] gSDF: Geometry-Driven Signed Distance Functions for 3D Hand-Object Reconstruction. CVPR23.
   [[PDF](https://zerchen.github.io/contents/CVPR_gSDF_Paper.pdf)] 
@@ -1037,11 +1046,6 @@ Junsong Yuan*
 
 #### Dynamics
 
-+ [HO.DN.8] Bimanual Grasp Synthesis for Dexterous Robot Hands. RAL24.
-  [[PDF](https://arxiv.org/pdf/2411.15903)]
-  [[Project](https://bimangrasp.github.io/)] \
-  *Yanming Shao, Chenxi Xiao*
-
 + [HO.DN.7] ArtiGrasp: Physically Plausible Synthesis of Bi-Manual Dexterous Grasping and Articulation. 3DV24.
   [[PDF](https://arxiv.org/pdf/2309.03891)]
   [[Project](https://eth-ait.github.io/artigrasp/)]
@@ -1051,12 +1055,12 @@ Junsong Yuan*
 + [HO.DN.6] InterDiff: Generating 3D Human-Object Interactions with Physics-Informed Diffusion. ICCV23.
   [[PDF](https://arxiv.org/pdf/2308.16905.pdf)]
   [[Project](https://sirui-xu.github.io/InterDiff/)]
-  [[Code](https://github.com/Sirui-Xu/InterDiff)]
+  [[Code](https://github.com/Sirui-Xu/InterDiff)] \
   *Sirui Xu, Zhengyuan Li, Yu-Xiong Wang, Liang-Yan Gui*
 
 + [HO.DN.5] MACS: Mass Conditioned 3D Hand and Object Motion Synthesis. 3DV24.
   [[PDF](https://arxiv.org/pdf/2312.14929.pdf)] 
-  [[Project](https://vcai.mpi-inf.mpg.de/projects/MACS/)]
+  [[Project](https://vcai.mpi-inf.mpg.de/projects/MACS/)] \
   *Soshi Shimada, Franziska Mueller, Jan Bednarik, Bardia Doosti, Bernd Bickel, Danhang Tang, Vladislav Golyanik, Jonathan Taylor, Christian Theobalt, Thabo Beeler*
 
 + [HO.DN.4] DeepSimHO: Stable Pose Estimation for Hand-Object Interaction via Physics Simulation. NeurIPS23.
@@ -1078,67 +1082,29 @@ Junsong Yuan*
   [[PDF](https://www.yangangwang.com/papers/ZZM-SCR-2022-03.pdf)] \
   *Zimeng Zhao, Binghui Zuo, Wei Xie, Yangang Wang*
 
-#### Weak Supervision
-
-+ [HO.WS.2] Semi-Supervised 3D Hand-Object Poses Estimation with Interactions in Time. CVPR21.
-  [[PDF](https://arxiv.org/pdf/2106.05266.pdf)]
-  [[Project](https://stevenlsw.github.io/Semi-Hand-Object/)]
-  [[Code](https://github.com/stevenlsw/Semi-Hand-Object)] \
-  *Shaowei Liu*, Hanwen Jiang*, Jiarui Xu, Sifei Liu, Xiaolong Wang*
-
-+ [HO.WS.1] Weakly-supervised Domain Adaptation via GAN and Mesh Model for Estimating 3D Hand Poses Interacting Objects. CVPR20.
-  [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Baek_Weakly-Supervised_Domain_Adaptation_via_GAN_and_Mesh_Model_for_Estimating_CVPR_2020_paper.pdf)]
-  [[Code](https://github.com/bsrvision/weak_da_hands)] \
-  *Seungryul Baek, Kwang In Kim, Tae-Kyun Kim*
-
-#### Temporal
-
-+ [HO.TP.2] Towards unconstrained joint hand-object reconstruction from RGB videos. arXiv21.
-  [[PDF](https://arxiv.org/pdf/2108.07044.pdf)]
-  [[Project](https://hassony2.github.io/homan.html)]
-  [[Code](https://github.com/hassony2/homan)] \
-  *Yana Hasson, Gül Varol, Ivan Laptev, Cordelia Schmid*
-
-+ [HO.TP.1] Leveraging Photometric Consistency over Time for Sparsely Supervised Hand-Object Reconstruction. CVPR20.
-  [[PDF](https://arxiv.org/pdf/2004.13449.pdf)]
-  [[Project](https://hassony2.github.io/handobjectconsist.html)]
-  [[Code](https://github.com/hassony2/handobjectconsist)] \
-  *Yana Hasson, Bugra Tekin, Federica Bogo, Ivan Laptev, Marc Pollefeys, Cordelia Schmid*
-
 #### Contact
 
-+ [HO.Con.21] TOCH: Spatio-Temporal Object-to-Hand Correspondence for Motion Refinement. ECCV22.
++ [HO.Con.19] TOCH: Spatio-Temporal Object-to-Hand Correspondence for Motion Refinement. ECCV22.
   [[PDF](https://virtualhumans.mpi-inf.mpg.de/papers/zhou22toch/toch.pdf)]
   [[Project](https://virtualhumans.mpi-inf.mpg.de/toch/)]
   [[Code](https://github.com/kzhou23/toch)] \
   *Keyang Zhou, Bharat Lal Bhatnagar, Jan Eric Lenssen, Gerard Pons-Moll*
 
-+ [HO.Con.20] CAMS: CAnonicalized Manipulation Spaces for Category-Level Functional Hand-Object Manipulation Synthesis. CVPR23.
++ [HO.Con.18] CAMS: CAnonicalized Manipulation Spaces for Category-Level Functional Hand-Object Manipulation Synthesis. CVPR23.
   [[PDF](https://openaccess.thecvf.com/content/CVPR2023/papers/Zheng_CAMS_CAnonicalized_Manipulation_Spaces_for_Category-Level_Functional_Hand-Object_Manipulation_Synthesis_CVPR_2023_paper.pdf)]
   [[Project](https://cams-hoi.github.io/)]
   [[Code](https://github.com/cams-hoi/CAMS)] \
   *Juntian Zheng, Lixing Fang, Qingyuan Zheng, Yun Liu, Li Yi*
 
-+ [HO.Con.19] ContactArt: Learning 3D Interaction Priors for Category-level Articulated Object and Hand Poses Estimation. 3DV24.
++ [HO.Con.17] ContactArt: Learning 3D Interaction Priors for Category-level Articulated Object and Hand Poses Estimation. 3DV24.
   [[PDF](https://arxiv.org/pdf/2305.01618)]
   [[Project](https://zehaozhu.github.io/ContactArt/)] \
   *Zehao Zhu, Jiashun Wang, Yuzhe Qin, Deqing Sun, Varun Jampani, Xiaolong Wang*
 
-+ [HO.Con.18] HMDO: Markerless multi-view hand manipulation capture with deformable objects. Graphical Models23.
++ [HO.Con.16] HMDO: Markerless multi-view hand manipulation capture with deformable objects. Graphical Models23.
   [[PDF](https://arxiv.org/pdf/2301.07652)]
   [[Code](https://github.com/WeiXie-wx/HMDO)] \
   *Wei Xie, Zhipeng Yu, Zimeng Zhao, Binghui Zuo, Yangang Wang*
-
-+ [HO.Con.17] DexGraspNet: A Large-Scale Robotic Dexterous Grasp Dataset for General Objects Based on Simulation. ICRA23.
-  [[PDF](https://arxiv.org/pdf/2210.02697)]
-  [[Project](https://pku-epic.github.io/DexGraspNet/)]
-  [[Code](https://github.com/PKU-EPIC/DexGraspNet)] \
-  *Ruicheng Wang, Jialiang Zhang, Jiayi Chen, Yinzhen Xu, Puhao Li, Tengyu Liu, He Wang*
-
-+ [HO.Con.16] SemGrasp: Semantic Grasp Generation via Language Aligned Discretization. ECCV24.
-  [[PDF](https://arxiv.org/pdf/2404.03590)]
-  [[Project](https://kailinli.github.io/SemGrasp/)]
-  *Kailin Li, Jingbo Wang,Lixin Yang, Cewu Lu, Bo Dai*
 
 + [HO.Con.15] GenHeld: Generating and Editing Handheld Objects. arXiv24.
   [[PDF](https://arxiv.org/pdf/2406.05059)] 
@@ -1286,6 +1252,19 @@ Junsong Yuan*
   [[Code](https://github.com/facebookresearch/InterHand2.6M)] \
   *Gyeongsik Moon, Shoou-i Yu, He Wen, Takaaki Shiratori, Kyoung Mu Lee*
 
+#### Graph
+
++ [HH.GH.2] Decoupled Iterative Refinement Framework for Interacting Hands Reconstruction from a Single RGB Image. ICCV23.
+  [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Ren_Decoupled_Iterative_Refinement_Framework_for_Interacting_Hands_Reconstruction_from_a_ICCV_2023_paper.pdf)]
+  [[Project](https://pengfeiren96.github.io/DIR/)]
+  [[Code](https://github.com/PengfeiRen96/DIR)] \
+  *Pengfei Ren, Chao Wen, Xiaozheng Zheng, Zhou Xue, Haifeng Sun, Qi Qi, Jingyu Wang, Jianxin Liao*
+
++ [HH.GH.1] Interacting Attention Graph for Single Image Two-Hand Reconstruction. CVPR22.
+  [[PDF](https://arxiv.org/pdf/2203.09364.pdf)]
+  [[Code](https://github.com/Dw1010/IntagHand)] \
+  *Mengcheng Li, Liang An, Hongwen Zhang, Lianpeng Wu, Feng Chen, Tao Yu, Yebin Liu*
+
 #### Transformer
 
 + [HH.TR.12] 4DHands: Reconstructing Interactive Hands in 4D with Transformers. arXiv24. 
@@ -1329,20 +1308,7 @@ Junsong Yuan*
   [[Project](https://www.tugraz.at/index.php?id=57823)] \
   *Shreyas Hampali, Sayan Deb Sarkar, Mahdi Rad, Vincent Lepetit*
 
-#### Graph
-
-+ [HH.GH.2] Decoupled Iterative Refinement Framework for Interacting Hands Reconstruction from a Single RGB Image. ICCV23.
-  [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Ren_Decoupled_Iterative_Refinement_Framework_for_Interacting_Hands_Reconstruction_from_a_ICCV_2023_paper.pdf)]
-  [[Project](https://pengfeiren96.github.io/DIR/)]
-  [[Code](https://github.com/PengfeiRen96/DIR)] \
-  *Pengfei Ren, Chao Wen, Xiaozheng Zheng, Zhou Xue, Haifeng Sun, Qi Qi, Jingyu Wang, Jianxin Liao*
-
-+ [HH.GH.1] Interacting Attention Graph for Single Image Two-Hand Reconstruction. CVPR22.
-  [[PDF](https://arxiv.org/pdf/2203.09364.pdf)]
-  [[Code](https://github.com/Dw1010/IntagHand)] \
-  *Mengcheng Li, Liang An, Hongwen Zhang, Lianpeng Wu, Feng Chen, Tao Yu, Yebin Liu*
-
-#### Shape
+#### Implicit Shape
 
 + [HH.SP.2] MultiPly: Reconstruction of Multiple People from Monocular Video in the Wild. CVPR24.
   [[PDF](https://arxiv.org/pdf/2406.01595)]
@@ -1450,6 +1416,7 @@ Junsong Yuan*
   *Evonne Ng, Hanbyul Joo, Shiry Ginosar, Trevor Darrell*
 
 #### Manipulation
+
 + [HH.Mani.2] GigaHands: A Massive Annotated Dataset of Bimanual Hand Activities. arXiv24.
   [[PDF](https://arxiv.org/pdf/2412.04244)]
   [[Project](https://ivl.cs.brown.edu/research/gigahands.html)] \
@@ -1473,6 +1440,12 @@ Junsong Yuan*
   [[Project](https://ttxskk.github.io/AiOS/)]
   [[Code](https://github.com/ttxskk/AiOS)] \
   *Qingping Sun, Yanjun Wang, Ailing Zeng, Wanqi Yin, Chen Wei, Wenjia Wang, Haiyi Mei, Chi Sing Leung, Ziwei Liu, Lei Yang, Zhongang Cai*
+
++ [FBR.FK.8] One-Stage 3D Whole-Body Mesh Recovery with Component Aware Transformer. CVPR23.
+  [[PDF](https://arxiv.org/pdf/2303.16160)]
+  [[Project](https://osx-ubody.github.io/)]
+  [[Code](https://github.com/IDEA-Research/OSX)] \
+  *Jing Lin, Ailing Zeng, Haoqian Wang, Lei Zhang, Yu Li*
 
 + [FBR.FK.7] PyMAF-X: Towards Well-aligned Full-body Model Regression from Monocular Images. arXiv22.
   [[PDF](https://arxiv.org/pdf/2207.06400.pdf)]
@@ -1520,7 +1493,7 @@ Junsong Yuan*
   [[PDF](https://arxiv.org/pdf/2012.06087.pdf)] \
   *Yuxiao Zhou, Marc Habermann, Ikhsanul Habibie, Ayush Tewari, Christian Theobalt, Feng Xu*
 
-#### Shape
+#### Implicit Shape
 
 + [FBR.SP.7] ECON: Explicit Clothed humans Obtained from Normals. arXiv22.
   [[PDF](https://arxiv.org/pdf/2212.07422.pdf)]
@@ -1558,6 +1531,11 @@ Junsong Yuan*
   *Shunsuke Saito, Zeng Huang, Ryota Natsume, Shigeo Morishima, Angjoo Kanazawa, Hao Li*
 
 #### Neural Rendering
+
++ [FBR.NR.7] One Shot, One Talk: Whole-body Talking Avatar from a Single Image. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2412.01106)]
+  [[Project](https://ustc3dv.github.io/OneShotOneTalk/)]
+  *Jun Xiang, Yudong Guo, Leipeng Hu, Boyang Guo, Yancheng Yuan, Juyong Zhang*
 
 + [FBR.NR.6] Expressive Whole-Body 3D Gaussian Avatar. ECCV24.
   [[PDF](https://arxiv.org/pdf/2407.21686)]
@@ -1621,143 +1599,204 @@ Junsong Yuan*
   [[Code](https://github.com/otaheri/GrabNet)] \
   *Omid Taheri, Nima Ghorbani, Michael J. Black, Dimitrios Tzionas*
 
-#### In-Sence
+### Multi-Modal Motion
 
-+ [FBR.IS.10] Human-Aware 3D Scene Generation with Spatially-constrained Diffusion Models. arXiv24.
+#### In Sence
+
++ [MM.IS.10] Human-Aware 3D Scene Generation with Spatially-constrained Diffusion Models. arXiv24.
   [[PDF](https://arxiv.org/pdf/2406.18159)]
   [[Project](https://hong-xl.github.io/SHADE/)] \
   *Xiaolin Hong, Hongwei Yi, Fazhi He, Qiong Cao*
 
-+ [FBR.IS.9] GenZI: Zero-Shot 3D Human-Scene Interaction Generation. arXiv23.
++ [MM.IS.9] GenZI: Zero-Shot 3D Human-Scene Interaction Generation. arXiv23.
   [[PDF](https://arxiv.org/pdf/2311.17737.pdf)]
   [[Project](https://craigleili.github.io/projects/genzi/)] \
   *Lei Li, Angela Dai*
 
-+ [FBR.IS.8] Compositional Human-Scene Interaction Synthesis with Semantic Control. ECCV22.
++ [MM.IS.8] Compositional Human-Scene Interaction Synthesis with Semantic Control. ECCV22.
   [[PDF](https://www.ecva.net/papers/eccv_2022/papers_ECCV/papers/136660305.pdf)]
   [[Project](https://zkf1997.github.io/COINS/index.html)] 
   [[Code](https://github.com/zkf1997/COINS)] \
   *Kaifeng Zhao, Shaofei Wang, Yan Zhang, Thabo Beeler, Siyu Tang*
 
-+ [FBR.IS.7] Controllable Human-Object Interaction Synthesis. arXiv23.
++ [MM.IS.7] Controllable Human-Object Interaction Synthesis. arXiv23.
   [[PDF](https://arxiv.org/pdf/2312.03913.pdf)] \
   *Jiaman Li, Alexander Clegg, Roozbeh Mottaghi, Jiajun Wu, Xavier Puig, C. Karen Liu*
 
-+ [FBR.IS.6] Generating Continual Human Motion in Diverse 3D Scenes. arXiv23.
++ [MM.IS.6] Generating Continual Human Motion in Diverse 3D Scenes. arXiv23.
   [[PDF](https://arxiv.org/pdf/2304.02061.pdf)] \
   *Aymen Mir, Xavier Puig, Angjoo Kanazawa, Gerard Pons-Moll*
 
-+ [FBR.IS.5] Stochastic Scene-Aware Motion Prediction. ICCV21.
++ [MM.IS.5] Stochastic Scene-Aware Motion Prediction. ICCV21.
   [[PDF](https://openaccess.thecvf.com/content/ICCV2021/papers/Hassan_Stochastic_Scene-Aware_Motion_Prediction_ICCV_2021_paper.pdf)]
   [[Project](https://samp.is.tue.mpg.de/)]
   [[Code](https://github.com/mohamedhassanmus/SAMP)] \
   *Mohamed Hassan, Duygu Ceylan, Ruben Villegas, Jun Saito, Jimei Yang, Yi Zhou, Michael Black*
 
-+ [FBR.IS.4] PLACE: Proximity Learning of Articulation and Contact in 3D Environments. 3DV20.
++ [MM.IS.4] PLACE: Proximity Learning of Articulation and Contact in 3D Environments. 3DV20.
   [[PDF](https://files.is.tue.mpg.de/black/papers/3DV_2020_BPSGen.pdf)]
   [[Project](https://sanweiliti.github.io/PLACE/PLACE.html)]
   [[Code](https://github.com/sanweiliti/PLACE)] \
   *Siwei Zhang, Yan Zhang, Qianli Ma, Michael J. Black, Siyu Tang*
 
-+ [FBR.IS.3] Populating 3D Scenes by Learning Human-Scene Interaction. CVPR21.
++ [MM.IS.3] Populating 3D Scenes by Learning Human-Scene Interaction. CVPR21.
   [[PDF](https://openaccess.thecvf.com/content/CVPR2021/papers/Hassan_Populating_3D_Scenes_by_Learning_Human-Scene_Interaction_CVPR_2021_paper.pdf)]
   [[Project](https://posa.is.tue.mpg.de/)] 
   [[Code](https://github.com/mohamedhassanmus/POSA)] \
   *Mohamed Hassan, Partha Ghosh, Joachim Tesch, Dimitrios Tzionas, Michael J. Black*
 
-+ [FBR.IS.2] The Wanderings of Odysseus in 3D Scenes. CVPR22.
++ [MM.IS.2] The Wanderings of Odysseus in 3D Scenes. CVPR22.
   [[PDF](https://arxiv.org/pdf/2112.09251.pdf)]
   [[Project](https://yz-cnsdqz.github.io/eigenmotion/GAMMA/)] \
   *Yan Zhang, Siyu Tang*
 
-+ [FBR.IS.1] Generating 3D People in Scenes without People. CVPR20.
++ [MM.IS.1] Generating 3D People in Scenes without People. CVPR20.
   [[PDF](https://openaccess.thecvf.com/content_CVPR_2020/papers/Zhang_Generating_3D_People_in_Scenes_Without_People_CVPR_2020_paper.pdf)]
   [[Code](https://github.com/yz-cnsdqz/PSI-release)] \
   *Yan Zhang, Mohamed Hassan, Heiko Neumann, Michael J. Black, Siyu Tang*
 
-#### Text-to-Motion
+#### Text to Motion
 
-+ [FBR.Tex.14] Human Motion Instruction Tuning. arXiv24.
++ [MM.Tex.12] ChatPose: Chatting about 3D Human Pose. CVPR24.
+  [[PDF](https://arxiv.org/pdf/2311.18836)]
+  [[Project](https://yfeng95.github.io/ChatPose/)] \
+  *Yao Feng, Jing Lin, Sai Kumar Dwivedi, Yu Sun, Priyanka Patel, Michael J. Black*
+
++ [MM.Tex.15] SemGrasp: Semantic Grasp Generation via Language Aligned Discretization. ECCV24.
+  [[PDF](https://arxiv.org/pdf/2404.03590)]
+  [[Project](https://kailinli.github.io/SemGrasp/)]
+  *Kailin Li, Jingbo Wang,Lixin Yang, Cewu Lu, Bo Dai*
+
++ [MM.Tex.14] Human Motion Instruction Tuning. arXiv24.
   [[PDF](https://arxiv.org/pdf/2411.16805)] \
   *Lei Li, Sen Jia, Wang Jianhao, Zhongyu Jiang, Feng Zhou, Ju Dai, Tianfang Zhang, Wu Zongkai, Jenq-Neng Hwang*
 
-+ [FBR.Tex.13] MotionCLR: Motion Generation and Training-free Editing via Understanding Attention Mechanisms. arXiv24.
++ [MM.Tex.13] MotionCLR: Motion Generation and Training-free Editing via Understanding Attention Mechanisms. arXiv24.
   [[PDF](https://arxiv.org/pdf/2410.18977)]
   [[Project](https://lhchen.top/MotionCLR/)]
   [[Code](https://github.com/IDEA-Research/MotionCLR)] \
   *Ling-Hao Chen, Wenxun Dai, Xuan Ju, Shunlin Lu, Lei Zhang*
 
-+ [FBR.Tex.12] MotionLLM: Understanding Human Behaviors from Human Motions and Videos. arXiv24.
++ [MM.Tex.12] MotionLLM: Understanding Human Behaviors from Human Motions and Videos. arXiv24.
   [[PDF](https://arxiv.org/pdf/2405.20340)]
   [[Project](https://lhchen.top/MotionLLM/)]
   [[Code](https://github.com/IDEA-Research/MotionLLM)] \
   *Ling-Hao Chen, Shunlin Lu, Ailing Zeng, Hao Zhang, Benyou Wang, Ruimao Zhang, Lei Zhang*
 
-+ [FBR.Tex.11] InterGen: Diffusion-based Multi-human Motion Generation under Complex Interactions. IJCV24.
++ [MM.Tex.11] InterGen: Diffusion-based Multi-human Motion Generation under Complex Interactions. IJCV24.
   [[PDF](https://arxiv.org/pdf/2304.05684)]
   [[Project](https://tr3e.github.io/intergen-page/)]
   [[Code](https://github.com/tr3e/InterGen)] \
   *Han Liang, Wenqian Zhang, Wenxuan Li, Jingyi Yu, Lan Xu*
 
-+ [FBR.Tex.10] Inter-X: Towards Versatile Human-Human Interaction Analysis. CVPR24.
++ [MM.Tex.10] Inter-X: Towards Versatile Human-Human Interaction Analysis. CVPR24.
   [[PDF](https://arxiv.org/pdf/2312.16051)]
   [[Project](https://liangxuy.github.io/inter-x/)]
   [[Code](https://github.com/liangxuy/Inter-X)] \
   *Liang Xu, Xintao Lv, Yichao Yan, Xin Jin, Shuwen Wu, Congsheng Xu, Yifan Liu, Yizhou Zhou, Fengyun Rao, Xingdong Sheng, Yunhui Liu, Wenjun Zeng, Xiaokang Yang*
 
-+ [FBR.Tex.9] MoMask: Generative Masked Modeling of 3D Human Motions. 
++ [MM.Tex.9] MoMask: Generative Masked Modeling of 3D Human Motions. 
   [[PDF](https://arxiv.org/pdf/2312.00063)]
   [[Project](https://ericguo5513.github.io/momask/)]
   [[Code](https://github.com/EricGuo5513/momask-codes)] \
   *Chuan Guo, Yuxuan Mu, Muhammad Gohar Javed, Sen Wang, Li Cheng*
 
 
-+ [FBR.Tex.8] TMR: Text-to-Motion Retrieval Using Contrastive 3D Human Motion Synthesis. ICCV23.
++ [MM.Tex.8] TMR: Text-to-Motion Retrieval Using Contrastive 3D Human Motion Synthesis. ICCV23.
   [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Petrovich_TMR_Text-to-Motion_Retrieval_Using_Contrastive_3D_Human_Motion_Synthesis_ICCV_2023_paper.pdf)]
   [[Project](https://mathis.petrovich.fr/tmr/)]
   [[Code](https://github.com/Mathux/TMR)] \
   *Mathis Petrovich, Michael J. Black, Gül Varol*
 
-+ [FBR.Tex.7] HumanTOMATO: Text-aligned Whole-body Motion Generation. arXiv23.
++ [MM.Tex.7] HumanTOMATO: Text-aligned Whole-body Motion Generation. arXiv23.
   [[PDF](https://arxiv.org/pdf/2310.12978.pdf)]
   [[Project](https://lhchen.top/HumanTOMATO/)]
   [[Code](https://github.com/IDEA-Research/HumanTOMATO)] \
   *Shunlin Lu, Ling-Hao Chen, Ailing Zeng, Jing Lin, Ruimao Zhang, Lei Zhang, Heung-Yeung Shum*
 
-+ [FBR.Tex.6] Motion-X: A Large-scale 3D Expressive Whole-body Human Motion Dataset. NeurIPS23.
++ [MM.Tex.6] Motion-X: A Large-scale 3D Expressive Whole-body Human Motion Dataset. NeurIPS23.
   [[PDF](https://arxiv.org/pdf/2307.00818.pdf)]
   [[Project](https://motion-x-dataset.github.io/)]
   [[Code](https://github.com/IDEA-Research/Motion-X?tab=readme-ov-file)] \
   *Jing Lin, Ailing Zeng, Shunlin Lu, Yuanhao Cai, Ruimao Zhang, Haoqian Wang, Lei Zhang*
 
-+ [FBR.Tex.5] MotionDiffuse: Text-Driven Human Motion Generation with Diffusion Model. arXiv22.
++ [MM.Tex.5] MotionDiffuse: Text-Driven Human Motion Generation with Diffusion Model. arXiv22.
   [[PDF](https://arxiv.org/pdf/2208.15001.pdf)]
   [[Project](https://mingyuan-zhang.github.io/projects/MotionDiffuse.html)]
   [[Code](https://github.com/mingyuan-zhang/MotionDiffuse?tab=readme-ov-file)] \
   *Mingyuan Zhang, Zhongang Cai, Liang Pan, Fangzhou Hong, Xinying Guo, Lei Yang, Ziwei Liu*
 
-+ [FBR.Tex.4] UDE: A Unified Driving Engine for Human Motion Generation. CVPR23.
++ [MM.Tex.4] UDE: A Unified Driving Engine for Human Motion Generation. CVPR23.
   [[PDF](https://arxiv.org/pdf/2211.16016.pdf)]
   [[Project](https://zixiangzhou916.github.io/UDE/)]
   [[Code](https://github.com/zixiangzhou916/UDE/?tab=readme-ov-file)] \
   *Zixiang Zhou, Baoyuan Wang*
 
-+ [FBR.Tex.3] MotionGPT: Finetuned LLMs are General-Purpose Motion Generators. arXiv23.
++ [MM.Tex.3] MotionGPT: Finetuned LLMs are General-Purpose Motion Generators. arXiv23.
   [[PDF](https://arxiv.org/pdf/2306.10900.pdf)]
   [[Project](https://qiqiapink.github.io/MotionGPT/)]
   [[Code](https://github.com/qiqiApink/MotionGPT)] \
   *Yaqi Zhang, Di Huang, Bin Liu, Shixiang Tang, Yan Lu, Lu Chen, Lei Bai, Qi Chu, Nenghai Yu, Wanli Ouyang*
 
-+ [FBR.Tex.2] MotionGPT: Human Motion as a Foreign Language. NeurIPS23.
++ [MM.Tex.2] MotionGPT: Human Motion as a Foreign Language. NeurIPS23.
   [[PDF](https://arxiv.org/pdf/2306.14795.pdf)]
   [[Project](https://motion-gpt.github.io/)] 
   [[Code](https://github.com/OpenMotionLab/MotionGPT)] \
   *Biao Jiang, Xin Chen, Wen Liu, Jingyi Yu, Gang Yu, Tao Chen*
 
-+ [FBR.Tex.1] GUESS: GradUally Enriching SyntheSis for Text-Driven Human Motion Generation. TVCG24.
++ [MM.Tex.1] GUESS: GradUally Enriching SyntheSis for Text-Driven Human Motion Generation. TVCG24.
   [[PDF](https://arxiv.org/pdf/2401.02142.pdf)] 
   [[Code](https://github.com/Xuehao-Gao/GUESS)] \
   *Xuehao Gao, Yang Yang, Zhenyu Xie, Shaoyi Du, Zhongqian Sun, Yang Wu*
+
+### Dexterous Robot Hand
+
+#### Dynamics
+
++ [RO.DN.5] Grasping Diverse Objects with Simulated Humanoids. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2407.11385)]
+  [[Project](https://www.zhengyiluo.com/Omnigrasp-Site/)] \
+  *Zhengyi Luo, Jinkun Cao, Sammy Christen, Alexander Winkler, Kris Kitani, Weipeng Xu*
+
++ [RO.DN.4] DexMimicGen: Automated Data Generation for Bimanual Dexterous Manipulation via Imitation Learning. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2410.24185)]
+  [[Project](https://dexmimicgen.github.io/)] \
+  *Zhenyu Jiang, Yuqi Xie, Kevin Lin, Zhenjia Xu, Weikang Wan, Ajay Mandlekar, Linxi Fan, Yuke Zhu*
+
++ [RO.DN.3] UniGraspTransformer: Simplified Policy Distillation for Scalable Dexterous Robotic Grasping. arXiv24.
+  [[PDF](https://arxiv.org/abs/2412.02699)]
+  [[Project](https://dexhand.github.io/UniGraspTransformer/)]
+  [[Code](https://github.com/microsoft/UniGraspTransformer)] \
+  *Wenbo Wang, Fangyun Wei, Lei Zhou, Xi Chen, Lin Luo, Xiaohan Yi, Yizhong Zhang, Yaobo Liang, Chang Xu, Yan Lu, Jiaolong Yang, Baining Guo*
+
++ [RO.DN.2] Bimanual Grasp Synthesis for Dexterous Robot Hands. RAL24.
+  [[PDF](https://arxiv.org/pdf/2411.15903)]
+  [[Project](https://bimangrasp.github.io/)] \
+  *Yanming Shao, Chenxi Xiao*
+
++ [RO.DN.1] DexGraspNet: A Large-Scale Robotic Dexterous Grasp Dataset for General Objects Based on Simulation. ICRA23.
+  [[PDF](https://arxiv.org/pdf/2210.02697)]
+  [[Project](https://pku-epic.github.io/DexGraspNet/)]
+  [[Code](https://github.com/PKU-EPIC/DexGraspNet)] \
+  *Ruicheng Wang, Jialiang Zhang, Jiayi Chen, Yinzhen Xu, Puhao Li, Tengyu Liu, He Wang*
+
+#### Generation
+
++ [RO.Gen.3] OKAMI: Teaching Humanoid Robots Manipulation Skills through Single Video Imitation. CoRL24.
+  [[PDF](https://arxiv.org/pdf/2410.11792)]
+  [[Project](https://ut-austin-rpl.github.io/OKAMI/)] \
+  *Jinhan Li, Yifeng Zhu, Yuqi Xie, Zhenyu Jiang, Mingyo Seo, Georgios Pavlakos, Yuke Zhu*
+
++ [RO.Gen.2] DexDiffuser: Generating Dexterous Grasps with Diffusion Models. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2402.02989)]
+  [[Project](https://yulihn.github.io/DexDiffuser_page/)] \
+  *Zehang Weng, Haofei Lu, Danica Kragic, Jens Lundell*
+
++ [RO.Gen.1] CogACT: A Foundational Vision-Language-Action Model for Synergizing Cognition and Action in Robotic Manipulation. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2411.19650)]
+  [[Project](https://cogact.github.io/)]
+  [[Code](https://github.com/microsoft/CogACT)] \
+  *Qixiu Li, Yaobo Liang, Zeyu Wang, Lin Luo, Xi Chen, Mozheng Liao, Fangyun Wei, Yu Deng, Sicheng Xu, Yizhong Zhang, Xiaofan Wang, Bei Liu, Jianlong Fu, Jianmin Bao, Dong Chen, Yuanchun Shi, Jiaolong Yang, Baining Guo*
 
 
 [\[back to top\]](#contents)
