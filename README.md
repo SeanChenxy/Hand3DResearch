@@ -11,7 +11,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
   - [Overview](#overview)
   - [Datasets](#datasets)
   - [Papers](#papers)
-    - [Hand Shape/Pose](#hand-shapepose)
+    - [Hand Modeling](#hand-modeling)
       - [Forward Kinematics](#forward-kinematics)
       - [Inverse Kinematics](#inverse-kinematics)
       - [Graph](#graph)
@@ -51,11 +51,11 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [Text to Motion](#text-to-motion)
     - [Dexterous Robot Hand](#dexterous-robot-hand)
       - [Dynamics](#dynamics-2)
-      - [Generation](#generation)
+      - [Imitation](#imitation)
+      - [VLA](#vla)
   - [Tools](#tools)
     - [Model](#model)
     - [MoCap](#mocap)
-  - [Data](#data)
 
 <!-- /code_chunk_output -->
 
@@ -122,7 +122,7 @@ This list presents recent datasets with properties of data size, shape annotatio
 
 The below indices are references to the above [overview](#overview).
 
-### Hand Shape/Pose
+### Hand Modeling
 
 #### Forward Kinematics
 
@@ -837,7 +837,7 @@ Junsong Yuan*
   [[PDF](https://arxiv.org/pdf/2007.05168.pdf)] \
   *John Yang, Hyung Jin Chang, Seungeui Lee, Nojun Kwak*
 
-[\[back to top\]](#contents)
+[\[back to top\]](#recent-progress-in-3d-hand-tasks-awesomehttpsawesomerebadge-flatsvg)
 
 ### Hand-Object Interaction
 
@@ -1179,7 +1179,7 @@ Junsong Yuan*
   [[Project](https://hwjiang1510.github.io/GraspTTA/)] \
   *Hanwen Jiang, Shaowei Liu, Jiashun Wang, Xiaolong Wang*
 
-[\[back to top\]](#contents)
+[\[back to top\]](#recent-progress-in-3d-hand-tasks-awesomehttpsawesomerebadge-flatsvg)
 
 ### Hand-Hand Interaction
 
@@ -1429,7 +1429,7 @@ Junsong Yuan*
   *Xinyu Zhan, Lixin Yang, Yifei Zhao, Kangrui Mao, Hanlin Xu, Zenan Lin, Kailin Li, Cewu Lu*
 
 
-[\[back to top\]](#contents)
+[\[back to top\]](#recent-progress-in-3d-hand-tasks-awesomehttpsawesomerebadge-flatsvg)
 
 ### Full Body Reconstruction
 
@@ -1753,15 +1753,15 @@ Junsong Yuan*
 
 #### Dynamics
 
++ [RO.DN.6] DexDiffuser: Generating Dexterous Grasps with Diffusion Models. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2402.02989)]
+  [[Project](https://yulihn.github.io/DexDiffuser_page/)] \
+  *Zehang Weng, Haofei Lu, Danica Kragic, Jens Lundell*
+
 + [RO.DN.5] Grasping Diverse Objects with Simulated Humanoids. arXiv24.
   [[PDF](https://arxiv.org/pdf/2407.11385)]
   [[Project](https://www.zhengyiluo.com/Omnigrasp-Site/)] \
   *Zhengyi Luo, Jinkun Cao, Sammy Christen, Alexander Winkler, Kris Kitani, Weipeng Xu*
-
-+ [RO.DN.4] DexMimicGen: Automated Data Generation for Bimanual Dexterous Manipulation via Imitation Learning. arXiv24.
-  [[PDF](https://arxiv.org/pdf/2410.24185)]
-  [[Project](https://dexmimicgen.github.io/)] \
-  *Zhenyu Jiang, Yuqi Xie, Kevin Lin, Zhenjia Xu, Weikang Wan, Ajay Mandlekar, Linxi Fan, Yuke Zhu*
 
 + [RO.DN.3] UniGraspTransformer: Simplified Policy Distillation for Scalable Dexterous Robotic Grasping. arXiv24.
   [[PDF](https://arxiv.org/abs/2412.02699)]
@@ -1780,26 +1780,33 @@ Junsong Yuan*
   [[Code](https://github.com/PKU-EPIC/DexGraspNet)] \
   *Ruicheng Wang, Jialiang Zhang, Jiayi Chen, Yinzhen Xu, Puhao Li, Tengyu Liu, He Wang*
 
-#### Generation
+#### Imitation
 
-+ [RO.Gen.3] OKAMI: Teaching Humanoid Robots Manipulation Skills through Single Video Imitation. CoRL24.
++ [RO.IM.2] OKAMI: Teaching Humanoid Robots Manipulation Skills through Single Video Imitation. CoRL24.
   [[PDF](https://arxiv.org/pdf/2410.11792)]
   [[Project](https://ut-austin-rpl.github.io/OKAMI/)] \
   *Jinhan Li, Yifeng Zhu, Yuqi Xie, Zhenyu Jiang, Mingyo Seo, Georgios Pavlakos, Yuke Zhu*
 
-+ [RO.Gen.2] DexDiffuser: Generating Dexterous Grasps with Diffusion Models. arXiv24.
-  [[PDF](https://arxiv.org/pdf/2402.02989)]
-  [[Project](https://yulihn.github.io/DexDiffuser_page/)] \
-  *Zehang Weng, Haofei Lu, Danica Kragic, Jens Lundell*
++ [RO.IM.1] DexMimicGen: Automated Data Generation for Bimanual Dexterous Manipulation via Imitation Learning. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2410.24185)]
+  [[Project](https://dexmimicgen.github.io/)] \
+  *Zhenyu Jiang, Yuqi Xie, Kevin Lin, Zhenjia Xu, Weikang Wan, Ajay Mandlekar, Linxi Fan, Yuke Zhu*
 
-+ [RO.Gen.1] CogACT: A Foundational Vision-Language-Action Model for Synergizing Cognition and Action in Robotic Manipulation. arXiv24.
+#### VLA
+
++ [RO.VLA.2] Diffusion-VLA: Scaling Robot Foundation Models via Unified Diffusion and Autoregression. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2412.03293)]
+  [[Project](https://diffusion-vla.github.io/)] \
+  *Junjie Wen, Minjie Zhu, Yichen Zhu, Zhibin Tang, Jinming Li, Zhongyi Zhou, Chengmeng Li, Xiaoyu Liu, Yaxin Peng, Chaomin Shen, Feifei Feng*
+
++ [RO.VLA.1] CogACT: A Foundational Vision-Language-Action Model for Synergizing Cognition and Action in Robotic Manipulation. arXiv24.
   [[PDF](https://arxiv.org/pdf/2411.19650)]
   [[Project](https://cogact.github.io/)]
   [[Code](https://github.com/microsoft/CogACT)] \
   *Qixiu Li, Yaobo Liang, Zeyu Wang, Lin Luo, Xi Chen, Mozheng Liao, Fangyun Wei, Yu Deng, Sicheng Xu, Yizhong Zhang, Xiaofan Wang, Bei Liu, Jianlong Fu, Jianmin Bao, Dong Chen, Yuanchun Shi, Jiaolong Yang, Baining Guo*
 
 
-[\[back to top\]](#contents)
+[\[back to top\]](#recent-progress-in-3d-hand-tasks-awesomehttpsawesomerebadge-flatsvg)
 
 ## Tools
 
@@ -1812,18 +1819,13 @@ Junsong Yuan*
 + [T.MD.1] [spheremesh](https://github.com/anastasia-tkach/hmodel-cpp-public)
 
 ### MoCap
-+ [T.MC.7] [Mediapipe-TFLite](https://github.com/Daming-TF/Mediapipe-hands)
-+ [T.MC.6] [AlphaPose](https://github.com/MVIG-SJTU/AlphaPose)
-+ [T.MC.5] [EasyMocap](https://github.com/zju3dv/EasyMocap)
-+ [T.MC.4] [MediaPipe](https://mediapipe.dev/index.html)
-+ [T.MC.3] [frankmocap](https://github.com/facebookresearch/frankmocap)
-+ [T.MC.2] [HandMotionViewer](https://github.com/dimtziwnas/HandObjectInteractionIJCV16_HandMotionViewer?utm_source=catalyzex.com)
++ [T.MC.5] [AlphaPose](https://github.com/MVIG-SJTU/AlphaPose)
++ [T.MC.4] [EasyMocap](https://github.com/zju3dv/EasyMocap)
++ [T.MC.3] [MediaPipe](https://mediapipe.dev/index.html)
++ [T.MC.2] [frankmocap](https://github.com/facebookresearch/frankmocap)
 + [T.MC.1] [openpose](https://github.com/CMU-Perceptual-Computing-Lab/openpose)
 
-## Data
-+ [T.DA.1] [HandData](https://github.com/Daming-TF/HandData)
-
-[\[back to top\]](#contents)
+[\[back to top\]](#recent-progress-in-3d-hand-tasks-awesomehttpsawesomerebadge-flatsvg)
 
 <!-- ## Benchmarks
 ### FreiHAND
