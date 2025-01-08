@@ -67,13 +67,15 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
 
 ## Datasets
 This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, synthetic, and physical attributes (Phy. att.).
-|  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic | Phy. att. | Affordacne |
-|  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- |  ---- | ---- |
-|GigaHands | [link](https://ivl.cs.brown.edu/research/gigahands.html) | 183M | ✅ | ✅ | ✅ | ✅ | | | ✅
-|HOGraspNet| [link](https://hograspnet2024.github.io/) | 1.5M | ✅ | | ✅ | ✅ | | ✅ | ✅
+|  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic | Phy. att. | Affordacne | Text | Contact |
+|  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- |  ---- | ---- | ---- | ---- |
+|GigaHands | [link](https://ivl.cs.brown.edu/research/gigahands.html) | 183M | ✅ | ✅ | ✅ | ✅ | | |  | ✅
+|ContactDescribe | [link](https://arxiv.org/pdf/2407.12727) | 2.3K Grasp | ✅ | | ✅ | | | |  | ✅ | ✅
+|CapGrasp | [link](https://kailinli.github.io/SemGrasp/) | 50K Grasp | ✅ | | ✅ | | | |  | ✅
+|HOGraspNet| [link](https://hograspnet2024.github.io/) | 1.5M | ✅ | | ✅ | ✅ | | ✅ | ✅ | | ✅
 |HInt| [link](https://lvxintao.github.io/himo/)   | 40.4K |  | ✅ | ✅ |  | | | 
 |HANDS23| [link](https://lvxintao.github.io/himo/)   | 257K |  | ✅ | ✅ |  | | | ✅
-|HIMO| [link](https://lvxintao.github.io/himo/)   | 4.1M | ✅ | ✅ | ✅ | ✅ | | | ✅
+|HIMO| [link](https://lvxintao.github.io/himo/)   | 4.1M | ✅ | ✅ | ✅ | ✅ | | | | ✅
 |Assembly101| [link](https://assembly-101.github.io/)   | 111M |  | ✅ | ✅ | ✅ | |
 |HMDO| [link](https://github.com/WeiXie-wx/HMDO)   | 21K | ✅ | ✅ | ✅ | ✅ | |
 |HOI4D| [link](https://www.hoi4d.top/)   | 2.4M | ✅ |  | ✅ | ✅ | | | ✅ |
@@ -85,11 +87,11 @@ This list presents recent datasets with properties of data size, shape annotatio
 | AffordPose | [link](https://github.com/GentlesJan/AffordPose) | 26K | ✅ |  | ✅ |  | ✅ | | ✅ |
 | RenderIH| [link](https://github.com/adwardlee/RenderIH) | 1.0M | ✅ | ✅ | |  | ✅ |
 | AssemblyHands| [link](https://assemblyhands.github.io/) | 3.0M | | | ✅ | ✅ | |
-| ARCTIC | [link](https://arctic.is.tue.mpg.de/) | 2.1M | ✅ | ✅ | ✅ | ✅ | |✅ |
+| ARCTIC | [link](https://arctic.is.tue.mpg.de/) | 2.1M | ✅ | ✅ | ✅ | ✅ | |✅ | | | ✅
 |BlurHand | [link](https://github.com/JaehaKim97/BlurHand_RELEASE) | 155K | ✅ | ✅ | | ✅ | | 
 |DART| [link](https://dart2022.github.io/)   | 800K | ✅ |  | ✅ | | ✅ | |
 |CBF| [link](https://pan.seu.edu.cn/#/link/49FA8AC060F9801261509D7ED207026E?path=)   | 25K | ✅ |  | ✅ | ✅ | | ✅ |
-|OakInk| [link](https://oakink.net/)   | 50K | ✅ |  | ✅ | ✅ | |
+|OakInk| [link](https://oakink.net/)   | 50K | ✅ |  | ✅ | ✅ | | | | |✅
 |Sign-Language| [link](https://www.kaggle.com/ardamavi/27-class-sign-language-dataset)   | 22801   |   |  |  | | |
 |MuViHand| [link](https://github.com/LeylaKhaleghi/MuViHand)   | 402K   |   |  |  | ✅ | ✅ |
 |H2O     | [link](https://arxiv.org/pdf/2104.11181.pdf)   | 571K   | ✅  | ✅  | ✅  | ✅ | |
@@ -101,7 +103,7 @@ This list presents recent datasets with properties of data size, shape annotatio
 |YoutubeHand | [link](https://github.com/arielai/youtube_3d_hands) | 47K  | ✅ |  |  | | |
 | YCB-Affordance | [link](https://github.com/enriccorona/YCB_Affordance) | 134K  | ✅ | |✅ | ✅ | |
 | HO3D   | [link](https://github.com/shreyashampali/ho3d) | 77K  | ✅ |  | ✅ | ✅ | |
-|ContactPose | [link](https://contactpose.cc.gatech.edu/) | 2.9M | ✅ | ✅ | ✅ | ✅ | |
+|ContactPose | [link](https://contactpose.cc.gatech.edu/) | 2.9M | ✅ | ✅ | ✅ | ✅ | | | | | ✅
 | FreiHAND | [link](https://lmb.informatik.uni-freiburg.de/projects/freihand/) | 134K | ✅ |  | | | |
 |ObMan   | [link](https://hassony2.github.io/obman.html)  | 154K | ✅ | | ✅ | | ✅ |
 |Interhand2.6M| [link](https://mks0601.github.io/InterHand2.6M) | 2.6M  | ✅ | ✅   |  |✅ | |
@@ -1084,6 +1086,15 @@ Junsong Yuan*
 
 #### Contact
 
++ [HO.Con.21] NL2Contact: Natural Language Guided 3D Hand-Object Contact Modeling with Diffusion Model. ECCV24.
+  [[PDF](https://arxiv.org/pdf/2407.12727)] \
+  *Zhongqun Zhang, Hengfei Wang, Ziwei Yu, Yihua Cheng, Angela Yao, Hyung Jin Chang*
+
++ [HO.Con.20] SemGrasp: Semantic Grasp Generation via Language Aligned Discretization. ECCV24.
+  [[PDF](https://arxiv.org/pdf/2404.03590)]
+  [[Project](https://kailinli.github.io/SemGrasp/)] \
+  *Kailin Li, Jingbo Wang,Lixin Yang, Cewu Lu, Bo Dai*
+
 + [HO.Con.19] TOCH: Spatio-Temporal Object-to-Hand Correspondence for Motion Refinement. ECCV22.
   [[PDF](https://virtualhumans.mpi-inf.mpg.de/papers/zhou22toch/toch.pdf)]
   [[Project](https://virtualhumans.mpi-inf.mpg.de/toch/)]
@@ -1417,6 +1428,16 @@ Junsong Yuan*
 
 #### Manipulation
 
++ [HH.Mani.4] DiffH2O: Diffusion-Based Synthesis of Hand-Object Interactions from Textual Descriptions. SIGGRAPHAsia24.
+  [[PDF](https://arxiv.org/pdf/2403.17827)]
+  [[Project][https://diffh2o.github.io/]] \
+  *Sammy Christen, Shreyas Hampali, Fadime Sener, Edoardo Remelli, Tomas Hodan, Eric Sauser, Shugao Ma, Bugra Tekin*
+
++ [HH.Mani.3] Text2HOI: Text-guided 3D Motion Generation for Hand-Object Interaction. CVPR24
+  [[PDF](https://arxiv.org/pdf/2404.00562)]
+  [[Code](https://github.com/JunukCha/Text2HOI)] \
+  *Junuk Cha, Jihyeon Kim, Jae Shin Yoon, Seungryul Baek*
+
 + [HH.Mani.2] GigaHands: A Massive Annotated Dataset of Bimanual Hand Activities. arXiv24.
   [[PDF](https://arxiv.org/pdf/2412.04244)]
   [[Project](https://ivl.cs.brown.edu/research/gigahands.html)] \
@@ -1657,15 +1678,10 @@ Junsong Yuan*
 
 #### Text to Motion
 
-+ [MM.Tex.12] ChatPose: Chatting about 3D Human Pose. CVPR24.
++ [MM.Tex.15] ChatPose: Chatting about 3D Human Pose. CVPR24.
   [[PDF](https://arxiv.org/pdf/2311.18836)]
   [[Project](https://yfeng95.github.io/ChatPose/)] \
   *Yao Feng, Jing Lin, Sai Kumar Dwivedi, Yu Sun, Priyanka Patel, Michael J. Black*
-
-+ [MM.Tex.15] SemGrasp: Semantic Grasp Generation via Language Aligned Discretization. ECCV24.
-  [[PDF](https://arxiv.org/pdf/2404.03590)]
-  [[Project](https://kailinli.github.io/SemGrasp/)]
-  *Kailin Li, Jingbo Wang,Lixin Yang, Cewu Lu, Bo Dai*
 
 + [MM.Tex.14] Human Motion Instruction Tuning. arXiv24.
   [[PDF](https://arxiv.org/pdf/2411.16805)] \
