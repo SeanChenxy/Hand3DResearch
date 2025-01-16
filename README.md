@@ -66,7 +66,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
 ![img](Hand.png)
 
 ## Datasets
-This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, synthetic, and physical attributes (Phy. att.).
+This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, synthetic, physical attributes (Phy. att.), affordance, text description, and contact label.
 |  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic | Phy. att. | Affordacne | Text | Contact |
 |  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- |  ---- | ---- | ---- | ---- |
 |GigaHands | [link](https://ivl.cs.brown.edu/research/gigahands.html) | 183M | ✅ | ✅ | ✅ | ✅ | | |  | ✅
@@ -100,6 +100,7 @@ This list presents recent datasets with properties of data size, shape annotatio
 |H2O-3D  | [link](https://www.tugraz.at/index.php?id=57823)     | 62K  | ✅ | ✅ | ✅ | ✅ | |
 |GRAB    | [link](https://grab.is.tue.mpg.de/)     | 1.6M | ✅ | ✅ | ✅ | ✅ | |
 |DexYCB  | [link](https://dex-ycb.github.io/?utm_source=catalyzex.com)     | 528K | ✅ | | ✅ | ✅ | |
+|CompHand  | [link](https://github.com/SeanChenxy/HandMesh)     | 107K | | | | | ✅ |
 |YoutubeHand | [link](https://github.com/arielai/youtube_3d_hands) | 47K  | ✅ |  |  | | |
 | YCB-Affordance | [link](https://github.com/enriccorona/YCB_Affordance) | 134K  | ✅ | |✅ | ✅ | |
 | HO3D   | [link](https://github.com/shreyashampali/ho3d) | 77K  | ✅ |  | ✅ | ✅ | |
@@ -1810,17 +1811,37 @@ Junsong Yuan*
 
 #### VLA
 
-+ [RO.VLA.2] Diffusion-VLA: Scaling Robot Foundation Models via Unified Diffusion and Autoregression. arXiv24.
++ [RO.VLA.6] OmniManip: Towards General Robotic Manipulation via Object-Centric Interaction Primitives as Spatial Constraints. arXiv25.
+  [[PDF](https://arxiv.org/pdf/2501.03841)]
+  [[Project](https://omnimanip.github.io/)] \
+  *Mingjie Pan, Jiyao Zhang, Tianshu Wu, Yinghao Zhao, Wenlong Gao, Hao Dong*
+
++ [RO.VLA.5] ReKep: Spatio-Temporal Reasoning of Relational Keypoint Constraints for Robotic Manipulation. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2409.01652)]
+  [[Project](https://rekep-robot.github.io/)] \
+  *Wenlong Huang, Chen Wang, Yunzhu Li, Ruohan Zhang, Li Fei-Fei*
+
++ [RO.VLA.4] CoPa: General Robotic Manipulation through Spatial Constraints of Parts with Foundational Model. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2403.08248)]
+  [[Project](https://copa-2024.github.io/)] \
+  *Haoxu Huang, Fanqi Lin, Yingdong Hu, Shengjie Wang, Yang Gao*
+
+
++ [RO.VLA.3] Diffusion-VLA: Scaling Robot Foundation Models via Unified Diffusion and Autoregression. arXiv24.
   [[PDF](https://arxiv.org/pdf/2412.03293)]
   [[Project](https://diffusion-vla.github.io/)] \
   *Junjie Wen, Minjie Zhu, Yichen Zhu, Zhibin Tang, Jinming Li, Zhongyi Zhou, Chengmeng Li, Xiaoyu Liu, Yaxin Peng, Chaomin Shen, Feifei Feng*
 
-+ [RO.VLA.1] CogACT: A Foundational Vision-Language-Action Model for Synergizing Cognition and Action in Robotic Manipulation. arXiv24.
++ [RO.VLA.2] CogACT: A Foundational Vision-Language-Action Model for Synergizing Cognition and Action in Robotic Manipulation. arXiv24.
   [[PDF](https://arxiv.org/pdf/2411.19650)]
   [[Project](https://cogact.github.io/)]
   [[Code](https://github.com/microsoft/CogACT)] \
   *Qixiu Li, Yaobo Liang, Zeyu Wang, Lin Luo, Xi Chen, Mozheng Liao, Fangyun Wei, Yu Deng, Sicheng Xu, Yizhong Zhang, Xiaofan Wang, Bei Liu, Jianlong Fu, Jianmin Bao, Dong Chen, Yuanchun Shi, Jiaolong Yang, Baining Guo*
 
++ [RO.VLA.1] VoxPoser: Composable 3D Value Maps for Robotic Manipulation with Language Models. CoRL23.
+  [[PDF](https://arxiv.org/pdf/2307.05973)]
+  [[Project](https://voxposer.github.io/)] \
+  *Wenlong Huang, Chen Wang, Ruohan Zhang, Yunzhu Li, Jiajun Wu, Li Fei-Fei*
 
 [\[back to top\]](#recent-progress-in-3d-hand-tasks-awesomehttpsawesomerebadge-flatsvg)
 
