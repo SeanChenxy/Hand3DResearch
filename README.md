@@ -1811,6 +1811,11 @@ Junsong Yuan*
 
 #### VLA
 
++ [RO.VLA.7] Universal Actions for Enhanced Embodied Foundation Models. arXiv25.
+  [[PDF](https://arxiv.org/pdf/2501.10105)]
+  [[Project](https://github.com/2toinf/UniAct)] \
+  *Jinliang Zheng, Jianxiong Li, Dongxiu Liu, Yinan Zheng, Zhihao Wang, Zhonghong Ou, Yu Liu, Jingjing Liu, Ya-Qin Zhang, Xianyuan Zhan*
+
 + [RO.VLA.6] OmniManip: Towards General Robotic Manipulation via Object-Centric Interaction Primitives as Spatial Constraints. arXiv25.
   [[PDF](https://arxiv.org/pdf/2501.03841)]
   [[Project](https://omnimanip.github.io/)] \
