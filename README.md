@@ -302,7 +302,7 @@ Self-Supervised Learning. ICCV23.
 
 #### Transformer
 
-+ [H.TR.15] HandOS: 3D Hand Reconstruction in One Stage. arXiv24.
++ [H.TR.15] HandOS: 3D Hand Reconstruction in One Stage. CVPR25.
   [[PDF](https://arxiv.org/pdf/2412.01537)]
   [[Project](https://idea-research.github.io/HandOSweb/)] \
   *Xingyu Chen, Zhuheng Song, Xiaoke Jiang, Yaoqing Hu, Junzhi Yu, Lei Zhang*
@@ -1087,6 +1087,22 @@ Junsong Yuan*
 
 #### Contact
 
++ [HO.Con.24] QORT-Former: Query-optimized Real-time Transformer for Understanding Two Hands Manipulating Objects. AAAI25.
+  [[PDF](https://arxiv.org/pdf/2502.19769)]
+  [[Project](https://kcsayem.github.io/QORT-Former/)]
+  [[Code](https://github.com/kcsayem/QORT-Former)] \
+  *Elkhan Ismayilzada, MD Khalequzzaman Chowdhury Sayem, Yihalem Yimolal Tiruneh, Mubarrat Tajoar Chowdhury, Muhammadjon Boboev, Seungryul Baek*
+
++ [HO.Con.23] DECO: Dense Estimation of 3D Human-Scene Contact In The Wild. ICCV23.
+  [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Tripathi_DECO_Dense_Estimation_of_3D_Human-Scene_Contact_In_The_Wild_ICCV_2023_paper.pdf)]
+  [[Code](https://github.com/sha2nkt/deco)] \
+  *Shashank Tripathi, Agniv Chatterjee, Jean-Claude Passy, Hongwei Yi, Dimitrios Tzionas, Michael J. Black*
+
++ [HO.Con.22] Fine-Grained Egocentric Hand-Object Segmentation: Dataset, Model, and Applications. ECCV22.
+  [[PDF](https://arxiv.org/pdf/2208.03826)]
+  [[Code](https://github.com/owenzlz/EgoHOS)] \
+  *Lingzhi Zhang, Shenghao Zhou, Simon Stent, Jianbo Shi*
+
 + [HO.Con.21] NL2Contact: Natural Language Guided 3D Hand-Object Contact Modeling with Diffusion Model. ECCV24.
   [[PDF](https://arxiv.org/pdf/2407.12727)] \
   *Zhongqun Zhang, Hengfei Wang, Ziwei Yu, Yihua Cheng, Angela Yao, Hyung Jin Chang*
@@ -1191,6 +1207,26 @@ Junsong Yuan*
   [[Project](https://hwjiang1510.github.io/GraspTTA/)] \
   *Hanwen Jiang, Shaowei Liu, Jiashun Wang, Xiaolong Wang*
 
+#### Affordance 
+
++ [HO.AF.4] AffordDexGrasp: Open-set Language-guided Dexterous Grasp with Generalizable-Instructive Affordance. arXiv25.
+  [[PDF](https://arxiv.org/pdf/2503.07360)] \
+  *Yi-Lin Wei, Mu Lin, Yuhao Lin, Jian-Jian Jiang, Xiao-Ming Wu, Ling-An Zeng, Wei-Shi Zheng*
+
++ [HO.AF.3] SceneFun3D: Fine-Grained Functionality and Affordance Understanding in 3D Scenes. CVPR24.
+  [[PDF](https://alexdelitzas.github.io/assets/pdf/SceneFun3D.pdf)]
+  [[Project](https://scenefun3d.github.io/)] 
+  [[Code](https://github.com/SceneFun3D/scenefun3d)] \
+  *Alexandros Delitzas, Ayça Takmaz, Federico Tombari, Robert W. Sumner, Marc Pollefeys, Francis Engelmann*
+
++ [HO.AF.2] AffordPose: A Large-scale Dataset of Hand-Object Interactions with Affordance-driven Hand Pose. ICCV23.
+  [[PDF](https://arxiv.org/pdf/2309.08942)] \
+  *Juntao Jian, Xiuping Liu, Manyi Li, Ruizhen Hu, Jian Liu*
+
++ [HO.AF.1] 3D AffordanceNet: A Benchmark for Visual Object Affordance Understanding. CVPR21.
+  [[PDF](https://arxiv.org/pdf/2103.16397)] \
+  *Shengheng Deng, Xun Xu, Chaozheng Wu, Ke Chen, Kui Jia*
+
 [\[back to top\]](#recent-progress-in-3d-hand-tasks-awesomehttpsawesomerebadge-flatsvg)
 
 ### Hand-Hand Interaction
@@ -1278,6 +1314,10 @@ Junsong Yuan*
   *Mengcheng Li, Liang An, Hongwen Zhang, Lianpeng Wu, Feng Chen, Tao Yu, Yebin Liu*
 
 #### Transformer
+
++ [HH.TR.13] Aligning Foundation Model Priors and Diffusion-Based Hand Interactions for Occlusion-Resistant Two-Hand Reconstruction. arXiv25.
+  [[PDF](https://arxiv.org/pdf/2503.17788)] \
+  *Gaoge Han, Yongkang Cheng, Zhe Chen, Shaoli Huang, Tongliang Liu*
 
 + [HH.TR.12] 4DHands: Reconstructing Interactive Hands in 4D with Transformers. arXiv24. 
   [[PDF](https://arxiv.org/pdf/2405.20330)]
