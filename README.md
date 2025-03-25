@@ -31,6 +31,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [Neural Rendering](#neural-rendering)
       - [Dynamics](#dynamics-1)
       - [Contact](#contact)
+      - [Affordnce](#affordance)
     - [Hand-Hand Interaction](#hand-hand-interaction)
       - [Kinematics](#kinematics-1)
       - [2.5D](#25d-1)
