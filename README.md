@@ -75,11 +75,11 @@ This list presents recent datasets with properties of data size, shape annotatio
 |CapGrasp | [link](https://kailinli.github.io/SemGrasp/) | 50K Grasp | ✅ | | ✅ | | | |  | ✅
 |HOGraspNet| [link](https://hograspnet2024.github.io/) | 1.5M | ✅ | | ✅ | ✅ | | ✅ | ✅ | | ✅
 |HInt| [link](https://lvxintao.github.io/himo/)   | 40.4K |  | ✅ | ✅ |  | | | 
-|HANDS23| [link](https://lvxintao.github.io/himo/)   | 257K |  | ✅ | ✅ |  | | | ✅
+|HANDS23| [link](https://fouheylab.eecs.umich.edu/~dandans/projects/hands23/)   | 257K |  | ✅ | ✅ |  | | | ✅
 |HIMO| [link](https://lvxintao.github.io/himo/)   | 4.1M | ✅ | ✅ | ✅ | ✅ | | | | ✅
 |Assembly101| [link](https://assembly-101.github.io/)   | 111M |  | ✅ | ✅ | ✅ | |
 |HMDO| [link](https://github.com/WeiXie-wx/HMDO)   | 21K | ✅ | ✅ | ✅ | ✅ | |
-|HOI4D| [link](https://www.hoi4d.top/)   | 2.4M | ✅ |  | ✅ | ✅ | | | ✅ |
+|HOI4D| [link](https://hoi4d.github.io/)   | 2.4M | ✅ |  | ✅ | ✅ | | | ✅ |
 |TACO| [link](https://taco2024.github.io/)   | 5.2M | ✅ | ✅ | ✅ | ✅ | | | ✅ |
 |KIT| [link](https://bimanual-actions.humanoids.kit.edu/)   | 4M |  | ✅ | ✅ | ✅ | | | ✅ |
 |OakInk2| [link](https://oakink.net/v2/)   | 4M | ✅ | ✅ | ✅ | ✅ | | | ✅ |
@@ -129,6 +129,12 @@ The below indices are references to the above [overview](#overview).
 ### Hand Modeling
 
 #### Forward Kinematics
+
++ [H.FK.16] WiLoR: End-to-end 3D Hand Localization and Reconstruction in-the-wild, CVPR25.
+  [[PDF](https://arxiv.org/pdf/2409.12259)]
+  [[Project](https://rolpotamias.github.io/WiLoR/)]
+  [[Code](https://github.com/rolpotamias/WiLoR)] \
+  *Rolandos Alexandros Potamias, Jinglei Zhang, Jiankang Deng, Stefanos Zafeiriou*
 
 + [H.FK.15] SiMA-Hand: Boosting 3D Hand-Mesh Reconstruction by Single-to-Multi-View Adaptation. arXiv24.
   [[PDF](https://arxiv.org/pdf/2402.01389.pdf)] \
@@ -302,6 +308,11 @@ Self-Supervised Learning. ICCV23.
   *Liuhao Ge, Zhou Ren, Yuncheng Li, Zehao Xue, Yingying Wang, Jianfei Cai, Junsong Yuan*
 
 #### Transformer
+
++ [H.TR.16] MaskHand: Generative Masked Modeling for Robust Hand Mesh Reconstruction in the Wild. arXiv24.
+  [[PDF](https://arxiv.org/pdf/2412.13393)]
+  [[Project](https://m-usamasaleem.github.io/publication/MaskHand/MaskHand.html)] \
+  *Muhammad Usama Saleem, Ekkasit Pinyoanuntapong, Mayur Jagdishbhai Patel, Hongfei Xue, Ahmed Helmy, Srijan Das, Pu Wang*
 
 + [H.TR.15] HandOS: 3D Hand Reconstruction in One Stage. CVPR25.
   [[PDF](https://arxiv.org/pdf/2412.01537)]
@@ -1223,6 +1234,11 @@ Junsong Yuan*
 + [HO.AF.2] AffordPose: A Large-scale Dataset of Hand-Object Interactions with Affordance-driven Hand Pose. ICCV23.
   [[PDF](https://arxiv.org/pdf/2309.08942)] \
   *Juntao Jian, Xiuping Liu, Manyi Li, Ruizhen Hu, Jian Liu*
+
++ [HO.AF.2] O2O-Afford: Annotation-Free Large-Scale Object-Object Affordance Learning. CoRL21.
+  [[PDF](https://arxiv.org/pdf/2106.15087)]
+  [[Project](https://cs.stanford.edu/~kaichun/o2oafford/)] \
+  *Kaichun Mo, Yuzhe Qin, Fanbo Xiang, Hao Su, Leonidas Guibas*
 
 + [HO.AF.1] 3D AffordanceNet: A Benchmark for Visual Object Affordance Understanding. CVPR21.
   [[PDF](https://arxiv.org/pdf/2103.16397)] \
