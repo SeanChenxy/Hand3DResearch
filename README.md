@@ -1856,6 +1856,11 @@ Junsong Yuan*
 
 #### Imitation
 
++ [RO.IM.3] MANIPTRANS: Efficient Dexterous Bimanual Manipulation Transfer via Residual Learning. CVPR25.
+  [[PDF](https://arxiv.org/pdf/2503.21860)]
+  [[Project](https://maniptrans.github.io/)] \
+  *Kailin Li, Puhao Li, Tengyu Liu, Yuyang Li, Siyuan Huang*
+
 + [RO.IM.2] OKAMI: Teaching Humanoid Robots Manipulation Skills through Single Video Imitation. CoRL24.
   [[PDF](https://arxiv.org/pdf/2410.11792)]
   [[Project](https://ut-austin-rpl.github.io/OKAMI/)] \
