@@ -547,6 +547,10 @@ Self-Supervised Learning. ICCV23.
 
 #### Neural Rendering on Avatar
 
++ [H.AVA.31] HandOcc: NeRF-based Hand Rendering with Occupancy Networks. arXiv25.
+  [[PDF](https://arxiv.org/pdf/2505.02079)] \
+  *Maksym Ivashechkin, Oscar Mendez, Richard Bowden*
+
 + [H.AVA.30] Volume Rendering of Human Hand Anatomy. arXiv24.
   [[PDF](https://arxiv.org/pdf/2411.18630)]
   *Jingtao Huang, Bohan Wang, Zhiyuan Gao, Mianlun Zheng, George Matcuk, Jernej Barbic*
