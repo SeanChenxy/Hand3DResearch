@@ -130,7 +130,12 @@ The below indices are references to the above [overview](#overview).
 
 #### Forward Kinematics
 
-+ [H.FK.16] WiLoR: End-to-end 3D Hand Localization and Reconstruction in-the-wild, CVPR25.
++ [H.FK.17] Analyzing the Synthetic-to-Real Domain Gap in 3D Hand Pose Estimation. CVPR25.
+  [[PDF](https://arxiv.org/pdf/2503.19307)]
+  [[Code](https://github.com/delaprada/HandSynthesis)] \
+  *Zhuoran Zhao, Linlin Yang, Pengzhan Sun, Pan Hui, Angela Yao*
+
++ [H.FK.16] WiLoR: End-to-end 3D Hand Localization and Reconstruction in-the-wild. CVPR25.
   [[PDF](https://arxiv.org/pdf/2409.12259)]
   [[Project](https://rolpotamias.github.io/WiLoR/)]
   [[Code](https://github.com/rolpotamias/WiLoR)] \
@@ -810,6 +815,12 @@ Junsong Yuan*
 
 #### Temporal
 
++ [H.TP.11] HaWoR: World-Space Hand Motion Reconstruction from Egocentric Videos. CVPR25.
+  [[PDF](https://arxiv.org/pdf/2501.02973)]
+  [[Project](https://hawor-project.github.io/)]
+  [[Code](https://github.com/ThunderVVV/HaWoR)] \
+  *Jinglei Zhang, Jiankang Deng, Chao Ma, Rolandos Alexandros Potamias*
+
 + [H.TP.10] DGTR: Dual-Branch Graph Transformer Network for 3D Human Mesh Reconstruction from Video. IROS24.
   [[PDF](https://arxiv.org/pdf/2412.01179)]
   [[Code](https://github.com/TangTao-PKU/DGTR)] \
@@ -861,6 +872,17 @@ Junsong Yuan*
 ### Hand-Object Interaction
 
 #### Kinematics
+
++ [HO.FK.20] UniHOPE: A Unified Approach for Hand-Only and Hand-Object Pose Estimation. CVPR25.
+  [[PDF](https://arxiv.org/pdf/2503.13303)]
+  [[Code](https://github.com/JoyboyWang/UniHOPE_Pytorch)] \
+  *Yinqiao Wang, Hao Xu, Pheng-Ann Heng, Chi-Wing Fu*
+
++ [HO.FK.19] HORT: Monocular Hand-held Objects Reconstruction with Transformers. arXiv25.
+  [[PDF](https://arxiv.org/pdf/2503.21313)]
+  [[Project](https://zerchen.github.io/projects/hort.html)]
+  [[Code](https://github.com/zerchen/hort)] \
+  *Zerui Chen, Rolandos Alexandros Potamias, Shizhe Chen, Cordelia Schmid*
 
 + [HO.FK.18] FastGrasp: Efficient Grasp Synthesis with Diffusion. 3DV25.
   [[PDF](https://arxiv.org/pdf/2411.14786)]
@@ -1000,6 +1022,12 @@ Junsong Yuan*
 
 #### Implicit Shape
 
++ [HO.SP.5] HOLD: Category-agnostic 3D Reconstruction of Interacting Hands and Objects from Video. CVPR24.
+  [[PDF](https://arxiv.org/pdf/2311.18448)]
+  [[Project](https://zc-alexfan.github.io/hold)]
+  [[Code](https://github.com/zc-alexfan/hold?tab=readme-ov-file)] \
+  *Zicong Fan, Maria Parelli, Maria Eleni Kadoglou, Muhammed Kocabas, Xu Chen, Michael J. Black, Otmar Hilliges*
+
 + [HO.SP.4] gSDF: Geometry-Driven Signed Distance Functions for 3D Hand-Object Reconstruction. CVPR23.
   [[PDF](https://zerchen.github.io/contents/CVPR_gSDF_Paper.pdf)] 
   [[Project](https://zerchen.github.io/projects/gsdf.html)] \
@@ -1023,6 +1051,15 @@ Junsong Yuan*
   *Korrawe Karunratanakul, Jinlong Yang, Yan Zhang, Michael Black, Krikamol Muandet, Siyu Tang*
 
 #### Neural Rendering
+
++ [HO.NR.10] ManiVideo: Generating Hand-Object Manipulation Video with Dexterous and Generalizable Grasping. CVPR25.
+  [[PDF](https://arxiv.org/pdf/2412.16212)] \
+  *Youxin Pang, Ruizhi Shao, Jiajun Zhang, Hanzhang Tu, Yun Liu, Boyao Zhou, Hongwen Zhang, Yebin Liu*
+
++ [HO.NR.9] BIGS: Bimanual Category-agnostic Interaction Reconstruction from Monocular Videos via 3D Gaussian Splatting. CVPR25.
+  [[PDF](https://arxiv.org/pdf/2504.09097)]
+  [[Code](https://github.com/On-JungWoan/BIGS)] \
+  *Jeongwan On, Kyeonghwan Gwak, Gunyoung Kang, Junuk Cha, Soohyun Hwang, Hyein Hwang, Seungryul Baek*
 
 + [HO.NR.8] DreamHOI: Subject-Driven Generation of 3D Human-Object Interactions with Diffusion Priors. arXiv24.
   [[PDF](https://arxiv.org/pdf/2409.08278)]
