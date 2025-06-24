@@ -130,6 +130,11 @@ The below indices are references to the above [overview](#overview).
 
 #### Forward Kinematics
 
++ [H.FK.18] SiMHand: Mining Similar Hands for Large-Scale 3D Hand Pose Pre-training. ICLR25.
+  [[PDF](https://arxiv.org/pdf/2502.15251)]
+  [[Code](https://github.com/ut-vision/SiMHand)] \
+  *Nie Lin, Takehiko Ohkawa, Yifei Huang, Mingfang Zhang, Minjie Cai, Ming Li, Ryosuke Furuta, Yoichi Sato*
+
 + [H.FK.17] Analyzing the Synthetic-to-Real Domain Gap in 3D Hand Pose Estimation. CVPR25.
   [[PDF](https://arxiv.org/pdf/2503.19307)]
   [[Code](https://github.com/delaprada/HandSynthesis)] \
@@ -814,6 +819,17 @@ Junsong Yuan*
   *Yumeng Zhang, Li Chen, Yufeng Liu, Junhai Yong, Wen Zheng*
 
 #### Temporal
+
++ [H.TP.13] FourierHandFlow: Neural 4D Hand Representation Using Fourier Query Flow. NeurIPS23.
+  [[PDF](https://arxiv.org/pdf/2307.08100)]
+  [[Code](https://github.com/jyunlee/FourierHandFlow)] \
+  *Jihyun Lee, Junbong Jang, Donghwan Kim, Minhyuk Sung, Tae-Kyun Kim*
+
++ [H.TP.12] Dyn-HaMR: Recovering 4D Interacting Hand Motion from a Dynamic Camera. CVPR25.
+  [[PDF](https://arxiv.org/pdf/2412.12861)]
+  [[Project](https://dyn-hamr.github.io/)]
+  [[Code](https://github.com/ZhengdiYu/Dyn-HaMR)] \
+  *Zhengdi Yu, Stefanos Zafeiriou, Tolga Birdal*
 
 + [H.TP.11] HaWoR: World-Space Hand Motion Reconstruction from Egocentric Videos. CVPR25.
   [[PDF](https://arxiv.org/pdf/2501.02973)]
