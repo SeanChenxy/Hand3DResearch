@@ -32,6 +32,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [Dynamics](#dynamics-1)
       - [Contact](#contact)
       - [Affordnce](#affordance)
+      - [Large-Model Prior](#large-model-prior)
     - [Hand-Hand Interaction](#hand-hand-interaction)
       - [Kinematics](#kinematics-1)
       - [2.5D](#25d-1)
@@ -223,6 +224,10 @@ The below indices are references to the above [overview](#overview).
   *Franziska Mueller, Florian Bernard, Oleksandr Sotnychenko, Dushyant Mehta, Srinath Sridhar, Dan Casas, Christian Theobalt*
 
 #### Inverse Kinematics
+
++ [H.IK.5] Learnable SMPLify: A Neural Solution for Optimization-Free Human Pose Inverse Kinematics. arXiv25.
+  [[PDF](https://arxiv.org/abs/2508.13562)] \
+  *Yuchen Yang, Linfeng Dong, Wei Wang, Zhihang Zhong, Xiao Sun*
 
 + [H.IK.4] HandTailor: Towards High-Precision Monocular 3D Hand Recovery. arXiv21.
   [[PDF](https://arxiv.org/pdf/2102.09244.pdf)]
@@ -1156,30 +1161,21 @@ Junsong Yuan*
 
 #### Contact
 
-+ [HO.Con.24] QORT-Former: Query-optimized Real-time Transformer for Understanding Two Hands Manipulating Objects. AAAI25.
++ [HO.Con.22] QORT-Former: Query-optimized Real-time Transformer for Understanding Two Hands Manipulating Objects. AAAI25.
   [[PDF](https://arxiv.org/pdf/2502.19769)]
   [[Project](https://kcsayem.github.io/QORT-Former/)]
   [[Code](https://github.com/kcsayem/QORT-Former)] \
   *Elkhan Ismayilzada, MD Khalequzzaman Chowdhury Sayem, Yihalem Yimolal Tiruneh, Mubarrat Tajoar Chowdhury, Muhammadjon Boboev, Seungryul Baek*
 
-+ [HO.Con.23] DECO: Dense Estimation of 3D Human-Scene Contact In The Wild. ICCV23.
++ [HO.Con.21] DECO: Dense Estimation of 3D Human-Scene Contact In The Wild. ICCV23.
   [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Tripathi_DECO_Dense_Estimation_of_3D_Human-Scene_Contact_In_The_Wild_ICCV_2023_paper.pdf)]
   [[Code](https://github.com/sha2nkt/deco)] \
   *Shashank Tripathi, Agniv Chatterjee, Jean-Claude Passy, Hongwei Yi, Dimitrios Tzionas, Michael J. Black*
 
-+ [HO.Con.22] Fine-Grained Egocentric Hand-Object Segmentation: Dataset, Model, and Applications. ECCV22.
++ [HO.Con.20] Fine-Grained Egocentric Hand-Object Segmentation: Dataset, Model, and Applications. ECCV22.
   [[PDF](https://arxiv.org/pdf/2208.03826)]
   [[Code](https://github.com/owenzlz/EgoHOS)] \
   *Lingzhi Zhang, Shenghao Zhou, Simon Stent, Jianbo Shi*
-
-+ [HO.Con.21] NL2Contact: Natural Language Guided 3D Hand-Object Contact Modeling with Diffusion Model. ECCV24.
-  [[PDF](https://arxiv.org/pdf/2407.12727)] \
-  *Zhongqun Zhang, Hengfei Wang, Ziwei Yu, Yihua Cheng, Angela Yao, Hyung Jin Chang*
-
-+ [HO.Con.20] SemGrasp: Semantic Grasp Generation via Language Aligned Discretization. ECCV24.
-  [[PDF](https://arxiv.org/pdf/2404.03590)]
-  [[Project](https://kailinli.github.io/SemGrasp/)] \
-  *Kailin Li, Jingbo Wang,Lixin Yang, Cewu Lu, Bo Dai*
 
 + [HO.Con.19] TOCH: Spatio-Temporal Object-to-Hand Correspondence for Motion Refinement. ECCV22.
   [[PDF](https://virtualhumans.mpi-inf.mpg.de/papers/zhou22toch/toch.pdf)]
@@ -1300,6 +1296,23 @@ Junsong Yuan*
 + [HO.AF.1] 3D AffordanceNet: A Benchmark for Visual Object Affordance Understanding. CVPR21.
   [[PDF](https://arxiv.org/pdf/2103.16397)] \
   *Shengheng Deng, Xun Xu, Chaozheng Wu, Ke Chen, Kui Jia*
+
+#### Large-Model Prior
+
++ [HO.LM.3] Follow My Hold: Hand-Object Interaction Reconstruction through Geometric Guidance. arXiv25.
+  [[PDF](https://arxiv.org/pdf/2508.18213)]
+  [[Project](https://aidilayce.github.io/FollowMyHold-page/)] 
+  [[Code](https://github.com/aidilayce/FollowMyHold)] \
+  *Ayce Idil Aytekin, Helge Rhodin, Rishabh Dabral, Christian Theobalt*
+
++ [HO.LM.2] NL2Contact: Natural Language Guided 3D Hand-Object Contact Modeling with Diffusion Model. ECCV24.
+  [[PDF](https://arxiv.org/pdf/2407.12727)] \
+  *Zhongqun Zhang, Hengfei Wang, Ziwei Yu, Yihua Cheng, Angela Yao, Hyung Jin Chang*
+
++ [HO.LM.1] SemGrasp: Semantic Grasp Generation via Language Aligned Discretization. ECCV24.
+  [[PDF](https://arxiv.org/pdf/2404.03590)]
+  [[Project](https://kailinli.github.io/SemGrasp/)] \
+  *Kailin Li, Jingbo Wang,Lixin Yang, Cewu Lu, Bo Dai*
 
 [\[back to top\]](#recent-progress-in-3d-hand-tasks-awesomehttpsawesomerebadge-flatsvg)
 
