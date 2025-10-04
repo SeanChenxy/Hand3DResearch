@@ -1073,6 +1073,13 @@ Junsong Yuan*
 
 #### Neural Rendering
 
++ [HO.NR.11] TASTE-Rob: Advancing Video Generation of Task-Oriented Hand-Object Interaction for Generalizable Robotic Manipulation. CVPR25.
+  [[PDF](https://arxiv.org/pdf/2503.11423)]
+  [[Project](https://taste-rob.github.io/)]
+  [[Code](https://github.com/GAP-LAB-CUHK-SZ/TASTE-Rob)] \
+  *Hongxiang Zhao, Xingchen Liu, Mutian Xu, Yiming Hao, Weikai Chen, Xiaoguang Han*
+
+
 + [HO.NR.10] ManiVideo: Generating Hand-Object Manipulation Video with Dexterous and Generalizable Grasping. CVPR25.
   [[PDF](https://arxiv.org/pdf/2412.16212)] \
   *Youxin Pang, Ruizhi Shao, Jiajun Zhang, Hanzhang Tu, Yun Liu, Boyao Zhou, Hongwen Zhang, Yebin Liu*
@@ -1082,7 +1089,7 @@ Junsong Yuan*
   [[Code](https://github.com/On-JungWoan/BIGS)] \
   *Jeongwan On, Kyeonghwan Gwak, Gunyoung Kang, Junuk Cha, Soohyun Hwang, Hyein Hwang, Seungryul Baek*
 
-+ [HO.NR.8] DreamHOI: Subject-Driven Generation of 3D Human-Object Interactions with Diffusion Priors. arXiv24.
++ [HO.NR.8] DreamHOI: Subject-Driven Generation of 3D Human-Object Interactions with Diffusion Priors. arXiv24. \
   [[PDF](https://arxiv.org/pdf/2409.08278)]
   [[Project](https://dreamhoi.github.io/)]
   [[Code](https://github.com/hanwenzhu/dreamhoi)]
