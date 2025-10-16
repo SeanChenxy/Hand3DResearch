@@ -505,6 +505,13 @@ Self-Supervised Learning. ICCV23.
 
 #### Neural Rendering on Generation
 
++ [H.GEN.11] InfiniHuman: Infinite 3D Human Creation with Precise Control. SIGGRAPH Asia25.
+  [[PDF](https://arxiv.org/pdf/2510.11650)]
+  [[Project](https://yuxuan-xue.com/infini-human/)]
+  [[Code](https://github.com/YuxuanSnow/InfiniHuman/)] \
+  *Yuxuan Xue, Xianghui Xie, Margaret Kostyrko, Gerard Pons-Moll*
+
+
 + [H.GEN.10] FoundHand: Large-Scale Domain-Specific Learning for Controllable Hand Image Generation.
   [[PDF](https://arxiv.org/pdf/2412.02690)]
   [[Project](https://ivl.cs.brown.edu/research/foundhand.html)] \
@@ -1168,6 +1175,12 @@ Junsong Yuan*
 
 #### Contact
 
++ [HO.Con.22] PhySIC: Physically Plausible 3D Human-Scene Interaction and Contact from a Single Image. SIGGRAPH Aisa25.
+  [[PDF](https://arxiv.org/pdf/2510.11649)]
+  [[Project](https://yuxuan-xue.com/physic/)]
+  [[Code](https://github.com/YuxuanSnow/Phy-SIC)] \
+  *Pradyumna Yalandur Muralidhar, Yuxuan Xue, Xianghui Xie, Margaret Kostyrko, Gerard Pons-Moll*
+
 + [HO.Con.22] QORT-Former: Query-optimized Real-time Transformer for Understanding Two Hands Manipulating Objects. AAAI25.
   [[PDF](https://arxiv.org/pdf/2502.19769)]
   [[Project](https://kcsayem.github.io/QORT-Former/)]
@@ -1489,6 +1502,11 @@ Junsong Yuan*
   *Zhiyang Guo, Wengang Zhou, Min Wang, Li Li, Houqiang Li*
 
 #### Gesture Prediction
+
++ [HH.TR.14] Bimanual 3D Hand Motion and Articulation Forecasting in Everyday Images. arXiv25. 
+  [[PDF](https://arxiv.org/pdf/2510.06145)]
+  [[Project](https://ap229997.github.io/projects/forehand4d/)] \
+  *Aditya Prakash, David Forsyth, Saurabh Gupta*
 
 + [HH.GP.13] EMAGE: Towards Unified Holistic Co-Speech Gesture Generation via Expressive Masked Audio Gesture Modeling. CVPR24.
   [[PDF](https://arxiv.org/pdf/2401.00374.pdf)]
