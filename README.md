@@ -31,7 +31,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [Neural Rendering](#neural-rendering)
       - [Dynamics](#dynamics-1)
       - [Contact](#contact)
-      - [Affordnce](#affordance)
+      - [Affordance](#affordance)
       - [Large-Model Prior](#large-model-prior)
     - [Hand-Hand Interaction](#hand-hand-interaction)
       - [Kinematics](#kinematics-1)
@@ -71,6 +71,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
 This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, synthetic, physical attributes (Phy. att.), affordance, text description, and contact label.
 |  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic | Phy. att. | Affordacne | Text | Contact |
 |  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- |  ---- | ---- | ---- | ---- |
+|VITRA | [link](https://microsoft.github.io/VITRA/) | 26M | ✅ |  | ✅ | ✅ | | |  | ✅
 |GigaHands | [link](https://ivl.cs.brown.edu/research/gigahands.html) | 183M | ✅ | ✅ | ✅ | ✅ | | |  | ✅
 |ContactDescribe | [link](https://arxiv.org/pdf/2407.12727) | 2.3K Grasp | ✅ | | ✅ | | | |  | ✅ | ✅
 |CapGrasp | [link](https://kailinli.github.io/SemGrasp/) | 50K Grasp | ✅ | | ✅ | | | |  | ✅
@@ -1831,6 +1832,10 @@ Junsong Yuan*
 
 #### Text to Motion
 
++ [MM.Tex.16] OmniMotion: Multimodal Motion Generation with Continuous Masked Autoregression. arXiv25.
+  [[PDF](https://arxiv.org/pdf/2510.14954)] \
+  *Zhe Li, Weihao Yuan, Weichao Shen, Siyu Zhu, Zilong Dong, Chang Xu*
+
 + [MM.Tex.15] ChatPose: Chatting about 3D Human Pose. CVPR24.
   [[PDF](https://arxiv.org/pdf/2311.18836)]
   [[Project](https://yfeng95.github.io/ChatPose/)] \
@@ -1967,6 +1972,12 @@ Junsong Yuan*
   *Zhenyu Jiang, Yuqi Xie, Kevin Lin, Zhenjia Xu, Weikang Wan, Ajay Mandlekar, Linxi Fan, Yuke Zhu*
 
 #### VLA
+
++ [RO.VLA.8] VITRA: Scalable Vision-Language-Action Model Pretraining for Robotic Manipulation with Real-Life Human Activity Videos. arXiv25.
+  [[PDF](https://microsoft.github.io/VITRA/vitra_paper.pdf)]
+  [[Project](https://microsoft.github.io/VITRA/)]
+  [[Code](https://github.com/microsoft/VITRA/)] \
+  *Qixiu Li, Yu Deng, Yaobo Liang, Lin Luo, Lei Zhou, Chengtang Yao, Lingqi Zeng, Zhiyuan Feng, Huizhi Liang, Sicheng Xu, Yizhong Zhang, Xi Chen, Hao Chen, Lily Sun, Dong Chen, Jiaolong Yang, Baining Guo*
 
 + [RO.VLA.7] Universal Actions for Enhanced Embodied Foundation Models. arXiv25.
   [[PDF](https://arxiv.org/pdf/2501.10105)]
