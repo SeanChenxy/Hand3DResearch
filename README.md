@@ -1504,7 +1504,13 @@ Junsong Yuan*
 
 #### Gesture Prediction
 
-+ [HH.TR.14] Bimanual 3D Hand Motion and Articulation Forecasting in Everyday Images. arXiv25. 
++ [HH.GP.15] Uni-Hand: Universal Hand Motion Forecasting in Egocentric Views. arXiv25.
+  [[PDF](https://arxiv.org/pdf/2511.12878)]
+  [[Project](https://irmvlab.github.io/unihand.github.io/)]
+  [[Code](https://github.com/IRMVLab/MMTwin)]
+  *Junyi Ma, Wentao Bao, Jingyi Xu, Guanzhong Sun, Yu Zheng, Erhang Zhang, Xieyuanli Chen, Hesheng Wang*
+
++ [HH.GP.14] Bimanual 3D Hand Motion and Articulation Forecasting in Everyday Images. arXiv25. 
   [[PDF](https://arxiv.org/pdf/2510.06145)]
   [[Project](https://ap229997.github.io/projects/forehand4d/)] \
   *Aditya Prakash, David Forsyth, Saurabh Gupta*
@@ -1831,6 +1837,10 @@ Junsong Yuan*
   *Yan Zhang, Mohamed Hassan, Heiko Neumann, Michael J. Black, Siyu Tang*
 
 #### Text to Motion
+
++ [MM.Tex.17] HMVLM: Human Motion-Vision-Lanuage Model via MoE LoRA. arXiv25.
+  [[PDF](https://arxiv.org/pdf/2511.01463)] \
+  *Lei Hu, Yongjing Ye, Shihong Xia*
 
 + [MM.Tex.16] OmniMotion: Multimodal Motion Generation with Continuous Masked Autoregression. arXiv25.
   [[PDF](https://arxiv.org/pdf/2510.14954)] \
