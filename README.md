@@ -1090,6 +1090,16 @@ Junsong Yuan*
 
 #### Neural Rendering
 
++ [HO.NR.14] Open-world Hand-Object Interaction Video Generation Based on Structure and Contact-aware Representation. arXiv25.
+  [[PDF](https://arxiv.org/pdf/2512.01677)]
+  [[Project](https://hgzn258.github.io/SCAR/)] \
+  *Haodong Yan, Hang Yu, Zhide Zhong, Weilin Yuan, Xin Gong, Zehang Luo, Chengxi Heyu, Junfeng Li, Wenxuan Song, Shunbo Zhou, Haoang Li*
+
+
++ [HO.NR.13] SpriteHand: Real-Time Versatile Hand-Object Interaction with Autoregressive Video Generation. arXiv25.
+  [[PDF](https://arxiv.org/pdf/2512.01960)] \
+  *Zisu Li, Hengye Lyu, Jiaxin Shi, Yufeng Zeng, Mingming Fan, Hanwang Zhang, Chen Liang*
+
 + [HO.NR.12] MANUS: Markerless Grasp Capture using Articulated 3D Gaussians. CVPR24.
   [[PDF](https://openaccess.thecvf.com/content/CVPR2024/papers/Pokhariya_MANUS_Markerless_Grasp_Capture_using_Articulated_3D_Gaussians_CVPR_2024_paper.pdf)]
   [[Project](https://ivl.cs.brown.edu/research/manus)] 
