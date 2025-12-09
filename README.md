@@ -907,6 +907,11 @@ Junsong Yuan*
 
 #### Kinematics
 
++ [HO.FK.21] Reconstructing Objects along Hand Interaction Timelines in Egocentric Video. arXiv25.
+  [[PDF](https://arxiv.org/pdf/2512.07394)]
+  [[Project](https://zhifanzhu.github.io/objects-along-hit/)] \
+  *Zhifan Zhu, Siddhant Bansal, Shashank Tripathi, Dima Damen*
+
 + [HO.FK.20] UniHOPE: A Unified Approach for Hand-Only and Hand-Object Pose Estimation. CVPR25.
   [[PDF](https://arxiv.org/pdf/2503.13303)]
   [[Code](https://github.com/JoyboyWang/UniHOPE_Pytorch)] \
@@ -977,13 +982,13 @@ Junsong Yuan*
   [[Code](https://github.com/NVlabs/dex-ycb-toolkit)] \
   *Yu-Wei Chao, Wei Yang, Yu Xiang, Pavlo Molchanov, Ankur Handa, Jonathan Tremblay, Yashraj S. Narang, Karl Van Wyk, Umar Iqbal, Stan Birchfield, Jan Kautz, Dieter Fox*
 
-+ [HO.TP.6] Towards unconstrained joint hand-object reconstruction from RGB videos. arXiv21.
++ [HO.FK.6] Towards unconstrained joint hand-object reconstruction from RGB videos. arXiv21.
   [[PDF](https://arxiv.org/pdf/2108.07044.pdf)]
   [[Project](https://hassony2.github.io/homan.html)]
   [[Code](https://github.com/hassony2/homan)] \
   *Yana Hasson, Gül Varol, Ivan Laptev, Cordelia Schmid*
 
-+ [HO.TP.5] Leveraging Photometric Consistency over Time for Sparsely Supervised Hand-Object Reconstruction. CVPR20.
++ [HO.FK.5] Leveraging Photometric Consistency over Time for Sparsely Supervised Hand-Object Reconstruction. CVPR20.
   [[PDF](https://arxiv.org/pdf/2004.13449.pdf)]
   [[Project](https://hassony2.github.io/handobjectconsist.html)]
   [[Code](https://github.com/hassony2/handobjectconsist)] \
@@ -1376,6 +1381,11 @@ Human-Object Interaction Synthesis. ICCV25.
   *Shengheng Deng, Xun Xu, Chaozheng Wu, Ke Chen, Kui Jia*
 
 #### Large-Model Prior
+
++ [HO.LM.4] OpenHOI: Open-World Hand-Object Interaction Synthesis with Multimodal Large Language Model. NeurIPS25.
+  [[PDF](https://arxiv.org/pdf/2505.18947)]
+  [[Project](https://openhoi.github.io)] \
+  *Zhenhao Zhang, Ye Shi, Lingxiao Yang, Suting Ni, Qi Ye, Jingya Wang*
 
 + [HO.LM.3] Follow My Hold: Hand-Object Interaction Reconstruction through Geometric Guidance. arXiv25.
   [[PDF](https://arxiv.org/pdf/2508.18213)]
