@@ -1095,31 +1095,11 @@ Junsong Yuan*
 
 #### Neural Rendering
 
-+ [HO.NR.14] Open-world Hand-Object Interaction Video Generation Based on Structure and Contact-aware Representation. arXiv25.
-  [[PDF](https://arxiv.org/pdf/2512.01677)]
-  [[Project](https://hgzn258.github.io/SCAR/)] \
-  *Haodong Yan, Hang Yu, Zhide Zhong, Weilin Yuan, Xin Gong, Zehang Luo, Chengxi Heyu, Junfeng Li, Wenxuan Song, Shunbo Zhou, Haoang Li*
-
-
-+ [HO.NR.13] SpriteHand: Real-Time Versatile Hand-Object Interaction with Autoregressive Video Generation. arXiv25.
-  [[PDF](https://arxiv.org/pdf/2512.01960)] \
-  *Zisu Li, Hengye Lyu, Jiaxin Shi, Yufeng Zeng, Mingming Fan, Hanwang Zhang, Chen Liang*
-
-+ [HO.NR.12] MANUS: Markerless Grasp Capture using Articulated 3D Gaussians. CVPR24.
++ [HO.NR.10] MANUS: Markerless Grasp Capture using Articulated 3D Gaussians. CVPR24.
   [[PDF](https://openaccess.thecvf.com/content/CVPR2024/papers/Pokhariya_MANUS_Markerless_Grasp_Capture_using_Articulated_3D_Gaussians_CVPR_2024_paper.pdf)]
   [[Project](https://ivl.cs.brown.edu/research/manus)] 
   [[Code](https://github.com/brown-ivl/manus)] \
   *Chandradeep Pokhariya, Ishaan N Shah, Angela Xing, Zekun Li, Kefan Chen, Avinash Sharma, Srinath Sridhar*
-
-+ [HO.NR.11] TASTE-Rob: Advancing Video Generation of Task-Oriented Hand-Object Interaction for Generalizable Robotic Manipulation. CVPR25.
-  [[PDF](https://arxiv.org/pdf/2503.11423)]
-  [[Project](https://taste-rob.github.io/)]
-  [[Code](https://github.com/GAP-LAB-CUHK-SZ/TASTE-Rob)] \
-  *Hongxiang Zhao, Xingchen Liu, Mutian Xu, Yiming Hao, Weikai Chen, Xiaoguang Han*
-
-+ [HO.NR.10] ManiVideo: Generating Hand-Object Manipulation Video with Dexterous and Generalizable Grasping. CVPR25.
-  [[PDF](https://arxiv.org/pdf/2412.16212)] \
-  *Youxin Pang, Ruizhi Shao, Jiajun Zhang, Hanzhang Tu, Yun Liu, Boyao Zhou, Hongwen Zhang, Yebin Liu*
 
 + [HO.NR.9] BIGS: Bimanual Category-agnostic Interaction Reconstruction from Monocular Videos via 3D Gaussian Splatting. CVPR25.
   [[PDF](https://arxiv.org/pdf/2504.09097)]
@@ -1380,7 +1360,57 @@ Human-Object Interaction Synthesis. ICCV25.
   [[PDF](https://arxiv.org/pdf/2103.16397)] \
   *Shengheng Deng, Xun Xu, Chaozheng Wu, Ke Chen, Kui Jia*
 
+#### World Model
+
++ [HO.WM.6] Egocentric World Model for Photorealistic Hand-Object Interaction Synthesis. arXiv26.
+  [[PDF](https://arxiv.org/pdf/2603.13615)]
+  [[Project](https://egohoi.github.io)] \
+  *Dayou Li, Lulin Liu, Bangya Liu, Shijie Zhou, Jiu Feng, Ziqi Lu, Minghui Zheng, Chenyu You, Zhiwen Fan*
+
++ [HO.WM.5] World Models for Learning Dexterous Hand-Object Interactions from Human Videos. arXiv26.
+  [[PDF](https://arxiv.org/pdf/2512.13644)]
+  [[Project](https://raktimgg.github.io/dexwm/)] \
+ *Raktim Gautam Goswami, Amir Bar, David Fan, Tsung-Yen Yang, Gaoyue Zhou, Prashanth Krishnamurthy, Michael Rabbat, Farshad Khorrami, Yann LeCun*
+
++ [HO.WM.4] Open-world Hand-Object Interaction Video Generation Based on Structure and Contact-aware Representation. CVPR26.
+  [[PDF](https://arxiv.org/pdf/2512.01677)]
+  [[Project](https://hgzn258.github.io/SCAR/)] \
+  *Haodong Yan, Hang Yu, Zhide Zhong, Weilin Yuan, Xin Gong, Zehang Luo, Chengxi Heyu, Junfeng Li, Wenxuan Song, Shunbo Zhou, Haoang Li*
+
++ [HO.WM.3] SpriteHand: Real-Time Versatile Hand-Object Interaction with Autoregressive Video Generation. arXiv25.
+  [[PDF](https://arxiv.org/pdf/2512.01960)] \
+  *Zisu Li, Hengye Lyu, Jiaxin Shi, Yufeng Zeng, Mingming Fan, Hanwang Zhang, Chen Liang*
+
++ [HO.WM.2] TASTE-Rob: Advancing Video Generation of Task-Oriented Hand-Object Interaction for Generalizable Robotic Manipulation. CVPR25.
+  [[PDF](https://arxiv.org/pdf/2503.11423)]
+  [[Project](https://taste-rob.github.io/)]
+  [[Code](https://github.com/GAP-LAB-CUHK-SZ/TASTE-Rob)] \
+  *Hongxiang Zhao, Xingchen Liu, Mutian Xu, Yiming Hao, Weikai Chen, Xiaoguang Han*
+
++ [H10] ManiVideo: Generating Hand-Object Manipulation Video with Dexterous and Generalizable Grasping. CVPR25.
+  [[PDF](https://arxiv.org/pdf/2412.16212)] \
+  *Youxin Pang, Ruizhi Shao, Jiajun Zhang, Hanzhang Tu, Yun Liu, Boyao Zhou, Hongwen Zhang, Yebin Liu*
+
 #### Large-Model Prior
+
++ [HO.LM.8] EasyHOI: Unleashing the Power of Large Models for Reconstructing
+Hand-Object Interactions in the Wild. CVPR25.
+  [[PDF](https://arxiv.org/pdf/2411.14280)]
+  [[Project](https://lym29.github.io/EasyHOI-page/)] \
+  *Yumeng Liu, Xiaoxiao Long, Zemin Yang, Yuan Liu, Marc Habermann, Christian Theobalt, Yuexin Ma, Wenping Wang*
+
++ [HO.LM.7] EgohandICL:egocentric 3D hand reconsturction with In-context learning. ICLR26.
+  [[PDF](Binzhu Xie, Shi Qiu, Sicheng Zhang, Yinqiao Wang, Hao Xu, Muzammal Naseer, Chi-Wing Fu, Pheng-Ann Heng)]
+  [[Code](https://github.com/Nicous20/EgoHandICL)] \
+  *Binzhu Xie, Shi Qiu, Sicheng Zhang, Yinqiao Wang, Hao Xu, Muzammal Naseer, Chi-Wing Fu, Pheng-Ann Heng*
+
++ [HO.LM.6] Affordance-Guided Diffusion Prior for 3D Hand Reconstruction. arXIv25.
+  [[PDF](https://arxiv.org/pdf/2510.00506)] \
+  *Naru Suzuki, Takehiko Ohkawa, Tatsuro Banno, Jihyun Lee, Ryosuke Furuta, Yoichi Sato*
+
++ [HO.LM.5] EgoHandICL: Egocentric 3D Hand Reconstruction with In-Context Learning. ICLR2026.
+  [[PDF](https://arxiv.org/pdf/2601.19850)] \
+  *Binzhu Xie, Shi Qiu, Sicheng Zhang, Yinqiao Wang, Hao Xu, Muzammal Naseer, Chi-Wing Fu, Pheng-Ann Heng*
 
 + [HO.LM.4] OpenHOI: Open-World Hand-Object Interaction Synthesis with Multimodal Large Language Model. NeurIPS25.
   [[PDF](https://arxiv.org/pdf/2505.18947)]
@@ -1870,6 +1900,10 @@ Human-Object Interaction Synthesis. ICCV25.
 ### Multi-Modal Motion
 
 #### In Sence
+
++ [MM.IS.11] Open-Vocabulary Functional 3D Human-Scene Interaction Generation. arXiv26.
+  [[PDF](https://arxiv.org/abs/2601.20835)] \
+  *Jie Liu, Yu Sun, Alpar Cseke, Yao Feng, Nicolas Heron, Michael J. Black, Yan Zhang*
 
 + [MM.IS.10] Human-Aware 3D Scene Generation with Spatially-constrained Diffusion Models. arXiv24.
   [[PDF](https://arxiv.org/pdf/2406.18159)]
