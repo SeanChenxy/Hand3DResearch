@@ -1901,6 +1901,22 @@ Hand-Object Interactions in the Wild. CVPR25.
 
 #### In Sence
 
++ [MM.IS.14] OnlineHMR: Video-based Online World-Grounded Human Mesh Recovery. arXiv26.
+  [[Project](https://tsukasane.github.io/Video-OnlineHMR/)]
+  [[Code](https://github.com/Tsukasane/Video-OnlineHMR)] \
+  *Yiwen Zhao, Ce Zheng, Yufu Wang, Hsueh-Han Daniel Yang, Liting Wen, László A. Jeni.*
+
++ [MM.IS.13] Hand3R: Online 4D Hand-Scene Reconstruction in the Wild. arXiv26.
+  [[PDF](https://arxiv.org/pdf/2602.03200)]
+  *Wendi Hu, Haonan Zhou, Wenhao Hu, Gaoang Wang*
+
++ [MM.IS.12] UniSH: Unifying Scene and Human Reconstruction in a Feed-Forward Pass. arXiv26.
+  [[PDF](https://arxiv.org/pdf/2601.01222)]
+  [[Project](https://murphylmf.github.io/UniSH/)]
+  [[Code](https://github.com/murphylmf/UniSH)] \
+  *Mengfei Li, Peng Li, Zheng Zhang, Jiahao Lu, Chengfeng Zhao, Wei Xue, Qifeng Liu, Sida Peng, Wenxiao Zhang, Wenhan Luo, Yuan Liu, Yike Guo*
+
+
 + [MM.IS.11] Open-Vocabulary Functional 3D Human-Scene Interaction Generation. arXiv26.
   [[PDF](https://arxiv.org/abs/2601.20835)] \
   *Jie Liu, Yu Sun, Alpar Cseke, Yao Feng, Nicolas Heron, Michael J. Black, Yan Zhang*
