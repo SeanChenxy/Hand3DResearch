@@ -32,6 +32,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
       - [Dynamics](#dynamics-1)
       - [Contact](#contact)
       - [Affordance](#affordance)
+      - [World Model](#world-model)
       - [Large-Model Prior](#large-model-prior)
     - [Hand-Hand Interaction](#hand-hand-interaction)
       - [Kinematics](#kinematics-1)
@@ -71,6 +72,7 @@ A complete paper list for hand pose can be found [here](https://github.com/xingh
 This list presents recent datasets with properties of data size, shape annotation, hand-hand interaction (Hand int.), hand-object interaction (Obj. int.), motion sequence, synthetic, physical attributes (Phy. att.), affordance, text description, and contact label.
 |  Dataset | Link  | Size  | Shape | Hand int. | Obj. int. | Motion | Synthetic | Phy. att. | Affordacne | Text | Contact |
 |  ----  | ----  | ---- | ---- | ---- | ---- | ---- | ---- |  ---- | ---- | ---- | ---- |
+|HandX | [link](https://handx-project.github.io) | 5.9M hours | ✅  | ✅ |  | ✅ | | |  | ✅
 |SEA | [link](https://spatial-ai.com) | 10K hours |  |  | ✅ | ✅ | | |  | ✅
 |VITRA | [link](https://microsoft.github.io/VITRA/) | 26M | ✅ |  | ✅ | ✅ | | |  | ✅
 |GigaHands | [link](https://ivl.cs.brown.edu/research/gigahands.html) | 183M | ✅ | ✅ | ✅ | ✅ | | |  | ✅
@@ -1974,6 +1976,12 @@ Hand-Object Interactions in the Wild. CVPR25.
   *Yan Zhang, Mohamed Hassan, Heiko Neumann, Michael J. Black, Siyu Tang*
 
 #### Text to Motion
+
++ [MM.Tex.19] HandX: Scaling Bimanual Motion and Interaction Generation. CVPR26.
+  [[PDF](https://arxiv.org/pdf/2603.28766)]
+  [[Project](https://handx-project.github.io)]
+  [[Code](https://github.com/handx-project/HandX)] \
+  *Zimu Zhang, Yucheng Zhang, Xiyan Xu, Ziyin Wang, Sirui Xu, Kai Zhou, Bing Zhou, Chuan Guo, Jian Wang, Yu-Xiong Wang, Liang-Yan Gui*
 
 + [MM.Tex.18] InterAct: Advancing Large-Scale Versatile 3D Human-Object Interaction Generation. CVPR25.
   [[PDF](https://openaccess.thecvf.com/content/CVPR2025/papers/Xu_InterAct_Advancing_Large-Scale_Versatile_3D_Human-Object_Interaction_Generation_CVPR_2025_paper.pdf)]
