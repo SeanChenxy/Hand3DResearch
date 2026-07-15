@@ -1,29 +1,8 @@
-<p align="center">
-  <img src="logo/XDU-Logo.png" height="60" alt="Xidian University">
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="logo/ZGCA-Logo.jpg" height="60" alt="Zhongguancun Academy">
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="logo/HMI-Lab-Logo.png" height="60" alt="HMI Lab">
-</p>
-
 # Awesome Hand-Object Interaction Reconstruction and Generation
 
 [![arXiv](https://img.shields.io/badge/arXiv-coming_soon-b31b1b.svg)]() [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)]() [![GitHub](https://img.shields.io/badge/GitHub-Repo-181717.svg?logo=github)](https://github.com/Awesome-HOI-Reconstruction-and-Generation)
 
-<p align="center">
-  <b>Weiquan Lin</b><sup>1,2</sup>,
-  <b>Xu Tang</b><sup>1</sup>,
-  <b>Yaoqing Hu</b><sup>2</sup>,
-  <b>Xingyu Chen</b><sup>2,*</sup>
-</p>
-
-<p align="center">
-  <sup>1</sup>Xidian University,
-  <sup>2</sup>Zhongguancun Academy<br>
-  <sup>*</sup>Corresponding Author
-</p>
-
-This repository accompanies our survey **Foundation-Model Priors for Hand-Object Interaction: Reconstruction, Generation, and Embodied Transfer - A Survey** — a prior-centric survey of foundation-model priors for HOI reconstruction, generation, and robot learning.
+This repository accompanies our survey **Hand-Object Interaction in the Age of Large Foundation Models: Reconstruction, Generation, and Embodied Transfer – A Survey** — a prior-centric survey of foundation-model priors for HOI reconstruction, generation, and robot learning.
 
 - 📄 Curated paper list with code, websites, models, benchmarks, and datasets.
 - 🤖 Organized around non-foundation-prior methods and three foundation-model prior families.
@@ -769,8 +748,7 @@ If you find this repository useful, please consider citing the original papers a
 
 ```bibtex
 @misc{hoi-survey-2026,
-  title = {Foundation-Model Priors for Hand-Object Interaction: Reconstruction, Generation, and Embodied Transfer - A Survey},
-  author = {Coming Soon},
+  title = {Hand-Object Interaction in the Age of Large Foundation Models: Reconstruction, Generation, and Embodied Transfer – A Survey},
   year = {2026},
 }
 ```
