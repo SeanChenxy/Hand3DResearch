@@ -1,4 +1,4 @@
-# Hand-Object Interaction in the Age of Large Foundation Models: Reconstruction, Generation, and Embodied Transfer – A Surve
+# Hand-Object Interaction in the Age of Large Foundation Models: Reconstruction, Generation, and Embodied Transfer – A Survey
 
 [![arXiv](https://img.shields.io/badge/arXiv-coming_soon-b31b1b.svg)]() [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)]() [![GitHub](https://img.shields.io/badge/GitHub-Repo-181717.svg?logo=github)](https://github.com/Awesome-HOI-Reconstruction-and-Generation)
 
