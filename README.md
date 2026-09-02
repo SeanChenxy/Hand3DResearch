@@ -1,9 +1,9 @@
 # Hand-Object Interaction in the Age of Large Foundation Models: Reconstruction, Generation, and Embodied Transfer – A Survey
 
-This repository accompanies our survey **Hand-Object Interaction in the Age of Large Foundation Models: Reconstruction, Generation, and Embodied Transfer – A Survey** — a prior-centric survey of foundation-model priors for HOI reconstruction, generation, and robot learning.
+This repository accompanies our survey **Hand-Object Interaction in the Age of Large Foundation Models: Reconstruction, Generation, and Embodied Transfer – A Survey** — a prior-centric survey of foundation-model priors for HOI reconstruction, generation, and HOI for robot learning.
 
 - 📄 Curated paper list with code, websites, models, benchmarks, and datasets.
-- 🤖 Organized around non-foundation-prior methods and three foundation-model prior families.
+- 🤖 Organized around non-foundation-prior methods, three foundation-model prior families, HOI for robot learning, and datasets and pretraining sources.
 - 📝 **Each paper includes an paper summary document** for deep reading.
 - 🤝 If you find missing papers, outdated links, or incorrect metadata, please feel free to open an issue or submit a pull request!
 
@@ -11,7 +11,7 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 
 ## Table of Contents
 
-- [1. HOI Tasks, Representations, and Non-Foundation-Prior Methods (Chapter 2)](#1-hoi-tasks-representations-and-non-foundation-prior-methods-chapter-2)
+- [1. HOI Non-Foundation-Prior Methods (Chapter 2)](#1-hoi-non-foundation-prior-methods-chapter-2)
   - [1.1 Hand-Object Reconstruction](#11-hand-object-reconstruction)
   - [1.2 Hand-Held Object Reconstruction](#12-hand-held-object-reconstruction)
   - [1.3 Hand-Object Motion Reconstruction](#13-hand-object-motion-reconstruction)
@@ -39,15 +39,15 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
   - [5.3 Task-Specific Skill Transfer: Dexterous Motion Retargeting](#53-task-specific-skill-transfer-dexterous-motion-retargeting)
   - [5.4 Task-Specific Skill Transfer: Interaction-Guided Policy Learning](#54-task-specific-skill-transfer-interaction-guided-policy-learning)
   - [5.5 HOI-to-Robot Data Engines](#55-hoi-to-robot-data-engines)
-- [7. Benchmarks (Chapter 7)](#7-benchmarks-chapter-7)
+- [7. Datasets and Pretraining Sources (Chapter 7)](#7-datasets-and-pretraining-sources-chapter-7)
   - [7.1 Reconstruction Benchmarks](#71-reconstruction-benchmarks)
   - [7.2 Generation Benchmarks](#72-generation-benchmarks)
   - [7.3 Embodied Learning Data Sources](#73-embodied-learning-data-sources)
 
 ---
 
-<a id="1-hoi-tasks-representations-and-non-foundation-prior-methods-chapter-2"></a>
-## 1. HOI Tasks, Representations, and Non-Foundation-Prior Methods (Chapter 2)
+<a id="1-hoi-non-foundation-prior-methods-chapter-2"></a>
+## 1. HOI Non-Foundation-Prior Methods (Chapter 2)
 
 > This chapter covers prior-free supervised baselines and domain-intrinsic prior methods across six HOI tasks. These methods do NOT invoke foundation-model knowledge, serving as the baseline against which foundation-model prior gains are measured.
 
@@ -714,8 +714,8 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 
 
 
-<a id="7-benchmarks-chapter-7"></a>
-## 7. Benchmarks (Chapter 7)
+<a id="7-datasets-and-pretraining-sources-chapter-7"></a>
+## 7. Datasets and Pretraining Sources (Chapter 7)
 
 > Key benchmark datasets for HOI reconstruction, generation, and interaction understanding, organized by evaluation purpose. Each dataset comes with a detailed AI summary covering data composition, annotation types, supported evaluation tasks, strengths, and limitations.
 
@@ -802,8 +802,13 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 If you find this repository useful, please consider citing the original papers and our survey:
 
 ```bibtex
-@misc{hoi-survey-2026,
-  title = {Hand-Object Interaction in the Age of Large Foundation Models: Reconstruction, Generation, and Embodied Transfer – A Survey},
-  year = {2026},
+@misc{lin2026handobjectinteractionagelarge,
+      title={Hand-Object Interaction in the Age of Large Foundation Models:Reconstruction, Generation, and Embodied Transfer},
+      author={Weiquan Lin and Yu Deng and Shiyang Liu and Luping Xiao and Xu Tang and Junzhi Yu and Jiaolong Yang and Lei Zhang and Xingyu Chen},
+      year={2026},
+      eprint={2607.28394},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2607.28394}
 }
 ```
