@@ -1,44 +1,39 @@
 # Hand3R: Online 4D Hand-Scene Reconstruction in the Wild
 
+**Authors:** Wendi Hu, Haonan Zhou, Wenhao Hu, Gaoang Wang  
+**Date:** 2026-02-03  
+**Identifier:** [arXiv:2602.03200](https://arxiv.org/abs/2602.03200)  
+**Zotero item:** `5EZVT6K6` ([Zotero](zotero://select/library/items/5EZVT6K6))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-Hand3R is the first online framework for joint 4D hand-scene reconstruction from monocular video, synergizing a pre-trained hand expert with a 4D scene foundation model via a scene-aware visual prompting mechanism that injects high-fidelity hand priors into a persistent scene memory, enabling simultaneous reconstruction of accurate hand meshes and dense metric-scale scene geometry in a single forward pass.
 
-## 1. Problem and Setting
-- Joint 4D (3D + time) reconstruction of dynamic hands and dense scene context from monocular video.
-- Input: monocular RGB video of a person manipulating or interacting with the scene.
-- Output: 4D hand meshes + dense metric-scale scene geometry in a globally consistent coordinate system.
-- Task: hand-scene reconstruction; uses 3D scene foundation model priors.
+Hand3R is the first online, end-to-end framework for joint 4D hand-scene reconstruction from monocular video: it simultaneously recovers accurate MANO hand meshes, their global metric-scale placement, the camera trajectory in SE(3), and a dense scene point cloud in a single forward pass. It couples a frozen HaMeR hand expert with the CUT3R 4D scene foundation model through a scene-aware visual prompting mechanism that injects high-fidelity hand priors into the scene's persistent temporal memory. On DexYCB it matches specialized local regressors (4.83 mm PA-MPJPE overall, 4.43 mm under 50-75% occlusion), and on HOI4D it delivers the best camera-frame hand accuracy among global methods (C-MPJPE 42.6 mm, beating offline multi-stage HaWoR) while remaining fully online.
 
-## 2. Core Method
-- Synergizes a pre-trained hand expert with a 4D scene foundation model.
-- A scene-aware visual prompting mechanism injects high-fidelity hand priors into a persistent scene memory, enabling simultaneous reconstruction.
-- Bypasses the reliance on offline optimization through a feed-forward single-pass architecture.
-- How FM prior is injected: a 4D scene foundation model (e.g., based on DUSt3R/Mast3R-style architectures) provides the scene geometry backbone; hand priors are injected as scene-aware prompts to align the hand reconstruction with the scene.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Foundation model: 4D scene foundation model (likely DUSt3R/Mast3R-based) for scene geometry; pre-trained hand expert for hand priors.
-- Domain knowledge: hand model (MANO); persistent scene memory representation.
-- Training data: large-scale scene reconstruction datasets; hand expert is pre-trained on hand datasets.
-- Assumption: the scene foundation model's geometric understanding generalizes to dynamic hand-in-scene scenarios.
+Hands are the primary interface for perceiving and manipulating the world, so applications in AR/VR, Embodied Intelligence, and Human-Computer Interaction require not just isolated hand pose but the hand's exact metric location within a global world frame together with the dense geometry of its surroundings — needed to reason about physical interactions, collisions, and hand-scene relationships. Existing monocular hand mesh recovery methods (HaMeR, WiLoR) excel at local articulation but operate in root-relative camera coordinates, spatially ungrounded; recent global methods like HaWoR recover world-space hand trajectories but rely on fragmented multi-stage pipelines (separate SLAM camera tracking, metric depth estimation, hand reconstruction) and do not reconstruct dense scene geometry. Conversely, emerging global scene learners master metric-scale mapping but lack the feature resolution for sub-centimeter hand dexterity. The core challenge the paper identifies is bridging these two domains: fusing the high-fidelity priors of a pre-trained hand expert into the consistent metric space of a 4D scene learner in a unified end-to-end framework. Formally, operating on a continuous RGB stream I_t, the model feed-forwardly estimates the camera trajectory T_t in SE(3), a dense canonical scene point cloud X_t, and a set of interacting hand meshes {M_t^h}.
 
-## 4. Experiments and Findings
-- Datasets: hand-scene benchmarks (likely ARCTIC, Ego4D-derived, or HOT3D-based).
-- Metrics: local hand reconstruction accuracy, global scene positioning, runtime (online vs. offline).
-- Bypasses the reliance on offline optimization while delivering competitive performance in both local hand reconstruction and global positioning.
-- Online operation enables applications in robotics and AR/VR where real-time performance matters.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- First online framework for joint 4D hand-scene reconstruction.
-- Single-pass inference enables real-time applications.
-- Combines hand expertise with scene understanding via scene-aware prompting.
-- Global scene positioning alongside local hand accuracy.
+Hand3R uses a dual-stream architecture that disentangles local articulation from global positioning. (1) Dual-stream encoding: a scene stream, built on the CUT3R continuous 3D perception model, encodes the full frame into metric-scale scene feature maps F_s; a hand stream crops each detected hand region and passes it through a frozen HaMeR ViT expert encoder to obtain high-fidelity hand tokens f_h. (2) Scene-aware visual prompting: the local environmental context f_s is extracted by region-based average pooling of F_s inside the detected hand box, and a prompt network fuses expert priors with spatial context, p_h = M_prompt(Concat(f_h, f_s)), encoding both what the hand looks like and where it sits in the metric scene. (3) State-aware decoding and decoupled prediction: the hand prompts are injected into the scene decoder, which interacts with the persistent recurrent state S_{t-1} (updated to S_t) and the dense scene features, yielding fused tokens f_fused with depth-resolved spatial context. Prediction is decoupled: a translation head reads the fused tokens to resolve depth ambiguity and predict absolute global hand translation, while the MANO head regresses pose and shape directly from the original expert tokens f_h via a shortcut connection, so finger articulation cues are not diluted by global fusion. Training is two-stage: stage one freezes the scene branches and fine-tunes only the MANO head on DexYCB with root-relative joint and vertex L2 losses to establish a robust pose prior; stage two fine-tunes the fused network and translation head on HOI4D with losses on global root translation, absolute 3D joint coordinates, and 2D keypoint reprojection, while retaining the scene point and camera objectives with a small weight to prevent catastrophic forgetting of scene geometry.
 
-### Limitations
-- Hand-scene benchmarks are still limited; evaluation may be narrow.
-- Depends on the quality of the scene foundation model.
-- May not handle highly dynamic scenes (e.g., multiple people) well.
-- Persistent scene memory requirements may limit very long sequences.
+## Contributions
 
-## 6. Takeaway
-Hand3R demonstrates that combining a pre-trained hand expert with a 4D scene foundation model — via scene-aware visual prompting — enables online, globally consistent hand-scene reconstruction in a single forward pass. The work addresses a key limitation of prior hand-only methods (no scene context) and scene-only methods (no hand detail), opening up applications in embodied AI where understanding both the scene and the hands in it is critical.
+- The first online, end-to-end framework for joint metric-scale hand and dense scene reconstruction from monocular video, bypassing offline optimization and multi-stage pipelines entirely.
+- A scene-aware visual prompting mechanism that injects high-fidelity hand-expert priors into the persistent memory of a 4D scene foundation model, preserving millimeter-level hand precision while maintaining the metric consistency of the global environment; a decoupled head design (global translation from fused tokens, local MANO from expert tokens) protects articulation quality.
+- Competitive empirical performance on DexYCB and HOI4D in both local hand reconstruction and global positioning, with natural support for multi-hand and left-hand tracking within one metric coordinate frame, demonstrated on unseen in-the-wild sequences.
+
+## Experimental Setup
+
+Local hand mesh recovery is evaluated on the DexYCB test set following standard protocols with PA-MPJPE and AUC, including occlusion-ratio subsets (50%-75% and 75%-100%), against monocular methods (Spurr et al., MeshGraphormer, SemiHandObj, HandOccNet, WiLoR), temporal methods (S2HAND, VIBE, TCMR, Deformer), and HaWoR. Global hand reconstruction is evaluated on the HOI4D test set using C-MPJPE (absolute camera-frame joint error), W-MPJPE (global trajectory error after first-frame alignment), and WA-MPJPE (error after whole-trajectory alignment), reported separately on short videos (continuous 30 frames) and long videos (continuous 100 frames). Since few methods perform global hand reconstruction, two baselines are constructed by coupling DROID-SLAM camera poses with HaMeR (HaMeR-SLAM) and WiLoR (WiLoR-SLAM), and Hand3R is compared against the offline multi-stage HaWoR; Hand3R is the only method operating in an online, one-stage manner. The hand expert is HaMeR's pretrained ViT; the scene foundation model is CUT3R's encoder-decoder with persistent state.
+
+## Results
+
+- Local reconstruction (DexYCB): Hand3R achieves 4.83 mm PA-MPJPE and 90.5 AUC overall — competitive with the best specialized regressors (WiLoR 5.01/90.0) and essentially matching the dedicated global pipeline HaWoR (4.76/90.5). Under 50%-75% occlusion it reaches 4.43 mm / 91.1 AUC, the best of all compared methods, credited to the decoupled head that bypasses global fusion; under 75%-100% occlusion it scores 5.52 mm versus HaWoR's 5.07 mm.
+- Global reconstruction (HOI4D): Hand3R attains the lowest camera-frame error, C-MPJPE 42.6 mm versus 51.77 mm for offline HaWoR and 248.23/252.24 mm for HaMeR-SLAM/WiLoR-SLAM. On short 30-frame sequences it reaches W-MPJPE 38.04 mm / WA-MPJPE 86.87 mm versus HaWoR's 22.54/41.28 mm; on long 100-frame sequences the gap widens to 125.81/86.87 mm versus 58.62/41.28 mm, which the authors attribute to inevitable drift in causal online estimation versus offline global bundle adjustment. Hand3R comprehensively outperforms the HaMeR-SLAM and WiLoR-SLAM baselines on all global metrics.
+- Qualitative results on unseen in-the-wild sequences show smooth hand trajectories anchored in online-accumulated dense scene geometry, with consistent multi-hand and left-hand tracking in a single global coordinate system.
+
+## Limitations
+
+Because Hand3R is restricted to causal, single-pass online estimation, it accumulates drift that shows up as a global positioning gap relative to offline multi-stage HaWoR, and this precision gap grows as sequences lengthen from 30 to 100 frames — an inherent limitation of online methods that the paper states current models cannot bridge. Global trajectory accuracy also depends on the underlying CUT3R scene model's persistent state, and evaluation of global positioning relies on HOI4D sequences of limited length.

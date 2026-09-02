@@ -1,49 +1,35 @@
-# FreiHAND (ICCV 2019)
+# FreiHAND: A Dataset for Markerless Capture of Hand Pose and Shape From Single RGB Images
 
-> Zimmermann, Ceylan, Yang, Russell, Argus, Brox. *FreiHAND: A Dataset for Markerless Capture of Hand Pose and Shape From Single RGB Images.* ICCV 2019. DOI: 10.1109/ICCV.2019.00090. Zotero Key: `UPJ9BN4I`.
+**Authors:** Christian Zimmermann, Duygu Ceylan, Jimei Yang, Bryan Russell, Max Argus, Thomas Brox  
+**Date:** 2019 (ICCV 2019)  
+**Identifier:** DOI `10.1109/ICCV.2019.00090`  
+**Zotero item:** `UPJ9BN4I` ([Zotero](zotero://select/library/items/UPJ9BN4I))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-FreiHAND is the first large-scale benchmark that provides 3D hand pose and full MANO shape ground truth for single RGB images. Using a multi-view green-screen capture and a semi-automatic iterative annotation pipeline, it addresses the scarcity of hand-only 3D data and the failure of cross-dataset generalization.
 
-## 1. Dataset Purpose
-- Fills the gap of a "single RGB → 3D hand pose & shape" benchmark: prior datasets (e.g., CMU Panoptic) were mostly from mocap studios, depth sensors, or synthetic data and exhibited a domain gap to real RGB images.
-- Tasks: 3D hand joint estimation from a monocular RGB image, MANO shape-parameter regression, and articulated hand mesh reconstruction.
-- A hand-only benchmark: no objects and no bi-manual interaction; focused purely on hand shape recovery.
-- Provides both hand pose and hand shape annotations, unlike earlier datasets such as STB or RHD that only provided joints.
+FreiHAND is the first large-scale multi-view RGB hand dataset annotated with both 3D pose and shape, created to address the dataset bias the authors document in single-view 3D hand pose estimation: networks trained on existing datasets perform well in-domain but generalize poorly elsewhere (average cross-dataset ranks of 2.9-6.1 for seven prior datasets versus 2.2 for FreiHAND). The dataset covers 32 subjects and hand-object interactions, captured with 8 synchronized cameras and annotated through an iterative semi-automated human-in-the-loop procedure that fits the MANO model. Its 33K-sample training set (augmented to 132K with background compositing) and 4K-sample in-the-wild evaluation set enable supervised monocular articulated hand shape estimation for the first time.
 
-## 2. Data Composition
-- Source: real capture. 32 subjects perform 32 prescribed hand-pose categories against a green screen, shot by 8 calibrated multi-view RGB cameras simultaneously (256 viewpoints in total).
-- Viewpoint: third-person multi-view; the test set is in-the-wild single-view RGB.
-- Scale: 130,240 training frames, 3,960 evaluation frames, 13,272 test frames. About 4 subjects do not appear in the training set.
-- Object and action coverage: 32 hand-pose categories (reaching, grasping, pinching, gesturing, etc.), with no object interaction.
-- No hand-object occlusion, no contact, no bi-manual interaction, no tool use.
+## Background and Motivation
 
-## 3. Annotation and Supervision
-- Hand: 3D 21-joint annotations obtained via multi-view + iterative human-in-the-loop optimization; MANO shape β and pose θ.
-- Object: none.
-- Interaction: none.
-- Scene: green-screen masks, camera intrinsics/extrinsics; an in-the-wild test set for cross-domain evaluation.
-- Robot-related annotations: none; a purely visual benchmark.
+Synthetic datasets struggle to reproduce real image characteristics and often sample unrealistic poses, while controlled real datasets carry markers, gloves, or narrow variation. The paper's cross-dataset experiment — training the same architecture on each of STB, RHD, GANerated, Panoptic, LSMV, FPHA (FPA), and HO-3D, then testing on all evaluation splits — shows substantial drops out-of-domain: FPHA-trained networks exploit visible magnetic markers, GANerated suffers from texture and color artifacts, and strong STB results turn out not to predict generalization. Sparse manual annotation of all 21 keypoints across views (about 15 minutes per multi-view set) is too expensive at scale and yields no shape information, motivating a bootstrapped annotation strategy.
 
-## 4. Supported Evaluation
-- Benchmark task: monocular RGB → MANO hand shape / pose estimation.
-- Key metrics: mesh error (vertex-to-vertex distance), joint position error (3D / 2D), F-score @ 5mm/15mm, PA-MPJPE.
-- Role: used as both training and evaluation set; its evaluation split is the de facto standard hand-mesh evaluation protocol.
-- Cross-dataset capability: the paper explicitly tests generalization trained on FreiHAND and evaluated on STB / RHD, serving as an "in-the-wild generalization" indicator.
+## Dataset Construction
 
-## 5. Why It Matters
-- Provides, for the first time, a large-scale and reproducible ground truth for "single RGB → full hand mesh".
-- The multi-view iterative annotation pipeline becomes the methodological blueprint for later datasets such as HO-3D and HOT3D.
-- Demonstrates that 3D hand shape can be regressed end-to-end from a single RGB image, removing the need for depth sensors.
-- Networks trained on FreiHAND clearly outperform those trained on STB / RHD when evaluated on those datasets, establishing the "unified large training set + cross-domain evaluation" paradigm.
-- Acts as one of the training-data sources for nearly all hand-only mesh-reconstruction methods (METRO, I2L-MeshNet, etc.).
+Eight calibrated, time-synchronized RGB cameras at the corners of a cube record 32 subjects of different genders and ethnic backgrounds performing actions with and without household objects, demonstrating varied grasping techniques. Annotation starts from automatically extracted green-screen segmentation masks (refined to align the model wrist) plus six manually placed 2D keypoints (fingertips and wrist); a multi-term MANO fitting objective combines 2D/3D keypoint, segmentation, shape, and pose priors to produce pose and shape candidates. A multi-view network (MVNet) predicting 3D keypoints with confidence enables bootstrapping: heuristic criteria (confidence above 0.8, per-keypoint above 0.6, mask IoU at least 0.7, and keypoint distances under 0.5 cm) auto-accept samples, while annotators verify or refine the rest in about 5 seconds each. Four iterations grow verified fits from 302 to 993, 1449, 2609, and 4565 samples. All green-screen recordings (24 subjects) form the training set; the evaluation set has 11 subjects (3 shared) captured in 2 indoor and 1 outdoor location.
 
-## 6. Limitations and Biases
-- No objects and no interaction: a purely hand-shape benchmark, not reflective of recovery under hand-object occlusion.
-- 32 prescribed poses and 32 subjects: limited motion and subject diversity.
-- Green-screen background: domain gap to in-the-wild backgrounds remains.
-- Annotation depends on MANO: any hand shape outside the MANO low-dimensional space (infants, deformities, severe injury) cannot be represented.
-- No contact, affordance, language, or scene context.
+## Evaluation Protocol
 
-## 7. Takeaway
-FreiHAND is best suited to demonstrate RGB-only 3D hand pose / MANO shape estimation and cross-dataset generalization. **Not suitable** for evaluating hand-object interaction, hand-object occlusion, bi-manual manipulation, or in-hand manipulation. In this survey, FreiHAND plays the role of a "hand-only baseline / hand-only upper bound" and serves as the standard evaluation source for all hand-object methods on hand-only tasks.
+Cross-dataset generalization is scored as the area under the percentage-of-correct-keypoints curve of a single-view pose network trained on each dataset and tested on all others, ranked by cumulative average rank. The shape estimation benchmark takes a single RGB image as input and requires predicting MANO pose and shape parameters; predicted meshes are Procrustes-aligned and scored with mean per-vertex mesh error and F-scores at 5 mm and 15 mm thresholds against the mean-shape baseline, a MANO fit to predicted 3D keypoints, and a Kanazawa-style MANO-parameter regression network (MANO CNN).
+
+## Findings and Analysis
+
+The network trained on FreiHAND ranks first across all seven external evaluation sets (AUC of 0.473 on STB, 0.518 on RHD, 0.562 on Panoptic, 0.537 on LSMV, 0.557 on FPHA, 0.217 on GANerated, and 0.678 on its own evaluation set), confirming that its pose, shape, viewpoint, and object variation reduce dataset bias. The bootstrapping loop improves monotonically: cross-dataset AUC on RHD rises from 0.244 to 0.518 and on Panoptic from 0.347 to 0.562 as accepted annotations grow. On shape estimation, MANO CNN outperforms both baselines with 1.16 mean mesh error and F-scores of 0.484 at 5 mm and 0.925 at 15 mm, versus 1.45/0.415/0.884 for fitting a MANO model to predicted keypoints and 1.78/0.300/0.808 for the mean shape, with the largest margin in the fine-grained regime.
+
+## Contributions
+
+The largest RGB hand dataset with paired pose and shape labels at publication time; a scalable iterative human-in-the-loop annotation pipeline combining sparse manual input, multi-view MANO fitting, MVNet confidence-based auto-acceptance, and human verification; a quantitative demonstration and mitigation of cross-dataset bias in single-view hand pose estimation; and the first real benchmark with training and evaluation protocols for monocular articulated hand shape estimation.
+
+## Limitations
+
+The training portion is restricted to green-screen recordings requiring background compositing (with harmonization and colorization to hide green bleeding), and although the evaluation set spans indoor and outdoor scenes, the overall scale (about 33K training samples) remains below synthetic alternatives; annotations are MANO fits rather than direct measurements, so fitting errors propagate into the ground truth; and objects are limited to household items allowing one-handed manipulation, without 3D object pose or shape annotations.

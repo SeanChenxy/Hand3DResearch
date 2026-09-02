@@ -1,47 +1,39 @@
 # Multi-GraspLLM: A Multimodal LLM for Multi-Hand Semantic Guided Grasp Generation
 
+**Authors:** Haosheng Li, Weixin Mao, Weipeng Deng, Chenyu Meng, Haoqiang Fan, Tiancai Wang, Yoshie Osamu, Ping Tan, Hongan Wang, Xiaoming Deng  
+**Date:** 2024-12-11  
+**Identifier:** [arXiv:2412.08468](https://arxiv.org/abs/2412.08468)  
+**Zotero item:** `Y6GHV9E5` ([Zotero](zotero://select/library/items/Y6GHV9E5))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-Multi-GraspLLM is a unified language-guided grasp generation framework that leverages large language models (LLMs) to handle variable-length sequences, generating grasp poses for diverse robotic hands in a single unified architecture, supported by Multi-GraspSet — the first large-scale multi-hand grasp dataset with automatic contact annotations — and significantly outperforming existing methods in both real-world and simulation experiments.
 
-## 1. Problem and Setting
-- Multi-hand semantic grasp generation: producing feasible and semantically appropriate grasp poses for different robotic hands from natural language instructions.
-- Input: natural language instruction + object point cloud.
-- Output: grasp poses for one or more robotic hands on the object, with appropriate contacts.
-- Language reasoning prior; uses an LLM as the central reasoning engine.
+Multi-GraspLLM addresses multi-hand semantic grasp generation: given an object point cloud and a natural-language instruction, a single multimodal LLM produces grasp poses for five different robotic end-effectors (Allegro, Shadow, Barrett, and Jaco dexterous hands plus the Panda gripper), with the same semantic instruction translated into structurally different grasping behaviors per hand. The paper contributes Multi-GraspSet, described as the first large-scale multi-hand grasp dataset with automatic fine-grained contact annotations (2.1k objects, 140k grasp poses, over 1M LLM-generated conversations at low/middle/high instruction levels), and an LLM framework (PointBERT encoder, modality adaptor, Vicuna backbone) that outputs hand-aware discretized grasp-bin tokens mapped back to continuous wrist poses and joint angles. In simulation, mixed multi-hand training achieves Chamfer distance 0.36 cm, penetration 0.57 cm, and success rate 0.40 on average, beating per-hand training and baselines such as DexGraspNet (CD 1.02) and DexGYS (CD 0.62); in real-world robot experiments on 29 objects it attains part-selection accuracy of 0.82 (gripper) and 0.72 (Allegro), far above baselines.
 
-## 2. Core Method
-- Multi-GraspSet: a large-scale multi-hand grasp dataset with automatically generated contact annotations between robotic hands and objects.
-- Multi-GraspLLM: a unified LLM-based framework that:
-  1. Aligns encoded point cloud features and text features into a unified semantic space.
-  2. Generates grasp bin tokens (discrete grasp representations).
-  3. Converts grasp bin tokens into grasp pose for each robotic hand via hand-aware linear mapping.
-- Supports variable-length sequences (different numbers of hands) via the LLM's autoregressive generation.
-- How language prior is injected: the LLM is the central reasoning engine, conditioning on text and point cloud features.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: Multi-GraspSet (introduced).
-- Supervision: multi-hand grasp poses, text instructions, contact annotations.
-- Domain knowledge: LLM capabilities, hand-aware linear mapping, grasp physics.
-- Assumption: LLMs can effectively reason about grasp generation when properly aligned with point cloud features.
+Grasp generation is essential for robotic manipulation, but existing methods mostly train specialized, physically-stability-focused models for individual robotic hands and lack semantic understanding. The paper defines multi-hand semantic-guided grasp generation: produce feasible and semantically appropriate grasp poses for multiple robotic hands from natural-language instructions using one unified model, rather than one model per hand. Two challenges motivate the work. First, no comprehensive dataset existed combining multiple robotic hands with semantic contact descriptions; among multi-hand grasp datasets, only DexGYSNet/CapGrasp-style resources provide rich contact semantics, but their retargeting from human grasp data (e.g., OakInk) does not generalize to hands with different link and joint structures, especially multi-fingered hands with fewer than five fingers such as the Jaco and Barrett hands. Second, a unified model must map the same semantic instruction to different grasping behaviors for hands with distinct kinematics; prior semantic-guided methods (SemGrasp, DexGYS/human-like grasp) train separate models per hand, while the unified DexGrasp-Diffusion lacks semantic guidance. A single unified model offers deployment simplicity and cross-hand generalization through joint training.
 
-## 4. Experiments and Findings
-- Datasets: Multi-GraspSet; real-world experiments; simulation benchmarks.
-- Metrics: grasp success rate, semantic alignment, multi-hand coordination.
-- Significantly outperforms existing methods in both real-world and simulation experiments.
-- The unified LLM architecture handles diverse robotic hands effectively.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- First unified LLM-based multi-hand grasp generation.
-- Multi-GraspSet is a valuable dataset contribution.
-- Variable-length sequence support via LLM autoregressive generation.
-- Real-world and simulation validation.
+The work consists of a dataset pipeline and an LLM architecture. Multi-GraspSet construction: 2,100 meshes (1,800 from OakInk, 300 from ShapeNet) are made watertight via COACD convex decomposition (threshold 0.01); physically stable grasps are generated with unified methods — DexGraspNet (128 grasps per object for Allegro, 160 for Shadow), GraspIt (30 for Jaco, 60 for Barrett), and Contact-GraspNet (200 grasps for the Panda gripper) — followed by penetration filtering with a 2 cm threshold. Contact annotation uses signed distance fields: points are sampled on the object surface, Kaolin computes SDF values from sampled points to each robotic-hand link, and a link counts as in contact when the SDF falls below a threshold; object-face category labels identify which part each finger touches. Two annotation granularities are produced — per-finger detail ("Index, middle, thumb, and ring fingers contact the hammer's grip") and a general form when fingers share a part. An LLM-assisted system (GPT-4o) then builds basic conversations in three instruction levels — low (hand and object only), middle (adds the target part), and high (adds full finger-contact information) — with template generation and per-sentence refinement for natural phrasing, yielding over 1M dialogues. Multi-GraspLLM: a PointBERT point cloud encoder maps 8,192-point clouds into 512 x 384 feature tokens; a modality adaptor aligns them into the 4,096-dimensional language feature space of a Vicuna LLM backbone, whose input concatenates point-cloud and text tokens. Continuous grasp angles are discretized with a hand-aware scheme: for each hand, the valid angle range between dataset-derived lower and upper bounds is divided uniformly into bins (bin count ablated over 512/384/256, with 384 used in the final implementation), and predicted bins are linearly de-tokenized back to a 6-D wrist pose [T, R] plus hand-specific joint angles (e.g., d = 22 for Allegro). Three special tokens support this: a robotic-hand identification token, a scale token compensating for PointBERT's point-cloud normalization, and grasp bin tokens. Training is two-stage: multimodal alignment (LLM and point encoder frozen; only the adaptor fine-tuned on single-round grasp generation, 3 epochs at lr 2e-3) followed by instruction tuning (point encoder frozen; adaptor and LLM fully fine-tuned on all conversation types, 3 epochs at lr 2e-5, on 8 x 80GB A100 GPUs), using single-round, multi-round mix (with object captioning), and multi-round multi-hand conversation formats.
 
-### Limitations
-- Requires training on the proposed Multi-GraspSet.
-- LLM inference is slower than direct prediction.
-- Performance depends on the LLM's capabilities.
-- May not generalize to very novel robotic hand morphologies.
+## Contributions
 
-## 6. Takeaway
-Multi-GraspLLM demonstrates that LLMs can serve as effective reasoning engines for multi-hand grasp generation when properly aligned with point cloud features, with the unified architecture handling diverse robotic hands in a single model. The work exemplifies the "language reasoning prior" paradigm at the LLM level, pushing multi-hand grasp generation toward generalist models.
+- Multi-GraspSet, stated to be the first large-scale multi-hand grasp dataset with rich automatic contact annotations: 5 robotic hands, 2,100 object point clouds, 140k grasp poses, and more than 1M conversations with a three-level instruction hierarchy, filling a gap for multi-hand and semantic-guided grasping.
+- Multi-GraspLLM, an LLM-based framework enabling cross-hand semantic grasp generation in a single architecture, handling variable-length inputs and outputs through hand-aware grasp-bin discretization and special tokens.
+- A unified grasp-generation strategy validated against per-hand training: joint multi-hand training outperforms separately trained models, supporting the case for embodied foundation models shared across robotic systems.
+- An end-to-end approach requiring no extra physical-stability loss functions (unlike DexGraspNet's stability losses or DexGYS's two-stage pipeline), which nevertheless surpasses baselines in both intention accuracy and stability.
+- Real-world validation on two robot systems (gripper and Allegro dexterous hand) demonstrating sim-to-real feasibility and large gains in part-selection accuracy over semantic-guided competitors.
+
+## Experimental Setup
+
+Multi-GraspSet is split 80% training / 10% validation / 10% testing, with test-set point clouds completely disjoint from training and validation. Evaluation covers grasp intention and physical stability: Chamfer distance (CD, cm) between predicted and ground-truth robotic-hand point clouds, maximum penetration distance (Pen, cm) computed via point-to-surface distances of 512 sampled hand points, and grasp success rate (Suc) in Isaac Sim. Baselines are retrained on the new dataset for each end-effector: DexGraspNet, SceneDiffuser, and DexGYS on dexterous hands, and Contact-GraspNet on parallel grippers; the raw dataset ("GroundTruth") is also evaluated as a reference. Ablations cover each special token, two-stage training, grasp-bin count, instruction-tuning data composition, the amount of modality-alignment data (100k-750k conversations), and the number of hands included in training. Real-world experiments use two setups — an AR5X arm with a gripper and Orbbec DaBai depth camera, and a UR5 arm with an Allegro hand and two Orbbec Femto Bolt cameras — extracting full object point clouds from depth images with SAM2, testing 29 daily-life objects with 20 trials per method, and manually scoring grasp success and part-selection correctness after filtering table-colliding grasps.
+
+## Results
+
+In simulation (Table 2, averaged over all hands), Multi-GraspLLM-mix achieves CD 0.36 cm, Pen 0.57 cm, and Suc 0.40, versus DexGraspNet at 1.02/0.80/0.28, SceneDiffuser at 1.14/0.76/0.30, DexGYS at 0.62/0.68/0.32, and the raw dataset's GroundTruth at 0.97/0.66/0.36 — the unified model even outperforms the original dataset entries; per hand, the mixed model reaches CD 0.37/0.42/0.48/0.34/0.20 for Allegro/Shadow/Barrett/Jaco/Panda. Mixed training beats per-hand training (avg CD 0.36 vs. 0.43), and instruction granularity matters: CD drops from 0.78 (low-level, no contact information) to 0.34 (middle-level, target part) and 0.31 (high-level, full finger contacts), while stability metrics stay consistent across levels. Ablations (Table 3) show removing the two-stage training hurts most (CD 0.48, Pen 0.74, Suc 0.32), and each special token contributes (e.g., without the scale token CD rises to 0.42 and Suc falls to 0.35); bin-count ablation favors 384 bins (CD 0.36) over 512 (0.38) and 256 (0.40); adding multi-round mix and multi-hand conversation data improves CD from 0.40 to 0.36 and Suc from 0.37 to 0.40; increasing alignment data from 100k to 750k conversations steadily lowers CD (0.49 to 0.36) and raises success (0.31 to 0.40); and Allegro performance improves monotonically as training hands grow from one (CD 0.41, Suc 0.32) to five (CD 0.37, Suc 0.34), with mixed training surpassing separate training from three hands onward. In real-world tests (Table 10), Multi-GraspLLM attains Suc 0.45 and part-selection accuracy 0.82 on the gripper (vs. Contact-GraspNet's 0.48/0.42) and Suc 0.31, accuracy 0.72 on the Allegro hand (vs. DexGYS 0.27/0.56, DexGraspNet 0.29/0.32, SceneDiffuser 0.24/0.30) — comparable grasp success but substantially better semantic part selection.
+
+## Limitations
+
+The authors state as future work the need to collect larger data covering more robotic-hand types and objects to further enhance generalization to real-world scenarios. Additional constraints are visible in the reported results: grasp angles are quantized into discrete bins, trading resolution against predictability (the bin-count ablation shows the trade-off explicitly); real-world grasp success is only comparable to, not above, the stability-focused gripper baseline (0.45 vs. 0.48), with the advantage concentrated in semantic part accuracy; the Panda gripper supports only low- and middle-level instructions due to its limited degrees of freedom; and contact annotations are automatically derived from SDF thresholds on simulation grasps rather than measured physical contacts. The dataset's object base is drawn from OakInk and ShapeNet, and each contact pattern for dexterous hands is represented by a single sampled grasp pose, which may limit pose diversity per contact pattern.

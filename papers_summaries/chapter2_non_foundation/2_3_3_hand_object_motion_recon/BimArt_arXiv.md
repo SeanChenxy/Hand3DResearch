@@ -1,43 +1,38 @@
 # BimArt: A Unified Approach for the Synthesis of 3D Bimanual Interaction with Articulated Objects
 
+**Authors:** Wanyue Zhang, Rishabh Dabral, Vladislav Golyanik, Vasileios Choutas, Eduardo Alvarado, Thabo Beeler, Marc Habermann, Christian Theobalt  
+**Date:** 2024-12-06  
+**Identifier:** [arXiv:2412.05066](https://arxiv.org/abs/2412.05066)  
+**Zotero item:** `YPEGQ4MS` ([Zotero](zotero://select/library/items/YPEGQ4MS))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-A unified generative framework for synthesizing bimanual hand interactions with articulated objects (e.g., opening a laptop, turning a faucet), handling both grasping and articulation in a single model without separate stages.
 
-## 1. Problem and Setting
-- Generate 3D bimanual hand motions for interacting with articulated objects.
-- Input: articulated object 3D model + task specification; output: MANO hand poses for both hands over time, with coordinated grasping and articulation motions.
-- Bimanual (two hands). The object has movable parts (articulated). Unlike prior work that separates grasping and articulation into distinct stages, this method unifies them.
+BimArt (CVPR 2025, MPI Informatics and Google) is a generative diffusion-based approach that synthesizes diverse, plausible bimanual hand motions manipulating two-part articulated objects, given only the object mesh and its 7-DoF trajectory (6D global rotation/translation plus 1D articulation angle). Unlike prior work, it needs no reference grasp, no coarse hand trajectory, no per-category model, and handles grasping and articulating simultaneously. Its core ideas are a normalized, part-based BPS object representation that treats small articulating parts fairly, and a bimanual distance-based contact map diffusion model whose output guides the hand motion diffusion via classifier-free conditioning plus per-timestep contact-map guidance, followed by optimization-based MANO fitting that removes penetrations. On ARCTIC it strongly surpasses adapted CAMS, MDM, and OMOMO baselines in penetration, contact, and articulation metrics, and a 55-person user study confirms significantly preferred motion naturalness.
 
-## 2. Core Method
-- A diffusion-based generative model operating over the joint space of two-hand MANO parameters.
-- Key innovations:
-  1. Distance-based contact representation: encodes hand-object proximity as a conditioning signal, allowing the model to reason about where contact should occur without pre-specifying grasp locations.
-  2. Unified grasp-articulation modeling: the diffusion process jointly generates the approach, grasp, articulation, and release phases as a single continuous sequence.
-  3. Articulation-aware conditioning: the object's joint parameters (e.g., drawer displacement, lid angle) are encoded as additional conditioning, enabling the model to coordinate hand motion with object articulation.
-- No reference grasp or coarse trajectory needed — the model generates everything from scratch.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: bimanual interaction datasets with articulated objects (ARCTIC, custom data).
-- Supervision: MANO parameters, object articulation states.
-- Uses MANO for hand.
-- Assumes articulated object model with known joint parameters is available; the interaction follows a grasp-then-manipulate pattern.
+Humans constantly manipulate articulated objects (twisting bottle caps, opening laptop screens, cutting with scissors), but computational synthesis of such bimanual interactions is hard: the space of two-hand animations that both move an object rigidly and articulate it is high-dimensional and requires understanding of object parts, affordances, and geometry. Prior work falls short in several ways: methods for articulated objects are category-specific (CAMS trains one model per category and needs the initial grasp), cannot simultaneously perform articulation and root motion (ArtiGrasp requires a reference pose), or refine noisy input hand sequences rather than generating them (GeneOH). Existing HOI feature representations either suit rigid objects (ManipNet's voxels) or use stage-wise contact targets that under-constrain dynamic bimanual fitting (CAMS). The paper defines the task: given a sequence of articulated object states — global 6D pose and 1D joint angle per frame — generate N frames of plausible, diverse MANO hand motions for both hands that justify the trajectory, in a unified cross-category model without reference grasps.
 
-## 4. Experiments and Findings
-- Datasets: ARCTIC, custom bimanual articulated object captures.
-- Metrics: FID, diversity, articulation success rate, contact accuracy.
-- Unified approach outperforms two-stage (grasp-then-articulate) methods in both realism and task success rate. Generated motions show natural coordination between the two hands.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Unified framework eliminates error propagation from stage-wise approaches.
-- Handles the full bimanual manipulation pipeline.
-- No reference grasp or initial trajectory required.
+BimArt is a three-stage pipeline. First, representations: hands are encoded object-centrically in the object's canonical frame (articulation axis aligned with the negative z-axis), each hand per frame parameterized by J surface keypoints sampled from the MANO mesh plus direction vectors from each keypoint to its nearest object vertex, which jointly encode position, distance, and contact reasoning. The object is encoded with the proposed normalized part-based BPS: the object is scale-normalized into the unit sphere (with a margin of 0.15), and the same basis point set is mapped separately to each articulated part, so small parts (e.g., a bottle lid) receive the same spatial encoding resolution as large ones; global states (relative translation to the first frame and global rotation) are appended because BPS alone cannot distinguish gravity or supporting-hand requirements. Second, a Bimanual Contact Generation diffusion model (transformer-encoder denoiser) conditioned on object features predicts per-frame distance-based contact maps for the left and right hand separately — the minimum distance from each object vertex (at BPS point locations) to any hand vertex — without encoding hand-vertex correspondence, which would over-constrain and reduce diversity. Third, a Bimanual Hand Motion diffusion model denoises hand sequences conditioned on the object embedding concatenated with the contact-map embedding, trained with classifier-free guidance (contact features replaced by a learnable null token with dropout 0.5); during sampling, a contact-map guidance term (a differentiable one-nearest-neighbor derived contact map compared to the contact model's prediction, with scale set by the gradient norm) aligns each intermediate prediction with the generated contacts. Finally, optimization-based MANO fitting recovers MANO pose/shape parameters from the predicted keypoints and refines them with projection, penetration, and acceleration losses to remove floating, penetration, and jitter artifacts. Both diffusion models use 8 transformer encoder layers, latent dimension 512, 50 diffusion steps, DDPM schedule with direct clean-sample prediction, EMA weights, Adam at lr 1e-4 with cosine scheduling, trained 200 epochs in under two days on a single A40 GPU; post-processing runs 100 iterations.
 
-### Limitations
-- Requires articulated object models with known joint parameters.
-- Bimanual coordination is challenging to evaluate quantitatively.
-- Limited to the articulation types seen during training.
-- Computationally intensive for long sequences.
+## Contributions
 
-## 6. Takeaway
-BimArt addressed the challenging bimanual articulated object interaction problem with a unified generative approach, showing that joint modeling of grasp and articulation produces more coherent results than stage-wise methods. The distance-based contact representation is an elegant way to handle contact without explicit grasp annotation.
+- BimArt, a unified generative approach for bimanual hand motion synthesis with articulated objects that requires no reference grasp, no coarse hand trajectory, no object/category-specific training, and performs grasping and articulation simultaneously — relaxing the input assumptions of ArtiGrasp, CAMS, and refinement-based methods.
+- A canonicalized, part-aware object feature representation: normalized part-based BPS features computed per articulated part, ensuring balanced geometric encoding across parts of very different sizes and enabling a single cross-category model.
+- A generative bimanual contact prior: a diffusion model producing frame-wise, distance-based, hand-separate contact maps that serve as an intermediate interaction representation, capturing rich bimanual manipulation patterns more finely than sparse or stage-wise contact targets.
+- Contact-guided sampling (classifier-free conditioning plus per-timestep contact-map discrepancy guidance) and physically plausible post-refinement, with comprehensive ablations validating each representation and component.
+
+## Experimental Setup
+
+Training and evaluation use ARCTIC (11 articulated objects with fully annotated bimanual mesh sequences; 257 training and 44 test sequences, using four held-out test sequences per object) and HOI4D (following CAMS's protocol on the pliers and scissors categories with the same splits). Metrics: multi-modality "Mul" (mean pairwise distance between hand vertices of 10 samples for the same trajectory), acceleration (cm/s^2), "Pen 1cm" (percentage of frames with hand-vertex penetration beyond 1 cm), "Con" (percentage of frames with object contact), and "Art" (percentage of frames with contact on the articulated part among frames where articulation changes); on HOI4D, penetration percentage, contact score, and articulation score follow CAMS's protocol. Baselines are adapted to the identical input setting: CAMS-B (bimanual adaptation for ARCTIC) and CAMS-X (cross-category model on HOI4D), MDM-B/MDM-U (MDM re-conditioned on the normalized part-based BPS object features), OMOMO-B (whole-body object-motion method extended to hands), plus GraspTTA and ManipNet on HOI4D. A perceptual user study with 55 respondents compared BimArt against MDM-B and OMOMO-B on 40 force-choice pairs over five objects.
+
+## Results
+
+On ARCTIC, BimArt achieves Pen-1cm of 2.03% versus 30.44% (OMOMO-B), 42.52% (CAMS-B), and 66.71% (MDM-B), object contact of 99.63% (GT 95.14%), and articulation contact of 85.57% (GT 94.56%), with acceleration 0.188 cm/s^2 and multi-modality 6.91 cm; CAMS-B scores higher on multi-modality (8.56) and acceleration (0.120) but produces implausible motions with massive penetration, and MDM-B and OMOMO-B lag on all plausibility metrics. On HOI4D in the unified cross-category setting, BimArt with optimization reaches penetration 0.464% on pliers and contact score 1.000 on both categories, outperforming CAMS-X by large margins (e.g., CAMS-X pliers contact score 0.485, articulation 0.015) and performing comparably to category-specific baselines (e.g., BimArt without optimization: pliers Pen 0.044%, contact 0.966, articulation 0.597). The user study shows participants significantly prefer BimArt over both MDM-B and OMOMO-B for every object tested (p < 10^-3, z-test). Ablations on ARCTIC show the proposed normalized part-based BPS beats unnormalized and part-agnostic BPS variants (Pen-1cm 20.27% vs 17.54%/17.51% but clearly better contact and multi-modality in the full pipeline; NP-BPS: Mul 6.98, Con 98.48), that replacing the surface-keypoint-plus-direction hand representation with MANO 6D pose parameters worsens penetration (22.20%), contact, and articulation (76.81%), that removing global states G yields physically implausible motions despite better acceleration, and that contact conditioning, contact guidance, and optimization each contribute: with contact conditioning plus guidance plus optimization, Pen-1cm drops from 20.27% (conditioning only) to 2.03% and acceleration from 0.314 to 0.188.
+
+## Limitations
+
+The authors state that, while robust to novel object trajectories, the method is restricted to the object categories present in the training datasets (ARCTIC and HOI4D) and does not generalize zero-shot to new, open-vocabulary objects; they suggest leveraging common-sense knowledge of multi-modal large language models for such generalization. They also note that adoption in artistic creation with limited time budgets would benefit from faster diffusion sampling (e.g., DDIM) or latent diffusion modeling. The task definition assumes a two-part articulated object with a single rotational joint and a given 7-DoF object trajectory, so object trajectories themselves must be provided externally.

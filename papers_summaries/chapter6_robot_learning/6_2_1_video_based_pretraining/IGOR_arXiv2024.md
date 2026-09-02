@@ -1,45 +1,32 @@
 # IGOR: Image-GOal Representations are the Atomic Control Units for Foundation Models in Embodied AI
 
+**Authors:** Xiaoyu Chen, Junliang Guo, Tianyu He, Chuheng Zhang, Pushi Zhang, Derek Cathera Yang, Li Zhao, Jiang Bian  
+**Date:** 2024-10-17  
+**Identifier:** [arXiv:2411.00785](https://arxiv.org/abs/2411.00785); DOI `10.48550/arXiv.2411.00785`  
+**Zotero item:** `XCLMJPCN` ([Zotero](zotero://select/library/items/XCLMJPCN))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-IGOR (Image-GOal Representations) aims to learn a unified, semantically consistent action space across human and various robots by compressing visual changes between an initial image and its goal state into latent actions, enabling knowledge transfer among large-scale robot and human activity data and generating latent action labels for internet-scale video data.
+IGOR learns a unified, semantically consistent latent action space shared by humans and multiple robots by compressing the visual change between an initial image and its goal state into a latent action. Because these image-goal representations can be generated for Internet-scale video, they serve as atomic control units for training foundation policies and world models across robot and human data (about 2.8M video clips). IGOR can "migrate" an object's motion from one video to another — even across human and robot — by combining its latent action model with a world model, and a foundation policy aligns latent actions with language while a low-level policy grounds them in robot control.
 
-## 1. Problem and Setting
-- Embodied AI requires unified representations across diverse embodiments (human, various robots) for knowledge transfer.
-- Input: initial image + goal image (or future state).
-- Output: a latent action representation (atomic control unit) for embodied AI.
-- Video-based pretraining prior: latent action representations learned from video enable internet-scale pretraining.
+## Background and Problem
+Embodied foundation models need a shared action interface that spans human videos and heterogeneous robots, but action labels exist only for narrow robot data. The paper defines the problem as learning a unified latent action space from visual goal change, so that large-scale human activity video and robot data can jointly train world models and policies.
 
-## 2. Core Method
-- Compresses visual changes between an initial image and its goal state into latent actions (atomic control units).
-- The latent action space is unified across humans and various robots, enabling cross-embodiment knowledge transfer.
-- Latent action labels can be generated for internet-scale video data, enabling large-scale pretraining.
-- How FM prior is injected: latent actions bridge the visual state changes from video to actionable control representations.
+## Method
+The latent action model compresses the visual transition between an initial image and a goal state into a latent action; the world model predicts future frames conditioned on these tokens, and the two together enable motion "migration" between videos across embodiments. Pre-training uses roughly 0.8M robot trajectories from an Open X-Embodiment subset (single-arm end-effector control, RT-1 excluded for out-of-distribution evaluation, actions and proprioception discarded) alongside large-scale human activity video with language instructions (Something-Something v2, EGTEA and similar egocentric sources), totaling about 2.8M clips. The foundation policy aligns latent actions with natural language, and a low-level policy maps them to robot control.
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: paired initial-goal image data from human and robot activities; internet-scale video for latent action generation.
-- Supervision: latent action prediction; cross-embodiment alignment.
-- Foundation models: pretrained image encoders; possibly video models.
-- Domain knowledge: embodied AI, cross-embodiment transfer, action representation learning.
-- Assumption: visual changes between initial and goal states can be compressed into a unified latent action.
+## Contributions
+- Image-GOal representations: latent actions defined by image-to-goal visual change, forming a semantically consistent action space across humans and robots.
+- A pipeline that labels Internet-scale video with latent actions and uses them to train foundation policies and world models jointly on human and robot data.
+- Demonstrated cross-embodiment motion migration via the latent action model plus world model, and language alignment of latent actions for effective robot control.
 
-## 4. Experiments and Findings
-- Datasets: human activity datasets, robot manipulation benchmarks, internet video.
-- Metrics: cross-embodiment transfer, downstream task performance.
-- Unified latent action space enables knowledge transfer among human and various robot data.
-- Generates latent action labels for internet-scale video data.
+## Experimental Setup
+Evaluation covers real-robot manipulation tasks — "Pick Coke Can", "Move Near", and "Open/Close Drawer" — comparing a policy trained with IGOR pre-training against one trained from scratch, plus qualitative retrieval analyses showing image-goal pairs with similar latent actions across out-of-distribution tasks. Trial counts and full success tables are not reproduced from the available evidence.
 
-## 5. Strengths and Limitations
-### Strengths
-- Unified action space across embodiments.
-- Enables internet-scale video pretraining.
-- Cross-embodiment knowledge transfer.
-- Simple and general framework.
+## Results
+- On the evaluated real-robot tasks, IGOR achieves higher or equal success rates than the model trained from scratch, indicating the learned latent actions generalize to real robot control.
+- Retrieval analyses show image-goal pairs sharing similar latent actions across semantically related but out-of-distribution language tasks, evidencing a consistent action space.
+- The joint latent action and world model transfers an object's motion between videos, including across human and robot embodiments, in qualitative demonstrations.
 
-### Limitations
-- May lose fine-grained action details in compression.
-- Cross-embodiment alignment may be challenging for very different morphologies.
-- Internet-scale labeling requires significant compute.
-- May not capture all action semantics.
-
-## 6. Takeaway
-IGOR demonstrates that unified image-goal latent action representations enable cross-embodiment knowledge transfer and large-scale video pretraining for embodied AI. The work exemplifies the "video-based pretraining" paradigm where image-goal differences serve as atomic control units.
+## Limitations
+Latent actions are defined purely by visual change, so aspects of interaction not visible in images are outside the representation. Quantitative evaluation is limited to a small set of real-robot tasks plus qualitative analyses; large-scale benchmark comparisons are not reported in the available evidence. The pre-training corpus discards robot actions and proprioception, so the approach depends on the low-level policy to bridge latent tokens to executable control.

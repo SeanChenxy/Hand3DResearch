@@ -1,40 +1,37 @@
-# Chord: Category-level Hand-held Object Reconstruction via Shape Deformation
+# CHORD: Category-level Hand-held Object Reconstruction via Shape Deformation
+
+**Authors:** Kailin Li, Lixin Yang, Haoyu Zhen, Zenan Lin, Xinyu Zhan, Licheng Zhong, Jian Xu, Kejian Wu, Cewu Lu  
+**Date:** 2023-08-21  
+**Identifier:** [arXiv:2308.10574](https://arxiv.org/abs/2308.10574)  
+**Zotero item:** `WRIJJS5N` ([Zotero](zotero://select/library/items/WRIJJS5N))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-Reconstructs hand-held objects at the category level by deforming a category-level shape prior to match the observed image, jointly optimizing hand and object meshes via differentiable rendering.
 
-## 1. Problem and Setting
-- Category-level reconstruction of hand-held objects from RGB images or video, where the object category is known but the specific instance shape is unknown.
-- Input: RGB image(s); output: MANO hand mesh + deformed category-level 3D object mesh.
-- Category-level (not template-free) — a category-specific shape prior is available (e.g., "mug", "bottle"). Both hand and object reconstructed.
+CHORD reconstructs hand-held objects at the category level by explicitly deforming a learned categorical shape prior instead of regressing object-agnostic surfaces from scratch. It operates in two steps: an image-to-image translation network deforms the rendered normal and depth maps of a category-level object prior to those of the actual instance, and an implicit network then deforms the prior's 3D surface by regressing signed distances conditioned on appearance, shape, and hand-pose awareness. Trained and tested on its new COMIC dataset (426K rendered images of 90K object instances in six categories), CHORD achieves a Chamfer distance of 7.69 on the mug category under predicted poses, versus 8.14 for an iHOI variant and 8.28 for an AlignSDF variant given the same category-level pose estimation, while also halving penetration depth (0.42 cm versus 0.54 cm).
 
-## 2. Core Method
-- Learns a category-level shape space via a deformation network trained on ShapeNet object categories. Given an object category, a base mesh is deformed to fit the observed instance.
-- Joint optimization framework: uses differentiable rendering (Neural Mesh Renderer) to optimize hand MANO parameters and object deformation parameters simultaneously, driven by photometric consistency and silhouette losses.
-- For video input, enforces temporal smoothness on both hand pose and object shape/deformation.
-- Can work with single images (weaker) or multi-view/video (stronger).
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: ShapeNet for category-level shape priors; HO3D, ObMan for hand-object interaction data.
-- Supervision: 2D supervision (silhouette, photometric) during test-time optimization; 3D shape supervision for the deformation network pretraining.
-- Uses MANO for hand.
-- Assumes object category is known a priori; object instances within a category share a common topology; object is rigid.
+Producing high-quality object geometry in hand-object interaction scenes is harder than hand reconstruction because of mutual occlusion, the lack of a geometrical prior for arbitrary objects, and insufficient training data covering shape and appearance variation. Prior work splits into two failing camps: methods assuming a known 3D template reduce the task to 6D object pose estimation and fail on unseen instances, while object-agnostic reconstruction methods trained on large synthetic data (AtlasNet-style, Grasping Field, iHOI, AlignSDF) produce "bubble-like" shapes and broken geometries because they either lack any shape basis or use one with fixed topology and resolution. Humans, by contrast, exploit a mastered category-level shape prior — for a mug they know where the rim and handle must be — even for instances they have never seen. CHORD formalizes category-level hand-held object reconstruction: given an RGB image and the object's category, deform a categorical implicit prior onto the observed instance, using the interacting hand as a scale and shape cue that removes the need for depth input required by mainstream category-level pose methods (NOCS and followers).
 
-## 4. Experiments and Findings
-- Datasets: HO3D (real), ObMan (synthetic), custom in-the-wild captures.
-- Metrics: Chamfer Distance, IoU for object; MPJPE for hand.
-- Category priors significantly improve reconstruction quality over template-free methods, especially under occlusion. The deformation-based approach produces watertight, plausible meshes even for heavily occluded regions.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Category prior enables reconstruction of fully occluded object parts by "hallucinating" plausible geometry.
-- Produces complete, watertight meshes (unlike occupancy/SDF approaches that may have holes).
+CHORD builds on two preceding task models. Hand pose is estimated via 3D keypoints and an inverse-kinematics network into MANO parameters; the object-prior pose is estimated with a category-aware decoupled rotation representation (one or two shape-aligned rotation axes, avoiding dense NOCS correspondences under occlusion) plus a volumetric-heatmap translation relative to the hand, following AlignSDF. The pipeline then proceeds in two deformation steps. First, a 2D deformation network GN takes the RGB image together with differentiably rendered depth and normal maps of the estimated MANO hand and of the posed object-prior, and predicts the deformed normal and depth maps of the actual object instance; rendering hand and object separately helps decouple the mutually occluding surfaces. Second, a point-wise implicit network GS regresses the signed distance of query points to the instance surface, whose zero level set is extracted with Marching Cubes. GS aggregates three types of local features for each query point: appearance-aware features sampled from the deformed hand/object normal and depth maps; shape-aware features obtained by trilinear interpolation in a SparseConvNet-diffused volume of latent codes anchored to the object-prior's vertices (query points first transformed into the object-prior's canonical frame); and pose-aware features given by the query point's coordinates in all 16 MANO joint local frames, including the global wrist transform. Image features from a four-level ResNet-50 feature pyramid and positional encodings of the world- and canonical-frame coordinates are also injected. The object-prior itself is extracted with Deep Implicit Templates (DIT), which jointly learns an instance-agnostic implicit template and per-instance warping, establishing cross-shape correspondence within the category.
 
-### Limitations
-- Requires known object category — cannot handle completely unknown objects.
-- Deformation space is limited to the training categories (ShapeNet coverage).
-- Test-time optimization is slow compared to feed-forward methods.
-- Assumes rigid objects with fixed category topology.
+## Contributions
 
-## 6. Takeaway
-CHORD showed that category-level priors offer a powerful middle ground between template-based (requires exact CAD model) and template-free (struggles under occlusion) approaches. The deformation-based paradigm enables physically plausible completions of occluded regions, making it practical for real-world applications where object categories are often known.
+- The CHORD model, which performs category-level hand-held object reconstruction by deforming an explicit-to-implicit categorical shape prior, rather than learning object-agnostic implicit surfaces or assuming known instance templates.
+- Three types of awareness (appearance, categorical shape, interacting hand pose) integrated as local features of the implicit function, with an ablation showing monotonically improved reconstruction as awareness is added.
+- COMIC, a new large-scale dataset for category-level hand-object interaction: 426K high-fidelity Blender-rendered images of 90K hand-held objects in six categories (mug, camera, box, trigger sprayer, bottle, knife), with interactions grounded in real human demonstrations from OakInk, NIMBLE hand models with random appearance, randomized object materials, and randomized camera viewpoints.
+
+## Experimental Setup
+
+Quantitative results and ablations are reported on COMIC, primarily on the mug category (the only genus-1 object among the six, with thin walls and a deep non-convex interior); category-level numbers are also given for the other five categories. Comparison baselines AlignSDF and iHOI are upgraded to category-aware versions (AlignSDF-C, iHOI-C) by adding object-prior pose estimation and retraining on COMIC, with the same estimated hand poses at test time. Chamfer distance is computed on 30,000 bidirectionally sampled points in camera coordinates, with penetration depth (PD, cm) and penetration volume (PV, cm3) measuring physical plausibility; hand quality is measured by MPJPE. For generalization, CHORD is retrained on a mixture of COMIC, OakInk-Image, and DexYCB (plus FreiHand and YouTubeHand for the hand pose module) and evaluated on unseen camera views of OakInk and DexYCB as well as real in-the-wild photographs of unseen objects. A "+GT.pose" setting feeds ground-truth hand and object-prior poses to expose the upper bound.
+
+## Results
+
+On the COMIC mug benchmark with estimated poses, CHORD reaches CD 7.69, PD 0.42 cm, PV 2.79, and MPJPE 6.08 mm, against iHOI-C (CD 8.14, PD 0.54, PV 3.61, MPJPE 6.20) and AlignSDF-C (CD 8.28, PD 0.54, PV 3.71, MPJPE 6.18); with ground-truth poses CHORD attains CD 3.11. The awareness ablation shows the image-feature-only baseline at CD 12.88 (estimated poses) and adding appearance, shape, or pose awareness alone improves it by 36%, 38%, and 37% respectively, while the full model improves over the baseline by 40% (estimated poses) and 62% (ground-truth poses). The DIT-derived prior clearly beats alternative prior constructions (CD 7.99 versus 9.41 for a DeepSDF latent mean and 10.27 for a voxel mean), and expressing query points in all 16 joint-local frames including the global transform (CD 7.27) outperforms iHOI-style wrist-only canonicalization (7.41), HALO-based signed distance input (7.50), and ContactPose-style distance features (10.00). Separately rendered hand and object normal/depth inputs also help (CD 7.07 versus 7.88 with joint rendering, using ground-truth maps). On category-level generalization, CD under estimated poses is 15.50-69.11 across the six categories on COMIC, 32.63-74.97 on unseen views of OakInk, and 10.24-19.16 on the categories available in DexYCB, with qualitative results showing convincing reconstructions of complex-topology (mug handles) and transparent objects in the wild.
+
+## Limitations
+
+CHORD is restricted to the six categories for which priors exist in COMIC, so reconstruction quality depends on the categorical prior and the approach does not address open-vocabulary objects; the knife category shows a notably high CD of 69.11 on COMIC, indicating difficulty for thin-bladed shapes. The method also relies on preceding pose estimators whose errors propagate (the ground-truth-pose upper bound of CD 3.11 is far below the 7.69 achieved with estimated poses), and the hand pose module is a secondary component rather than a target — the paper does not report object reconstruction on fully unseen categories, and camera-coordinate evaluation with fixed scale assumptions is tied to the synthetic rendering conditions of COMIC.

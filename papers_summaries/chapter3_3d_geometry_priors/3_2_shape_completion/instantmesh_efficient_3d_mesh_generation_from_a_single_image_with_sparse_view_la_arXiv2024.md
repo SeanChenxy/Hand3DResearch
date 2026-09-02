@@ -1,57 +1,37 @@
 # InstantMesh: Efficient 3D Mesh Generation from a Single Image with Sparse-view Large Reconstruction Models
 
-# Paper Summary
+**Authors:** Jiale Xu, Weihao Cheng, Yiming Gao, Xintao Wang, Shenghua Gao, Ying Shan  
+**Date:** 2024-04-10  
+**Identifier:** [arXiv:2404.07191](https://arxiv.org/abs/2404.07191)  
+**Zotero item:** `B8GH3KTA` ([Zotero](zotero://select/library/items/B8GH3KTA))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-InstantMesh is a feed-forward framework that generates high-quality 3D meshes from single images within 10 seconds by combining a multi-view diffusion model with a sparse-view Large Reconstruction Model (LRM) that directly predicts mesh geometry using differentiable iso-surface extraction.
 
-## 1. Problem and Setting
-- **Task**: Single-image to 3D mesh generation - creating complete 3D mesh models from a single input image
-- **Input**: Single RGB image of an object
-- **Output**: Complete 3D mesh representation with geometry
-- **Difficulty**: Limited scale and poor annotations of 3D datasets; challenges with 3D consistency; computational inefficiency of existing triplane-based LRMs which require memory-intensive volume rendering
+InstantMesh is a feed-forward image-to-3D framework that generates high-quality textured 3D meshes from a single image in roughly 10 seconds by chaining a multi-view diffusion model (a white-background fine-tuned Zero123++ that synthesizes 6 novel views at fixed camera poses) with a transformer-based sparse-view Large Reconstruction Model (LRM) that predicts a 3D mesh directly via the FlexiCubes differentiable iso-surface extraction module, enabling direct depth and normal supervision on the mesh representation. On the Google Scanned Objects evaluation set it reports Chamfer Distance 0.177 and F-Score 0.882 (NeRF variant), clearly ahead of TripoSR, LGM, and CRM, and the full code, weights, and demo were released openly.
 
-## 2. Core Method
-**Pipeline**: Input image → Multi-view diffusion model (Zero123++) → 6 white-background multi-view images → Sparse-view LRM with differentiable iso-surface extraction → Final 3D mesh
+## Background and Problem
 
-**Key innovations**:
-- **Multi-view generation**: Uses fine-tuned Zero123++ to generate 6 consistent multi-view images with white backgrounds (3×2 grid format, 960×640 resolution) at azimuths starting at 30° and increasing by 60°, with interleaving elevations of 20° and −10°
-- **Sparse-view LRM**: Architecture based on LRM [14] that directly predicts 3D geometry from sparse multi-view inputs
-- **Differentiable iso-surface extraction**: Integrates differentiable surface optimization techniques [39, 40] to enable direct geometric supervision (depths and normals) on the mesh representation without volume rendering
-- **White-background fine-tuning**: Fine-tuned Zero123++ on LVIS subset of Objaverse to generate consistent white-background images, eliminating artifacts from inconsistent gray backgrounds
+The paper addresses single-image to 3D asset generation, motivated by applications in virtual reality, industrial design, gaming, and animation. Two prior paradigms have complementary weaknesses: per-scene score distillation from 2D diffusion priors (DreamFusion's SDS and successors) has strong zero-shot capability but is time-consuming and suffers from the multi-face "Janus" problem, while Large Reconstruction Models (LRMs) trained on large-scale 3D datasets (e.g., Objaverse) map image tokens to triplane representations in a feed-forward manner but decode novel views through memory-intensive volume rendering, which impedes training scalability and makes it hard to use high-resolution RGB and geometric supervision (depths and normals). Gaussian-based variants (LGM, GRM) render efficiently but are unsuited to explicit geometric modeling and high-quality surface extraction, and concurrent CNN-based mesh-optimization approaches (CRM, MVD2) lack architectural flexibility for varying input viewpoints and large-scale training. InstantMesh builds on the Instant3D recipe (multi-view diffusion plus sparse-view LRM) and targets training efficiency, geometric supervision, and mesh quality.
 
-**Essential differences from existing methods**:
-- Direct mesh prediction vs. triplane+MLP decoding requiring volume rendering
-- Enables use of full-resolution images and geometric supervisions (depths, normals) without patch cropping
-- Feed-forward inference (~10 seconds) vs. per-scene optimization in SDS-based methods
+## Method
 
-## 3. Knowledge, Supervision, and Assumptions
-- **Training data**: LVIS subset of Objaverse [8] - renders query and 6 target images with white backgrounds at sampled poses
-- **Pretrained models used**: Zero123++ (fine-tuned), stable diffusion base architecture
-- **Geometric supervision**: Uses depths and normals as additional supervision signals during training
-- **Learned vs provided**: The model learns the mapping from sparse multi-view images to complete 3D mesh geometry; camera poses follow predefined distribution pattern
+The framework has two components. Multi-view diffusion stage: any multi-view generator can in principle be integrated (MVDream, ImageDream, SyncDreamer, SPAD, SV3D are named); the authors select Zero123++ for its multi-view consistency and viewpoint distribution covering the upper and lower object parts, and fine-tune it for 1000 steps (learning rate 1e-5, batch size 48, linear noise schedule, v-prediction) to output consistent white-background 6-view grids, eliminating gray-background inconsistency that causes floaters and cloud-like artifacts. Reconstruction stage: a transformer-based sparse-view LRM modified from Instant3D and initialized from OpenLRM weights takes the 6 generated views (resized to 320 x 320) with AdaLN camera pose modulation in the ViT image encoder and predicts a triplane whose fields are decoded to output. Training uses about 270k filtered high-quality instances curated from 800k Objaverse objects (removing untextured, tiny, multi-object, uncaptioned, and low-quality items), with 512 x 512 images, depths, and normals rendered from 32 viewpoints per object; each training sample uses 6 random input views and 4 supervision views. Two-stage training on 8 NVIDIA H800 GPUs: Stage 1 trains the triplane NeRF representation with image, LPIPS, and mask losses (rendered 192 x 192 patches supervised by crops up to 512 x 512, learning rate 4e-4 cosine-annealed to 4e-5); Stage 2 integrates FlexiCubes to extract an explicit mesh from the triplane implicit fields — reusing the density MLP to predict SDF (with a signed-flip weight/bias initialization that reverses the density direction to the SDF convention at the iso-surface level set), plus two new MLPs predicting FlexiCubes deformations and weights — and adds depth (L1, weight 0.5), normal (1 - cosine, weight 0.2), and FlexiCubes regularization (weight 0.01) losses for efficient full-resolution mesh supervision. Because the model reconstructs objects in a canonical world space (z-axis aligned with the anti-gravity direction), training applies random rotation and scaling of input camera poses and random noise on camera parameters for robustness against the diffusion model's pose inconsistencies. Four released variants combine {NeRF, Mesh} representations with base (12 transformer layers) and large (16 layers) scales, the Mesh variants decoding a 128^3 grid and rendering at 512 x 512.
 
-## 4. Experiments and Findings
-- **Datasets**: LVIS subset of Objaverse for training (mentioned in data preparation section)
-- **Key metrics**: Not specified in provided text
-- **Quantitative results**: Not mentioned in provided text (paper states "significantly outperforms other latest image-to-3D baselines, both qualitatively and quantitatively" without specific numbers)
-- **Ablation studies**: Not mentioned in provided text
-- **Real improvements**: Claims "state-of-the-art generation quality" and generation within 10 seconds
+## Contributions
 
-## 5. Strengths and Limitations
+- A synergistic feed-forward image-to-3D pipeline combining a fine-tuned multi-view diffusion model with a sparse-view LRM that generates diverse 3D assets within about 10 seconds, with state-of-the-art quality among contemporaneous baselines.
+- Integration of the FlexiCubes differentiable iso-surface extraction module into the LRM pipeline so that optimization happens directly on the mesh representation, enabling efficient full-resolution rendering and additional geometric supervision (depths and normals) that yields smoother surfaces while avoiding memory-intensive volume rendering and thereby improving training scalability.
+- Practical training recipes and engineering details: white-background fine-tuning of Zero123++ for consistent downstream reconstruction, quality filtering of Objaverse to about 270k instances, an SDF-direction initialization trick for stable FlexiCubes training, camera augmentation and perturbation for canonical-space robustness, and the release of all code, weights (4 model variants), and a demo as an open-source foundation for 3D generative AI.
 
-### Strengths
-- Fast inference (within 10 seconds) for practical applications
-- Feed-forward architecture without per-scene optimization
-- Direct mesh output (not intermediate representations requiring post-processing)
-- Training scalability on large datasets due to efficient architecture
-- Can integrate arbitrary multi-view generation models (MVDream, ImageDream, SyncDreamer, SPAD, SV3D)
+## Experimental Setup
 
-### Limitations
-- **Implicit assumptions**: Objects are captured on white backgrounds; requires consistent multi-view generation
-- **Generalization boundaries**: Training on Objaverse LVIS subset; performance on out-of-distribution objects not discussed
-- **Computational costs**: Not mentioned in provided text
-- **Multi-view generation dependency**: Quality of final mesh depends on multi-view diffusion model's consistency
+Quantitative evaluation uses two public datasets: Google Scanned Objects (GSO, about 1K objects, 300 randomly picked for evaluation) and OmniObject3D (130 objects drawn as the first 5 from each of 28 common categories). For 2D visual quality, 21 images per object are rendered along an orbiting trajectory with uniform azimuths and elevations in {30, 0, -30} degrees, plus an additional 16-view benchmark image set for Omni3D; metrics are PSNR, SSIM, and LPIPS. For 3D geometric quality, generated meshes are aligned to ground truth, normalized into a [-1, 1]^3 cube, and compared via Chamfer Distance and F-Score at threshold 0.2 using 16K uniformly sampled surface points. Baselines are TripoSR (open-source LRM), LGM (large Gaussian model on generated multi-view images), CRM (convolutional reconstruction model producing meshes from multi-view images and canonical coordinate maps), and SV3D (image-conditioned video diffusion, evaluated only on novel view synthesis since mesh extraction is not straightforward). The paper's qualitative figures use the Mesh variant.
 
-## 6. Takeaway
-InstantMesh demonstrates that combining multi-view diffusion models with sparse-view reconstruction architectures using differentiable mesh optimization enables fast, high-quality single-image-to-3D mesh generation while maintaining training scalability—addressing key limitations of both SDS-based optimization methods (speed) and triplane-based LRMs (memory efficiency).
+## Results
+
+On GSO orbiting views, the NeRF variant achieves PSNR 23.141, SSIM 0.898, LPIPS 0.119, CD 0.177, and FS 0.882 (Mesh variant: 22.794, 0.897, 0.120, 0.180, 0.880), versus TripoSR (23.373, 0.868, 0.213, 0.217, 0.843), LGM (21.538, 0.871, 0.216, 0.345, 0.671), CRM (22.195, 0.891, 0.150, 0.252, 0.787), and SV3D (22.098, 0.861, 0.201); the authors note that TripoSR's slightly higher PSNR reflects pixel-level faithfulness while InstantMesh's much better SSIM/LPIPS indicates superior perceptual quality, and that its PSNR is lower because novel views are "dreamed" by the diffusion model with multiple plausible completions. On Omni3D orbiting views, the NeRF variant reports PSNR 22.635, SSIM 0.903, LPIPS 0.110, CD 0.199, FS 0.869, and on Omni3D benchmark views PSNR 19.752, SSIM 0.869, LPIPS 0.150, CD 0.206, FS 0.863 (Mesh variant CD 0.204, FS 0.866), leading on CD and FS across all sets and on SSIM/LPIPS on both GSO and orbiting Omni3D. The NeRF variant scores marginally higher than the Mesh variant, attributed to the limited FlexiCubes grid resolution losing detail during surface extraction, but the authors consider the drop negligible given mesh rendering's efficiency, and the Mesh variant produces smoother surfaces thanks to explicit depth/normal supervision. Qualitatively, TripoSR degrades on free-style input images and generates degraded geometry and textures on the back, LGM exhibits multi-view inconsistency distortions, and CRM struggles with smooth surfaces, while InstantMesh yields the most plausible geometry and sharper textures from high-resolution supervision.
+
+## Limitations
+
+The authors note three limitations: (i) the transformer-based triplane decoder produces 64 x 64 triplanes, whose resolution may bottleneck high-definition 3D modeling (inherited from LRM and Instant3D); (ii) generation quality is inevitably influenced by the multi-view inconsistency of the diffusion model, which they expect future multi-view diffusion architectures to alleviate; and (iii) despite FlexiCubes improving smoothness and reducing artifacts, it is less effective at modeling tiny and thin structures than the NeRF representation. Additional post-processing possibilities enabled by the mesh representation, such as SDS optimization or texture baking, are mentioned as future work.

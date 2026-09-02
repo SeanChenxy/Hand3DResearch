@@ -1,45 +1,38 @@
 # Follow My Hold: Hand-Object Interaction Reconstruction through Geometric Guidance
 
+**Authors:** Ayce Idil Aytekin, Helge Rhodin, Rishabh Dabral, Christian Theobalt  
+**Date:** 2025-08-25  
+**Identifier:** [arXiv:2508.18213](https://arxiv.org/abs/2508.18213)  
+**Zotero item:** `7T3CI5HG` ([Zotero](zotero://select/library/items/7T3CI5HG))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-A novel diffusion-based framework for reconstructing 3D geometry of hand-held objects from monocular RGB images by leveraging hand-object interaction as geometric guidance — conditioning a latent diffusion model on an inpainted object appearance and using inference-time guidance with optimization-in-the-loop design that directly generates high-quality object geometry during the diffusion process.
 
-## 1. Problem and Setting
-- 3D reconstruction of hand-held objects from monocular RGB images, with the geometric relationship between hand and object serving as a guiding signal.
-- Input: a single RGB image of a hand holding an object.
-- Output: 3D shape of the held object (neural implicit or explicit mesh).
-- Task: hand-held object reconstruction with shape completion. This method uniquely conditions the generation process on the hand-object interaction geometry itself.
+FollowMyHold reconstructs a 3D hand-held object together with its interacting hand from a single RGB image by steering a pretrained rectified-flow image-to-3D generator (Hunyuan3D-2) at inference time: rather than accepting the generative model's output or post-processing it, the method performs gradient-based guidance with an optimization-in-the-loop design that simultaneously optimizes the hand and object transformations and the velocity field, using pixel-aligned 2D cues (normal, disparity, silhouette) plus 3D intersection and proximity constraints. On OakInk it reports a Chamfer Distance of 1.80 cm^2 versus 4.62 for EasyHOI and a reconstruction rate of 87% versus 39%, setting the state of the art among generative single-image HOI methods.
 
-## 2. Core Method
-- A latent diffusion model conditioned on the inpainted object appearance, guided at inference time by geometric cues derived from the hand (spatial proximity, contact regions, relative orientation).
-- Optimization-in-the-loop design: supervises the diffusion model's velocity field while simultaneously optimizing the transformations of both the hand and the object being reconstructed.
-- The optimization is driven by multi-modal geometric cues: normal and depth alignment, silhouette consistency, and 2D keypoint reprojection.
-- Incorporates signed distance field supervision and enforces contact and non-intersection constraints to ensure physical plausibility.
-- How FM prior is injected: the diffusion model provides the generative prior for object appearance and shape; hand geometry acts as a control signal constraining generation to be physically compatible with the observed hand pose.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Foundation model: pre-trained latent diffusion model (likely fine-tuned on Objaverse renderings for 3D-aware generation).
-- Domain knowledge: hand-object proximity and contact as geometric constraints; MANO hand model for pose estimation.
-- Training data: the diffusion model is pre-trained; an object inpainting model is also used off-the-shelf.
-- Assumption: object is held with visible grasping configuration; hand pose can be reliably estimated.
+The paper addresses reconstruction of the 3D geometry of hand-held objects and their interaction with hands from monocular RGB images — a fundamentally ill-posed setting because hands occlude objects, shapes overlap, and depth and contact cues are limited. Applications named include AR/VR, embodied AI, and robotics. Prior approaches have drawbacks that motivate the design: template-based optimization requires explicit geometric priors; methods trained on 3D hand-object datasets struggle with limited object diversity; direct regression of partial point clouds cannot complete unobserved regions; and recent foundation-model pipelines such as EasyHOI and Gen3DSR, despite strong out-of-domain generalization, are brittle because each foundation model operates in its own canonical coordinate space with mismatched scale and orientation assumptions, so a single component's failure can cascade into catastrophic reconstruction failure. The core idea is to embed 2D foundation-model supervision directly into the 3D generative sampling process instead of using the generative output as a fixed starting point, which improves robustness while producing high-quality geometry during diffusion rather than through extensive post-processing.
 
-## 4. Experiments and Findings
-- Datasets: HO3D, DexYCB, and in-the-wild images.
-- Metrics: Chamfer distance, F-score, normal consistency for object shape; visual quality metrics for generated views.
-- Outperforms baseline methods that use only appearance-based diffusion guidance (e.g., pure image inpainting + 3D lifting) by leveraging the hand pose as geometric guidance.
-- Geometric guidance from the hand pose provides significant improvement in shape accuracy and physical plausibility of the reconstructed object relative to the hand.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Novel conditioning strategy: uses the interaction geometry (not just visual appearance) to guide the diffusion prior.
-- Physically more consistent with observed hand pose than appearance-only methods.
-- Single-image input, no video required.
-- Modular design (inpainting + geometric guidance + 3D lifting).
+The method has an initialization stage and an inference-time guidance stage. Initialization: LangSAM extracts hand and object masks and WiLoR's hand detector provides a crop; a diffusion-based inpainter (FLUX.1 Kontext [dev], prompted via Gemini) removes the hand and completes the object appearance; HaMeR provides an initial MANO hand mesh with 2D keypoints; MoGe-2 estimates a partial point cloud of the hand-object region plus camera parameters, from which normal, disparity, and silhouette supervision maps are rendered; and Hunyuan3D-2 (conditioned on DINOv2 features of the crop) generates a coarse HOI mesh whose SDF is decoded and meshed via FlexiCubes. Because these outputs live in different canonical spaces, a two-step ICP alignment first registers the coarse HOI mesh to the partial point cloud (yielding T_U->I) and then the hand mesh to the coarse HOI mesh (T_H->U, composed into T_H->I), bringing everything into a shared image-aligned frame. Guidance: Hunyuan3D-2's rectified flow predicts a velocity field that moves a noisy latent toward the clean target; the clean-sample estimate is recovered analytically, decoded to a mesh, rendered differentiably, and supervised. The sampling proceeds in three phases over 20 diffusion steps. Phase 1 (at step t = tau1 = 0.526) optimizes only the hand similarity transform T_h with normal, disparity, and silhouette losses, an L2 keypoint reprojection loss against HaMeR detections, and a translation regularizer, establishing a spatial anchor while treating hand geometry as fixed and reliable. Phase 2 (at t = tau2 = 0.579) optimizes the object transform T_o and applies gradient-based guidance to the velocity field with the same 2D objectives plus regularizers on translation, scale drift, and mesh noise, coarsely aligning the object before joint reasoning. Phase 3 (t in [tau2, 1]) jointly refines (T_h, T_o) and the velocity field, adding 3D constraints on the posed hand-object union: an intersection loss that penalizes voxels where both hand and object SDFs are negative, and a one-sided proximity loss that attracts hand contact-region vertices to within a margin delta_contact of the object surface (computed hand-to-object because hand geometry is more reliable). Full-pipeline hyperparameters are reported (e.g., Phase 3 weights gamma1-3 = 10 for the 2D terms, gamma4 = 1e-5 for intersection, gamma5 = 1 for proximity), with Adam updates of K inner gradient steps per diffusion step.
 
-### Limitations
-- Quality depends on accurate hand pose estimation.
-- Diffusion-based generation can still produce shapes inconsistent with actual object identity.
-- Multi-view consistency of generated images is not guaranteed.
-- Limited to hand-held objects with visible grasping configurations.
+## Contributions
 
-## 6. Takeaway
-Follow My Hold introduces an important conceptual advance: the interaction geometry itself (hand pose, contact, proximity) can serve as a conditioning signal for foundation model priors, not just a downstream constraint. This bridges the gap between purely visual priors (appearance-based diffusion) and physical interaction reasoning, suggesting a direction where FM priors are guided by task-specific geometric constraints for more physically grounded HOI reconstruction.
+- An optimization-in-the-loop inference-time guidance scheme for rectified-flow 3D generators, which steers the velocity field and simultaneously optimizes hand and object similarity transforms during sampling — generating geometry that satisfies geometric constraints during diffusion rather than post-hoc.
+- A two-step ICP protocol that registers heterogeneous foundation-model outputs (HaMeR hand mesh, MoGe-2 partial point cloud, Hunyuan3D-2 coarse HOI mesh) into a shared image-aligned frame, enabling pixel-aligned differentiable 2D supervision against MoGe-2-rendered normal, disparity, and silhouette maps.
+- A staged optimization design (hand anchor, then object alignment, then joint refinement) with complementary 3D intersection and proximity constraints that yields physically plausible grasps, validated by ablations showing each phase and loss is necessary.
+- State-of-the-art results among generative single-image HOI methods on OakInk, ARCTIC, and DexYCB, with roughly two-fold higher reconstruction rate than EasyHOI and strong in-the-wild generalization without any task-specific training.
+
+## Experimental Setup
+
+Evaluation uses OakInk (100 rigid objects), ARCTIC (11 articulated objects), and DexYCB (20 YCB objects), with 1000 randomly sampled images per dataset as test sets; the method uses only pretrained foundation models without additional training. Baselines are divided into deterministic feed-forward methods — IHOI, AlignSDF, gSDF, and HORT (whose point clouds are converted to meshes via alpha shapes for comparison) — and generative methods, where EasyHOI is the primary state-of-the-art comparison. AlignSDF, gSDF, and HORT are excluded from DexYCB evaluation because they were trained on it; video-based methods are excluded because the method is single-frame. Metrics: object Chamfer Distance on 30K point samples and F-scores at 5 mm and 10 mm (computed after aligning the reconstructed hand to ground truth via ICP and applying the same transform to the object, so these metrics capture both shape and relative-pose errors), hand-object Intersection Volume (voxel size 0.5 cm), and Reconstruction Rate, the fraction of the test set for which any output is produced; accuracy metrics are computed only over successful cases. All experiments run on an NVIDIA Tesla H100 NVL GPU in PyTorch, batch size 1, 20 diffusion inference steps with hand-only optimization at step 9 and guidance from step 10 onward, object guidance scale 5.0, and approximately 6.03 minutes per sample (about 2 minutes initialization plus about 4 minutes guidance and staged optimization).
+
+## Results
+
+On OakInk, FollowMyHold achieves F5 0.179, F10 0.322, CD 1.80 cm^2, I.V. 5.96 cm^3, and R.R. 0.87, versus EasyHOI (F5 0.109, F10 0.210, CD 4.62, I.V. 21.31, R.R. 0.39), IHOI (CD 3.97, R.R. 0.82), AlignSDF (CD 7.75), gSDF (CD 8.17), and HORT (F5 0.319, F10 0.508, CD 2.22, but I.V. 16.6); the authors note HORT achieves higher F-scores on OakInk despite worse CD because its feed-forward design rarely fails catastrophically while producing coarser geometry. On ARCTIC, the method attains F5 0.160, F10 0.288, CD 2.57, I.V. 5.08, R.R. 0.92 versus EasyHOI (CD 10.9, I.V. 18.3, R.R. 0.36) and HORT (CD 11.0, I.V. 30.8), with HORT failing more often on thin, fine-grained, or larger tools. On DexYCB, the method reports F5 0.158, F10 0.300, CD 2.04, I.V. 7.02, R.R. 0.58 versus EasyHOI (CD 6.26, I.V. 19.13, R.R. 0.30) and IHOI (CD 4.87, R.R. 0.49). Robustness stands out: reconstruction rate is 87% versus 39% for EasyHOI on OakInk, comparable to feed-forward methods. Phase ablations on 100 OakInk samples show the full method reaches CD 1.70 cm^2 and I.V. 4.03 cm^3, while removing inference-time guidance (generate first, optimize transforms after) raises CD to 3.70, removing Phase 1 raises CD to 5.67, removing Phase 2 gives 3.53, swapping the phase order gives 3.18, and starting with joint optimization gives 5.51 with I.V. 11.7. A control experiment replacing EasyHOI's InstantMesh with Hunyuan3D-2 changes its CD only from 5.23 to 5.13 cm^2, confirming the gains stem from the guidance framework rather than the choice of 3D generator. Per-loss ablations show removing the silhouette loss is most damaging (CD 4.29, R.R. 0.78, divergence with scale mismatch and penetration), removing the proximity loss raises CD to 3.43 and lets the grasp vanish, and removing the intersection loss raises I.V. to 9.33 cm^3.
+
+## Limitations
+
+The inference-time guidance trades accuracy and robustness for compute: every diffusion step involves inner-loop gradient updates with backpropagation through the latent decoder, increasing runtime. The method assumes reliable upstream segmentation and inpainting, and artifacts there propagate into reconstruction — for example, incorrect inpainting can cause the diffusion model to reconstruct the wrong object (the paper shows a case yielding two cans). Thin or fine-grained objects remain challenging because 2D and 3D supervision signals are weaker (e.g., glasses). Future work includes more robust fusion of 2D and 3D signals with learned interaction priors for uncertain regions, integrating the geometric objectives into diffusion training to eliminate the guidance loop, and extension to video with temporal consistency for stable AR/VR and telepresence reconstruction.

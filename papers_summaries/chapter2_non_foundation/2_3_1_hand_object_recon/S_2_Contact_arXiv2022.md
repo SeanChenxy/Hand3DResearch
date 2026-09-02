@@ -1,46 +1,42 @@
-# S²Contact: Graph-Based Network for 3D Hand-Object Contact Estimation with Semi-supervised Learning
+# S$$^2$$Contact: Graph-Based Network for 3D Hand-Object Contact Estimation with Semi-supervised Learning
+
+**Authors:** Tze Ho Elden Tse, Zhongqun Zhang, Kwang In Kim, Ales Leonardis, Feng Zheng, Hyung Jin Chang  
+**Date:** 2022-08-01  
+**Identifier:** [arXiv:2208.00874](https://arxiv.org/abs/2208.00874); DOI `10.1007/978-3-031-19769-7_33`  
+**Zotero item:** `IV7AJVV2` ([Zotero](zotero://select/library/items/IV7AJVV2))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-A graph-based semi-supervised framework for estimating dense 3D hand-object contact (which hand vertices touch which object regions) that leverages both fully annotated and unlabeled data through consistency regularization.
 
-## 1. Problem and Setting
-- Dense 3D contact estimation between a hand mesh and an object mesh, i.e., predicting per-vertex contact labels on both the hand and object surfaces.
-- Input: 3D hand mesh (MANO) and object mesh (CAD/template) with known relative pose. Output: per-vertex contact probability for both hand and object vertices.
-- Static 3D setting; given the meshes and their relative pose, predict where contact occurs.
-- Both hand and object; focus is on the contact interface between them.
+S2Contact tackles 3D hand-object contact estimation under the scarcity of ground-truth contact annotations, which normally require thermal cameras to record residual heat on manipulated objects. The paper contributes (1) GCN-Contact, an EdgeConv-based graph network that infers contact maps from hand-object point clouds with less than half the parameters and half the GPU memory of PointNet/DGCNN-style baselines, and (2) a semi-supervised training pipeline in which a teacher-student pair with an exponential-moving-average teacher generates pseudo contact labels on unannotated hand-object video datasets, filtered by geometric consistency (Chamfer distance and signed-distance-field penetration checks) and visual consistency (SSIM between a rendered pose and the input image), plus a contact consistency loss under stochastic transforms. Using the estimated contact map to drive a ContactOpt-style pose optimization yields state-of-the-art refinement on HO-3D (hand joint error 8.7 mm, average object ADD-0.1D 81.4 versus 69.9 for the prior semi-supervised method) and better cross-dataset generalization on DexYCB.
 
-## 2. Core Method
-- Graph-based network (GCN) operating on the hand mesh and object mesh as separate graphs with inter-graph message passing.
-- Hand mesh graph: nodes are MANO vertices with kinematic edges. Object mesh graph: nodes are object vertices with surface edges.
-- Cross-graph attention/communication: hand vertices attend to nearby object vertices (and vice versa) based on spatial proximity, enabling the network to reason about which hand-object vertex pairs are in contact.
-- Semi-supervised training: a teacher-student consistency framework. A teacher model (EMA of the student) generates pseudo-labels on unlabeled hand-object pairs. The student is trained on labeled data (supervised loss) plus a consistency loss between its predictions and the teacher's on unlabeled data under different augmentations.
-- Graph augmentation includes random rotations, scaling, and vertex dropout to encourage robust contact reasoning.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Labeled training data: hand-object pairs with dense ground-truth contact annotations (e.g., ContactPose, HO-3D with contact labels).
-- Unlabeled data: hand-object mesh pairs without contact labels (only mesh geometry and relative pose).
-- Supervision signals: binary cross-entropy for vertex-level contact classification on labeled data; consistency loss (e.g., MSE) between student and teacher predictions on unlabeled data.
-- Requires both MANO for the hand and a known object mesh/template.
-- Assumption: contact patterns are largely determined by 3D geometry and relative pose; the graph network can learn this mapping.
+Joint hand-object pose estimates from image-based models still contain enough error to produce unrealistic contact, motivating contact-map-based pose refinement and grasp generation. However, the primary contact ground truth (ContactPose, built on ContactDB) was captured with thermal cameras observing heat transfer after grasping, so annotations are restricted to constrained laboratory settings, cover only 25 household objects, and cannot scale to the diversity of manipulated objects in real life. Prior semi-supervised work on hand-object pose estimation (Liu et al.) generated pseudo-labels for hand poses only and ignored physical contact. The paper defines two problems: learning a contact map estimator C = (C_hand, C_obj) mapping hand-object point clouds to per-point contact probabilities in [0,1], and training it semi-supervised by exploiting large hand-object datasets without contact annotations. A second, architectural motivation is that PointNet-style estimators treat points independently at a local scale, while graph convolutions capture local geometric structure better but incur costly K-nearest-neighbor searches; the paper seeks a design that keeps GCN accuracy at PointNet-like cost.
 
-## 4. Experiments and Findings
-- Evaluated on ContactPose, HO-3D, and ObMan datasets.
-- Metrics: contact classification accuracy, F1 score, AUC, precision/recall of predicted contact vertices.
-- S²Contact achieves state-of-the-art contact estimation accuracy, with significant gains over fully supervised baselines when only limited labeled data is available.
-- Semi-supervised learning provides the largest gains when labeled data is scarce (< 20% labeled), demonstrating effective use of unlabeled hand-object pose data.
-- Ablation: cross-graph attention is critical for accuracy; removing it causes a large drop in contact prediction quality.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Addresses the practical problem of scarce contact annotations through semi-supervised learning.
-- Graph-based architecture naturally captures the geometric structure of hand-object contact.
-- Cross-graph attention mechanism effectively models the interplay between hand and object surfaces.
+GCN-Contact takes a MANO hand point cloud (778 vertices) and an object point cloud (2048 points randomly sampled from the object model), each augmented with per-point features (binary hand/object indicator, hand-to-object distances, surface normals). The network applies EdgeConv with the neighborhood obtained by a single K-NN search per pass, computed separately on 3D positions and on point features to build robust local regions under perturbation, and enlarges the receptive field by dilating the K-NN neighborhoods at multiple factors (an Inception-style multi-scale aggregation) before concatenating features into an MLP that predicts the contact map, trained with a class-balanced binary cross-entropy over 10 discretized contact bins. The semi-supervised pipeline has two stages. First, the network is pre-trained on ContactPose and, following ContactOpt, used to optimize hand-object poses toward the predicted contact. Second, the trained network is cloned into a student and an EMA teacher; the teacher produces pseudo contact labels and refined poses on unlabelled datasets, which are filtered by three constraints: a contact consistency loss comparing student and teacher predictions under stochastic flips (plus/minus 20%), rotations (plus/minus 180 degrees), and scalings (plus/minus 20%); a geometric constraint requiring Chamfer distance between hand and object meshes below t_dist = 0.7 and hand signed-distance penetration below t_pen = 6; and a visual constraint requiring SSIM between the input image segment and the pose-rendered hand-object image above a threshold (t_SSIM = 0.25). The student is then self-trained on the union of human-annotated data and surviving pseudo-labels, with total loss L_semi = L_sup + L_unsup + lambda_c * L_cont, and the refined poses are obtained through the differentiable contact optimization model.
 
-### Limitations
-- Requires known hand and object meshes (MANO + CAD template); not applicable to unknown objects.
-- Assumes the relative hand-object pose is given; errors in pose estimation would cascade to contact prediction.
-- The graph construction depends on spatial proximity heuristics which may miss long-range contact dependencies.
-- Semi-supervised gains depend on the quality and diversity of unlabeled data.
+## Contributions
 
-## 6. Takeaway
-S²Contact showed that dense hand-object contact estimation benefits significantly from semi-supervised learning, reducing the dependency on expensive contact annotations. Its graph-based cross-attention design provides an effective architecture for reasoning about the geometry of contact, and the semi-supervised paradigm has influenced subsequent works that aim to learn physical interaction priors from limited labeled data.
+- The first semi-supervised framework for 3D hand-object contact estimation, combining pseudo-labelling with consistency training on monocular hand-object videos, removing the reliance on thermally captured contact ground truth.
+- GCN-Contact, a graph-based contact estimator with one-time, separately computed K-NN search and dilated multi-scale neighborhoods, reported at 2.4x fewer learnable parameters and 2x less GPU memory than the PointNet-based baseline and DGCNN respectively, with faster convergence and better accuracy.
+- Confidence-based pseudo-label filtering that fuses geometric (Chamfer, SDF penetration) and visual (SSIM rendering) consistency constraints, shown by ablation to be individually necessary for stable training and high-quality pseudo-labels.
+- Demonstration that contact-map-driven pose optimization improves hand-object reconstruction and that pseudo-label training extends contact estimation to out-of-domain objects and generalizes across datasets.
+
+## Experimental Setup
+
+Training uses Adam at learning rate 1e-3 for 100 epochs on a single RTX 3090, with K = 10 neighbors and dilation factor d = 4. Datasets: ContactPose (2,306 unique grasps of 25 objects by 50 participants, over 2.9M RGB-D grasp images; the Perturbed variant adds noise to MANO parameters, giving 22,624 training and 1,416 test grasps), HO-3D v2 (78,000 frames, 10 objects, official split), and DexYCB (582,000 frames, 20 YCB objects, official split). The initial hand-object poses come from the image-based estimator of Hasson et al. retrained per dataset; ContactOpt's DeepContact is the main supervised contact-refinement baseline (it assumes ground-truth object class and pose, which S2Contact does not), DGCNN is the architectural baseline, and Liu et al.'s semi-supervised pipeline is the state-of-the-art comparison. Metrics: Procrustes-aligned hand joint and mesh error (mm), object ADD-0.1D (percentage of object vertices within 10% object diameter) per object (bottle, can, bleach) and on average, contact coverage (percentage of hand points within plus/minus 2 mm of the object surface), and intersection volume via 0.5 cm voxelization.
+
+## Results
+
+- Pose refinement from large errors: on Perturbed ContactPose, where the initial estimate has 82.947 mm mean joint error, GCN-Contact-based refinement reaches 29.442 mm joint and 30.635 mm mesh error, versus 32.988/33.147 for the baseline pipeline and 32.592/32.762 with DGCNN as the estimator.
+- mm-scale refinement: on ContactPose, S2Contact reaches 5.878 mm joint and 5.765 mm mesh error versus 8.880/8.769 for the baseline.
+- HO-3D: S2Contact improves the initial pose (11.1 mm joint, 11.0 mm mesh, ADD-0.1D average 74.5, coverage 15.3) to 8.7 mm joint and 8.9 mm mesh error with average ADD-0.1D 81.4 (bottle 79.1, can 71.8, bleach 93.3), coverage 19.2, and intersection volume 3.5; this outperforms ContactOpt (9.7/9.7 mm, coverage 75.5 with the paper's protocol, intersection 6.0) by 1 mm and 0.8 mm on joint and mesh error, and beats the semi-supervised state of the art of Liu et al. (9.9/9.5 mm, ADD 69.9) by 11.5% in average ADD-0.1D.
+- Cross-dataset generalization on DexYCB: the semi-supervised model lifts joint error from 13.0 to 11.8 mm, average ADD-0.1D from 63.8 to 70.5, coverage from 4.1 to 9.3, and reduces intersection volume from 16.0 to 10.5, versus the same model trained without semi-supervision.
+- Ablations: K = 10 saturates performance (K = 15 gains nothing); dilation d = 4 is optimal (HO-3D joint error 9.92 mm without semi-supervision); computing K-NN separately on positions and features is crucial (combining them degrades ContactPose joint error to about 8.36 mm); semi-supervision improves HO-3D joint error from 9.92 to 8.74 mm and ADD by 8.56%; removing the contact consistency loss destabilizes training (5.45% object-error drop), removing the visual SSIM constraint costs 1 mm joint error and 8.04% ADD, and removing the geometric constraints costs over 5% contact coverage.
+
+## Limitations
+
+The paper's conclusion names temporal and multi-view consistency as unexplored extensions, indicating the current framework does not exploit information over time or across cameras despite operating on video datasets. The pipeline depends on an image-based initial hand-object pose estimator, so end-to-end accuracy is bounded by that estimate, and pseudo-label quality hinges on the three fixed filtering thresholds (t_dist = 0.7, t_pen = 6, t_SSIM = 0.25), which were set empirically. The contact estimator consumes an object point cloud sampled from a known object model, inheriting the known-object assumption of the refinement line of work it builds on. The ablation shows the geometric consistency constraints contribute less to pose accuracy than the visual and contact consistency terms, and the evaluation covers 25 (ContactPose), 10 (HO-3D), and 20 (DexYCB) YCB-style objects, leaving genuinely novel object categories to qualitative examples in the supplementary material.

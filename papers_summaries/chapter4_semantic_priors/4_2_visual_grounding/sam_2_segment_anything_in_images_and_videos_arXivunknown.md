@@ -1,72 +1,47 @@
 # SAM 2: Segment Anything in Images and Videos
 
-# Summary Template
+**Authors:** Nikhila Ravi, Valentin Gabeur, Yuan-Ting Hu, Ronghang Hu, Chaitanya Ryali, Tengyu Ma, Haitham Khedr, Roman Rädle, Chloe Rolland, Laura Gustafson, Eric Mintun, Junting Pan, Kalyan Vasudev Alwala, Nicolas Carion, Chao-Yuan Wu, Ross Girshick, Piotr Dollár, Christoph Feichtenhofer  
+**Date:** 2024-08-01  
+**Identifier:** [arXiv:2408.00714](https://arxiv.org/abs/2408.00714)  
+**Zotero item:** `7SJJEKGR` ([Zotero](zotero://select/library/items/7SJJEKGR))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-SAM 2 introduces a unified foundation model for promptable visual segmentation in both images and videos, using a transformer architecture with streaming memory that enables real-time video processing and interactive refinement through user prompts.
 
-## 1. Problem and Setting
-- **Task**: Promptable Visual Segmentation (PVS) - a generalized segmentation task that works for both images and videos, where users can provide prompts (points, boxes, or masks) on any frame to define and refine object segments over time
-- **Inputs**: Video sequences or single images with user prompts (positive/negative clicks, bounding boxes, or masks) on any frame
-- **Outputs**: Spatio-temporal masks ("masklets") that track the object of interest across video frames, or single-frame masks for images
-- **Difficulty**: Video segmentation presents unique challenges including appearance changes due to motion/deformation/occlusion, lower video quality compared to images, camera motion blur, lower resolution, and the computational challenge of efficiently processing many frames while maintaining temporal consistency
+SAM 2 (Meta FAIR) extends promptable segmentation from images to video by unifying both under one task, Promptable Visual Segmentation (PVS): given points, boxes, or masks on any video frame, the model predicts a spatio-temporal mask ("masklet") that can be iteratively refined with further prompts. It is a streaming transformer with a memory attention module and memory bank that conditions each frame's features on memories of previous predictions and prompted frames, processing videos in real time (Hiera-B+ variant at 43.8 FPS and Hiera-L at 30.2 FPS on an A100). Through a three-phase model-in-the-loop data engine the authors built SA-V, the largest video segmentation dataset (50.9K videos, 642.6K masklets, 35.5M masks), and the resulting model achieves better video segmentation accuracy with 3x fewer interactions than prior approaches and is more accurate and 6x faster than SAM on images. Model, dataset, and training code are released.
 
-## 2. Core Method
-SAM 2 uses a streaming transformer architecture that processes video frames sequentially:
+## Background and Problem
 
-**Input Processing**: Frames are processed one at a time in streaming fashion. User prompts (points, boxes, masks) can be provided on any frame.
+The original Segment Anything (SAM) provided a foundation model for promptable segmentation in images, but images are static snapshots: real-world applications in AR/VR, robotics, autonomous vehicles, and video editing require temporal localization of entities whose appearance changes through motion, deformation, occlusion, and lighting changes, with lower-quality frames and the need for efficient processing of many frames. Existing video object segmentation (VOS) models and datasets fall short of a "segment anything in videos" capability — video segmentation datasets typically annotate whole objects of specific classes (people, vehicles, animals) rather than parts, and are an order of magnitude smaller than image segmentation data. The paper defines the PVS task (generalizing image promptable segmentation to video, with semi-supervised VOS as a special case of a single first-frame mask prompt), builds a unified model for it, and constructs the dataset needed to train and benchmark it.
 
-**Representation**: The model uses a transformer-based encoder-decoder architecture equipped with a streaming memory mechanism. The memory stores information about the target object and previous user interactions.
+## Method
 
-**Inference Method**: 
-- For each frame, the encoder extracts features
-- A memory attention module allows the model to attend to previous memories of the target object
-- The decoder produces segmentation masks for the current frame
-- When applied to images (single-frame videos), the memory is empty and the model behaves similarly to the original SAM
+SAM 2 is a streaming architecture generalizing SAM to video. The image encoder — an MAE-pretrained hierarchical Hiera backbone (sizes T/S/B+/L) run once per frame — provides unconditioned frame embeddings. A memory attention module conditions these features on a memory bank via stacked transformer blocks (self-attention, cross-attention to memories and object pointers, MLP), using vanilla attention compatible with efficient kernels (FlashAttention). A SAM-style prompt encoder (clicks, boxes, masks) and a lightweight mask decoder with "two-way" transformer blocks predict the frame's mask; for ambiguous prompts multiple masks are predicted, and an additional head predicts object presence to handle frames where the object is occluded or absent. Skip connections from the hierarchical encoder inject high-resolution features into decoding. The memory encoder fuses the output mask (downsampled via convolution) with the frame embedding; the memory bank keeps a FIFO queue of up to N recent unprompted frame memories (with temporal positional encodings), up to M prompted-frame memories (without temporal encodings), and a list of lightweight object-pointer vectors from decoder output tokens for high-level semantics.
 
-**Final Output**: Segmentation masks that form a complete "masklet" (spatio-temporal mask sequence) across the video
+Training is joint on images and video: 8-frame sequences are sampled, up to 2 frames receive prompts (ground-truth mask, click, or box with probabilities 0.5/0.25/0.25), and corrective clicks are simulated from model errors against the ground-truth masklet, training the model to predict masklets sequentially and interactively. The default evaluated model uses a Hiera-B+ encoder at 1024x1024 resolution, trained on SA-1B, SA-V, an internal licensed video dataset, and public VOS sets.
 
-**Key Innovation**: The streaming memory architecture is the critical innovation - it's a natural generalization of SAM to videos that enables:
-1. Efficient single-frame-at-a-time processing for real-time performance
-2. Temporal consistency through memory of previous frames and interactions
-3. Interactive correction capabilities where users can refine mistakes by providing additional prompts on any frame
-4. The model can "remember" the object context from previously observed frames to handle occlusions and re-appearances
+The data engine runs in three model-in-the-loop phases: Phase 1 annotates every frame with SAM alone (37.8 s/frame, 16K masklets over 1.4K videos); Phase 2 adds "SAM 2 Mask" for temporal propagation (7.4 s/frame, ~5.1x faster, 63.5K masklets); Phase 3 uses the fully interactive SAM 2 with memory so annotators only give occasional refinement clicks (4.5 s/frame, ~8.4x faster than Phase 1, 197.0K masklets), with mask quality verified by separate annotators and re-annotated when unsatisfactory. Automatic masklets are also generated by prompting SAM 2 with a grid of points on the first frame and filtered through verification.
 
-## 3. Knowledge, Supervision, and Assumptions
-- **Training Data**: SA-V dataset with 35.5M masks across 50.9K videos - 53× more masks than any existing video segmentation dataset
-- **Data Engine**: A model-in-the-loop annotation system where SAM 2 assists annotators interactively, making the process 8.4× faster at comparable quality
-- **Supervision**: The model learns from manual annotations corrected by annotators, covering not just whole objects but also parts and subparts with valid boundaries
-- **Pretrained Models**: Builds upon concepts from the original SAM but extends it with novel streaming memory architecture for video
-- **Assumptions**: The model assumes that objects have valid boundaries and that user prompts can be provided interactively when needed for correction
-- **Learned vs Provided**: The model learns to segment and track objects across diverse video distributions, while prompts are provided by users interactively
+## Contributions
 
-## 4. Experiments and Findings
-- **Video Segmentation Datasets**: Evaluated on established VOS benchmarks including DAVIS, YouTube-VOS, and others across 17 zero-shot video segmentation benchmarks
-- **Image Segmentation Datasets**: 37 zero-shot single-image segmentation benchmarks
-- **Key Metrics**: Segmentation accuracy (J&F scores), number of user interactions required, inference speed
-- **Important Quantitative Results**:
-  - 3× fewer user interactions than prior approaches for comparable or better accuracy
-  - 6× faster than SAM for image segmentation while being more accurate
-  - Strong performance across multiple VOS benchmarks under different evaluation settings
-  - Fairness evaluation showed minimal performance discrepancy based on perceived gender and little variance across age groups
+- The Promptable Visual Segmentation (PVS) task: a single promptable formulation covering image segmentation, interactive video object segmentation, and semi-supervised VOS, allowing prompts and corrections on any frame of a video.
+- SAM 2: a unified streaming architecture with memory attention and a memory bank (spatial memories plus object pointers) that generalizes SAM to video — with an empty memory it behaves like SAM on images — achieving real-time inference.
+- A three-phase data engine with the model in the loop, 8.4x faster than SAM-per-frame annotation at comparable (verified) quality, and the resulting SA-V dataset: 50.9K videos, 642.6K masklets, 35.5M masks — 53x more masks than any existing video segmentation dataset (15x counting manual only) — including object parts and occlusion-heavy targets (42.5% disappearance rate for manual masklets).
+- State-of-the-art zero-shot performance across 17 video segmentation and 37 single-image segmentation datasets, with better video segmentation accuracy using 3x fewer interactions and image segmentation 6x faster than SAM; model, SA-V dataset (CC BY 4.0), training code, and demo are all released.
 
-## 5. Strengths and Limitations
-### Strengths
-- Truly unifies image and video segmentation in a single model
-- Real-time streaming architecture enables practical video processing
-- Interactive refinement allows users to easily correct mistakes
-- Handles challenging cases like occlusions, small objects, and object parts
-- Massive and diverse training dataset (SA-V) with broad geographical coverage
-- Strong zero-shot generalization across 17 video and 37 image segmentation benchmarks
-- Significant efficiency improvements (6× faster than SAM, 3× fewer user interactions)
-- Open-source release with permissive licenses
+## Experimental Setup
 
-### Limitations
-- Still requires user interaction for challenging cases (though much less than prior methods)
-- Video quality issues (motion blur, lower resolution) can affect performance
-- The paper doesn't deeply address computational requirements for very long videos
-- Performance on extremely rare or novel object categories may still be limited
-- The streaming memory architecture may have limitations for very long-term temporal dependencies
+Evaluations are zero-shot. Interactive promptable video segmentation is simulated on 9 densely annotated video datasets in offline (multiple passes to pick worst-error frames) and online (single pass) settings, with N=1..8 interacted frames and 3 clicks per frame, against two strong modular baselines the authors construct: SAM+XMem++ and SAM+Cutie. Semi-supervised VOS uses first-frame-only prompts (1/3/5 clicks, bounding box, or ground-truth mask) across 17 video datasets, reported with the J&F metric (J for VOST). Image segmentation is evaluated on 37 zero-shot datasets (including the 23 used by SAM) with 1-click and 5-click mIoU, plus throughput in FPS on a single A100 with batch size 1. The semi-supervised VOS comparison covers MOSE val, DAVIS 2017 val, LVOS val, SA-V val/test, and YouTube-VOS 2019 val against methods including STCN, XMem, DeAOT variants, DEVA, and Cutie. Ablations vary training-data mixtures, data quantity, data filtering, resolution, frame count, memory size, memory channel width, memory-attention depth, and encoder size, evaluated on SA-V val, Internal-test, a MOSE dev subset, 9 zero-shot datasets, and SA-23 image mIoU.
 
-## 6. Takeaway
-SAM 2 represents a significant milestone in visual segmentation by successfully unifying image and video segmentation in a single foundation model. The key innovation is the streaming memory architecture that enables real-time, frame-by-frame processing while maintaining temporal consistency and allowing interactive refinement. Combined with the massive SA-V dataset (35.5M masks), SAM 2 achieves strong performance across diverse distributions with dramatically improved efficiency (6× faster, 3× fewer interactions). The work demonstrates that a unified model with appropriate data can effectively handle the additional complexity of video segmentation while maintaining strong image segmentation capabilities.
+## Results
+
+- Interactive video segmentation: across the 9 zero-shot datasets, SAM 2 dominates SAM+XMem++ and SAM+Cutie in both offline and online settings at every interaction count (1-8 frames), producing better accuracy with more than 3x fewer interactions.
+- Semi-supervised VOS (17 datasets, average J&F): with a ground-truth first-frame mask, SAM 2 (Hiera-B+) reaches 79.3 versus 74.1 for SAM+Cutie; with 3 clicks 75.3 versus 70.1; with 1 click 64.7 versus 56.7; with a box 74.4 versus 69.4. On MOSE val, SAM 2 (Hiera-L) scores 77.9 J&F versus 71.7 for Cutie-base+; DAVIS 2017 val 90.7; LVOS val 78.0; SA-V val/test 77.9/78.4, where prior methods plateau near 61-63, exposing the gap to a true "segment anything in videos" capability; YouTube-VOS 2019 val 89.3.
+- Image segmentation (SA task): SAM 2 trained on SA-1B attains 58.9 mIoU (1-click) on the 23 SAM benchmark datasets versus SAM's 58.1, while running at 130.1 FPS versus SAM's 21.7 FPS (6x faster, attributed to the smaller but more effective Hiera encoder); trained on the full mix, SAM 2 reaches 61.9 mIoU on SA-23, 63.3 on SA-23 images, 60.1 on SA-23 video, and 69.6 on 14 new video datasets (5-click values in parentheses rise to 83.5/83.8/83.2/85.8 respectively).
+- Speed: SAM 2 (Hiera-B+) runs at 43.8 FPS and SAM 2 (Hiera-L) at 30.2 FPS on one A100, real-time for streaming video processing.
+- Data engine: annotation time per frame drops from 37.8 s (Phase 1, SAM only) to 7.4 s (Phase 2) and 4.5 s (Phase 3), with Phase 3 achieving the highest Phase-1 Mask Alignment Score (89.1% of masks at IoU>0.75, vs 86.4% for Phase 2) and the fewest edited frames (19.04%) and clicks per clicked frame (2.68); adding each phase's data consistently improves SA-V val J&F (50.0 to 63.2) and 9-dataset zero-shot J&F (62.5 to 71.5), and mixing all data sources yields +12.1% average zero-shot improvement over VOS-only training.
+- A fairness evaluation reported in the appendix indicates minimal performance discrepancy by perceived gender and little variance across three perceived age groups; SA-V val and test contain 293 masklets/155 videos and 278 masklets/150 videos respectively, deliberately targeting fast-moving, heavily occluded, disappearing/re-appearing targets.
+
+## Limitations
+
+The paper's own limitations section reports that SAM 2 may fail to segment objects across shot changes and can lose track of or confuse objects in crowded scenes, after long occlusions, or in extended videos (mitigated by prompting additional frames to recover); it struggles to track objects with very thin or fine details, especially when fast-moving, and with nearby objects of similar appearance such as multiple identical juggling balls, for which more explicit motion modeling could help. Although it can track multiple objects simultaneously, each object is processed separately with only shared per-frame embeddings and no inter-object communication, which the authors suggest could be made more efficient with shared object-level context. The data engine still relies on human annotators for verification and correction-frame selection, which the authors propose to automate. The results are also tied to a revised checkpoint ("SAM 2.1" in the released code) rather than the initial release, and the highest accuracy variant trades speed for quality (Hiera-L runs at 30.2 FPS).

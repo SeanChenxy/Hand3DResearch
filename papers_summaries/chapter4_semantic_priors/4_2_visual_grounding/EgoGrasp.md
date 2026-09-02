@@ -1,38 +1,37 @@
-# EgoGrasp: World-Space Hand-Object Interaction Estimation from Dynamic Egocentric Videos (Cross-reference)
+# EgoGrasp: World-Space Hand-Object Interaction Estimation from Egocentric Videos
+
+**Authors:** Hongming Fu, Wenjia Wang, Xiaozhen Qiao, Rolandos Alexandros Potamias, Taku Komura, Shuo Yang, Zheng Liu, Bo Zhao  
+**Date:** 2026-01-03  
+**Identifier:** [arXiv:2601.01050](https://arxiv.org/abs/2601.01050)  
+**Zotero item:** `E8NM5G7B` ([Zotero](zotero://select/library/items/E8NM5G7B))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-This entry is a cross-reference to the detailed summary in Chapter 3 (3D Geometry Priors, section 3.4 Spatial Geometry). EgoGrasp is the first method to reconstruct world-space hand-object interactions from dynamic egocentric videos, supporting open-vocabulary objects, through a multi-stage framework combining foundation-model-based preprocessing, body-guided diffusion for hand pose estimation, and an HOI-prior-informed diffusion for hand-aware 6DoF object pose infilling.
 
-## 1. Problem and Setting
-- World-space hand-object interaction (W-HOI) reconstruction from dynamic egocentric videos, supporting open-vocabulary objects.
-- Input: dynamic egoview video showing hand-object interaction; no templates required.
-- Output: world-space hand poses and 6DoF object pose trajectories, with hand-object interaction constraints.
-- Visual grounding prior: the body-guided diffusion model grounds hand pose estimation in egocentric body priors, providing a visual-grounded signal for hand localization.
+EgoGrasp is presented as the first method to reconstruct world-space hand-object interactions (W-HOI) from egocentric videos captured by dynamic cameras, supporting open-vocabulary, template-free objects and scaling to multiple objects. It follows a perception-generation-infilling design: foundation models (Depth-Anything3, WiLoR, SAM3D, SAM2, MEMFOF) provide camera trajectories, hand poses, and an IoU-filtered 6DoF object track; a body-guided diffusion model synthesizes SMPL-X upper-body motion that constrains both hands; and an HOI-prior diffusion model infills unreliable object 6DoF segments into continuous trajectories, refined by test-time optimization with contact, penetration, and temporal losses. On H2O and HOI4D it reaches state-of-the-art W-HOI results, cutting object relative rotation error to 18.62/14.33 degrees (local coordinates) versus 21.15-36.92 for baselines, and achieving the lowest penetration depth (0.74 mm on H2O) among comparable methods.
 
-## 2. Core Method
-- Three-stage framework:
-  1. Robust preprocessing pipeline leveraging vision foundation models for initial 3D scene, hand, and object reconstruction.
-  2. Body-guided diffusion model for hand pose estimation with egocentric body priors.
-  3. HOI-prior-informed diffusion model for hand-aware 6DoF object pose infilling.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Foundation models: vision foundation models for preprocessing; body-guided and HOI-prior-informed diffusion models for hand and object.
-- Domain knowledge: egocentric body priors, hand-object interaction physical constraints.
+World-space HOI reconstruction from egocentric video is critical for embodied AI, robotics, and VR, but existing methods are insufficient in three respects. First, most hand and HOI estimators operate per-frame or in camera coordinates, which change with wearer motion; world space is argued to be essential because it (i) stabilizes interaction dynamics by filtering high-frequency camera jitter so reconstructions reflect firm grasps rather than contact sliding, (ii) resolves semantic ambiguities via static background cues (e.g., leaning toward an object versus lifting it), and (iii) grounds objects in the static environment to prevent physically invalid states such as floating above or penetrating tables. Second, HOI methods either rely on predefined CAD templates, failing on open-set categories, or use per-instance differentiable rendering that is computationally prohibitive, occlusion-sensitive, and unstable in dynamic environments. Third, egocentric priors — the structural coupling of camera, body, and hands — are underutilized. The task is formulated as: given an egocentric video, recover upper-body SMPL-X parameters (hand poses for both hands, upper-body pose, shared betas, global orientation and translation) and, per object, a canonical mesh plus a world-space SE(3) trajectory, with world-space hand estimation, object 6DoF, object mesh, temporal coherence, and ego-hand support simultaneously — a capability gap the paper summarizes in a task-comparison table against ego hand estimation, world hand estimation, camera 6DoF, and camera-space HOI.
 
-## 4. Experiments and Findings
-- Datasets: egocentric HOI benchmarks (HOT3D, Epic-Kitchens, ARCTIC).
-- Achieves state-of-the-art performance in W-HOI reconstruction, handling multiple and open-vocabulary objects.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- First W-HOI method supporting open-vocabulary objects from dynamic egocentric videos.
-- Body-guided and HOI-prior diffusion provide physically grounded pose estimation.
-- Handles occlusions and open-set categories robustly.
+EgoGrasp has three stages. (1) Egocentric preprocessing: Depth-Anything3 (DA3) infers camera intrinsics, per-frame extrinsics, and depth maps, defining the global coordinate system; WiLoR estimates MANO parameters for both hands, with metric depth computed from the focal length (z = f/s) and aligned to the DA3 depth via a global scale factor; for objects, SAM3D (with a multi-view implementation) reconstructs a canonical mesh and anchor-frame pose, MEMFOF optical flow transports projected 3D keypoints across frames to solve RANSAC-PnP for a preliminary 6DoF trajectory propagated bidirectionally, SAM2 masks and hand-occlusion-aware rasterization yield a mask-IoU reliability score per frame, and low-IoU frames are zero-padded and left to the HOI diffusion model, which infills only untrusted, actively-grasped frames. (2) Body Diffusion: a conditional DDPM generates SMPL-X upper-body pose sequences, conditioned on features encoded by a transformer from inter-frame transformations of the central pupil frame (CPF, anchored at the interocular midpoint and aligned with head orientation, following EgoLlo); the body's limited reach constrains hand movement regions. Training uses AMASS, 100STYLE, GRAB, PA-HOI, and HIMO. Test-time optimization refines SMPL-X with a pose anchor loss, a hand pose loss to WiLoR, a 2D keypoint loss on jointly visible joints, and a wrist loss constraining wrist position and orientation in CPF coordinates. (3) HOI Diffusion: a second DDPM, trained with a masked-reconstruction objective on GRAB, PA-HOI, and HIMO, infills discrete 6DoF sequences represented in wrist coordinates, conditioned on the IoU-filtered reliable 6DoFs, a coarse translation from masked-depth projection, a one-hot grasp label from hand-object distances, and the body diffusion's hand poses and joints; multi-object interaction is achieved by looping each object outside the model while sharing the body prediction. Test-time optimization then refines each object's 6DoF with an object anchor loss, a contact loss combining surface proximity of palm samples with a no-slip term penalizing hand-vertex motion in the object frame, a penetration loss enforcing a safety margin to the object surface, and a temporal loss on rotational/translational velocity and acceleration.
 
-### Limitations
-- Multi-stage pipeline is complex.
-- Diffusion-based inference is slower.
-- Requires significant compute.
+## Contributions
 
-## 6. Takeaway
-EgoGrasp demonstrates that reconstructing world-space hand-object interactions from dynamic egocentric videos requires a careful orchestration of multiple foundation model capabilities. In the context of visual grounding (chapter 4), the body-guided diffusion provides a visual-grounded prior for hand localization. See chapter 3 section 3.4 for the full technical details.
+- Identification and formalization of the world-space hand-object interaction (W-HOI) task — jointly requiring ego hand mesh, object 6DoF, object mesh, world-space output, and temporal coherence — together with an analysis of why camera-space hand estimation, world-space hand-only estimation, and template-based or differentiable-rendering HOI methods fail to cover it.
+- A template-free, multi-object-capable EgoGrasp framework combining robust foundation-model preprocessing (SAM3D mesh initialization, MEMFOF flow + PnP tracking, hand-aware mask-IoU reliability filtering) with two decoupled generative priors: a body-guided diffusion model exploiting egocentric CPF body constraints for hand estimation, and an HOI-prior diffusion model for hand-aware 6DoF pose infilling.
+- State-of-the-art W-HOI results on H2O and HOI4D with strong global trajectory consistency under long-range motion, severe occlusion, and in-the-wild conditions, validated by extensive ablations of both the hand and object optimization terms.
+
+## Experimental Setup
+
+Evaluation covers the egocentric HOI datasets H2O and HOI4D. Hand estimation is compared against Dyn-HaMR and HaWoR using W-MPJPE, WA-MPJPE, and PA-MPJPE (mm), with world-space metrics computed over 128-frame segments (W-MPJPE aligning only the first two frames, WA-MPJPE aligning the whole segment via Procrustes). W-HOI is compared against Any6D + WiLoR, GenPose2 + WiLoR, and the feed-forward HORT (with ICP-derived 6DoF from its point clouds), using Relative Rotation Error (RRE, degrees) and Relative Translation Error (RTE, mm) in local, global (world), and wrist coordinate systems, plus Chamfer Distance (cm2) and Penetration Depth (mm) in wrist coordinates; baselines use ground-truth camera extrinsics for world conversion while EgoGrasp uses DA3-predicted extrinsics. Training uses PyTorch on 2 NVIDIA H20 GPUs (learning rate 2.5e-4, AdamW, cosine annealing), sequences at 30 FPS with random 64-256 frame lengths; inference uses DDIM sampling with 200 steps and 3x temporal downsampling; test-time optimization runs 50 steps. The body diffusion is trained on AMASS, 100STYLE, GRAB, PA-HOI, and HIMO; the HOI diffusion on GRAB, PA-HOI, and HIMO.
+
+## Results
+
+For world-space hand pose on H2O, EgoGrasp achieves W-MPJPE 6.84 mm, WA-MPJPE 40.93 mm, and PA-MPJPE 18.92 mm, versus Dyn-HaMR (5.75/46.37/16.74) and HaWoR (5.77/113.39/30.75) — best WA-MPJPE and near-best elsewhere; on HOI4D it attains 8.61/192.06/47.29 mm, with the best W-MPJPE and PA-MPJPE (Dyn-HaMR: 9.83/190.68/63.12; HaWoR: 9.04/196.09/69.20), and Dyn-HaMR is observed to fail hand-side identification on some HOI4D sequences. For W-HOI on H2O, EgoGrasp reports local RRE/RTE 18.62 deg/77.68 mm, global 18.71/77.84, wrist 23.08/58.30, CD 52.56 cm2, and PD 0.74 mm, versus Any6D (33.40/85.43 local, CD 52.51, PD 3.18), GenPose2 (28.88/72.93 local — marginally better local/global RTE but far worse rotation and wrist errors), and HORT (35.09/116.42 local; best CD 22.98 as a single-frame point-cloud method but worst PD 10.46). On HOI4D, EgoGrasp reaches local RRE/RTE 14.33/124.69, global 14.17/135.80, wrist 34.87/116.66, CD 235.53, PD 0.64, dominating rotation accuracy (Any6D 36.92, GenPose2 21.15, HORT 29.04 local RRE); HORT retains the best CD (114.03) while Any6D has the lowest PD (0.46). Ablations on hand losses show the wrist loss is critical: removing it explodes WA-MPJPE to 238.20 mm (H2O) and 321.84 mm (HOI4D), and removing the 2D keypoint or hand pose losses also degrades specific metrics. Object ablations show removing the contact loss raises H2O local RTE from 77.68 to 105.67 mm and PD from 0.74 to 0.98, removing the temporal loss raises RRE to 19.12, and skipping test-time optimization entirely (raw HOI diffusion output) yields acceptable but uniformly worse results (e.g., HOI4D local RTE 142.32 versus 124.69), confirming both the diffusion infilling capacity and the necessity of optimization.
+
+## Limitations
+
+The framework is a multi-stage pipeline with substantial reliance on preprocessing; the authors state that future work will explore more streamlined feed-forward architectures for world-space human-object interaction to reduce this reliance while preserving accuracy and robustness. Multi-object interaction is handled by a decoupled sequential loop over objects rather than a joint multi-object generative model, with each object inferred independently under a shared body prediction. In isolated metrics EgoGrasp can trail specialized baselines — Chamfer Distance against the single-frame point-cloud method HORT on both datasets, and penetration depth against Any6D on HOI4D — which the authors attribute to the balancing effect of multiple constraints during test-time optimization rather than over-fitting to a single metric.

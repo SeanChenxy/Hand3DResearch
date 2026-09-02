@@ -1,44 +1,39 @@
 # HOIGPT: Learning Long-Sequence Hand-Object Interaction with Language Models
 
+**Authors:** Mingzhen Huang, Fu-Jen Chu, Bugra Tekin, Kevin J. Liang, Haoyu Ma, Weiyao Wang, Xingyu Chen, Pierre Gleize, Hongfei Xue, Siwei Lyu, Kris Kitani, Matt Feiszli, Hao Tang  
+**Date:** 2025-03-24  
+**Identifier:** [arXiv:2503.19157](https://arxiv.org/abs/2503.19157)  
+**Zotero item:** `JWKI8Z96` ([Zotero](zotero://select/library/items/JWKI8Z96))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-HOIGPT is a token-based generative method that unifies 3D hand-object interaction (HOI) perception and generation, providing the first comprehensive solution for captioning and generating high-quality 3D HOI sequences from diverse conditional signals (text, objects, partial sequences), built on a novel physically-grounded HOI tokenizer (hand-object decomposed VQ-VAE) and a motion-aware language model trained on both text and HOI tokens.
 
-## 1. Problem and Setting
-- Unified 3D HOI perception (captioning) and generation across diverse input/output modalities.
-- Input: any of (text, objects, partial HOI sequences).
-- Output: any of (text descriptions, completed HOI sequences, generated HOI from text).
-- Language reasoning prior; uses a large language model as the central reasoning engine for HOI.
+HOIGPT (CVPR 2025, FAIR Meta) is a token-based generative model that unifies 3D hand-object interaction (HOI) perception and generation in a single autoregressive language model. It discretizes joint hand-object motion with a novel hand-object decomposed VQ-VAE tokenizer (separate hand and object codebooks, trained with geometric losses for penetration, approach contact, and contact-region plausibility) and fine-tunes a Flan-T5 LLM on mixed text and HOI tokens, enabling bidirectional transformation between HOI sequences and language. One model with different prompts supports text-to-HOI generation, HOI captioning, HOI prediction, interpolation/completion, and object-motion-conditioned generation, without the post-refinement stages used by diffusion baselines and while handling long multi-action sequences. On a combined ARCTIC + GRAB benchmark, HOIGPT sets state-of-the-art results on both directions: FID 3.29 and top-3 R Precision 74.80% for text-to-HOI (vs. 5.85 and 72.34% for Text2HOI), and top-3 R Precision 48.43% for HOI-to-text (vs. 46.88% for MotionGPT), with the abstract reporting +2.01% R Precision and -2.56 FID over prior work.
 
-## 2. Core Method
-- A novel physically-grounded HOI tokenizer: the hand-object decomposed VQ-VAE, which discretizes HOI sequences into tokens that respect the physical structure of hand-object interaction.
-- A motion-aware language model trained to process and generate both text and HOI tokens, enabling bidirectional transformation between language and HOI.
-- A unified token sequence representation that allows the LLM to handle both perception (captioning) and generation tasks in a single model.
-- How language prior is injected: the LLM is the central model; the HOI tokenizer enables the LLM to process HOI sequences in a language-like manner, with text serving as the natural interface.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: HOI motion datasets (e.g., GRAB, ARCTIC) + text caption datasets.
-- Supervision: HOI sequences, text descriptions, paired HOI-text data.
-- Domain knowledge: VQ-VAE tokenization, large language model training, physical structure of HOI.
-- Assumption: HOI sequences can be tokenized in a way that respects their physical structure while being processable by LLMs.
+Hand-object interaction — how humans use one or both hands to manipulate objects — is central to human activity understanding, AR/VR, and robotics, and modeling it in 3D requires both generation and understanding capabilities. Recent text-to-HOI generators are diffusion-based (DiffH2O, Text2HOI); the paper identifies three structural shortcomings: (1) limited conditioning flexibility — text prompts are essentially the only steering signal, preventing motion completion, prediction, or blending; (2) difficulty generating coherent long sequences containing multiple actions, due to challenges in exploiting prior knowledge and enforcing temporal consistency; and (3) no ability to summarize or describe motions, restricting applicability to other tasks. LLMs offer an alternative interface — long-sequence coherence, bidirectionality, descriptive ability, and transferable world knowledge, which is attractive because HOI data collection is hard and datasets remain small. Directly porting body-motion LLM pipelines (T2M-GPT, MotionGPT) to HOI fails for a fundamental reason: human body motion models a single entity, whereas HOI involves up to three (two hands plus an object) with extremely diverse object shapes, affordances, and interaction patterns, so naive joint tokenization scales combinatorially and struggles in the enormous joint space. The problem HOIGPT addresses is thus how to discretize and language-model HOI motion so that a single LLM can both understand (caption) and generate physically plausible, temporally consistent, multi-action HOI sequences.
 
-## 4. Experiments and Findings
-- Datasets: multiple HOI benchmarks.
-- Metrics: R Precision (text generation), FID (HOI generation), and other task-specific metrics.
-- Sets new state-of-the-art on both text generation (+2.01% R Precision) and HOI generation (-2.56 FID) across multiple tasks and benchmarks.
-- The unified model handles both perception and generation effectively.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- First comprehensive unified solution for HOI perception and generation.
-- Novel physically-grounded HOI tokenizer that respects HOI structure.
-- Motion-aware LLM trained on both modalities.
-- Strong empirical results across multiple tasks.
+HOIGPT represents motion as 6-DoF object poses (global location, 6D rotation, articulation angle) plus MANO-derived hand poses (global location, 6D rotation), with object point clouds provided as input conditioning. Three components form the pipeline. (1) Hand-object decomposed VQ-VAE tokenizer: rather than a single combinatorial codebook, the codebook is factorized into one shared hand codebook (both hands mirrored, handedness encoded separately) and one object codebook, each of size 512. The encoder runs PointNet on canonical object point clouds to produce shape features co that condition two windowed motion feature extractors, yielding latents zl, zr for the hands and zo for the object; nearest-neighbor lookup in the respective codebooks yields token indices, interleaved per time window and wrapped in special HOI tokens (HOI, H(L)_1, H(R)_1, O_1, ..., HOI). The decoder reconstructs object motion via an object decoder on (reconstructed object latent + co) and decodes the interaction with a hand decoder that combines all three latents and is conditioned on the predicted object motion, so hand motion respects the object's trajectory. Training combines per-latent reconstruction and embedding losses with an MAE-style random masking of hand/object latents, plus a geometry-aware loss: a penetration loss penalizing MANO vertices inside the object, a contact grasping loss keeping hand joints within a threshold distance of the object surface during approach, and a contact region loss aligning ground-truth and reconstructed vertices near contact regions. (2) HOI language model: a 220M-parameter Flan-T5Base, trained in two stages — motion-language pre-training with span masking over mixed motion and text tokens (predicting masked spans to learn motion-language correspondences), followed by instruction tuning on a multi-task text-motion dataset with instruction-based prompts covering generation, captioning, prediction, and completion. (3) Task interfaces: at inference the same model handles text-to-HOI, HOI-to-text, HOI prediction (first 20% given, remaining 80% generated), interpolation (50% randomly masked and completed), and object-motion-conditioned generation, in which hand tokens are masked and the LLM predicts them from object tokens.
 
-### Limitations
-- Requires large-scale paired HOI-text data for training.
-- LLM inference is slower than specialized models.
-- Tokenization may lose fine-grained details.
-- The physical grounding in the tokenizer requires careful design.
+## Contributions
 
-## 6. Takeaway
-HOIGPT pioneers the "HOI as language" paradigm by tokenizing 3D hand-object interaction sequences in a physically grounded way and applying large language models to process them. This unification of perception and generation through a single LLM-based framework represents a powerful new direction for HOI research, with broad implications for embodied AI and multimodal learning.
+- The first unified model for bidirectional transformation between HOI motion and text through autoregressive language modeling, letting one model understand, generate, predict, and complete HOI motions with different prompts.
+- The first tokenizer designed to discretize HOI motions: the hand-object decomposed VQ-VAE factorizes hand and object token spaces (a shared mirrored hand codebook plus an object codebook) to tame the combinatorial joint space, addressing the lack of physical grounding in naive motion tokenization.
+- Geometry-aware tokenization: novel geometric losses (penetration, contact approach, contact region) integrated directly into tokenizer training, so physical plausibility is enforced during training rather than by post-refinement as in diffusion pipelines.
+- State-of-the-art performance on both HOI generation and understanding across multiple tasks and benchmarks, including long multi-action sequence generation, with reported improvements of +2.01% R Precision and -2.56 FID over prior methods.
+- A pretraining-plus-instruction-tuning recipe (span-masked motion-language pre-training, then multi-task instruction tuning) that transfers LLM knowledge to HOI tokens and generalizes to unseen prompts and tasks.
+
+## Experimental Setup
+
+The model is trained on a combination of ARCTIC (11 articulated objects with bimanual interactions; text descriptions manually annotated in prior work) and the hand-object subset of GRAB (58 objects), whose descriptions are generated from hand intent action labels and object names, with contact sides (left/right/both) automatically annotated by thresholding hand-vertex-to-object-surface distances. Unlike previous works, long sequences with multiple actions are not split into single-action clips; 500 unseen HOI sequences are reserved for testing and about 5.6k sequences used for training. Implementation: 512-entry hand and object codebooks, Flan-T5Base (220M), tokenizer trained for 2,000 epochs, language model fine-tuned 100 epochs at learning rate 2e-4, on 32 NVIDIA A100 GPUs; results are reported with 95% confidence intervals over 20 repeated runs. For text-to-HOI, baselines are Text2HOI (the prior diffusion state of the art) and language-model human-motion methods adapted and fine-tuned on the combined HOI data (T2MGPT, MotionGPT, TM2T). Metrics: FID on motion features, Diversity (variance of features), MultiModality, top-3 R Precision, MMDist, and interpenetration volume (IV, number of penetrating hand vertices, following Hasson et al.); captioning is evaluated with R Precision and MMDist; prediction and interpolation with ADE and FDE.
+
+## Results
+
+Text-to-HOI generation (Table 1): HOIGPT achieves FID 3.29 ± 0.54, Diversity 15.60 ± 2.18 (closest to the real-motion value 17.03), top-3 R Precision 74.80 ± 0.02%, MMDist 4.71 ± 0.21, MultiModality 4.75 ± 0.22, and IV 12.1, outperforming Text2HOI (5.85, 15.43, 72.34%, 5.24, 1.66, 12.3), T2MGPT (8.69, 12.69, 68.99%, 8.97, 4.71, 14.3), MotionGPT (8.71, 11.25, 63.67%, 6.10, 4.17, 16.3), and TM2T (9.51, 10.72, 64.80%, 6.30, 4.40, 15.3) on all metrics. HOI prediction and interpolation (Table 2, versus MotionGPT): prediction FID 4.08 vs. 8.23, ADE 4.79 vs. 5.86, FDE 6.84 vs. 8.43; interpolation FID 2.91 vs. 6.16, ADE 4.06 vs. 5.11. HOI-to-text captioning (Table 4): top-1/2/3 R Precision 26.69/42.19/48.43% and MMDist 7.55, versus MotionGPT at 24.68/40.63/46.88% and 8.83 and TM2T at 21.87/42.18/45.67% and 9.34 (real motions: 60.93/73.74/81.25%, 2.48). Tokenizer ablation (Table 3, reconstruction without the language model): the full HOI tokenizer reaches FID 0.43, Diversity 13.62, IV 8.60, versus a naive VQ-VAE at 0.87/10.56/14.23; removing the HOI-decomposed component gives 0.53/12.94/8.82 (a 23% degradation attributed to the decomposition), removing the penetration loss raises IV to 12.32, and removing the contact loss raises FID to 0.67. Object-motion-conditioned generation (Table 5) improves FID to 2.14 and R Precision to 82.71% (IV 11.2) versus unconditioned generation at 3.29/74.80/12.1, showing that conditioning on object motion yields more plausible, synchronized hand movements.
+
+## Limitations
+
+The paper's stated future direction is scaling the model to more diverse datasets, implicitly acknowledging that training data remains small (about 5.6k sequences from only two datasets, ARCTIC and GRAB). Several further constraints are evident from the reported results and setup: captioning quality still lags far behind real-motion retrieval performance (top-1 R Precision 26.69% vs. 60.93% for real data), GRAB text descriptions are auto-generated from action labels and object names rather than free-form annotations, and residual interpenetration remains (IV 12.1 versus 0.01 FID-real baseline in generation). The discrete-token formulation and the relatively small 220M-parameter Flan-T5 backbone bound motion fidelity and reasoning capacity, and quantitative evaluation of long-sequence temporal consistency is limited to FID/diversity-style metrics; the paper does not report inference latency or compare against physics simulation-based evaluation.

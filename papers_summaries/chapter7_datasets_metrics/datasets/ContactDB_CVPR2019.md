@@ -1,50 +1,35 @@
-# ContactDB (CVPR 2019)
+# ContactDB: Analyzing and Predicting Grasp Contact via Thermal Imaging
 
-> Brahmbhatt, Ham, Kemp, Hays. *ContactDB: Analyzing and Predicting Grasp Contact via Thermal Imaging.* CVPR 2019. DOI: 10.1109/CVPR.2019.00891. Zotero Key: `NIPUAPML`.
+**Authors:** Samarth Brahmbhatt, Cusuh Ham, Charles C. Kemp, James Hays  
+**Date:** 2019 (CVPR 2019)  
+**Identifier:** DOI `10.1109/CVPR.2019.00891`  
+**Zotero item:** `NIPUAPML` ([Zotero](zotero://select/library/items/NIPUAPML))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-ContactDB uses thermal imaging as a "contact sensor" to record the heat map (contact imprint on the object surface) after 3,750 grasps of 50 household objects, plus 3D object meshes. It provides 375K frames of synchronized RGB-D + thermal video, and is a pioneering dataset for "inferring contact from grasp".
 
-## 1. Dataset Purpose
-- Solves the fundamental difficulty that "existing datasets cannot directly measure hand-object contact". ContactDB uses thermal imaging as the contact proxy — after a hand grasps an object, the object surface leaves a thermal imprint, which is read by a thermal camera.
-- Tasks: (1) contact map (on object surface) prediction; (2) predicting grasp contact patterns from object shape; (3) image-to-3D / 3D-to-3D contact synthesis.
-- Anchors the "contact as physical measurement" paradigm, in contrast to ContactPose (multi-view-optimization contact).
-- 50 objects / 3,750 grasps is comparable in scale to ContactPose, but the contact ground truth comes from physical measurement (more reliable).
+ContactDB is the first large-scale dataset recording detailed hand-object contact maps for human grasps, obtained by texture-mapping thermal images onto 3D object meshes after a grasp. Fifty participants grasped fifty 3D-printed household objects with two post-grasp functional intents, yielding 3750 contact-map-textured meshes and 375K synchronized RGB-D plus thermal frames. Analysis shows grasps depend on functional intent, object size, and non-fingertip contact, and benchmark experiments predict diverse contact maps from object shape using single-view pix2pix and 3D PointNet/VoxNet models.
 
-## 2. Data Composition
-- Source: real capture. Multiple subjects grasp 50 3D-printed objects (with embedded sensors + synchronized thermal imaging) in a controlled studio.
-- Viewpoint: multi-view RGB-D + 1 thermal camera (FLIR); the subject's hand leaves before the thermal map of the object surface is collected.
-- Scale: 50 objects × multiple grasps × 3D mesh textured with contact map; 3,750 3D meshes + 375K frames of synchronized RGB-D + thermal images.
-- Object and action: 50 household objects (mug, bottle, box, kitchen items) of different sizes / shapes / functions.
-- Each object is grasped by multiple subjects, and a contact heatmap is left after each grasp.
+## Background and Motivation
 
-## 3. Annotation and Supervision
-- Contact: vertex-level contact intensity on the object surface (from thermal imaging).
-- Object: 3D mesh (high-precision 3D printing), each mesh attached with a contact texture.
-- Hand: no direct 3D hand annotation (only RGB-D video).
-- Scene: multi-view RGB-D + thermal, camera intrinsics / extrinsics.
-- No language, no robot, no MANO fitting.
+Hand-object contact is fundamental to grasping, but contact regions are usually occluded from visual-light imaging, so prior datasets recorded joint configurations with gloves or trackers, coarse grasp-type labels from videos, or single-point-per-fingertip tactile estimates. The paper argues that object-centric contact maps enable analysis of grasping preferences by intent, shape, size, and category, learning shape features for grasp prediction, and re-targeting grasps to different hand models. Thermal imaging makes contact observable: heat from the hand leaves a thermally visible imprint on the object surface after release, and the authors verified empirically that heat conduction from contact dominates the thermal measurement under their protocol.
 
-## 4. Supported Evaluation
-- Benchmark tasks: (1) object surface contact map prediction (vertex-level F-score); (2) image-to-contact prediction (image-to-image translation); (3) 3D shape-to-contact prediction (3D ConvNet).
-- Key metrics: contact F-score @ different thresholds (low / high temperature); image-to-contact IOU.
-- Provides an "unseen object" split.
-- The standard evaluation source for contact-from-shape / shape-to-contact research.
+## Dataset Construction
 
-## 5. Why It Matters
-- The first dataset to use thermal imaging to directly measure hand-object contact.
-- Contact data comes from physical measurement (rather than multi-view optimization), serving as a ground-truth verification reference for methods such as ContactPose / CP3.
-- Inspired basic research on "active area" (the area of an object that the hand tends to touch), "the relationship between functional intent and object size", etc.
-- The core citation in the "shape → contact" research of Ch3 "shape prior" and Ch4 "affordance".
-- 50 objects + 3,750 grasps is the representative "physical contact measurement" dataset of the early stage.
+Fifty household objects were 3D printed in white PLA at 15% infill (chosen for heat retention), selected from YCB plus additions such as flashlight, eyeglasses, computer mouse, Stanford bunny, and Utah teapot, and five geometric primitives (cube, cylinder, pyramid, torus, sphere) at 12, 8, and 4 cm scales. Fifty participants (mostly 20-25 years old) grasped each object in commonly encountered orientations, held it 5 seconds, and handed it to an experimenter wearing an insulating glove; participants used chemical hand warmers and avoided in-hand manipulation. A FLIR Boson 640 thermal camera rigidly mounted on a Kinect v2 RGB-D sensor recorded the object rotating on a turntable that paused at 9 equally spaced angles. Objects were grasped with two functional intents: hand-off (48 objects, 2400 textured meshes, 240K frames) and use (27 objects, 1350 meshes, 135K frames), for 3750 meshes and 375K frames in total. Processing segments the object from depth, estimates 6D pose per view with ICP plus circle interpolation, and runs color-map optimization to produce coherently textured contact maps.
 
-## 6. Limitations and Biases
-- Only 50 objects: object diversity is limited.
-- No 3D hand pose annotation: insufficient compared to the joint "contact + hand" annotation of ARCTIC, ContactPose, etc.
-- Thermal imaging measures the "location of the heat imprint left by the hand", not "real-time contact" — there is a 1–2 second delay; dynamic contact does not apply.
-- The objects need to be 3D-printed: the object set is limited to the 50 selected by the authors.
-- No articulated object, no bi-manual, no tool use, no language.
-- No robot annotation, and the direct connection to imitation learning / manipulation learning is limited.
+## Evaluation Protocol
 
-## 7. Takeaway
-ContactDB is best for demonstrating the predictive capability of "object shape → contact pattern" and the feasibility of contact as a physically measurable signal. **Not suitable** for evaluating hand pose, 6D object pose, bi-manual, articulated, dynamic contact, language-conditioned, or in-the-wild tasks. In this survey, ContactDB plays the role of "physical contact measurement benchmark" and serves as a reference for the "shape → contact" research in the "shape prior" of Ch3 and "affordance" of Ch4. It complements ContactPose: ContactPose provides "real-time contact", and ContactDB provides "physically measured contact".
+Contact prediction is evaluated on three held-out object classes (mug, pan, wine glass). The single-view task uses a modified pix2pix GAN taking 4-channel RGB-D input to predict a 2D contact map for the visible surface. The 3D task represents shape as a PointNet point cloud or a VoxNet 64-cubed voxel occupancy grid and trains with two one-to-many strategies: sMCL ensembles (k=1 and k=10) and DiverseNet with a control variable (k=10). Ground-truth contact maps are thresholded at 0.4; prediction error is the percentage mismatch after matching each ground-truth map with the closest of the k diverse predictions, discarding predictions with no contact.
+
+## Findings and Analysis
+
+Functional intent strongly shifts contact: for example, 100% of participants touched the scissors handle when using them versus 38% in hand-off, while the hammer head was touched by 38% in hand-off but 0% in use, and eyeglass temples by 64.58% in use versus 4% in hand-off. Object size changes grasp topology: small objects elicit two-or-three-fingertip grasps, large objects produce bimanual or fingertip-only grasps, and participants with smaller hands prefer bimanual grasps, with no bimanual grasps for medium and small objects. Contact area for many objects exceeds a loose upper bound on five-fingertip contact, demonstrating the importance of palm and proximal-finger contact. In prediction, 3D models beat single-view prediction, voxel grids beat point clouds, and diverse-prediction training is essential: sMCL with k=1 averages 55.37% error for hand-off and 44.48% for use, while VoxNet-sMCL k=10 falls to 11.64% and 17.27%, and VoxNet-DiverseNet reaches 8.72% on the use intent.
+
+## Contributions
+
+The paper contributes the first large-scale contact-map dataset from functional grasping with paired RGB-D-thermal data, an analysis of intent, size, and non-fingertip contact effects, and benchmark protocols and baselines for single-view and 3D diverse contact-map prediction from shape.
+
+## Limitations
+
+The method records contact only after object release rather than during the grasp, and thermal intensity depends on contact duration, pressure, and heat conduction, which the protocol keeps roughly constant. Only heat-retaining 3D-printed PLA objects are covered, participants avoid in-hand manipulation to prevent smudging, and only two functional intents are captured; the prediction baselines also leave a wide accuracy gap depending on representation and diversity strategy.

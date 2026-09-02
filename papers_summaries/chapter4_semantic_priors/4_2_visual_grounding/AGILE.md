@@ -1,42 +1,37 @@
-# AGILE: Hand-Object Interaction Reconstruction from Video via Agentic Generation (Cross-reference)
+# AGILE: Hand-Object Interaction Reconstruction from Video via Agentic Generation
+
+**Authors:** Jin-Chuan Shi, Binhong Ye, Tao Liu, Xiaoyang Liu, Yangjinhui Xu, Junzhe He, Zeju Li, Hao Chen, Chunhua Shen  
+**Date:** 2026-02-04  
+**Identifier:** [arXiv:2602.04672](https://arxiv.org/abs/2602.04672), [DOI: 10.1145/3799902.3811134](https://doi.org/10.1145/3799902.3811134) (SIGGRAPH Conference Papers 2026)  
+**Zotero item:** `6MIDPC9K` ([Zotero](zotero://select/library/items/6MIDPC9K))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-This entry is a cross-reference to the detailed summary in Chapter 3 (3D Geometry Priors, section 3.2 Shape Completion). AGILE shifts the paradigm from reconstruction to agentic generation, using a VLM-guided agentic pipeline that synthesizes a complete, watertight object mesh with high-fidelity texture, propagates pose via an anchor-and-track strategy, and applies contact-aware optimization to enforce physical plausibility.
 
-## 1. Problem and Setting
-- Dynamic 4D reconstruction of hand-object interactions from monocular videos.
-- Input: monocular RGB video of hand-object interaction, especially in-the-wild footage.
-- Output: complete textured 3D object mesh, MANO hand parameters over time, object 6D pose trajectory.
-- Visual grounding prior: the VLM provides visual-grounded planning and critique, identifying the object category and guiding the reconstruction process.
+AGILE reframes monocular hand-object interaction (HOI) reconstruction from video-based optimization into "agentic generation": a Vision-Language Model (VLM) agent selects informative keyframes, steers multi-view image synthesis, and filters hallucinated generations via rejection sampling to produce a complete, watertight, textured object mesh regardless of hand occlusion; pose is then initialized without Structure-from-Motion (SfM) by anchoring FoundationPose at a single interaction onset frame and propagating temporally through semantic (DINOv3) and contact-aware optimization. On DexYCB the method reports a Chamfer Distance of 0.52 cm2 versus 2.05 cm2 for MagicHOI and a 100% success rate where the baselines fail on 55-75% of sequences, and it delivers simulation-ready assets demonstrated via real-to-sim retargeting to a dexterous robotic hand in Isaac Gym.
 
-## 2. Core Method
-- An agentic pipeline where a VLM guides a 3D generative model to synthesize a complete, watertight object mesh.
-- An anchor-and-track strategy bypasses fragile SfM: object pose is initialized at a single interaction onset frame using a foundation model and propagated temporally.
-- A contact-aware optimization integrates semantic, geometric, and interaction stability constraints.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Foundation models: VLM for planning/critique; 3D generative model for shape/texture; foundation model for pose initialization.
-- Domain knowledge: hand model (MANO); contact physics constraints.
-- Training data: foundation models are pre-trained; no HOI-specific fine-tuning.
-- Assumption: video exhibits at least one clear interaction onset frame for anchor initialization.
+Reconstructing dynamic hand-object interactions from monocular video is motivated by dexterous manipulation data collection and building digital twins for robotics and VR, where assets must be visually coherent, geometrically explicit, watertight, and physically plausible. The authors identify two fundamental barriers in existing pipelines. First, reconstruction-based geometry (NeRF, 3D Gaussian Splatting, as in HOLD and BIGS) depends on multi-view consistency, which severe hand occlusion violates, yielding fragmented, noisy, or non-watertight meshes unsuited to physics engines. Second, and more critical, pose initialization anchored on SfM pipelines such as COLMAP is brittle in dynamic scenes with textureless objects, rapid motion, or heavy occlusion; when SfM fails to register frames the entire pipeline collapses. Recent generative approaches do not resolve this: MagicHOI uses diffusion priors with Score Distillation Sampling but produces over-smoothed meshes and still requires SfM, while single-view methods like SAM 3D suffer occlusion-induced information loss. Although 2D generative priors could synthesize missing object views, their stochastic nature introduces hallucinations inconsistent with the actual object, so an intelligent mechanism is needed to select informative frames and strictly filter generated views — a capability the paper argues is missing in end-to-end pipelines.
 
-## 4. Experiments and Findings
-- Datasets: HO3D, DexYCB, ARCTIC, in-the-wild videos.
-- AGILE outperforms baselines in global geometric accuracy while demonstrating exceptional robustness on challenging sequences.
-- The agentic refinement loop consistently improves reconstruction quality over single-pass generation.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Novel agentic paradigm leveraging VLM reasoning for iterative refinement.
-- Produces complete, textured 3D outputs usable for graphics/VR.
-- Robust to in-the-wild footage where SfM-based methods fail.
-- Validated on real-to-sim retargeting for robotics.
+AGILE processes a monocular video of a hand-object interaction (static camera for anchor detection; the core tracking itself is camera-motion agnostic) in three stages. (1) Agentic textured object generation: a VLM supervisor (Gemini 3 Pro) selects 1-4 informative keyframes maximizing viewpoint coverage; an image generation model (Gemini 2.5 Flash) synthesizes four orthogonal object views, hallucinating/completing hand-occluded regions; a VLM critic scores candidates on geometry, texture, material, feature consistency, and image quality, discarding and re-generating views below threshold through rejection sampling. Validated views are lifted to 3D by a feed-forward generator (Hunyuan3D), then automatically retopologized (Blender quad remeshing, roughly 10,000 faces) and UV-unwrapped, followed by VLM-supervised image-to-image texture refinement that recovers high-frequency detail from the video evidence. (2) SfM-free initialization of pose and scale: SAM2 provides hand/object masks, MoGe-2 supplies metric depth and camera intrinsics, and WiLoR predicts per-frame MANO parameters; the hand's metric scale is obtained by constrained ICP against depth-unprojected point clouds (rotation fixed), with per-frame translation solved by PnP against 2D keypoints. The object's global metric scale is estimated by ICP across frames; the interaction onset frame (IOF) is detected as the first frame with significant non-occluded object mask displacement, and FoundationPose initializes the object pose there using the RGB frame, metric depth, and the generated metrically scaled mesh. (3) Contact-aware bi-directional optimization: starting from the IOF and propagating toward both ends of the video, each frame alternates two steps — hand translation refinement driven solely by a joint reprojection loss against WiLoR's 2D keypoints, then object 6D pose optimization with a composite objective combining mask silhouette alignment (rendered alpha vs. SAM2 mask), a DINOv3-based semantic feature loss that maximizes similarity at projected canonical surface points under an occlusion mask, and an interaction stability loss that penalizes displacement of hand vertices mapped into the object's canonical frame, gated by SDF-based weights so that only vertices near the object surface (the effective grasp region) constrain the object. The object's anisotropic scale is jointly optimized only at the IOF and frozen afterward.
 
-### Limitations
-- Multi-agent loop introduces computational cost and latency.
-- Generation quality is bounded by the underlying 3D generative models.
-- Requires careful prompt engineering.
-- Dependency on multiple FMs increases system complexity.
+## Contributions
 
-## 6. Takeaway
-AGILE demonstrates that replacing reconstruction with agentic generation can overcome the long-standing robustness issues of neural rendering and SfM for dynamic HOI. In the context of visual grounding (chapter 4), the VLM serves as the central reasoning component that grounds the reconstruction in visual semantics. See chapter 3 section 3.2 for the full technical details.
+- The first agentic HOI pipeline that integrates VLM-guided quality assessment (keyframe selection, multi-view consistency critique, texture validation) with generative 3D models, producing high-fidelity, watertight, textured object meshes independent of video occlusions.
+- A robust anchor-and-track optimization strategy that eliminates dependence on brittle SfM by anchoring pose initialization at a single interaction onset frame and propagating pose via semantic (DINOv3) and geometric (mask, joint reprojection) alignment with SDF-gated contact stability.
+- Extensive validation across single-hand benchmarks (DexYCB, HO3D-v3), bimanual interaction (ARCTIC rigid-object subset), and in-the-wild sequences, showing state-of-the-art geometric accuracy and robustness (100% success rate where prior methods fail up to 75% of sequences), plus a real-to-sim retargeting pipeline in Isaac Gym that transfers reconstructed interactions to a dexterous robotic hand (e.g., Shadow), demonstrating simulation-ready assets.
+
+## Experimental Setup
+
+Quantitative evaluation uses DexYCB (20 diverse trajectories), HO3D-v3 (18 sequences following the HOLD protocol), ARCTIC (rigid-object subset following the HOLD protocol), and an in-the-wild collection combining sequences from prior work with self-captured footage of complex-geometry objects. Baselines are HOLD (implicit neural rendering) and MagicHOI (diffusion-prior NeRF), plus BIGS on the bimanual ARCTIC subset; baseline metrics are averaged over their successful subset only, which the authors flag as survivor bias. Metrics: root-relative hand MPJPE (mm); object Chamfer Distance in cm2 and F-scores at 5mm and 10mm thresholds (F@5, F@10); hand-relative Chamfer Distance (CDh, cm2) measuring relative hand-object spatial consistency; and Success Rate (SR), where a sequence fails on initialization breakdown (e.g., SfM collapse) or catastrophic tracking drift. HO3D sequences are processed from the identified IOF, capped at 1024 frames, subsampled with stride 5; the full pipeline runs on a single NVIDIA RTX 4090. The pipeline uses Gemini 3 Pro (VLM agent), Gemini 2.5 Flash (image generation), Hunyuan3D (3D and texture generation), SAM2, MoGe-2, WiLoR, FoundationPose, DINOv3, and PyTorch3D differentiable rendering.
+
+## Results
+
+On DexYCB, AGILE achieves MPJPE 19.06 mm, CD 0.52 cm2, F@5 83.21%, F@10 95.43%, CDh 94.60 cm2, and SR 100%, versus MagicHOI (MPJPE 21.20 mm, CD 2.05 cm2, F@5 45.67%, CDh 661.90 cm2, SR 25%) and HOLD (MPJPE 30.86 mm, CD 19.30 cm2, SR 45%), all baselines measured on their easier successful subsets; the roughly 75% CD reduction over MagicHOI and its near-collapse CDh (object drifting far from the hand) highlight the benefits of agentic generation and contact-aware optimization. On HO3D-v3, AGILE reports MPJPE 3.92 mm, CD 0.27 cm2, F@5 86.63%, F@10 97.77%, CDh 15.81 cm2, SR 100% versus MagicHOI (MPJPE 7.38 mm, CD 0.90 cm2, SR 83.3%) and HOLD (MPJPE 22.09 mm, CD 1.11 cm2). On ARCTIC rigid objects, AGILE attains MPJPE-l 25.0 mm, MPJPE-r 23.8 mm, object CD 1.12 cm2, F@5 57.6%, CD-l 21.9 cm2, CD-r 30.6 cm2, outperforming HOLD and BIGS on most metrics. Ablations on HO3D show that removing agentic multi-view generation raises CD from 0.27 to 2.85 cm2 (heuristic largest-mask keyframe selection: CD 2.04; skipping multi-view synthesis: CD 2.61), removing texture refinement raises CDh from 15.81 to 20.18, and removing the interaction stability loss spikes CDh to 54.40 with visible interpenetration; removing the mask, DINO, or joint reprojection losses each degrades accuracy. Runtime for a 200-frame (1000 raw frames, stride 5) sequence is approximately 2.1-2.2 hours total on one RTX 4090 (preprocessing 21-29 minutes, including 16-24 minutes of agentic generation; optimization ~1.75 hours), compared to ~2.4 hours for MagicHOI and ~25.1 hours for HOLD. Real-to-sim retargeting imports the reconstructed sequence into Isaac Gym and maps human hand motion to a Shadow-type dexterous robotic hand via kinematic optimization, loading the generated watertight mesh without manual cleanup and faithfully reproducing recovered contact configurations.
+
+## Limitations
+
+The framework inherits limitations of its foundation models for depth, segmentation, and multi-view generation: extreme cases such as transparent or highly reflective objects can induce scale drift or local tracking errors. The static camera assumption applies only to automatic IOF detection (mask-displacement heuristics would confuse object motion with camera ego-motion), though the paper notes the core tracking is camera-frame based and unaffected by camera motion, with the IOF step replaceable by VLM-based action recognition, contact predictors, or manual specification. The method targets rigid objects; extension to articulated and deformable categories is left as future work. The real-to-sim demonstration is kinematic visualization rather than full physics-based rollout, and closing the loop with contact dynamics and policy learning remains open. The authors also propose using VLMs as reconstructibility pre-filters and multi-anchor detectors against long-sequence drift as future directions.

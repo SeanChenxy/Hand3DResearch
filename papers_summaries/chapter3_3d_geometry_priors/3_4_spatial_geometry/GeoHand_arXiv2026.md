@@ -1,45 +1,43 @@
 # GeoHand: Unlocking Prior Geometry Knowledge for Monocular 3D Hand Reconstruction
 
+**Authors:** Weiquan Lin, Yaoqing Hu, Liangchen Dai, Xu Tang, Xingyu Chen  
+**Date:** 2026-05-17  
+**Identifier:** [arXiv:2605.17354](https://arxiv.org/abs/2605.17354)  
+**Zotero item:** `EZPFCH3P` ([Zotero](zotero://select/library/items/EZPFCH3P))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-GeoHand unlocks high-quality geometric priors from a frozen foundational monocular geometry estimator (MoGe2) and adapts them via a GeoAdapter and gated cross-modal token fusion, then refines articulation with a Keypoint-Queried Iterative Refiner (KQIR), achieving state-of-the-art hand reconstruction under severe occlusions and hand-object interactions on FreiHAND, DexYCB, and HO3Dv3.
 
-## 1. Problem and Setting
-- Monocular 3D hand reconstruction under severe self-occlusion and hand-object interactions.
-- Input: single RGB image, optionally with monocular depth as auxiliary input.
-- Output: MANO hand mesh parameters, 3D hand joints, mesh vertices.
-- Task: hand-only reconstruction; classified here under 3D geometry priors (MoGe2 provides spatial geometric priors).
+GeoHand is a monocular 3D hand reconstruction framework that keeps a pure RGB-only inference pipeline while injecting high-quality geometric priors extracted from a frozen foundational monocular geometry estimator (MoGe2). Because general-scene geometry features do not transfer directly to fine-grained hands, a map-level GeoAdapter recalibrates them before tokenization, a gated cross-modal token fusion integrates them into a ViT backbone without overwhelming appearance cues, and a Keypoint-Queried Iterative Refiner (KQIR) uses projected 3D joints as queries to correct local articulations from the geometry-aware features. GeoHand reports state-of-the-art results on FreiHAND, DexYCB, and HO3Dv3, with the largest gains on object-occluded hand poses (DexYCB MPJPE 7.4 mm versus 11.7-12.4 mm for prior methods) and, on HO3Dv3, outperforms massive-data competitors while training on roughly an order of magnitude fewer annotated images.
 
-## 2. Core Method
-- Key innovation: unlock a frozen foundational monocular geometry estimator (MoGe2) to provide spatial geometric priors, then adapt them specifically for hand reconstruction.
-- A map-level GeoAdapter recalibrates the general scene-oriented geometric features for detailed hand reconstruction.
-- A gated cross-modal token fusion strategy integrates the adapted geometric priors with intrinsic RGB appearance cues without overwhelming them.
-- A Keypoint-Queried Iterative Refiner (KQIR) uses projected joint locations to query geometry-aware image features for spatial correction, ensuring precise local articulation.
-- How FM prior is injected: MoGe2 (a foundation monocular geometry model) provides dense spatial priors, adapted to the hand domain via learned modules.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Foundation model: MoGe2 (monocular geometry estimator).
-- Domain knowledge: MANO parametric hand model; per-pixel geometric features from MoGe2.
-- Training data: FreiHAND, DexYCB, HO3Dv3 (for evaluation); pre-training uses general scene geometry datasets.
-- Assumption: MoGe2's general scene geometry transfers to hands with adapter-based domain adaptation.
+Monocular 3D hand pose and shape estimation from a single RGB image is fundamentally ill-posed: the hand is highly articulated, and a 2D projection provides minimal evidence about metric depth, global scale, and the topology of self-occluded fingers, which becomes worse under hand-object interactions. The dominant ViT-based paradigm (HaMeR, WiLoR, SimpleHand) forces the backbone to infer 3D geometry implicitly from 2D appearance cues, and the authors identify this as the core bottleneck. Multi-modal alternatives that consume sensor depth or IMU data resolve some ambiguity but require expensive paired RGB-D datasets, calibrated auxiliary sensors at inference, and intricate point-cloud or volumetric fusion; moreover, raw sensor depth on localized hand crops is noisy and full of missing values. Foundational monocular geometry estimators (Depth Anything, MoGe, MoGe2) produce dense, metric-scale geometry from a single image, and MoGe2's outputs remain noise-free and smoothly interpolated even on tight hand crops, but their priors are oriented toward general scenes, and naive pixel- or token-level injection suffers from a domain gap to fine-grained hand articulation. The paper defines its problem as bridging RGB appearance features and frozen foundation-model geometry priors for accurate MANO-based hand mesh reconstruction from a single cropped RGB image, predicting MANO pose, shape, and weak-perspective camera parameters.
 
-## 4. Experiments and Findings
-- Datasets: FreiHAND, DexYCB, HO3Dv3.
-- Metrics: PA-MPJPE, PA-MPVPE, F-score, with breakdowns under occlusion.
-- Achieves state-of-the-art performance, especially under severe occlusions and hand-object interactions.
-- The combination of global geometric disambiguation (MoGe2 + GeoAdapter) and local refinement (KQIR) provides complementary benefits.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Effective use of foundation geometry model (MoGe2) to resolve depth ambiguity in hand reconstruction.
-- Gated fusion balances geometric and appearance cues adaptively.
-- Strong results under severe occlusions and HOI scenarios.
-- Modular design with reusable FM components.
+The architecture has four components operating on a 256x192 input with a 16x12 patch grid. (1) Dual-branch feature extraction: a ViT-L patch embedding produces appearance tokens, while a frozen MoGe2 network supplies an intermediate geometry feature map from the processed image. (2) GeoAdapter: a lightweight convolutional stack (1x1 and 3x3 convolutions with GroupNorm and GELU) predicts an augmenting side feature that is concatenated channel-wise with the raw geometry map; the augmented map is pooled to the RGB patch grid, projected to the token dimension, flattened, and augmented with learnable grid-coordinate embeddings, yielding geometry tokens. (3) Gated cross-modal token fusion: for each token, the concatenated, layer-normalized RGB and geometry tokens are projected back into the appearance token space by a two-layer MLP to form a residual shift, which is added to the RGB token scaled by a learnable sigmoid gate, so that uncertain geometry (motion blur, out-of-distribution inputs) does not overwhelm appearance evidence; the remaining backbone blocks process the fused tokens into a unified geometry-aware image feature map. (4) MANO decoding with KQIR: a transformer-based MANO decoder (6 layers, 3 IEF iterations) predicts a coarse mesh; then, for T=2 refinement steps, each of the 21 joints forms a structured query from its current 3D position and 2D projection, cross-attends to the flattened geometry-aware image tokens, and an MLP predicts residual updates to pose, shape, and camera parameters, which are re-decoded by MANO. Training deliberately avoids adversarial discriminators used by HaMeR and WiLoR, relying instead on eight weighted losses: 2D reprojection (L1), root-relative 3D joint distance with 2.5x fingertip weighting, explicit bone-length constraint, root-aligned dense vertex L1, and Smooth-L1 supervision of global orientation, pose, and betas, plus an unsquared L2 shape regularization on beta; the weights are 1.0, 5.0, 1.0, 0.1, 0.1, 0.1, 0.01, and 0.05 respectively.
 
-### Limitations
-- Hand-only; no object reconstruction or interaction modeling.
-- Depends on MoGe2's quality for general scene geometry.
-- Adapter and refiner need training on hand data; not fully zero-shot.
-- The geometric prior may not generalize to unusual hand poses far from training distribution.
+## Contributions
 
-## 6. Takeaway
-GeoHand demonstrates that high-quality spatial geometric priors from a foundation monocular geometry model (MoGe2) can be unlocked for hand reconstruction through a carefully designed adapter and fusion strategy, especially valuable under severe occlusions. The work exemplifies the "geometry-as-prior" paradigm: leveraging off-the-shelf foundation models not for end-to-end prediction, but as spatial cues that complement appearance-based reasoning in the specialized hand domain.
+- A framework that unlocks prior geometry knowledge from a frozen foundational monocular geometry estimator (MoGe2) for hand reconstruction, preserving the simplicity and deployability of RGB-only inference while resolving global depth and scale ambiguity that pure appearance features cannot.
+- The map-level GeoAdapter with gated cross-modal token fusion, which recalibrates general-scene geometry features for the hand domain before tokenization and controls the injection strength per token, preventing raw geometry tokens from degrading the backbone under uncertain or out-of-domain conditions.
+- The Keypoint-Queried Iterative Refiner (KQIR), which converts global geometric disambiguation into targeted local articulation correction by using projected 3D joints as cross-attention queries into the geometry-aware feature map; it achieves better accuracy than the WiLoR refiner with less than half the parameters (1.125M versus 2.57M) at 153 FPS.
+- An adversarial-free training objective with explicit bone-length and vertex structural constraints, and state-of-the-art results on FreiHAND, DexYCB, and HO3Dv3 with notable data efficiency: the mixed-data GeoHand variant trained only on DexYCB, HO3Dv3, and FreiHAND (about 10x fewer samples than the 2.7M-image HaMeR compilation used by HaMeR, WiLoR, Hamba, and HandOS) still outperforms those models on HO3Dv3.
+
+## Experimental Setup
+
+Evaluated on FreiHAND (clean single hands, minimal clutter), DexYCB (complex hand-object interactions with severe depth ambiguity), and HO3Dv3 (massive self-occlusion and truncation from manipulation), reporting PA-MPJPE, MPJPE, PA-MPVPE, MPVPE (mm), and F-scores at 5 and 15 mm thresholds. Implementation: frozen MoGe2 neck features enhanced by a GeoAdapter with 128 side channels and depth 2; the geometry tokenizer pools to a 16x12 layout and projects to 1280-dimensional tokens; the MANO decoder uses 6 layers and 3 IEF iterations followed by a 2-step KQIR; training with AdamW for 60 epochs (base learning rate 2e-5, batch size 64) in PyTorch; at inference, bounding boxes come from the pre-trained WiLoR hand detector. Two training regimes are distinguished: the base model and a mixed-data variant (GeoHand*) trained solely on DexYCB, HO3Dv3, and FreiHAND, in contrast to competitors using a unified dataset of over 2.7 million images. Baselines include MobRecon, HandOccNet, SimpleHand, MaskHand, HandOS, HaMeR, WiLoR, and Hamba. Qualitative evaluation also covers unconstrained in-the-wild single- and multi-hand images.
+
+## Results
+
+- DexYCB: GeoHand achieves PA-MPJPE 5.0 mm, MPJPE 7.4 mm, PA-MPVPE 4.7 mm, and MPVPE 7.1 mm, versus MaskHand at 5.0/11.7/4.9/11.2 and SimpleHand at 5.5/12.4/5.5/12.1; the absolute (non-Procrustes) errors drop by more than 4 mm MPJPE, which the authors attribute to the geometry prior resolving metric depth during object grasping.
+- HO3Dv3: the mixed-data GeoHand* reaches PA-MPJPE 6.7 mm, PA-MPVPE 6.4 mm, F@5 0.697, and F@15 0.987, surpassing HandOS* (6.8/6.7/0.688/0.983) and Hamba* (6.9/6.8/0.681/0.982) despite the roughly 10x smaller training set; the non-mixed GeoHand still obtains 7.4/7.1/0.654/0.980.
+- FreiHAND: GeoHand achieves PA-MPJPE 5.1 mm and F@15 0.993, marginally trailing HandOS (5.0 mm) on PA-MPJPE, consistent with FreiHAND's clean, unoccluded single-hand composition where metric-geometry priors yield diminishing returns; GeoHand otherwise matches or beats WiLoR (5.5), MaskHand (5.5), and HaMeR (6.0) without bounding-box-specific tuning.
+- Geometry-prior ablation: adding raw MoGe2 tokens to the RGB-only baseline improves PA-MPJPE from 5.4 to 5.2 mm and PA-MPVPE from 5.9 to 5.6 mm on FreiHAND, and the GeoAdapter further improves both to 5.1 and 5.4 mm by filtering generic depth artifacts.
+- KQIR analysis: replacing the WiLoR refiner with KQIR reduces PA-MPJPE from 5.4 to 5.1 mm with 1.125M versus 2.57M parameters and 153 versus 156 FPS; without KQIR the model reaches 5.7 mm at 160 FPS, one step gives 5.4, two steps 5.1 (optimal), and three steps degrade to 5.3, attributed to overfitting ambiguous local details that distort the global kinematic chain.
+- Loss ablation: removing the bone-length loss or the vertex loss each degrades PA-MPJPE from 5.1 to 5.3 mm and PA-MPVPE from 5.4 to 5.7 mm, supporting the adversarial-free structural regularization.
+
+## Limitations
+
+The authors explicitly identify three limitations in their appendix. First, the cross-modal extraction mechanism is deliberately simple (token concatenation plus map-level GeoAdapter); more sophisticated multimodal transformer designs with cross-attention between appearance tokens and coordinate-bound geometry matrices may unlock further precision. Second, GeoHand operates in a top-down paradigm that depends on an external 2D hand detector for bounding-box cropping, so final reconstruction quality remains partially bounded by that preprocessing stage; tightly unifying detection within the same ViT pipeline is proposed as an upgrade. Third, geometry priors cannot recover radically invisible topological boundaries from a single static viewpoint; the paper suggests temporal motion context or multi-view observations as future directions for occlusion-heavy immersive reconstruction. The paper also notes on FreiHAND that the geometry prior yields diminishing returns on clean, unoccluded single-hand images, where HandOS retains a slight PA-MPJPE advantage.

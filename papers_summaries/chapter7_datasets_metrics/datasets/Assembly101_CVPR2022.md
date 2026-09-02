@@ -1,51 +1,35 @@
-# Assembly101 (CVPR 2022)
+# Assembly101: A Large-Scale Multi-View Video Dataset for Understanding Procedural Activities
 
-> Sener, Chatterjee, Shelepov, He, Singhania, Wang, Yao. *Assembly101: A Large-Scale Multi-View Video Dataset for Understanding Procedural Activities.* CVPR 2022. DOI: 10.1109/CVPR52688.2022.02042. Zotero Key: `JDZ3JI67`.
+**Authors:** Fadime Sener, Dibyadip Chatterjee, Daniel Shelepov, Kun He, Dipika Singhania, Robert Wang, Angela Yao  
+**Date:** 2022 (CVPR 2022)  
+**Identifier:** DOI `10.1109/CVPR52688.2022.02042`  
+**Zotero item:** `JDZ3JI67` ([Zotero](zotero://select/library/items/JDZ3JI67))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-Assembly101 is a large-scale "procedural activity" multi-view video dataset: 4,321 videos, 101 take-apart toys, 12 synchronized cameras (8 static + 4 egocentric), 100K+ coarse-grained / 1M+ fine-grained action segments, 18M 3D hand poses. It is a large-scale benchmark for "procedural activity + bi-manual + 3D hand".
 
-## 1. Dataset Purpose
-- Solves the dual problem of "existing video datasets lack 'procedural activities' + '3D hand pose'". Assembly101 takes "disassembling toys" as a sample of procedural activities.
-- Tasks: (1) action recognition (coarse / fine-grained); (2) action segmentation; (3) 3D hand pose estimation (partial); (4) next-action anticipation; (5) procedural understanding.
-- Anchors "procedural activities" + "egocentric multi-view" as independent sub-tasks.
-- Complements AssemblyHands: Assembly101's strength is the original multi-view video + action labels, while AssemblyHands's strength is the re-annotation of 3D hand pose.
+Assembly101 addresses the scarcity of large, non-scripted, multi-step activity benchmarks outside the kitchen domain by capturing 4321 videos (513 hours) of 53 adults assembling and disassembling 101 take-apart toy vehicles from 12 synchronized viewpoints. It is annotated with over 1M fine-grained and more than 100K coarse action segments plus 18M 3D hand poses, mistake labels, and participant skill levels. Baselines are provided for action recognition, anticipation, temporal segmentation, and a newly proposed mistake detection task, exposing large gaps on egocentric views, tail classes, unseen toys, and pose-only recognition.
 
-## 2. Data Composition
-- Source: real capture. Multiple subjects freely disassemble 101 take-apart toy vehicles in a controlled studio.
-- Viewpoint: 12 synchronized cameras (8 static + 4 egocentric headsets).
-- Scale: 4,321 videos, 100K+ coarse-grained action segments, 1M+ fine-grained action segments, 18M 3D hand poses.
-- Object and action: 101 take-apart toy vehicles; the action covers the full process of take apart and assemble, including natural errors, corrections, and action order variations.
-- No bi-manual specialized design (subjects mainly use a single hand), no articulated-object joint tracking.
+## Background and Motivation
 
-## 3. Annotation and Supervision
-- Video: 4,321 multi-view videos.
-- Annotations: coarse / fine-grained action segment, error annotation, correction annotation, 3D hand pose (2D keypoint, AssemblyHands redo 3D).
-- 3D information: 18M frames of 3D hand pose (obtained based on 2D keypoint + multi-view lifting, with medium accuracy).
-- Object: no 3D object annotation.
-- Interaction: action categories (coarse + fine), error / correction markers.
-- No language, no tactile, no robot.
+The paper positions procedural activity understanding as dominated by curated instructional or kitchen datasets with strict ordering, few recorded multi-step alternatives, or small scale. Assembly introduces free-style, goal-oriented procedures with natural variation in action ordering, mistakes, and corrections, and its simultaneous static and egocentric recordings enable cross-view transfer and 3D hand-object interaction studies that existing egocentric datasets lack. The authors also note that detecting mistakes in procedural activities had not previously been studied as a dataset task.
 
-## 4. Supported Evaluation
-- Benchmark tasks: (1) action recognition (Top-1); (2) action segmentation (F1 / edit distance); (3) next-action anticipation; (4) 3D hand pose estimation (MPJPE / PA-MPJPE).
-- Key metrics: action Top-1, segmental F1, edit distance, MPJPE.
-- Provides standard train / val / test split (by subject + toy category).
-- 5 major benchmark tasks each have their own specialized evaluation protocol.
+## Dataset Construction
 
-## 5. Why It Matters
-- The first large-scale "procedural activity + multi-view synchronization" video dataset.
-- 101 take-apart toys + 4,321 videos + 18M 3D hand poses are the largest scale in egocentric procedural activity at the time (2022).
-- The "error + correction" annotation enables the dataset to support "failure recovery" research.
-- Inspired subsequent datasets such as AssemblyHands (3D hand re-annotation) and TACO (tool use extension).
-- A video-pretraining anchor shared by multiple chapters including "language reasoning" in Ch4, "video generative prior" in Ch5, and "robot learning" in Ch6.
+Fifty-three adults (28 male, 25 female) each worked on six toys in hour-long sessions, first disassembling a completed toy and then re-assembling it, guided only by a picture of the assembled vehicle with no step instructions. A desk rig with eight RGB cameras (1920 x 1080; five overhead, three side) and four monochrome cameras (640 x 480) on a custom headset records synchronized, calibrated views. The 362 disassembly-assembly sequences span 15 vehicle categories. Fine-grained actions combine 24 verbs and 90 objects (including 5 tools) into 1380 classes with an average duration of 1.7 s; coarse actions combine 11 verbs and 61 part-attach/detach events into 202 classes averaging 16.5 s. Both hands are tracked from the four egocentric cameras with a modified MegATrack, yielding 21 world-coordinate keypoints per hand. Coarse assembly segments carry mistake/correction/correct labels (15.9% and 6.7% of the 60K assembly segments) and each participant receives a 1-5 skill rating.
 
-## 6. Limitations and Biases
-- Only 101 take-apart toys: object diversity is limited.
-- The 3D hand pose is obtained from 2D keypoints + multi-view lifting, and the accuracy is lower than that of mocap-level datasets such as ARCTIC.
-- No 6D object pose, no mesh, no contact map.
-- No language instruction (only action labels).
-- No tactile, no robot, no specialized articulated-object design.
-- Controlled studio environment, with limited generalization to in-the-wild tasks.
+## Evaluation Protocol
 
-## 7. Takeaway
-Assembly101 is best for demonstrating the capability of "procedural activity + multi-view egocentric video understanding", especially action segmentation, action anticipation, and error recovery. **Not suitable** for evaluating 3D object mesh reconstruction, 6D object pose, articulated 4D, language-conditioned, or in-the-wild tasks. In this survey, Assembly101 plays the role of "procedural activity + multi-view video flagship benchmark" and serves as a video-pretraining anchor shared by multiple chapters including Ch4, Ch5, and Ch6.
+Videos are split 60/15/25 into train/validation/test, with 25 of 101 toys shared across splits and held-out instances for zero-shot evaluation; test ground truth is withheld for online leaderboards. Recognition uses pre-trimmed clips scored by Top-1 verb/object/action accuracy (TSM for video, 2s-AGCN and MS-G3D for pose); anticipation predicts actions 1 second ahead with class-mean Top-5 recall (TempAgg); temporal segmentation assigns frame-wise labels with C2F-TCN and MS-TCN++, scored by MoF, edit distance, and F1@10/25/50; mistake detection classifies current coarse segments as correct/mistake/correction with precision and recall for full-segment and early (half-segment) prediction.
+
+## Findings and Analysis
+
+Fixed views beat egocentric views by 16.2% in action recognition Top-1 (39.2% vs 23.0% overall action accuracy), 4.9% in anticipation recall, and 6.5% MoF in segmentation, and models trained on one view type transfer poorly to the other. Head-tail imbalance is severe: recognition accuracy drops 37% from head to tail classes, and tail-class MoF is 7.2% versus 51.5% for head classes. Seen toys outperform unseen toys in all tasks, mainly on object labels. Pose-only recognition (MS-G3D with context, 28.7% action accuracy) trails fused egocentric video TSM (33.8%) on objects but exceeds it on verbs (65.7% vs 59.0%). TSM features pre-trained on EPIC-KITCHENS reach only 17.3% action accuracy versus 40.5% with in-domain pre-training. Mistake detection is hard even with oracle coarse labels (62.7% mistake recall), and TSM features reach only 46.6%, dropping further in early prediction.
+
+## Contributions
+
+The dataset itself: the largest procedural activity dataset at release, uniquely combining synchronized static and egocentric recordings, multi-granularity action labels, 3D hand poses, mistake and skill annotations; four benchmark tasks with baselines; and analyses of cross-view transfer, long-tail behavior, generalization to unseen toys, skill effects, and pose-versus-appearance recognition.
+
+## Limitations
+
+Hand poses are provided but no 6D object poses, and the paper leaves joint modeling of 3D objects and hand poses to future work. Baseline performances remain far from solving the tasks, especially on tail classes, egocentric views, and mistake early prediction, and the dataset's toy-vehicle domain may not transfer to real industrial assembly despite the procedural structure.

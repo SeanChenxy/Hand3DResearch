@@ -1,42 +1,39 @@
 # HOISDF: Constraining 3D Hand-Object Pose Estimation with Global Signed Distance Fields
 
+**Authors:** Haozhe Qi, Chen Zhao, Mathieu Salzmann, Alexander Mathis  
+**Date:** 2024-02-26  
+**Identifier:** [arXiv:2402.17062](https://arxiv.org/abs/2402.17062)  
+**Zotero item:** `EWD93K6W` ([Zotero](zotero://select/library/items/EWD93K6W))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-Jointly estimates hand and object 3D poses from a single image by constraining predictions via a global SDF that enforces physical non-penetration between hand and object meshes.
 
-## 1. Problem and Setting
-- Joint 3D pose estimation of hand and manipulated object from a single RGB image.
-- Input: single RGB image; output: MANO hand parameters + 6D object pose (for known object templates) + contact constraints.
-- Object template is known (not template-free). Focus is on pose estimation quality rather than shape reconstruction.
+HOISDF uses jointly learned hand and object signed distance fields not as reconstruction endpoints but as global, implicit intermediate representations that constrain 3D hand-object pose estimation from monocular images. The SDFs equip the visual encoder with 3D shape information, encode hand-object mutual constraints, and guide pose regression through field-informed query-point sampling, SDF-based feature augmentation, and cross-field hand-object interaction encoding. On DexYCB, HOISDF reaches a mean joint error of 10.1 mm and an object center error of 18.4 mm, and on HO3Dv2 a mean joint error of 23.6 mm, outperforming direct-lifting and coarse-to-fine competitors on nearly all hand and object metrics; an ablation replacing the SDF with 3D vertex intermediates raises MJE to 12.7 mm, confirming the value of the implicit global field.
 
-## 2. Core Method
-- A feed-forward network predicts initial hand (MANO) and object (6D pose, assuming known CAD model) parameters from the RGB image.
-- Global SDF constraint: during inference-time optimization, the predicted hand and object meshes are refined by minimizing an SDF-based interpenetration loss. For each vertex on the hand mesh, the SDF value w.r.t. the object mesh (and vice versa) is computed; positive values inside the object are penalized.
-- The global SDF approach is more physically meaningful than sparse contact-point constraints used in prior work, as it prevents penetration across the entire mesh surface.
-- Can be applied as a refinement step on top of any base pose estimator.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: HO3D, ObMan, DexYCB for the base pose estimator.
-- Supervision: 3D hand keypoints, 6D object pose, MANO parameters for training the base network; SDF constraint is self-supervised at test time.
-- Uses MANO for hand.
-- CAD models required at test time (known object templates).
-- Assumes object 3D model is known in advance; object is rigid.
+Joint estimation of hand and object 3D poses from a single monocular view is difficult because the hand and object occlude each other heavily during interaction, and existing methods degrade under severe occlusion. The authors classify prior approaches into direct-lifting methods, which map filtered 2D image features straight to 3D pose, and coarse-to-fine methods, which refine an initial prediction of hand joints or vertices; both embed only explicit or purely 2D shape information that is confined to the immediate surroundings of an intermediate estimate, so a poor initial prediction cannot be corrected with global cues. Earlier SDF-based hand-object works (Grasping Field, AlignSDF, gSDF, What's in your hands) treat the SDF as the output used to reconstruct meshes. The problem HOISDF poses is whether an SDF learned over the complete reconstruction volume, jointly for hand and object, can serve as a global implicit shape prior that makes pose estimation itself more robust — a role reversal from reconstruction to constraint.
 
-## 4. Experiments and Findings
-- Datasets: HO3D, DexYCB.
-- Metrics: MPJPE, PA-MPJPE (hand); ADD, ADD-S (object pose); penetration depth.
-- The SDF constraint significantly reduces hand-object interpenetration while maintaining or improving pose accuracy. Outperforms contact-point-based methods on both hand and object metrics.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Dense, physically-grounded constraint that prevents penetration across the entire mesh.
-- Plug-and-play — can be applied on top of any hand-object pose estimator.
-- Self-supervised refinement (no extra training data needed).
+HOISDF has two end-to-end-trained components. The global signed distance field learning module uses a ResNet-50 U-Net encoder-decoder, trained with auxiliary 2D predictions (heatmap and hand/object segmentation masks). For a 3D query point, hierarchical pixel-aligned image features from the decoder levels are concatenated with a Fourier positional encoding of the point and passed to two 3-layer MLP decoders that regress the signed distances to the hand and object surfaces in the original camera space — deliberately without the canonical-space rotations used by AlignSDF and gSDF, so the field captures global plausibility (shape, location, global rotation) rather than fine detail. The fields are supervised with smooth-L1 loss against precomputed ground-truth distances.
 
-### Limitations
-- Requires known object CAD models (not template-free).
-- Inference-time optimization adds latency (~seconds per frame).
-- Cannot correct grossly incorrect initial pose estimates.
-- Only prevents penetration; does not enforce proper contact.
+The field-guided pose regression module converts the implicit field into pose predictions via four mechanisms. Field-informed point sampling voxelizes the volume at inference (64^3 bins), filters points by hand/object bounding boxes, queries both SDFs, and keeps the points with the smallest absolute distances (600 hand points, 200 object points); during training, points are instead sampled near the ground-truth surfaces (within 4 cm) for speed, with the inference-style sampling mixed in late in training. Field-based feature augmentation converts the predicted signed distance to a volume density via a learnable sigmoid-based transform (in the spirit of StyleSDF) and multiplies it with the image feature, yielding point features that carry the field's global shape information. Cross-field hand-object interaction augments each hand query point with its object signed distance and each object point with its hand signed distance, so points near the contact region carry the strongest interaction cues. Finally, point-wise attention — six multi-head self-attention layers with cross-attention over the cross-target features — enhances the hand and object point features, which then regress poses: hand pose queries cross-attend to the enhanced hand features to produce 16 MANO joint-angle predictions plus 10 shape parameters, supported by dense point-to-joint offset regression; the rigid object pose is obtained by regressing rotation and translation vectors from all object point features and averaging them at inference.
 
-## 6. Takeaway
-HOISDF showed that global SDF-based constraints provide a principled and effective way to enforce physical plausibility in hand-object pose estimation. The idea of using implicit shape representations as a collision constraint has broader applicability beyond just hand-object interaction.
+## Contributions
+
+- Reformulating the SDF in hand-object understanding as an intermediate global constraint for pose estimation rather than a reconstruction target, with hand and object fields learned jointly so their mutual constraints are encoded implicitly.
+- A field-guided pose regression module that makes the implicit field actionable: field-informed point sampling that concentrates query points near the surfaces, SDF-derived volume-density feature augmentation, cross-field hand-object interaction features, and point-wise attention over field-guided query points.
+- State-of-the-art joint hand-object pose estimation on DexYCB and HO3Dv2, with systematic ablations comparing the SDF intermediate against 2D keypoint, 2D segmentation, and 3D vertex representations.
+
+## Experimental Setup
+
+Evaluation uses DexYCB (582K images of interactions with YCB objects) in two protocols — DexYCB Full (all frames with left-hand flipping, used by feature-fusion methods) and the contact-filtered right-hand S0 split used by coarse-to-fine methods — and HO3Dv2 (77K images, official test server), the latter additionally co-trained with synthetic hand-object renderings (marked *). Hand metrics are MJE, Procrustes-aligned MJE, mean mesh error, vertex AUC, and F-scores; object metrics are object center error, mean corner error, average closest point distance (ADD-S), and object mesh error on HO3Dv2, all in mm. The model uses a ResNet-50 U-Net backbone, 256-dimensional point features, Adam with batch size 32, learning rate 1e-4 decayed by 0.7 every 5 epochs, about 40 epochs of training, 1,000 sampled points for field learning, and 600/200 field-guided hand/object query points at inference.
+
+## Results
+
+On DexYCB Full, HOISDF achieves MJE 10.1 mm, PAMJE 5.13 mm, OCE 27.6 mm, MCE 35.8 mm, and ADD-S 18.6 mm, improving over the previous best harmonious-feature-learning method (MJE 12.6, OCE 42.7, ADD-S 33.8) and beating hand-only specialists that do not model objects. On the DexYCB contact split, HOISDF again leads with MJE 10.1 mm, PAMJE 5.31 mm, OCE 18.4 mm, MCE 27.4 mm, ADD-S 13.3 mm, versus 12.7/6.86/27.3/32.6/15.9 for dense mutual attention and 11.9/5.81/39.8/45.7/31.9 for harmonious features, and clearly outperforming the SDF-as-output methods AlignSDF (MJE 19.0) and gSDF (14.4). On hand mesh metrics for DexYCB Full it reaches MME 9.9 mm, VAUC 80.5, F@5 60.1, and F@15 94.9, above all hand-mesh baselines. On HO3Dv2, HOISDF attains MJE 23.6 mm, STMJE 22.8 mm, PAMJE 9.6 mm, OME 48.5 mm, ADD-S 17.8 mm, and with synthetic data MJE 19.0 mm, STMJE 18.3 mm, OME 35.5 mm, ADD-S 14.4 mm, leading on almost all metrics (Lin et al. retains a slight PAMJE edge of 8.9 mm but performs worse elsewhere). The representation ablation shows SDF intermediates decisively beating 2D keypoints (MJE 14.9), 2D segmentation (14.1), and 3D vertices (12.7), and the sampled-point analysis shows field-guided sampling places query points closer to the ground-truth finger joints than mesh-vertex sampling (e.g., 7.95 mm versus 10.4 mm at fingertips). Removing SDF augmentation, cross-feature enhancement, or field-guided sampling (random sampling gives MJE 25.8 mm) each degrades results, validating each module.
+
+## Limitations
+
+The paper does not include an explicit limitations section. The method requires 3D ground-truth hand and object meshes during training to supervise the SDFs and to enable the surface-near sampling strategy, and its inference involves voxelizing the volume and sorting by predicted distances, which adds steps relative to direct regression. Evaluation is confined to tabletop YCB-object benchmarks (DexYCB, HO3Dv2) with single, known object instances per scene, and the SDF intermediate is oriented toward global pose plausibility rather than detailed shape recovery, so the approach addresses pose estimation rather than full texture-accurate object reconstruction.

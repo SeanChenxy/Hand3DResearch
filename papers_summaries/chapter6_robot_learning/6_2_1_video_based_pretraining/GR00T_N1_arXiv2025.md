@@ -1,46 +1,32 @@
 # GR00T N1: An Open Foundation Model for Generalist Humanoid Robots
 
+**Authors:** NVIDIA GR00T N1 team (Johan Bjorck, Fernando Castañeda, Nikita Cherniadev, Xingye Da, Runyu Ding, Linxi "Jim" Fan, Yu Fang, Dieter Fox, et al.; authors listed alphabetically; project leads Linxi "Jim" Fan and Yuke Zhu)  
+**Date:** 2025-03-27  
+**Identifier:** [arXiv:2503.14734](https://arxiv.org/abs/2503.14734); DOI `10.48550/arXiv.2503.14734`  
+**Zotero item:** `YYA6XZNK` ([Zotero](zotero://select/library/items/YYA6XZNK))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-GR00T N1 is NVIDIA's open foundation model for generalist humanoid robots, trained on massive and diverse data sources including human HOI videos to enable versatile manipulation and locomotion skills, integrating a vision-language backbone with a humanoid action head for continuous control.
+GR00T N1 is an open Vision-Language-Action foundation model for humanoid robots with a dual-system architecture: a vision-language module (System 2) interprets the environment from vision and language, while a diffusion transformer module (System 1) generates fluid motor actions in real time; both are jointly trained end-to-end. It is trained on a heterogeneous mixture of real robot trajectories, human videos, and synthetic data, outperforming state-of-the-art imitation-learning baselines on standard simulation benchmarks across embodiments, and is deployed on the Fourier GR-1 humanoid for language-conditioned bimanual manipulation with high data efficiency.
 
-## 1. Problem and Setting
-- General-purpose humanoid robots require versatile bodies and intelligent minds; existing models are limited by narrow training data and task specialization.
-- Input: human HOI videos, teleoperated robot demonstrations, simulation data, and RGB observations.
-- Output: full-body humanoid control: arm manipulation, dexterous hand control, and locomotion.
-- Video-based pretraining prior: human HOI videos provide visual priors for manipulation that transfer to humanoid robots.
+## Background and Problem
+Generalist autonomy in the human world requires a robot foundation model trained on massive, diverse data so robots can reason about novel situations and rapidly learn new tasks. The paper targets an open, generalist humanoid model covering reasoning, robust real-world behavior, and data-efficient skill acquisition, released with checkpoints, simulation environments, and datasets for reproducibility.
 
-## 2. Core Method
-- Two-stage architecture: (1) a vision-language backbone pretrained on diverse visual and textual data; (2) an action head trained to output continuous joint-space control commands.
-- Pretraining incorporates human HOI videos through visual representation learning and video prediction objectives.
-- Fine-tuning uses a mixture of real robot teleoperation data and simulation rollouts across many tasks.
-- The model outputs full-body humanoid control: arm manipulation, dexterous hand control, and locomotion.
-- How FM prior is injected: the vision-language backbone is pretrained on diverse data including human HOI videos; the action head is fine-tuned for humanoid control.
+## Method
+The dual-system design couples a slower vision-language reasoning module with a fast diffusion transformer action generator, trained end-to-end. Training mixes real robot trajectories, human videos, and synthetically generated datasets. An implementation finding reported by the paper: using middle-layer instead of final-layer LLM embeddings yields both faster inference and higher downstream policy success rate.
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: human HOI videos (cooking, assembly, household tasks); teleoperated robot demonstrations; simulation data.
-- Supervision: video prediction (for backbone), action prediction (for head), full-body motion.
-- Foundation models: vision-language foundation model (likely from large-scale pretraining).
-- Domain knowledge: humanoid robotics, dexterous manipulation, locomotion, transfer from human to robot.
-- Assumption: human HOI videos provide useful priors for humanoid manipulation.
+## Contributions
+- An open VLA foundation model for humanoids with a dual-system (reasoning + real-time action) architecture trained end-to-end.
+- A heterogeneous training recipe combining real robot trajectories, human videos, and synthetic data.
+- Cross-embodiment simulation results exceeding state-of-the-art imitation-learning baselines, plus real deployment on the Fourier GR-1 with high data efficiency.
 
-## 4. Experiments and Findings
-- Datasets: human HOI videos; teleoperated robot data; simulation data.
-- Metrics: task success rate, locomotion stability, manipulation dexterity.
-- Demonstrates emergent multi-task capability on a wide range of humanoid manipulation tasks.
-- Human video pretraining significantly improves manipulation dexterity.
+## Experimental Setup
+Simulation evaluation spans three benchmarks chosen to mirror real settings: RoboCasa Kitchen (24 tasks) and two further open-source multitask suites across robot embodiments, plus a newly developed tabletop suite matching the real-robot tasks. Real-world evaluation uses the Fourier GR-1 humanoid on tabletop bimanual manipulation, reporting average success over 10 trials per task (with a placement-count protocol for the Pack Machinery task under a 30-second limit). Full data-mixture statistics are not reproduced from the available evidence.
 
-## 5. Strengths and Limitations
-### Strengths
-- Open foundation model democratizes humanoid robot research.
-- Massive data scale enables true multi-task generalization.
-- Integrates manipulation and locomotion in a unified framework.
-- Leverages human HOI video for dexterity transfer.
+## Results
+- GR00T N1 outperforms state-of-the-art imitation-learning baselines on the standard simulation benchmarks across multiple embodiments.
+- On the real Fourier GR-1 humanoid, the model achieves strong performance with high data efficiency on language-conditioned bimanual tabletop manipulation.
+- Middle-layer LLM embeddings improve both inference speed and downstream policy success rate relative to final-layer embeddings.
 
-### Limitations
-- Requires substantial compute for pretraining and fine-tuning.
-- Humanoid embodiment assumption limits applicability to other robot forms.
-- Real-world deployment gap: sim-to-real transfer challenges remain.
-- May not generalize to truly novel humanoid morphologies.
-
-## 6. Takeaway
-GR00T N1 demonstrates that large-scale pretraining incorporating human HOI videos can produce a single foundation model capable of diverse humanoid manipulation and locomotion, paving the way for generalist physical AI. The work exemplifies the "video-based pretraining" paradigm applied to humanoid robotics.
+## Limitations
+The model depends on large heterogeneous data collection pipelines spanning real, video, and synthetic sources, which the paper does not fully cost-characterize in the available evidence. Simulation benchmarks dominate the quantitative comparisons; real-robot evaluation is centered on the GR-1 humanoid tabletop setting. Per-benchmark numerical tables are not reproduced from the available evidence.

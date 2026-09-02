@@ -1,50 +1,35 @@
-# AssemblyHands (CVPR 2023)
+# AssemblyHands: Towards Egocentric Activity Understanding via 3D Hand Pose Estimation
 
-> Ohkawa, He, Sener, Hodan, Tran, Keskin. *AssemblyHands: Towards Egocentric Activity Understanding via 3D Hand Pose Estimation.* CVPR 2023. DOI: 10.1109/CVPR52729.2023.01249. Zotero Key: `MBPGMKXZ`.
+**Authors:** Takehiko Ohkawa, Kun He, Fadime Sener, Tomas Hodan, Luan Tran, Cem Keskin  
+**Date:** 2023 (CVPR 2023)  
+**Identifier:** DOI `10.1109/CVPR52729.2023.01249`  
+**Zotero item:** `MBPGMKXZ` ([Zotero](zotero://select/library/items/MBPGMKXZ))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-AssemblyHands re-annotates 3.0M images (490K of which are first-person) of egocentric 3D hand poses from the Assembly101 videos, focused on egocentric hand-pose estimation under long-horizon, bi-manual, and complex actions (disassembling toys). It is a large-scale benchmark for egocentric 3D hand pose + action recognition.
 
-## 1. Dataset Purpose
-- Solves the bottleneck of "small scale and simple actions (mostly pick-and-place)" of existing first-person 3D hand-pose datasets.
-- Tasks: (1) egocentric 3D hand pose estimation (single RGB); (2) egocentric action classification (based on hand pose).
-- Emphasizes "long-horizon, complex, bi-manual" actions (disassembling toy vehicles, frequently switching hand responsibilities).
-- Provides multi-view synchronization (8 external static + 4 egocentric headsets) as a strong supervision source.
+AssemblyHands is a large-scale benchmark of 3D hand pose annotations for egocentric images with challenging hand-object interactions, built on top of Assembly101. Because the original Assembly101 hand poses (from an egocentric tracker) average 27.55 mm error, the authors build a multi-view exocentric annotation network with iterative refinement that reaches 4.20 mm, an 85% error reduction, and scale it to 3.0M annotated images including 490K egocentric ones. A single-view egocentric pose baseline (SVEgoNet) and a verb-classification evaluation show that more accurate hand poses directly improve egocentric action recognition.
 
-## 2. Data Composition
-- Source: based on Assembly101 (4,321 videos, 101 take-apart toys) re-annotated. The original Assembly101 only provides 2D keypoints, while AssemblyHands redo 3D.
-- Viewpoint: 4 egocentric (head-mounted) + 8 external static cameras synchronized.
-- Scale: 3.0M annotated images (of which 490K are egocentric) — the largest egocentric 3D hand pose dataset at the time.
-- Action coverage: the full process of disassembling take-apart toys (vehicle models) — pressing buttons, pressing, tearing, pushing, pulling, rotating, connecting.
-- Bi-manual interaction is dense; no bi-manual articulated-object manipulation (the toys themselves have no active joints).
-- No contact map, no 6D object pose, no object mesh.
+## Background and Motivation
 
-## 3. Annotation and Supervision
-- Hand: 3D 21 joints (based on multi-view + iterative training-refinement, mean keypoint error 4.20 mm, 85% lower than the original Assembly101 annotation).
-- Object: no 3D object annotation.
-- Interaction: action categories come from the hierarchical action labels of Assembly101.
-- Scene: multi-view RGB, camera intrinsics / extrinsics.
-- No language instruction, no tactile, no robot.
+Assembly101 showed that 3D hand poses predict procedural actions better than video features, but its egocentric-tracker annotations are inaccurate under hand-object occlusion and narrow stereo baselines, leaving open how pose quality affects action recognition. Most hand pose datasets target static exocentric cameras; egocentric benchmarks like FPHA use magnetic sensors with few subjects. AssemblyHands therefore combines synchronized egocentric and exocentric images from Assembly101 with high-quality automatic multi-view annotation to create the largest egocentric 3D hand pose benchmark and to evaluate poses through downstream action classification.
 
-## 4. Supported Evaluation
-- Benchmark tasks: (1) egocentric 3D hand pose estimation (MPJPE / PA-MPJPE); (2) action classification (based on predicted hand pose).
-- Key metrics: MPJPE, PA-MPJPE, action Top-1 / Top-5.
-- Provides train / val / test split (based on subject + video split).
-- The paper shows that "better hand pose → better action classification", proving that 3D hand pose is a key intermediate representation for action understanding.
+## Dataset Construction
 
-## 5. Why It Matters
-- The largest egocentric 3D hand pose dataset at the time (2023), 6× the 490K frames of H2O.
-- Argues that "3D hand pose is a strong intermediate representation for action recognition" — an empirical basis for "semantic prior" in Ch4 and "motion prior" in Ch5.
-- Provides a replicable pipeline for re-annotating 3D hand pose from 2D video at scale, influencing subsequent large-scale 3D hand-pose annotations such as Ego4D-Hand and HoloAssist-Hand.
-- The application on long-horizon assembly / disassembly tasks inspires Ch6 research on "long-horizon robot tasks from egocentric video".
+Images are sampled from Assembly101's rig of 8 static RGB and 4 headset monochrome cameras. Manual annotation covers 62 video sequences sampled at 1 Hz: multi-view 2D keypoints are labeled and triangulated into 21 world-space joints per hand, producing 22K frames (19.2K train / 3.0K eval) from 14 subjects. These train MVExoNet, a volumetric multi-view network (EfficientNet encoders, learnable feature triangulation, V2V-PoseNet, soft-argmax) that is run with iterative refinement rounds to re-crop hands and re-center the volume. Applied to a 30 Hz subset, the automatic pipeline labels 2.81M frames (468K egocentric) from 20 disjoint subjects — 21 times more labels than manual effort. In total, AssemblyHands (M+A) provides 3.0M images and 34 subjects; the paper notes it surpasses InterHand2.6M in total annotated images and offers eight times H2O's subjects.
 
-## 6. Limitations and Biases
-- A single set of objects (101 take-apart toys): cross-object generalization is limited.
-- No 6D object pose, no mesh, no contact map: a joint hand-object reconstruction benchmark cannot be performed.
-- No articulated object, tool use, or cooking actions.
-- Annotation is hand-only, with no hand-object contact ground truth.
-- The training set is dominated by bi-manual, with fewer single-hand frames, so the usability for single-hand-only tasks is weak.
-- Still "semi-scripted" actions of subjects executing take-apart toys, with less naturalness than in-the-wild egocentric video.
+## Evaluation Protocol
 
-## 7. Takeaway
-AssemblyHands is best for demonstrating "large-scale egocentric 3D hand pose estimation" and the transfer effect of "3D hand pose fed into action classification". **Not suitable** for evaluating hand-object 3D mesh reconstruction, 6D object pose, bi-manual contact, or language-conditioned tasks. In this survey, AssemblyHands plays the role of "egocentric 3D hand pose large-scale benchmark" and serves as a hard anchor for evaluating "semantic prior" in Ch4 and "motion prior" in Ch5 on action recognition.
+Annotation quality is measured by MPJPE (mm) and PCK-AUC against the manually annotated test set, and for generalization on the Desktop Activities subset of the Aria Pilot Dataset with 12 exocentric cameras and novel YCB objects. For pose estimation, a single egocentric image input requires predicting 21 wrist-relative 3D joints; the SVEgoNet baseline uses a ResNet-50 with 2.5D heatmaps and a hand-identity classification branch (left/right/both). The novel downstream task is verb classification: MS-G3D consumes 42-keypoint sequences (both hands) and classifies six movement-heavy verbs (pick up, position, screw, put down, remove, unscrew), comparing poses from SVEgoNet, the original UmeTrack tracker, and the automatic annotations as an upper bound.
+
+## Findings and Analysis
+
+The annotation network cuts error from 27.55 mm (egocentric-only, the original Assembly101 labels) and 7.97 mm (2D + triangulation) to 4.20 mm after three refinement rounds; on Desktop Activities it degrades gracefully to 13.38 mm while triangulation collapses to 49.21 mm. SVEgoNet trained on combined manual and automatic annotations reaches 21.92 mm MPJPE, 33% lower than UmeTrack (32.91 mm). On verb classification, SVEgoNet poses yield 54.7% average accuracy versus 50.3% for UmeTrack poses and 60.0% for upper-bound annotations — 91.1% relative performance versus 83.8% — directly supporting the claim that annotation quality drives recognition; per-verb gains reach 13.1% for "position" while "remove" drops 1.8%.
+
+## Contributions
+
+The paper contributes the AssemblyHands benchmark (3.0M images, 490K egocentric, 34 subjects), an automatic multi-view annotation pipeline with 85% error reduction over prior egocentric annotation, a strong single-view egocentric pose baseline, and a pose-based verb classification protocol that quantifies how pose quality translates into action recognition.
+
+## Limitations
+
+The benchmark annotates hands only: object cues such as object pose are absent, and the authors state that annotating the many small assembly parts is a bigger challenge. Coverage of the 30 Hz automatic annotations is a subset of Assembly101, and the authors plan to extend annotation to the full dataset at higher sampling rates and to add object-level annotations such as bounding boxes.

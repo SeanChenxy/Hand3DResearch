@@ -1,45 +1,33 @@
 # GR-2: A Generative Video-Language-Action Model with Web-Scale Knowledge for Robot Manipulation
 
+**Authors:** Chi-Lam Cheang, Guangzeng Chen, Ya Jing, Tao Kong, Hang Li, Yifeng Li, Yuxiao Liu, Hongtao Wu, Jiafeng Xu, Yichu Yang, Hanbo Zhang, Minzhao Zhu (ByteDance Research; alphabetical order)  
+**Date:** 2024-10-08  
+**Identifier:** [arXiv:2410.06158](https://arxiv.org/abs/2410.06158); DOI `10.48550/arXiv.2410.06158`  
+**Zotero item:** `2IJFQ6CJ` ([Zotero](zotero://select/library/items/2IJFQ6CJ))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-GR-2 is a generative video-language-action model that leverages web-scale knowledge for robot manipulation, pre-trained on a large corpus of internet videos (especially human HOI videos) to learn generalizable manipulation knowledge, then fine-tuned on a small amount of robot data to produce a powerful VLA model for robot manipulation.
+GR-2 is a generalist video-language-action (VLA) robot agent pre-trained on 38 million Internet video clips (over 50 billion tokens) to absorb world dynamics, then fine-tuned on robot trajectories for both video generation and action prediction. In real-robot multi-task evaluation it reports a 97.7% average success rate across more than 100 tasks, and it generalizes to novel backgrounds, environments, objects, and tasks. The model also scales positively with size. Together with GR-1, it establishes web-scale video pre-training as a practical foundation for versatile manipulation.
 
-## 1. Problem and Setting
-- Robot manipulation policies require large amounts of robot data, but such data is scarce and expensive to collect.
-- Input: internet video (especially human HOI) + small amount of robot trajectory data.
-- Output: a video-language-action model for robot manipulation that generates video predictions and actions.
-- Video-based pretraining prior: internet videos (especially human HOI) provide web-scale knowledge for manipulation.
+## Background and Problem
+A generalist manipulation agent must acquire many skills and adapt to new tasks and disturbances, but robot-collected data alone is too small to support such breadth. The paper defines the task as language-conditioned multi-task visual manipulation from camera observations, with pre-training on Internet video to inject broad, web-scale knowledge of how the world and hands behave before any robot-specific training.
 
-## 2. Core Method
-- A video-language-action model that generates video predictions and actions.
-- Pretrained on a large corpus of internet videos, including extensive human HOI demonstrations, to learn generalizable manipulation knowledge.
-- Fine-tuned on a small amount of robot trajectory data to specialize for the target robot.
-- The model generates future video frames and robot actions conditioned on the input observation and language instruction.
-- How FM prior is injected: web-scale video pretraining provides the foundational manipulation knowledge; the model learns to generate actions as a natural extension of video prediction.
+## Method
+GR-2 first pre-trains on a large Internet video corpus to model generic scene and hand-object dynamics. It is then fine-tuned on robot trajectories with two coupled objectives: video prediction of the manipulated scene and autoregressive action prediction, so that the model grounds language and observations in executable control. The default model has 230M parameters, of which 95M are trainable, and the paper reports controlled model-scaling experiments.
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: large-scale internet video corpus (including human HOI); small robot trajectory dataset for fine-tuning.
-- Supervision: video prediction loss (pretraining), action prediction loss (fine-tuning).
-- Foundation model: web-scale video-language pretraining.
-- Domain knowledge: human-object interaction, video generation, VLA modeling.
-- Assumption: internet video manipulation knowledge transfers to robot manipulation.
+## Contributions
+- Web-scale video pre-training (38M clips, 50B+ tokens) as the foundation stage of a manipulation generalist.
+- A fine-tuning scheme that jointly learns video generation and action prediction on robot data.
+- Demonstration of state-of-the-art multi-task success, out-of-distribution generalization, and favorable model scaling.
 
-## 4. Experiments and Findings
-- Datasets: internet video corpus; robot manipulation benchmarks.
-- Metrics: video generation quality, robot task success rate, generalization to novel objects.
-- The web-scale pretraining significantly improves manipulation performance.
-- Generalizes to novel objects and tasks.
+## Experimental Setup
+Large-scale real-robot experiments cover two settings: multi-task learning over more than 100 tasks spanning 8 skill types (picking, placing, uncapping, capping, opening, closing, pressing, pouring), evaluated under Simple and progressively harder out-of-distribution settings (novel backgrounds, environments, objects, and tasks), and end-to-end bin picking in an industrial-style cluttered setting with a single text prompt. A CALVIN benchmark comparison against state-of-the-art methods, including GR-1, is also reported. Baseline definitions beyond the named settings are not fully reproduced from the available evidence.
 
-## 5. Strengths and Limitations
-### Strengths
-- Leverages web-scale data for robot learning.
-- Generative formulation enables both video and action prediction.
-- Strong generalization to novel tasks.
+## Results
+- Multi-task real-robot evaluation: an average success rate of 97.7% across 105 tasks in the Simple setting.
+- GR-2 reports improved success rates over GR-1 across the evaluated generalization settings (novel backgrounds, environments, objects, and tasks).
+- End-to-end bin picking and the CALVIN comparison are reported as supporting evidence for generality; the full per-setting success tables are not reproduced from the available evidence.
+- Model-scaling experiments report consistent gains with size, supporting continued growth.
 
-### Limitations
-- Requires large-scale video data for pretraining.
-- May have sim-to-real gap.
-- Quality of internet data affects pretraining.
-- Computational cost of large-scale pretraining.
-
-## 6. Takeaway
-GR-2 demonstrates that generative video-language-action pretraining on web-scale internet videos enables effective robot manipulation with limited robot data. The work exemplifies the "video-based pretraining" paradigm where internet video serves as a scalable source of manipulation knowledge.
+## Limitations
+The reported evaluation is real-robot-centric and proprietary-data-heavy, so independent reproduction depends on the released resources rather than the paper alone. Out-of-distribution gains, while consistent, are summarized at a level that does not expose per-task failure cases in the available evidence. The pre-training corpus is Internet video, so skills absent from that distribution still must come from fine-tuning; the paper does not quantify this boundary.

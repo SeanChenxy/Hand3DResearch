@@ -1,46 +1,38 @@
 # Hamba: Single-view 3D Hand Reconstruction with Graph-guided Bi-Scanning Mamba
 
+**Authors:** Haoye Dong, Aviral Chharia, Wenbo Gou, Francisco Vicente Carrasco, Fernando De la Torre  
+**Date:** 2024-07-12  
+**Identifier:** [arXiv:2407.09646](https://arxiv.org/abs/2407.09646)  
+**Zotero item:** `XQDFPSQR` ([Zotero](zotero://select/library/items/XQDFPSQR))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-Introduces the Mamba state-space model architecture to 3D hand reconstruction, using a graph-guided bi-directional scanning mechanism that efficiently processes hand mesh topology while achieving linear computational complexity.
 
-## 1. Problem and Setting
-- 3D hand mesh reconstruction from a single RGB image.
-- Input: single RGB image (hand crop). Output: MANO hand mesh (3D vertices, joints, pose, shape).
-- Static image setting; hand-only reconstruction.
-- The primary contribution is architectural: adapting the Mamba SSM (State Space Model) to the hand mesh domain.
+This NeurIPS 2024 paper addresses single-view 3D hand mesh reconstruction, where articulated motion, self-occlusion, and interaction with objects or other hands challenge attention-based state-of-the-art methods that model spatial relations between joints inefficiently over large token sets. Hamba bridges graph learning and state space modeling: it reformulates Mamba's scanning into a Graph-guided Bidirectional Scan (GBS) that operates on a few effective tokens sampled at predicted 2D joint locations, and its Graph-guided State Space (GSS) block combines graph convolutions over the hand skeleton with Mamba SS2D blocks to capture both structured joint relations and joint spatial sequences, using 88.5% fewer tokens than attention-based methods (22 versus 192). A fusion module then integrates the state-space tokens with global features before regressing MANO parameters. Hamba significantly outperforms existing state of the art on FreiHAND (PA-MPVPE 5.3 mm and F@15mm 0.992 with test-time augmentation, versus 5.7 mm for HaMeR), HO3Dv2, and HO3Dv3 (PA-MPJPE 6.9 mm versus 8.7 mm for AMVUR), holds Rank 1 on the HO3Dv2 and HO3Dv3 competition leaderboards at acceptance time, and shows markedly better in-the-wild robustness on the HInt benchmark.
 
-## 2. Core Method
-- Hamba replaces the conventional Transformer or GCN decoder with a Mamba-based architecture.
-- Graph-guided Bi-Scanning Mamba: the MANO hand mesh vertices are arranged as a 1D sequence (via graph traversal), and a bi-directional Mamba block processes this sequence. The scanning order is guided by the mesh topology (e.g., kinematic tree traversal, breadth-first search from the wrist), ensuring that neighboring vertices in the mesh are close in the sequence.
-- Bi-directional scanning means the Mamba processes the vertex sequence both forward and backward, capturing dependencies in both directions.
-- The Mamba architecture provides linear computational complexity in sequence length (vs. quadratic for Transformers), making it more efficient for processing dense mesh vertices.
-- The image features from a CNN or ViT backbone are projected to initial MANO parameters, which are then refined by the Mamba decoder through iterative vertex sequence processing.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Trained on standard hand mesh datasets (FreiHAND, HO-3D, DexYCB) with MANO annotations.
-- Supervision: 3D joint positions, MANO pose (θ) and shape (β), 3D vertex coordinates.
-- Uses MANO as the hand model.
-- The graph-guided scanning order is based on the known MANO mesh topology.
-- Fully supervised training; the novelty is efficiency and representation quality.
+Reconstructing the 3D hand mesh from a single RGB image, without body context or camera parameters, underpins robotics, animation, human-computer interaction, and AR/VR. Recent state-of-the-art approaches are transformer-based: METRO learns vertex-vertex and vertex-joint relations via self-attention, MeshGraphormer adds graph convolutions to transformers, and HaMeR scales a ViT-based model trained on large datasets. The paper identifies two weaknesses of this line: attention computes correlations among all image tokens, introducing unnecessary background correlations and failing to efficiently model the joint spatial sequence — the spatial relationships between joints — which yields inaccurate meshes under occlusion, truncation, and hand-hand or hand-object interaction; and Mamba-style state space models, despite their global receptive field and linear complexity, scan sequences unidirectionally and are poor at capturing fine-grained local "semantics" between hand joints, so directly applying Mamba to 3D hand reconstruction also produces inaccurate meshes. The problem is formulated as learning a mapping from the image to MANO parameters (48-dimensional pose, 10-dimensional shape, 3-dimensional camera) whose MANO layer generates the 778-vertex mesh, with the requirement of robust in-the-wild generalization beyond the controlled indoor environments in which roughly 95% of existing training data was collected.
 
-## 4. Experiments and Findings
-- Evaluated on FreiHAND, HO-3D, and DexYCB datasets.
-- Metrics: PA-MPJPE, PA-MPVPE, F-scores, inference time, parameter count.
-- Hamba achieves competitive or better accuracy than Transformer-based methods, with lower computational cost and fewer parameters.
-- The graph-guided scanning order is critical: random scanning degrades performance significantly, confirming the importance of topology-aware sequence construction.
-- Mamba-based processing is 2-3x faster than comparable Transformer decoders for the same mesh resolution.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- First application of Mamba/SSM architecture to hand mesh reconstruction, demonstrating the viability of linear-complexity alternatives to Transformers.
-- Graph-guided scanning effectively transfers mesh topology priors to the 1D sequence domain.
-- Better speed-accuracy trade-off than prior Transformer-based methods.
+Hamba is an encoder-decoder model. A ViT-H backbone (630M parameters, initialized from the HaMeR checkpoint and kept unfrozen) tokenizes the 256x192 input into 16x12x1280 tokens, downsampled to 512 channels by convolution. A Joints Regressor (JR) — four VSSM/SS2D blocks followed by an MLP with mean pooling — regresses initial MANO parameters, whose 21 3D joints are projected to 2D with a predefined 5000 mm focal length; a Token Sampler (implemented with bilinear grid sampling) then extracts 21 joint tokens at the predicted 2D joint locations, preventing the decoder from being distracted by background features early in training. The core GSS block operates on these sampled tokens plus a global mean token (22 tokens total, versus 192 for attention methods, an 88.5% reduction): within each block, a Semantic GCN (graph convolution with BatchNorm and ReLU) propagates features along the hand skeleton adjacency in MANO joint order with a learnable weighting matrix and softmax normalization, encoding how one joint influences another; the GCN output is concatenated with the global mean token, passed through the SS2D selective-scan block that performs bidirectional scanning over the joint spatial sequence, and combined through residual connections, LayerNorm, and a feed-forward network. Four GSS blocks are stacked. Finally, a fusion module concatenates the GSS tokens, the sampled tokens, the 2D joint features, and the global mean feature, and an MLP regresses the final MANO pose, shape, and camera parameters. Training follows HaMeR's loss design: L1 losses on 2D and 3D joints, L2 losses on pose and shape, and adversarial losses from discriminators on the MANO parameters and individual joint angles, with weights 0.05, 0.01, 0.001, 0.0005, and 0.0005 respectively.
 
-### Limitations
-- Hand-only; no object reconstruction or hand-object interactions.
-- Relies on MANO topology for scan order; may not generalize to other mesh structures without redesign.
-- Mamba is a relatively new architecture; training stability and best practices are less established than for Transformers.
-- Performance ceiling may still be below the best heavy Transformer models on very large datasets.
+## Contributions
 
-## 6. Takeaway
-Hamba brought the Mamba state-space model to 3D hand reconstruction, demonstrating that the linear-complexity SSM architecture can match or exceed Transformer performance when paired with topology-aware sequence construction. This paper is part of a broader trend exploring post-Transformer architectures for 3D vision, and showed that graph-guided scanning is a key design choice for adapting sequence models to mesh-structured data.
+- The first combination of graph learning and state space modeling for robust 3D hand mesh reconstruction, reformulating Mamba's unidirectional scanning into a graph-guided bidirectional scan that follows the hand's topological structure over a few effective tokens.
+- The Graph-guided State Space (GSS) block, which captures graph-structured relations between hand joints (via graph convolutions) and the spatial sequence of joints (via Mamba SS2D blocks), addressing the complementary weaknesses of graph-only and Mamba-only designs.
+- A token sampler guided by predicted 2D joints that boosts performance by isolating hand-relevant tokens, and a fusion module integrating state space tokens with global, sampled, and 2D-joint features.
+- State-of-the-art results on FreiHAND, HO3Dv2, and HO3Dv3 with large-margin in-the-wild improvements on HInt, Rank 1 on both HO3D leaderboards at acceptance, token efficiency (88.5% fewer tokens, 51.8% fewer decoder FLOPs, 83.7% less GPU memory than a GCN+Transformer counterpart), and demonstration of the GSS block as a plug-and-play module that transfers to full-body human mesh recovery.
+
+## Experimental Setup
+
+Hamba is trained on 2.7M samples mixing FreiHAND, HO3D, MTC, RHD, InterHand2.6M, H2O3D, DexYCB, COCO-Wholebody, Halpe, and MPII NZSL, using the same dataset mixture as HaMeR for fair comparison (sampling weights 0.25 for FreiHAND and InterHand2.6M, 0.1 for MTC and COCO-Wholebody, 0.05 for the rest). The JR is trained for 1M steps on one A4500 (batch size 8, 5 days), and the full model on two A6000 GPUs (batch size 56, about 2 days) with AdamW (learning rate 1e-5, weight decay 1e-4) and early stopping at 170K steps; ablations run 60K steps. For fairness with methods trained only on FreiHAND, a FreiHAND-only Hamba variant is compared against MobRecon, MeshGraphormer, and others, with and without test-time augmentation (rotations -90 to 90 degrees every 10 degrees, scales 0.7-1.1, averaged). Metrics are PA-MPJPE and AUCJ for joints and PA-MPVPE, AUCV, F@5mm, and F@15mm for mesh vertices on FreiHAND, HO3Dv2, and HO3Dv3 (the latter two via the official Codalab evaluation), and PCK at varying thresholds on the HInt benchmark (HInt-NewDays, HInt-EpicKitchensVISOR, HInt-Ego4D; 2D reprojection accuracy over all, visible, and occluded joints), none of which was seen in training.
+
+## Results
+
+On FreiHAND, Hamba achieves PA-MPJPE 5.8 mm, PA-MPVPE 5.5 mm, F@5 0.798, and F@15 0.991 without TTA, improving to 5.7/5.3/0.806/0.992 with TTA — surpassing HaMeR (6.0/5.7/0.785/0.990), MobRecon (5.7/5.8/0.784/0.986), and MeshGraphormer with TTA (5.9/6.0/0.764/0.986). On HO3Dv2 it reaches PA-MPJPE 7.5 mm, PA-MPVPE 7.7 mm, F@5 0.648, AUCJ 0.850, and AUCV 0.846, ahead of HaMeR (7.6/7.9/0.639/0.848/0.843), HandBooster (8.2/8.4), H2ONet (8.5/8.6), and AMVUR (8.3/8.2); on HO3Dv3 it obtains 6.9/6.8/0.681/0.982 with AUCJ 0.861 and AUCV 0.864, versus 8.7/8.3 for AMVUR, 8.8/8.6 for SPMHand, and 9.3/9.1 for HandGCAT, and holds Rank 1 on both leaderboards (as of May 2024). On the in-the-wild HInt benchmark it beats HaMeR across all settings, for example PCK@0.05 of 48.7 versus 48.0 on HInt-NewDays, 47.2 versus 43.0 on HInt-EpicKitchensVISOR, and 41.7 versus 38.9 on HInt-Ego4D for all joints, with the occluded-joint splits showing similarly consistent gains (e.g., 29.9 versus 25.9 VISOR @0.05). The ablations (full model 6.6/6.3/0.738/0.988 on FreiHAND at 60K steps) show that removing the GCN (7.3/7.2/0.673/0.983) or the Mamba blocks (7.3/7.2/0.675/0.983) causes equally large drops, confirming both are essential; replacing graph-guided bidirectional scanning with unidirectional scanning (6.9 mm) or shuffled ordering (7.3 mm) degrades results; GCN+Attention (Graformer-style) yields 7.0/6.6/0.730/0.985 versus 6.6/6.3/0.738/0.988 for GCN+SS2D under identical training; and the global mean token branch is the most important fusion input (without it: 7.3/7.2/0.680/0.982). In efficiency terms the decoder needs 71.8 versus 149 MFLOPs and 11.8 versus 21.9 ms of runtime compared to the GCN+Transformer variant, and GPU memory drops from 20,947 MB to 3,413 MB. Transferred to full-body HMR with 300K steps on one A100, Hamba achieves results comparable to HMR2.0b (trained 1M steps on 8 A100s), for example 3DPW PA-MPJPE 54.7 versus 54.3 mm and better PCK on LSP-Extended and COCO.
+
+## Limitations
+
+The authors explicitly state that, despite the strong representation capability of the graph-guided Mamba model and training on large comprehensive datasets, the approach may still not cover all in-the-wild situations, and that the current method lacks the capability to exploit temporal features in videos because crawling video datasets with 3D hand annotations requires extensive manual labor. The appendix documents concrete failure modes: wrong palm orientation, including 180-degree flips when the model cannot distinguish which side the palm faces; missed fingers under motion blur in low-frame-rate videos; wrong hand detections upstream; and complex finger gestures. The backbone is a 630M-parameter ViT-H, so the reported efficiency gains apply to the decoder rather than the full pipeline, and the state of the art comparisons rely on test-set access through Codalab competition websites, which the authors note precludes per-sample error analysis. The broader-impact statement also flags the potential misuse of released hand-reconstruction models for unauthorized surveillance or privacy infringement.

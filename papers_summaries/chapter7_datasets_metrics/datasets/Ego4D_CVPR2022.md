@@ -1,50 +1,35 @@
-# Ego4D (CVPR 2022)
+# Ego4D: Around the World in 3,000 Hours of Egocentric Video
 
-> Grauman et al. (large consortium). *Ego4D: Around the World in 3,000 Hours of Egocentric Video.* CVPR 2022. Zotero Key: `83EEQPQR`.
+**Authors:** Kristen Grauman, Andrew Westbury, Eugene Byrne, Zachary Chavis, Antonino Furnari, Rohit Girdhar, et al.  
+**Date:** 2022 (CVPR 2022)  
+**Identifier:** [arXiv:2110.07058](https://arxiv.org/abs/2110.07058)  
+**Zotero item:** `83EEQPQR` ([Zotero](zotero://select/library/items/83EEQPQR))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-Ego4D is the largest-scale, multi-scene, multi-cultural first-person video dataset to date: 3,000+ hours, 74 locations, 9 countries, 9 daily-life scenarios (household, outdoor, workplace, etc.), annotated with 5 major tasks (episodic memory, forecasting, hand-object, social, narration). It is the "ImageNet" of egocentric video understanding.
 
-## 1. Dataset Purpose
-- Solves the fundamental problem of "small scale, single country, single scenario" of existing egocentric datasets. Ego4D is constructed as a new-generation visual foundation dataset for egocentric video.
-- Tasks: 5 major benchmarks — (1) Episodic Memory; (2) Future Hand Prediction; (3) Hand-Object Interaction; (4) Social Interaction; (5) Audio-Visual Narration.
-- Anchors "egocentric video understanding" as an independent sub-task, enabling "learning world models from first-person human data".
-- Complements EPIC-KITCHENS and Assembly101: Ego4D's strength is scale and scene diversity, while EPIC's strength is the density of action / object labels.
+Ego4D is a massive-scale egocentric video dataset and benchmark suite offering 3,670 hours of unscripted daily-life video captured by 931 camera wearers across 74 worldwide locations in 9 countries, an order of magnitude larger than prior egocentric collections. Portions of the video carry audio, 3D environment scans, eye gaze, stereo, IMU, and synchronized multi-camera views. The paper contributes five benchmark challenges spanning the past (episodic memory), present (hand-object state changes, audio-visual diarization, social interactions), and future (activity forecasting) of first-person perception.
 
-## 2. Data Composition
-- Source: real capture. 74 locations, 9 countries, 4 continents, 9 daily-life scenarios (home, workplace, outdoor, leisure, etc.).
-- Viewpoint: first-person headset (multiple models: Pupil Labs, Vuzix, etc.).
-- Scale: 3,000+ hours of video, 74 locations, 9 countries; about 200 subjects.
-- Object and action: full range of daily scenarios (home, office, outdoor, supermarket, restaurant, etc.); full range of actions.
-- No fine annotations such as 3D objects / hands / contact / 6D pose (focused on the "video + task" level).
+## Background and Motivation
 
-## 3. Annotation and Supervision
-- Video: 3,000+ hours of raw video + metadata (GPS, IMU, audio).
-- Annotations: 5 major task labels — episodic memory queries, forecasting targets, HOI segments, social interaction, narration.
-- 3D information: none (focused on 2D video).
-- Hand: 2D hand mask provided in the future hand prediction sub-task.
-- Object: object category / bounding box provided in the narration sub-task.
-- Interaction: narration (natural language description) + action label.
+The authors argue that Internet third-person datasets represent a limited notion of perception: they contain brief, curated clips, whereas robotics and AR require long, fluid first-person streams without a photographer's curation. Prior egocentric datasets either focus narrowly on kitchens, use scripted activities, or rely mostly on graduate-student wearers. Ego4D instead maximizes geographic, demographic, and scenario diversity with unscripted, long-form footage (typical raw clips of 8 minutes), recruiting wearers of varied occupations and ages (45% female, 96 over 50 years old) through 14 partner institutions on 5 continents.
 
-## 4. Supported Evaluation
-- Benchmark tasks: each of the 5 sub-tasks has its own specialized evaluation protocol.
-- Key metrics: depending on the sub-task — retrieval mAP for episodic memory, hand mask AP for forecasting, mAP for HOI, IoU for social, BLEU / METEOR for narration.
-- Provides standard train / val / test split.
-- The core data source for egocentric foundation model training.
+## Dataset Construction
 
-## 5. Why It Matters
-- The largest-scale egocentric video dataset at the time (2022), 50× the scale of EPIC-KITCHENS.
-- The coverage of 9 countries and 74 locations makes "cross-cultural egocentric behavior" evaluation possible.
-- The 5-major-task design makes Ego4D the de facto platform for "egocentric pretraining + multi-task finetune".
-- Inspired subsequent "extended Ego4D" datasets such as Ego-Exo4D and EgoSchema.
-- The flagship data source of the "video generative prior" in Ch5 and the "video-based pretraining" in Ch6.
+Seven head-mounted camera types (GoPro, Vuzix Blade, Pupil Labs, ZShades, OR-DRO EP6, iVue Rincon 1080, Weeview) are used to avoid overfitting to one device. Modalities include 3,670 hours of RGB video and narrations and precomputed features, 2,535 hours of audio, 836 hours of synchronized multi-camera video, 612 hours of unblurred-face consented video, 491 hours coupled to Matterport3D environment meshes, 224 hours of IMU, 80 hours stereo, and 45 hours of gaze. Every video passes a narration procedure: two independent annotators produce dense timestamped free-form sentences (13.2 sentences per minute on average, 3.85M sentences covering 1,772 unique verbs and 4,336 unique nouns), which seed taxonomies and benchmark sampling. Collection follows consent, de-identification, and blurring protocols.
 
-## 6. Limitations and Biases
-- Lack of 3D annotation: no hand pose, 6D object pose, scene mesh, etc.; complements 3D benchmarks such as HO-3D v3, ARCTIC, and HOT3D but does not overlap.
-- Sparse labels: narration etc. is crowdsourced, and the quality varies.
-- The 9 countries are still dominated by North America and Europe, with weak coverage of Africa, South Asia, etc.
-- Headset-specific: the camera quality of different headsets varies greatly, affecting the generalization of vision models.
-- Not specifically oriented to "fine-grained hand-object interaction": the HOI task is coarse-grained (segmentation level).
+## Evaluation Protocol
 
-## 7. Takeaway
-Ego4D is best for demonstrating the capability of "large-scale egocentric video understanding + multi-task foundation model training". **Not suitable** for evaluating 3D hand pose, 6D object pose, joint hand-object reconstruction, articulated 4D, or in-studio high-precision tasks. In this survey, Ego4D plays the role of "egocentric video foundation dataset + multi-task HOI pretraining source" and serves as the core anchor of the "video generative prior" in Ch5 and the "video-based pretraining" in Ch6. **The abstract / DOI can be further refined after the Zotero metadata is supplemented.**
+The five benchmarks are: (1) Episodic Memory over 1,000 hours with about 74K queries in three forms — natural language queries localized in time (top-k recall at tIoU thresholds), visual queries localizing a queried object temporally and spatially, and moment queries against a 110-activity taxonomy (mAP at tIoU, plus timeliness metrics). (2) Hands and Objects, the HOI-relevant suite: point-of-no-return temporal localization of object state changes (absolute temporal error), state-change object detection on pre/PNR/post frames (average precision), and state-change classification (accuracy), with hands, tools, and objects boxed in each frame. (3) Audio-Visual Diarization: face localization/tracking, active speaker detection, speech diarization, and transcription, evaluated with MOT metrics, diarization error rate, and word error rate. (4) Social Interactions: Looking-at-Me and Talking-to-Me classification (mAP, top-1). (5) Forecasting: locomotion and hand movement prediction (L2), short-term object interaction anticipation (Top-5 mAP with time-to-contact), and long-term action anticipation (edit distance).
+
+## Findings and Analysis
+
+The paper reports annotations produced by over 250,000 hours of annotator effort, with 48 to 1,000 annotated hours per benchmark on top of the fully narrated 3,670 hours. Baseline models built from state-of-the-art components are provided for all five tasks, with quantitative results in the appendices, and a formal CVPR 2022 challenge was launched to improve them. The narrations alone constitute, to the authors' knowledge, the largest repository of aligned video and language. Stated biases include urban/college-town skew, COVID-era stay-at-home emphasis, and narration language bias from the two annotation sites.
+
+## Contributions
+
+An unprecedented-scale, demographically and geographically diverse egocentric video corpus with rich multimodal streams and privacy safeguards; dense video-language narrations; and a five-benchmark evaluation suite spanning episodic memory, object state change understanding, audio-visual conversation, social interaction, and forecasting, each with task definitions, annotations, metrics, and baselines.
+
+## Limitations
+
+The authors acknowledge that 74 locations far from cover the globe, wearers skew urban, the pandemic limited large social events, battery life biases footage toward active portions of the day, and crowd-sourced narrations carry local language bias. The Hands and Objects benchmark annotates state changes with 2D boxes and timestamps rather than 3D hand or object poses, so it does not by itself support metric 3D hand-object reconstruction.

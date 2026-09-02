@@ -1,45 +1,34 @@
 # HandNeRF: Learning to Reconstruct Hand-Object Interaction Scene from a Single RGB Image
+**Authors:** Hongsuk Choi, Nikhil Chavan-Dafle, Jiacheng Yuan, Volkan Isler, Hyunsoo Park  
+**Date:** 2024-05-13  
+**Identifier:** [arXiv:2309.07891](https://arxiv.org/abs/2309.07891), [DOI 10.1109/ICRA57147.2024.10611230](https://doi.org/10.1109/ICRA57147.2024.10611230) (ICRA 2024, pp. 13940-13946)  
+**Zotero item:** `SH9M4DDH` ([Zotero](zotero://select/library/items/SH9M4DDH))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-Reconstructs a complete hand-object interaction scene (hand mesh + object shape + appearance) from a single RGB image using a NeRF-based feed-forward network, enabling novel view synthesis of the interaction.
 
-## 1. Problem and Setting
-- Reconstruct a 3D hand-object interaction scene (hand + object geometry and appearance) from a single RGB image, enabling novel view rendering.
-- Input: single RGB image; output: MANO hand mesh + object NeRF (density + color) + relative pose between hand and object.
-- Single-image reconstruction with feed-forward inference (no per-scene optimization). Object is category-agnostic but assumes interaction type is within training distribution.
+HandNeRF learns a hand-object interaction prior that reconstructs a 3D hand-object scene (semantic neural radiance field of density, color, and hand/object/background labels) from a single RGB image, given a 3D MANO hand mesh and a 2D object mask. Its key idea is to explicitly encode the correlation between 3D hand shape features and 2D object features through sparse 3D convolutions, letting the hand shape constrain the plausible relative hand-object configuration and thereby resolve depth ambiguity and occlusion. Trained with only sparse-view RGB supervision (no depth, no object templates, no 3D object ground truth), it beats adapted PixelNeRF, IHOI, and MonoNHR on DexYCB and HO-3D v3 for novel grasps and unseen objects, and improves downstream robotic grasping (63% grasp success versus 26-46% for baselines).
 
-## 2. Core Method
-- A feed-forward neural network that, given a single RGB image, simultaneously predicts:
-  1. MANO hand parameters (pose + shape).
-  2. Object pose relative to the hand.
-  3. A canonical object NeRF (density + color fields).
-- The network architecture uses a shared CNN backbone with task-specific heads.
-- Key design: the object NeRF is defined in a hand-relative canonical space — the hand serves as the coordinate frame, making the representation invariant to global camera viewpoint.
-- At inference time, the hand mesh is rendered via rasterization and the object via volume rendering, composited by depth ordering.
-- Trained end-to-end with multi-view rendering supervision (during training, multiple views of the same interaction are available).
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: synthetic and real multi-view hand-object interaction data (ObjMan-style rendering, HO3D, DexYCB).
-- Supervision: multi-view RGB rendering loss, 3D object shape (SDF), MANO parameters, object 6D pose.
-- Uses MANO for hand.
-- Assumes training provides multi-view observations of interactions; object is rigid; interaction types are within training distribution.
+Reconstructing grasped objects from a single RGB image lags behind hand reconstruction because 3D object data is scarce: building CAD models for many objects and labeling 6D poses in interaction scenes is labor-intensive, and sparse real-world views make annotation ambiguous. Template-based methods fit a known object CAD model but do not scale; template-free methods such as Hasson et al., Grasping Field, and IHOI still require 3D object meshes at training time. Sparse-view NeRF methods reconstruct a single scene from a few images but generalize poorly, and the closest work, MonoNHR, conditions a neural field on a body mesh without explicitly encoding object-body correlation. The paper defines the task of generalizable semantic reconstruction of hand-object scenes from one RGB image: training uses only sparse-view RGB images, automated 3D hand annotations, and 2D segmentation per scene; testing presents a single image with a novel grasp configuration, unseen object poses, or even unseen object shapes. The hand shape is treated as a constraint that regularizes the ill-posed 2D-to-3D problem.
 
-## 4. Experiments and Findings
-- Datasets: HO3D, DexYCB, ObMan.
-- Metrics: PSNR, SSIM (novel view synthesis); Chamfer Distance (object shape); MPJPE (hand).
-- First method to demonstrate plausible novel view synthesis of hand-object interaction scenes from a single image. Feed-forward inference is fast (milliseconds).
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Single-image, feed-forward inference (fast at test time).
-- Produces complete 3D scene (hand + object with appearance).
-- Enables novel view synthesis of the interaction.
+HandNeRF predicts, for each query point, volume density, color radiance, and a semantic label (hand, object, background), rendered via Semantic-NeRF-style semantic volume rendering and supervised on sparse multiview RGB images with an RGB photometric loss plus semantic cross-entropy. Architecture: ResNet-18 image feature extraction, a feature volume V rasterized at 5 mm voxels, sparse 3D convolutions (SpConv) producing multi-scale interaction feature volumes, and linear layers for the neural field, with pixel-aligned 2D image features (f2D) injected at the field stage. The core mechanism is explicit interaction modeling: the object density is formally marginalized over the occupancy of the given 3D hand mesh faces, and this quadratic pairwise relationship is approximated by a 3D CNN that learns an interaction feature F. The volume V assigns each hand-mesh-face centroid a 3D hand feature fh (projected visual context plus positional encodings of the centroid coordinate and the face index) and each voxel projecting into the object mask a 2D object feature fo (projected image feature plus a fixed learned constant), zeros elsewhere. The interaction feature at a query point is extracted per scale by trilinear interpolation. Training details include Gaussian perturbation of object points as augmentation, volume rotation by pi/10 for 3D CNN anti-aliasing, a gradually increasing ratio of object-pixel rays up to 0.5 to prevent hand-dominated rendering, coarse-plus-fine NeRF modules, 300 epochs with Adam (learning rate 10^-3 decayed 10x after epoch 200), roughly 45 hours on one RTX 3090. At test time meshes are extracted with Marching Cubes at 2 mm voxels, separated by predicted semantics, and cleaned by removing small connected components; reconstruction takes 301-1015 ms per scene and inference around 500 ms in the handover system.
 
-### Limitations
-- Novel view quality degrades for viewpoints far from the input view.
-- Object NeRF may produce blurry or incomplete shapes for unseen object categories.
-- Requires multi-view training data with 3D annotations.
-- Hand-relative canonical space assumes the grasp is reasonably well-predicted.
+## Contributions
 
-## 6. Takeaway
-HandNeRF demonstrated that a feed-forward network can learn to predict a full 3D hand-object scene (including appearance) from a single image, moving beyond geometry-only reconstruction. The hand-relative canonical space was a key design choice that later works adopted for single-view hand-object reconstruction.
+1. A generalizable implicit function that explicitly encodes the correlation between 3D hand geometry and 2D object features, using the estimated hand shape to constrain relative hand-object configuration during single-image reconstruction. 2. A training paradigm requiring no object templates, no 3D object ground truth, and no depth: only sparse-view RGB images with automated hand annotations and 2D segmentation, demonstrated on both public benchmarks and a casual 7-camera in-house capture setup with fully automated annotation (SMPLify-X adapted to MANO with multi-view 2D projection loss, plus Segment-Anything masks). 3. State-of-the-art generalization to novel grasp configurations, unseen object poses, and unseen object shapes on DexYCB and HO-3D v3, including robustness to erroneous estimated hand meshes that breaks baseline methods. 4. Demonstration that the reconstructed objects improve downstream robotic tasks: Contact-GraspNet grasp proposals for hand-over and collision-free motion planning in Isaac Gym, plus a real-world single-RGB-image handover demonstration.
+
+## Experimental Setup
+
+Datasets: DexYCB (8 views per scene, 5 sequences per object with distinct grasp patterns; 4 sequences for training and 1 for testing per object, testing generalization to novel grasps on seen objects) and HO-3D v3 (5 views, 1 sequence per object, train/test split chosen so test grasps differ significantly). Novel-object generalization trains on 15 DexYCB objects and tests on 4 unseen ones (Sugar Box, Mustard Bottle, Banana, Power Drill). Rendering metrics: PSNR, semantic segmentation IoU, SSIM, LPIPS. Reconstruction metrics: F-scores at 5 mm and 10 mm and Chamfer distance (mm) for whole scene, object, and hand, computed from Marching Cubes meshes against ground truth and separated using predicted semantics. Baselines adapted to the same sparse-view training and single-image testing protocol: PixelNeRF (single-image variant), IHOINeRF (IHOI retrained without template-based object annotation; its semantic-label training fails to converge), and MonoNHR. Inputs use either ground-truth hand meshes (dagger notation) or HandOccNet estimates (12 mm hand MPJPE on DexYCB, 34 mm on HO-3D v3). Grasp evaluation runs Contact-GraspNet on reconstructed meshes with collision filtering against the hand mesh, on unseen DexYCB hand-over scenes of Banana and Power Drill, counting a grasp successful if it envelops ground-truth object geometry without colliding.
+
+## Results
+
+Ablations on four DexYCB objects (Table I, ground-truth inputs) show the full model M5 (fh + fo + f2D) reaches PSNR 21.66, IoU 0.79, object F10 0.70, and object CD 0.56 mm, versus 0.47/2.90 mm object CD without the object feature (M2) and 8.59 mm for MonoNHR-style implicit interaction (M4, which overfits to hand reconstruction); replacing the 3D CNN with a Transformer over all hand-object pairs (M1) loses on every metric while using over 10x more parameters (27.1K vs 2.1K) and overfitting more. On novel grasps (Table II), with ground-truth hands HandNeRF achieves object CD 0.56 mm and F10 0.70 on DexYCB (versus 2.90 PixelNeRF and 8.58 MonoNHR) and 0.31 mm / 0.74 on HO-3D v3 (versus 1.14 and 1.50); with HandOccNet-estimated hands it stays robust (DexYCB object CD 0.59) where IHOINeRF and MonoNHR degrade visibly and fail to recover half of a pair of scissors. On unseen objects (Table III), HandNeRF attains object CD 0.85 mm with estimated hands versus 1.31 (PixelNeRF), 54.89 (MonoNHR), and 571.55 (IHOINeRF); per-object results show the margin grows on the most shape-dissimilar objects, with HandNeRF ahead of MonoNHR by 62.5 and 58.1 percentage points of object F10 on Banana and Power Drill. Compared with the original 3D-ground-truth-supervised IHOI (Table VI), HandNeRF reaches comparable or better object accuracy with estimated hands (CD 0.41 vs 0.62 mm) despite IHOI's supervision advantages. For downstream grasping (Table IV), grasp proposal success is 0.63 for HandNeRF versus 0.46 PixelNeRF, 0.42 IHOINeRF, 0.36 MonoNHR, 0.26 for the RGB-D point cloud, and 0.77 for ground-truth meshes; supplementary experiments further show collision-free motion plans in Isaac Gym that fail with PixelNeRF reconstructions, and a real-world handover demonstration at roughly 500 ms per inference.
+
+## Limitations
+
+The authors state that the method strongly depends on off-the-shelf hand mesh estimation: when the hand is severely occluded by the object, estimated hand geometry is not accurate enough, and erroneous hand information can actively hurt object reconstruction; they propose integrating hand estimation with uncertainty modeling as future work. Novel-view renders from views significantly different from the input remain blurry, and the authors suggest self-supervised perceptual supervision such as CLIP feature consistency as a remedy. The sensitivity study shows degradation with larger hand pose error (200% extrapolated error drops hand F10 from 0.94 to 0.38), and the grasp analysis is limited to two objects on which Contact-GraspNet performed reliably on ground-truth meshes.

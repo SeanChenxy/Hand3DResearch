@@ -1,44 +1,38 @@
 # BOTH2Hands: Inferring 3D Hands from Both Text Prompts and Body Dynamics
 
+**Authors:** Wenqian Zhang, Molin Huang, Yuxuan Zhou, Juze Zhang, Jingyi Yu, Jingya Wang, Lan Xu  
+**Date:** 2024-06-16  
+**Identifier:** [arXiv:2312.07937](https://arxiv.org/abs/2312.07937), DOI [10.1109/CVPR52733.2024.00232](https://doi.org/10.1109/CVPR52733.2024.00232)  
+**Zotero item:** `E2NHLLUC` ([Zotero](zotero://select/library/items/E2NHLLUC))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-Generates 3D two-hand motions conditioned on both text descriptions and body motion, addressing the gap where text-to-motion models produce body motions without hands.
 
-## 1. Problem and Setting
-- Generate 3D two-hand motions (MANO parameters) given a full-body motion sequence and an optional text prompt.
-- Input: body motion sequence (SMPL/SMPL-X body joints) + text prompt; output: MANO hand motions for both hands over the same time horizon.
-- Hand motion generation conditioned on body context. The body motion provides global context (reaching, walking, interacting); the text provides semantic intent.
+BOTH2Hands (CVPR 2024) addresses two-hand motion generation under a hybrid condition setting: the 3D hand motions of both hands are inferred jointly from implicit body dynamics and explicit text prompts, something prior body-to-hand or text-to-hand methods could not do together. To break the data bottleneck, the authors contribute BOTH57M, a 57.4-million-frame (8.31 hours), 1,384-clip multi-modal dataset captured with a 32-RGB-camera dome, providing SMPLH body+hand motions and paired finger-level hand annotations plus full-body descriptions (23,477 text annotations, 4,140-word vocabulary). The method warms up two parallel diffusion models (body-to-hand and text-to-hand), projects text-conditioned local hands into the body coordinate system via forward kinematics, and blends the two conditioned hand motions with an alternating cross-attention transformer, outperforming T2M-GPT, MDM, MLD, and EgoEgo adaptations on their benchmark.
 
-## 2. Core Method
-- A transformer-based model that takes body joint sequences and text embeddings as input, and outputs both-hands MANO parameters frame by frame.
-- Key design choices:
-  1. Body-hand interaction encoding: cross-attention between body joints and hand joints captures coordination patterns (e.g., when the arm reaches, the hand opens).
-  2. Text conditioning via CLIP: text embeddings provide task-level context that body motion alone may not reveal (e.g., "pick up a cup" vs. "wave hello").
-  3. Two-hand coordination: a dedicated cross-hand attention module ensures the two hands move in a coordinated manner during bimanual tasks.
-- Trained on motion capture data with paired body and hand motions.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: motion capture datasets with full-body + hand data (AMASS, GRAB, ARCTIC).
-- Supervision: ground-truth MANO parameters.
-- Uses MANO for hand.
-- Pretrained models: CLIP for text encoding.
-- Assumes body motion provides sufficient context for hand motion prediction; text prompt describes the overall activity.
+Text-to-motion advances mostly generate body motions only; convenient generation of fine-grained two-hand motions has lagged because of severe data scarcity — widely used text-motion corpora (KIT, HumanML3D, AMASS) contain limited two-hand motions and hand descriptions, while Motion-X, though large-scale, lacks detailed finger-level hand annotations. Body-conditioned approaches (e.g., Body2Hands, EgoEgo) implicitly exploit body-hand correlation and suit speech or conversation scenarios, but cannot provide direct, human-interpretable control of what the hands do; text-only approaches provide explicit control but cannot coordinate hands with the body. The paper defines a novel hybrid task: given a body motion (without hands) and a text prompt, generate vivid two-hand motions that simultaneously follow the body dynamics and satisfy the textual description. The problem is challenging because the two conditions come from very different modalities and may point to diverse plausible outputs, and because paired body+hand+text data barely existed.
 
-## 4. Experiments and Findings
-- Datasets: AMASS (body+hand subset), GRAB, ARCTIC.
-- Metrics: MPJPE (hand), motion diversity, text-motion alignment, hand-body coordination metrics.
-- Significantly better hand motion quality than text-only or body-only baselines. Two-hand coordination module improves bimanual task performance.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Leverages body context which is often more reliably estimated than hand pose.
-- Text conditioning allows task-specific hand motion generation.
-- Explicit two-hand coordination modeling.
+The pipeline has two stages over the SMPLH skeleton (52 joints: 22 body, 30 hand) with 6D joint rotations. Stage 1 trains two parallel DDPM denoisers. The body-to-hand diffusion follows EgoEgo: global hand motions (absolute joint positions and rotations via forward kinematics) are noised, and the noised hand sequence is spatially concatenated with the clean body sequence as input to a transformer self-attention denoiser trained with an L1 reconstruction loss — the diffusion model samples the most plausible gesture for a given body rather than deterministically matching one. The text-to-hand diffusion follows MDM's text conditioning (CLIP text token embedded with the diffusion timestep token) but operates on "local hands": inverse kinematics extracts hand rotations relative to parents, and hand joint positions are expressed relative to each wrist so the denoiser can focus on the gesture itself; only noised hands are fed as input. Hand projection then bridges the two coordinate systems: the text-conditioned local hands are projected into the global body motion space via forward kinematics (given the conditioned body), eliminating gesture rotation errors before blending. Stage 2 is cross-attention hand blending: both conditioned hand sequences are embedded into a common latent space, and an N-block cross-attention transformer alternates which sequence provides queries versus keys/values (starting with body-conditioned hands as queries and text-conditioned hands as keys/values, then swapping) to fuse them into a final two-hand motion; training uses a weighted blending loss combining the two conditioned hands with weights wB and wT (wB + wT = 1). The text encoder is a frozen CLIP-ViTL-14; diffusion uses 1000 timesteps; all transformers use 4 blocks, 512 latent dimension, and 4 attention heads; blending is applied 3 times.
 
-### Limitations
-- Requires body motion as input (not standalone hand generation).
-- Body motion errors propagate to hand predictions.
-- Limited to tasks where hand motions correlate with body motions.
-- Text annotations for motion data are limited.
+## Contributions
 
-## 6. Takeaway
-BOTH2Hands bridges body-only and hand-only motion generation, showing that body dynamics provide strong priors for hand motion. This hierarchical approach (body first, then hands) reflects the natural kinematic chain and is a practical strategy for full-body HOI generation.
+- BOTH57M, the first dataset providing hybrid, detailed annotations of both body and hands: 57.4M frames (8.31 hours), 1,384 motion clips, 23,477 manually annotated motions with a 4,140-word vocabulary, captured with 32 synchronized RGB cameras at 59.97 FPS and 3840x2160 resolution with zoom-in cameras for hands, using markerless mocap (ViTPose for body, MediaPipe for hand keypoints) to derive SMPLH parameters.
+- A novel task formulation — two-hand motion generation from both implicit body dynamics and explicit text prompts — with a two-stage solution combining parallel single-condition diffusion denoisers and an alternating cross-attention transformer for multi-condition blending, avoiding hard-to-tune joint conditioning strengths.
+- A hand-projection mechanism that maps text-conditioned local-hand gestures into the body motion space via forward kinematics, resolving coordinate-system mismatch between the two diffusion branches.
+- Cross-validation showing BOTH57M-trained models generalize better than Motion-X-trained ones, plus applications augmenting hand motions for body-only text datasets such as HumanML3D and InterHuman.
+
+## Experimental Setup
+
+BOTH57M is split 80% train / 5% val / 15% test. The dataset capture quality is validated against a manually labeled subset: 31.4 mm MPJPE and 25.2 mm PA-MPJPE overall, and 6.51 mm MPJPE / 3.97 mm PA-MPJPE for hands, comparable to standard corpora. Evaluation follows HumanML3D metrics: R-Precision (top-1/2/3 retrieval), FID, MM-Dist, Diversity, and MModality, with 95% confidence intervals. Baselines are adapted to the hybrid setting with identical conditions: latent methods T2M-GPT and MLD (with two encoder-decoders for body and hands, merging latent tokens), diffusion-based MDM, and body-conditioned EgoEgo. Training runs on a single NVIDIA RTX 2080 Ti for about 2 days with AdamW at learning rate 1e-4; the blending weights are set to wB = 0.8 and wT = 0.2 based on an 11-setting hyperparameter sweep. A cross-dataset evaluation trains the same pipeline separately on BOTH57M and Motion-X and tests on both test sets.
+
+## Results
+
+On the BOTH57M test set, BOTH2Hands reaches FID 0.201 and Diversity 1.392 (real data: FID 0.181, Diversity 1.391), with R-Precision top-1/2/3 of 0.037/0.075/0.115 and MModality 3.969 — the closest to real motion among all methods; adapted baselines are far worse on FID (T2M-GPT 0.461, MLD 0.296, EgoEgo 0.287, MDM 0.257), and text-only or body-only variants of BOTH2Hands score FID 0.198 and 0.203 respectively. The authors note improvements in the standard metrics are only marginal and argue R-Precision-style metrics poorly reflect multi-condition hand generation quality, since hands are a small portion of full-body statistics and hand-text alignment is non-linear. Cross-dataset results: a model trained on BOTH57M achieves FID 0.201 on BOTH57M's test set versus FID 0.364 for a Motion-X-trained model on Motion-X, and the BOTH57M-trained model transfers better to Motion-X's test set (R-Precision 0.026, FID 2.399) than the Motion-X-trained model transfers to BOTH57M (R-Precision 0.030, FID 0.858 — though the table shows the BOTH57M-trained model on BOTH57M test at FID 0.201 far exceeds the Motion-X-trained one evaluated there at 2.399). Ablations confirm the design: removing hand projection raises FID from 0.201 to 0.204 and removing the blending loss (replaced by linear distance loss) raises it to 0.210, with clear qualitative degradation; the hyperparameter sweep shows body weight mainly improves realism (FID) while text weight improves condition alignment, motivating wB = 0.8 / wT = 0.2. Qualitatively, BOTH2Hands follows both conditions where non-latent baselines fail on text conditions and latent baselines struggle with body conditions, and it generates plausible hands when applied to HumanML3D and InterHuman (ballet, boxing) inputs.
+
+## Limitations
+
+The authors list several limitations: text provides fine-grained spatial control but lacks temporal alignment mechanisms, so when in time a described gesture occurs is not controlled; the model treats the body as a whole and does not model how individual body parts separately influence the hands; existing metrics cannot precisely reflect alignment among hand, body, text, and other complex conditions, motivating future metric design; and it remains difficult to decide whether a generated two-hand pose constitutes actual hand-to-hand interaction when the wrists are close, which the authors flag as an important open problem.

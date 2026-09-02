@@ -1,44 +1,38 @@
 # Diffusion-Guided Reconstruction of Everyday Hand-Object Interaction Clips
 
+**Authors:** Yufei Ye, Poorvi Hebbar, Abhinav Gupta, Shubham Tulsiani  
+**Date:** 2023-09-11  
+**Identifier:** [arXiv:2309.05663](https://arxiv.org/abs/2309.05663); DOI: [10.1109/ICCV51070.2023.01806](https://doi.org/10.1109/ICCV51070.2023.01806)  
+**Zotero item:** `JNVXC6LI` ([Zotero](zotero://select/library/items/JNVXC6LI))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-Casts 3D inference as a per-video optimization that recovers a neural 3D representation of the object shape plus time-varying hand motion and articulation from short monocular video, augmented by a pre-trained image diffusion model (Stable Diffusion) that supplies visual priors for unseen regions, providing accurate reconstruction without requiring 3D supervision or object templates.
 
-## 1. Problem and Setting
-- Joint 3D reconstruction of hand pose and unknown object shape from a short monocular video of hand-object interaction.
-- Input: short monocular RGB video clip (a few seconds) showing a hand interacting with an everyday object.
-- Output: neural 3D representation of object shape, plus time-varying 3D hand articulation and object 6D pose per frame.
-- Task: hand-held object reconstruction with shape completion, one of the earliest works leveraging a 2D generative diffusion prior to complete unseen object geometry in HOI videos.
+DiffHOI reconstructs full 3D hand-object interactions from short monocular video clips without object templates: it jointly optimizes a time-persistent neural SDF for the object, MANO hand articulations, hand-object relative poses, and camera parameters. Because everyday clips give limited viewpoints and mutual hand-object occlusion, purely geometry-driven multi-view optimization is insufficient; DiffHOI therefore adds a learned diffusion prior that models the conditional distribution of object geometry renderings (normals, masks, depth) given the rendered hand and a category text prompt, and injects it into the per-video optimization via score distillation sampling (SDS). On HOI4D across six rigid categories it substantially outperforms template-free baselines HHOR and iHOI (mean Chamfer distance 0.8 versus 2.7 and 4.7), beats template-based HOMAN in hand-frame object placement, and generalizes to in-the-wild YouTube and EPIC-KITCHENS clips in both egocentric and third-person views.
 
-## 2. Core Method
-- Per-video test-time optimization with the object represented as a neural radiance field or neural SDF.
-- A pre-trained text-to-image diffusion model (Stable Diffusion) provides a differentiable visual prior via Score Distillation Sampling (SDS) — it scores rendered views of the current 3D shape against the input frames, providing a "visual plausibility" loss that guides shape completion for occluded regions.
-- Hand poses are jointly optimized using a parametric MANO model with 2D keypoint and segmentation constraints.
-- How FM prior is injected: the diffusion model acts as a learned "realism filter" — penalizing shape configurations that would produce implausible object appearances from novel views, effectively injecting the visual world knowledge encoded in Stable Diffusion into the 3D reconstruction process.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Foundation model: Stable Diffusion (text-to-image latent diffusion pre-trained on LAION-5B), used via SDS.
-- Domain knowledge: known hand kinematic prior (MANO model); hand-object contact and interpenetration constraints.
-- Training data: no HOI-specific training; the diffusion prior is pre-trained; the reconstruction is per-video test-time optimization.
-- Assumption: object is rigid; camera is reasonably static; hand sufficiently rotates the object.
+The task is 3D reconstruction of hand-object interactions (HOI) from everyday video: recover the object's full shape, its per-frame pose relative to an articulated hand, hand meshes, and camera trajectories. Prior work falls into camps that each fail in this setting. Template-based methods reduce the problem to 6D pose estimation of known instances, which does not apply to arbitrary everyday objects. Video-based template-free methods fuse multi-frame observations into a canonical 3D representation using purely geometric reprojection objectives; this works for in-hand scanning where users deliberately show all sides, but everyday clips leave parts of the object permanently unobserved due to limited viewpoint variation and hand-object mutual occlusion, so unobserved geometry degenerates (e.g., collapsing to flat surfaces). Single-image methods inject learned priors and generalize to unseen objects, but cannot aggregate evidence across frames and produce predictions that are not time-consistent. The paper's problem statement is to unify the geometry-driven (video optimization) and data-driven (learned prior) paradigms so that complete, plausible, time-consistent object geometry can be recovered even for never-observed aspects of the object.
 
-## 4. Experiments and Findings
-- Datasets: HO3D, DexYCB, and in-the-wild video clips.
-- Metrics: 3D hand joint error (MPJPE), object shape accuracy (Chamfer distance), visual quality of novel-view synthesis.
-- Significantly outperforms baseline methods (e.g., photometric-only optimization, HOLD without diffusion prior) in object shape reconstruction quality, especially for object regions not directly observed in the video.
-- Ablation removing the SDS loss shows substantial degradation in object shape quality for occluded regions, confirming the critical role of the diffusion prior.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Pioneering use of 2D diffusion models as 3D shape priors for HOI reconstruction.
-- Requires no 3D training data, no object templates, no category labels.
-- Works on diverse everyday objects in a general framework.
+DiffHOI represents the scene with a time-persistent MLP-based signed distance field for the rigid object (topology-free), a MANO hand mesh parameterized by 45-dim articulation and 10-dim shape, the per-frame hand-to-object relative transform, camera-to-hand extrinsics, and per-frame intrinsics. Poses are tracked in the hand wrist frame rather than the camera frame: since objects move together with the hand ("common fate"), hand-to-object transforms are initialized to identity, while FrankMocap provides initial hand articulations, wrist orientation, weak-perspective cameras, and intrinsics; the object field starts as a coarse sphere, and a lightweight trajectory optimization over wrist orientation fixes catastrophic per-frame hand-pose failures. The object and hand are rendered separately (volumetric rendering for the SDF, mesh rendering for MANO) into geometry images — mask, depth, normals — which are depth-blended into a composed HOI mask for reprojection losses. The key novelty is the data-driven prior: a diffusion model, pretrained on ground-truth HOI renderings from HOI4D with viewpoints sampled uniformly in SO(3), denoises 5-channel a-modal geometry renderings of the object (3 normal, 1 mask, 1 depth channels; initialized from a large-scale text-to-image diffusion backbone) conditioned on the hand's geometry rendering, the MANO UV-coordinate rendering (which disambiguates palm facing), and a text prompt "an image of a hand holding {category}". At test time, per-video optimization combines an L1 mask reprojection loss on observed views, an SDS loss that treats the diffusion model as a critic on randomly sampled novel views, an Eikonal regularizer, and a temporal smoothness loss on hand-object relative motion. Operating purely in the geometry domain avoids appearance domain gaps when transferring the prior across videos.
 
-### Limitations
-- Slow per-video optimization (hours per clip).
-- SDS loss can be noisy and produce over-smoothed geometries.
-- Relies on accurate hand pose initialization.
-- Pre-trained diffusion model may introduce domain bias from LAION training data.
-- Limited ability to capture fine geometric details.
+## Contributions
 
-## 6. Takeaway
-This paper established the "diffusion-as-prior" paradigm for HOI reconstruction, showing that a pre-trained 2D generative model encodes sufficient visual world knowledge to serve as an effective 3D shape completion prior. It laid important groundwork for subsequent works (MagicHOI, ForeHOI) that build on diffusion priors for object shape recovery, and exemplifies how foundation model priors can substitute for the lack of 3D HOI training data.
+1. First template-free method for HOI reconstruction from casual everyday monocular clips, unifying per-video multi-view optimization with a learned generative prior so that permanently unobserved object parts are hallucinated plausibly rather than left degenerate.
+2. A conditional diffusion prior over a-modal geometry renderings (not appearance), conditioned jointly on hand configuration and category text, capturing both category shape priors (mugs are cylindrical) and interaction priors (pinched fingers imply thin handles).
+3. A hand-centric scene parameterization (object SDF + MANO + relative transforms with identity initialization) that sidesteps template-dependent camera-frame 6D pose tracking.
+4. Systematic evidence, via ablations, that category and hand priors are complementary and jointly necessary (e.g., neither alone recovers a bowl's concavity), and that surface-normal distillation is the single most critical geometry modality.
+
+## Experimental Setup
+
+The diffusion prior is trained on HOI4D (egocentric RGBD clips captured with head-worn cameras, ground truth from fitted scans), using all six portable rigid categories — mug, bottle, kettle, knife, toy car, bowl — rendering one random novel viewpoint per frame for 35K training points. Reconstruction is evaluated on held-out instances (two sequences per category): predicted shapes are aligned to ground truth by ICP with scale, then scored with Chamfer distance and F-score at 5 mm and 10 mm, averaged over two sequences per category; hand-object arrangement is scored by object Chamfer distance in the hand frame (CDh). All methods use ground-truth segmentation masks and, where needed, FrankMocap hand poses. Baselines are HHOR (multi-view in-hand scanning, no prior) and iHOI (single-image feed-forward with a hand prior). Additional comparisons cover template-based HOMAN with ground-truth, random, and furthest-from-GT templates; robustness tests with GT versus predicted and artificially degraded hand poses; and qualitative in-the-wild reconstruction on EPIC-KITCHENS clips and casual YouTube videos with off-the-shelf video object segmentation.
+
+## Results
+
+On HOI4D, DiffHOI attains mean F@5 0.62, F@10 0.91, and CD 0.8, versus iHOI (0.42/0.70/2.7) and HHOR (0.31/0.55/4.7); it wins all three mean metrics and most per-category scores (e.g., bowl 0.79 F@5 and 0.4 CD, toy car 0.83 F@5 and 0.3 CD), with HHOR collapsing toward flat surfaces without a prior and iHOI limited by per-frame, non-time-consistent single-view prediction. Ablating the prior drops performance to F@5 0.47/CD 2.7; a category-only prior reaches 0.56/1.6 and a hand-only prior 0.39/2.8, while only the combined prior recovers concave shapes such as bowls. The modality ablation shows surface normals are essential — removing normal distillation collapses reconstruction (F@5 0.36, CD 4.3, CDh 220.2, worse than no prior at all) — removing mask distillation degrades shape accuracy (CDh 128.1), and removing depth mainly harms hand-object alignment (CDh 88.0 versus 48.7). The system is robust to hand-pose errors: with doubled input-prediction error it still reaches F@5 0.63/CD 1.01, above the baselines, and its optimization improves raw FrankMocap estimates (MPJPE 28.4 to 26.9 mm; AUC 0.47 to 0.49). Against template-based HOMAN, DiffHOI loses on object shape only to GT-template runs (HOMAN-GT F@5 1.00) but achieves far better hand-frame placement (CDh 48.7 versus 84.3 GT, 120.9 average, 157.9 furthest), showing that even multi-objective template optimizers misplace handles and subtle parts when the template is inaccurate. Qualitatively, DiffHOI transfers to EPIC-KITCHENS and YouTube clips, including third-person views and cases with occluders, truncation, and transparent bottles where single-view iHOI fails.
+
+## Limitations
+
+The authors state two explicit limitations: the method only handles small hand-object motions in short clips of up to a few (about 5) seconds, and reconstructed objects still miss fine shape details. Additional constraints evident from the paper: the diffusion prior must be retrained per domain of categories (it was trained on HOI4D's six rigid portable categories), evaluation relies on ground-truth masks on HOI4D (with off-the-shelf segmentation only for qualitative in-the-wild results), the SDS guidance requires per-video optimization rather than feed-forward inference, and the prior's quantitative in-the-wild performance is not measured — in-the-wild reconstruction is demonstrated qualitatively only.

@@ -1,39 +1,38 @@
 # GanHand: Predicting Human Grasp Affordances in Multi-Object Scenes
 
+**Authors:** Enric Corona, Albert Pumarola, Guillem Alenya, Francesc Moreno-Noguer, Gregory Rogez  
+**Date:** 2020-06-01  
+**Identifier:** [DOI: 10.1109/CVPR42600.2020.00508](https://doi.org/10.1109/CVPR42600.2020.00508)  
+**Zotero item:** `TJHTGZKT` ([Zotero](zotero://select/library/items/TJHTGZKT))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-First work to predict full 3D hand grasps (MANO parameters) for multiple objects in a single RGB image, using a conditional VAE that jointly reasons about which object to grasp and how.
 
-## 1. Problem and Setting
-- Task: given a single RGB image containing one or more objects, predict a plausible 3D human grasp for each object — including which object the hand will interact with, the hand shape, and the 3D hand pose.
-- Input: monocular RGB image of a multi-object scene; output: per-object grasp represented as MANO hand mesh parameters (pose, shape, translation) built on top of 2D bounding box detections.
-- Key challenge: the hand must be synthesized so that it realistically contacts the object surface without penetrating it, all while choosing the most graspable object among several candidates.
+GanHand (CVPR 2020) introduces the problem of predicting how a human would grasp one or several objects from a single RGB image showing only the objects — no hand is visible. Its three-stage generative architecture estimates 3D object pose/shape, classifies the grasp type within the 33-class Feix taxonomy, and refines the 51-DoF MANO hand with a differentiable, parameter-free optimization layer that flexes each finger along its kinematic chain until it contacts the object. Training and evaluation rest on the new YCB-Affordance dataset: 133,936 real multi-object scene frames carrying more than 28 million plausible 3D human grasps. On YCB-Affordance, GanHand predicts a valid grasp for 58% of graspable objects (versus 21% for a direct-regression baseline) with 76% grasp-type accuracy, and its optimization layer, when plugged into the Hasson et al. hand-object reconstruction pipeline, cuts simulation displacement and interpenetration by more than 30%.
 
-## 2. Core Method
-- Two-stage pipeline: (1) object detection (Mask R-CNN) extracts per-object RoI features; (2) a conditional VAE (cVAE) generates hand pose per object.
-- The cVAE encoder maps object RoI features + ground-truth hand pose into a latent distribution; the decoder samples from this latent space conditioned on object features alone to predict MANO parameters.
-- A graspability discriminator scores each object candidate to select which object receives the grasp; a refinement module adjusts the hand to avoid interpenetration.
-- Key innovation: first end-to-end generative model for human grasp prediction from raw RGB, combining affordance reasoning with 3D hand mesh generation.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: ObMan dataset (synthetic grasps of ShapeNet objects rendered with MANO) + self-collected real images with annotated grasps.
-- Supervision: full 3D MANO parameters (pose, shape, global rotation and translation) for training the cVAE.
-- Domain knowledge: MANO hand model provides a low-dimensional articulated prior; object detection pre-training supplies visual understanding.
-- Assumption: the hand is the dominant interacting agent in the scene; single-hand, single-object interaction.
+While 3D hand pose and shape estimation from images had advanced rapidly, predicting human grasp affordances — the multiple plausible ways a human hand would grasp each object observed in a scene — had not been addressed. The task is harder than robotic grasp generation because the MANO hand has 51 degrees of freedom versus the 6-DoF of typical grippers, and it requires jointly reasoning about image semantics, 3D geometry of a potentially noisy object reconstruction, and physical hand-object interaction (contacts without interpenetration, hands above the table plane). Existing human-grasp datasets were deemed insufficient: GraspIt-generated data such as ObMan is realistic but of reduced grasp-type variability (the simulator maximizes an analytic score and misses natural grasps like holding scissors or grasps with abducted thumbs, fully recovering only three power grasp types in the authors' analysis), and MANO fitting on RGB captures is laborious with limited grasp variety. GanHand therefore defines the mapping from a single RGB image to, per object of interest, a grasp class C, hand mesh vertices V, and MANO pose P, with a stochastic generative model able to emit several grasp hypotheses per object for AR, robotics, imitation learning, and prosthetic design.
 
-## 4. Experiments and Findings
-- Datasets: ObMan (synthetic), First-Person Hand Action Benchmark (FPHAB, real egocentric), and a custom real multi-object test set.
-- Metrics: contact ratio, interpenetration volume, 2D keypoint error.
-- Main findings: GanHand generates realistic grasps on both seen and unseen objects; the graspability predictor effectively selects the most plausible object among multiple candidates; qualitative results show natural hand poses even under heavy occlusion.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Pioneered the full RGB-to-3D-grasp generation problem with a principled generative formulation.
-- Graspability discriminator adds scene-level reasoning beyond per-object prediction.
+Stage 1, 3D scene understanding: for multi-object scenes the method assumes known objects and uses a state-of-the-art 6D pose estimator (segmentation-driven, Hu et al.); the projected object shape forms a segmentation mask concatenated with the RGB input, so each object's grasp prediction retains full scene context (one forward pass per detected object); for single-object scenes, AtlasNet retrained on ObMan reconstructs the object without a CAD prior. Stage 2, grasp type and coarse hand: a fine-tuned ResNet-50 classifies the grasp into the 33-class taxonomy with cross-entropy; each class carries a representative hand configuration H_C, and a fully connected network predicts increments {Delta-H, Delta-T, Delta-R} relative to {H_C, the object pose, and a sampled rotation candidate} — predicting increments rather than absolute values accelerates convergence; at test time 20 rotation candidates are sampled per object and the top-scoring hand is kept. Stage 3, hand refinement: a differentiable, parameter-free layer walks each finger's three joints (knuckle, proximal, distal) along the kinematic chain, rotating the finger within physical limits and minimizing the distance between object vertices and the arc swept by finger vertices until contact (contact threshold 2 mm), with a hyperparameter delta controlling the interpenetration-stability trade-off. Training combines the classification, arc, and angle losses with a contact prior loss (vertices near the object in at least 8% of ground-truth samples, concentrated on fingertips and palm), an interpenetration loss over all scene objects, a table-plane signed-distance loss, and a Wasserstein GAN adversarial loss plus gradient penalty that makes the model stochastic and pushes grasps toward human-like configurations.
 
-### Limitations
-- Relies on 2D object detection, so undetected objects get no grasp.
-- Synthesized grasps may lack physical stability (no force-closure guarantee).
-- Limited to static single-hand grasps; no temporal dynamics or bimanual interactions.
+## Contributions
 
-## 6. Takeaway
-GanHand established the blueprint for image-conditioned human grasp generation by pairing a conditional VAE with a graspability selector, demonstrating that data-driven generative models can predict plausible 3D grasps from a single RGB image. Its two-stage detection-then-generation paradigm and MANO-based representation remain influential in follow-up work.
+- Formulation and first solution of human grasp affordance prediction from a single RGB image of the objects, outputting grasp type, hand pose, and hand shape without any visible hand.
+- The YCB-Affordance dataset: 367 manually annotated realistic grasps on 58 YCB CAD models under the 33-class Feix taxonomy, automatically transferred via ground-truth 6D poses to 92 YCB-Video videos, collision-filtered against other objects and an annotated table plane, yielding 133,936 annotated frames with over 28M valid grasps — the largest human grasp affordance dataset in real scenes at the time, explicitly richer than what brute-force GraspIt generation produces.
+- A differentiable, parameter-free finger-flexing optimization layer that can be inserted into other grasp or reconstruction pipelines to increase contacts and reduce interpenetration.
+- A coarse-to-fine, multi-task W-GAN architecture (classification to taxonomy class, incremental coarse pose regression, differentiable refinement) that stochastically generates diverse, feasible grasps even in cluttered scenes with objects in close contact.
+
+## Experimental Setup
+
+On ObMan (about 150k synthetic single-object pairs from GraspIt), GanHand is trained in a simplified variant without scene-intersection losses and evaluated with three sampled grasps per object, selecting the highest grasp score. On YCB-Affordance, models train on 80 videos (about 130k frames) and test on 12 videos (2,949 frames) containing the same objects in different scenes and poses, sampling up to 20 predictions per object and selecting the one with least interpenetration against all predicted objects; 20 rotation candidates average a 0.15 rotation error between neighboring quaternions at 0.3 s inference per object. The baseline replaces the taxonomy classification branch with a ResNet-50 directly regressing MANO pose, rotation, and translation, keeping scene understanding and refinement. Metrics: Ferrari-Canny analytical grasp score, number of hand-object contacts, interpenetration volume (0.5 cm3 voxelization), physics-simulation displacement under gravity, percentage of graspable objects receiving a valid grasp (at least two contact points, no interpenetration), grasp-type accuracy, and hand-to-table-plane interpenetration. Training uses Adam (learning rate 1e-4, batch 32) with loss weights 1 / 0.01 / 100 / 4000 / 20 / 1 / 10, 5 epochs plus 25 with linear decay, roughly 6 days (ObMan) and 8 days (YCB-Affordance) on a V100.
+
+## Results
+
+On ObMan, adding the optimization layer raises the baseline's grasp score from 0.19 to 0.43 (three joints optimized) and cuts interpenetration from 42 to 29, while GanHand with one joint optimized reaches a 0.60 grasp score with 33 interpenetration versus 0.40 and 48 without optimization; GraspIt on ground-truth object shapes scores 0.30 with the lowest interpenetration (10) but needs 300 s per grasp versus 0.2-0.4 s for the networks. Plugged into the Hasson et al. hand-object reconstruction pipeline, the optimization layer reduces simulation displacement and interpenetration by more than 30%. On YCB-Affordance, GanHand with one joint optimized is the best overall configuration: 58% of graspable objects receive a valid grasp versus 33% for the best baseline variant, grasp-type accuracy is 76% versus 62%, the grasp score is 0.47 versus 0.45, object interpenetration is 27 versus 30, hand-object contacts are comparable (3.7), and table-plane interpenetration is negligible for both (about 3 mm for GanHand). Qualitatively, both models produce diverse grasps, but the taxonomy branch gives GanHand more accurate grasp types; documented failure cases include overlapping grasps when the object's absolute 6D pose is inaccurate (can, clamps) and a cup misrecognized as a brick leading to a wrong grasp.
+
+## Limitations
+
+The method assumes known objects with CAD models for multi-object scenes, relying on an external 6D pose estimator whose errors propagate into overlapping or misplaced grasps; the AtlasNet alternative applies only to single-object scenes and, in the authors' words, is not reliable with multiple objects. Grasp feasibility depends on the taxonomy's representative configurations and the sampled rotation candidates, and the optimization layer's delta hyperparameter trades off interpenetration against grasp stability, with the best absolute penetration still far from GraspIt's collision-handled solutions. Evaluation on YCB-Affordance covers only seen objects in unseen poses/scenes, and the paper's stated future work — conditioning grasp choice on intended activity and object state (for example, how full a cup is) — is not addressed; runtime of about 0.3 s per object with 20 candidates is reported but scaling to dense clutter is untested.

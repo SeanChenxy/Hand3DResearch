@@ -1,42 +1,37 @@
 # In-Hand 3D Object Scanning from an RGB Sequence
 
+**Authors:** Shreyas Hampali, Tomas Hodan, Luan Tran, Lingni Ma, Cem Keskin, Vincent Lepetit  
+**Date:** 2022-11-28  
+**Identifier:** [arXiv:2211.16193](https://arxiv.org/abs/2211.16193)  
+**Zotero item:** `CWM6A7IB` ([Zotero](zotero://select/library/items/CWM6A7IB))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-Reconstructs an unknown object's 3D shape, appearance, and the hand-object motion from a monocular RGB video using a NeRF-based neural implicit representation that simultaneously models the object, hand, and their dynamic interaction.
 
-## 1. Problem and Setting
-- Jointly reconstruct the 3D shape and appearance of an unknown object held by a hand, along with the time-varying hand-object poses, from a monocular RGB video.
-- Input: monocular RGB video; output: object 3D shape (implicit density field), object appearance (color field), hand pose per frame (MANO), object pose per frame.
-- Template-free, joint hand-object tracking and reconstruction. The camera is stationary; the hand moves the object.
+This paper performs in-hand 3D scanning of an unknown object from a monocular RGB sequence without knowing the camera-object relative poses, jointly optimizing a neural implicit object model (occupancy plus color fields in the UNISURF style) and the object pose trajectory. Because direct joint optimization fails without coarse initialization, the method splits the sequence into overlapping segments whose boundaries fall at local extrema of the apparent object-mask area, reconstructs and tracks the object incrementally within each segment with stabilizing losses (optical flow, shape regularization, synthetic depth), merges segments by aligning poses on overlapping frames, and runs a global optimization. On HO-3D it achieves an average RMSE Hausdorff distance of 4.65 mm — well below COLMAP's 13.41 mm and close to the UNISURF baseline given ground-truth poses (3.76 mm) — and recovers texture quality statistically identical to the ground-truth-pose baseline (average PSNR 31.01 versus 31.02).
 
-## 2. Core Method
-- A NeRF-based framework that models the scene as two components: (1) the hand, represented by a canonical MANO mesh deformed per frame; (2) the object, represented by a canonical NeRF that is rigidly transformed per frame.
-- Joint optimization of: hand MANO parameters per frame, object 6D pose per frame, and the shared object NeRF (density + color).
-- Hand-aware ray sampling: rays passing through the hand are handled via a volumetric hand model that contributes density, preventing the hand from being reconstructed as part of the object.
-- Pose refinement: both hand and object poses are refined jointly during NeRF training through differentiable rendering.
-- Does not assume known camera extrinsics — the object pose relative to the hand is the unknown variable.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: per-video test-time optimization (no offline training).
-- Supervision: RGB pixel values (photometric loss); optional 2D hand keypoints for initialization.
-- Uses MANO for hand geometry.
-- Assumes object is rigid; camera is stationary; hand-object motion mostly consists of object rotation in-hand; initial hand pose estimates are reasonably good.
+In-hand scanning — turning an object in front of a camera — is convenient for AR/VR headsets and can capture the full surface including the bottom, but unlike static-object capture, Structure-from-Motion cannot supply camera poses: SfM needs many distinct visual features and fails on poorly textured objects, while pose-free NeRF variants (BARF, NeRF--, SCNeRF) converge only on forward-facing captures and fail for the wide viewpoint ranges typical of in-hand rotation. RGB-D in-hand scanning systems avoid this but require depth sensors, and single-image learning methods see only the visible side and need annotated training data. The problem addressed is per-sequence (training-free) reconstruction of shape, color, and pose trajectory of a completely unknown rigid object from RGB only, with unknown, possibly dynamic grasps — unlike HHOR, which assumes a static grasp and whose estimated hand poses would be unreliable under changing contact, this method deliberately avoids using hand poses at all.
 
-## 4. Experiments and Findings
-- Datasets: HO3D, custom captured in-hand scanning sequences.
-- Metrics: Chamfer Distance, PSNR for novel view synthesis.
-- Produces high-quality textured 3D object reconstructions from monocular video. Hand-aware modeling significantly reduces artifacts where the hand occludes the object.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Unified NeRF framework jointly optimizes hand tracking and object reconstruction.
-- Hand-aware ray sampling effectively disentangles hand and object.
-- Produces both geometry and appearance (textured mesh via NeRF density extraction).
+The object is represented by an occupancy field and a color field, each an 8-layer MLP with Fourier feature encoding; the color field is conditioned on viewing direction, surface normal, and a geometry feature, and rendering alpha-blends colors along rays as in UNISURF, assuming a solid non-translucent object, Phong reflectance, and distant lights. The optimization objective combines a photometric color loss on object rays with a binary-cross-entropy segmentation loss that pushes the maximum occupancy along each object-or-background ray toward the provided mask value (object and hand masks come from off-the-shelf segmenters such as Detic or DistinctNet, with SeqFormer masks used to ignore hand pixels). Direct optimization of this objective from random or fixed pose initialization degenerates, so the method proceeds incrementally. Sequence segmentation splits the input at frames where the smoothed apparent object-mask area (sliding window of 12 frames) passes local maxima and minima — moments when large surface parts disappear or appear — with boundaries shifted a few frames to create overlaps; each segment is processed from a local maximum toward a local minimum. Within a segment, optimization runs frame by frame over a growing window, with the pose of the new frame predicted from previous poses by a second-order motion model and parameterized through a CNN (as in LASR) that regularizes the optimization; additional losses stabilize it: an optical-flow loss constraining surface-point reprojections between consecutive frames, a shape regularization loss that penalizes occupancy far from the object-frame origin to encourage a planar proxy early on, and a synthetic-depth loss that penalizes deviation of current ray depths from depths rendered with the previous shape estimate to prevent drift of already-reconstructed parts. After per-segment optimization, segments are merged by estimating the rigid alignment between normalized poses at overlapping frames (a single overlapping frame suffices), and a global optimization over all frames (up to 150, BARF-style coarse-to-fine frequency masking, poses optimized directly, network initialized to a sphere) produces the final model and trajectory; meshes are extracted by Marching Cubes at the 0.5 occupancy level.
 
-### Limitations
-- Per-video optimization is slow (hours per sequence).
-- Requires significant object rotation in the video for complete coverage.
-- Struggles with fast motion or motion blur.
-- Assumes static camera and lighting.
+## Contributions
 
-## 6. Takeaway
-This work demonstrated that NeRF-based joint optimization can simultaneously track hands and reconstruct unknown objects from monocular video, producing appearance-aware 3D models. The hand-aware volumetric modeling approach established a template followed by many subsequent video-based hand-object reconstruction methods.
+- The first training-free method to reconstruct an unknown object's shape, color, and pose trajectory from a monocular RGB in-hand sequence without camera poses, without hand pose estimation, and without restricting the grasp to be static.
+- An incremental optimization strategy that makes joint reconstruction-and-tracking tractable: automatic sequence segmentation based on local extrema of apparent object area, segment-wise frame-by-frame reconstruction with CNN-parameterized poses, and segment merging through overlapping-frame pose alignment feeding a global optimization.
+- Three stabilizing losses for early-stage joint optimization — optical flow, origin-seeking shape regularization, and synthetic-depth consistency — shown by ablation to be individually necessary, plus new captured texture-less sequences (clamp, Rubik's cube) and an ARIA glasses demonstration of real-world applicability.
+
+## Experimental Setup
+
+Quantitative evaluation uses the multi-view HO-3D sequences (10 YCB objects with annotated 3D poses, same sequences as Patten et al.); qualitative evaluation covers RGBD-Obj (mustard bottle) and two newly captured texture-less YCB sequences (extra large clamp, Rubik's cube). Shape accuracy is the one-way RMSE Hausdorff distance (mm) to the ground-truth mesh after ICP alignment with allowed scaling (results are defined only up to scale); texture accuracy is PSNR, SSIM, and LPIPS of renderings from ground-truth poses on held-out frames after a photometric pose-refinement pass; pose accuracy is the area under the curve of the absolute trajectory error plot with a 10 cm threshold. Baselines are COLMAP with sequential matching restricted to object pixels, the single-image method of Ye et al. (pre-trained on sequences of the same object), and two ground-truth-pose methods: UNISURF and the RGB-D method of Patten et al. Per-segment optimization uses hidden width 128, four/four and two/two coordinate/direction Fourier octaves, 6K iterations per step adding 5 frames per step with 15% of rays from the new frame; global optimization uses width 256 and 25K iterations per segment pair.
+
+## Results
+
+On HO-3D, the method attains an average RMSE Hausdorff distance of 4.65 mm versus 6.76 mm for Ye et al. and 13.41 mm for COLMAP, approaching the ground-truth-pose baselines UNISURF (3.76 mm) and the depth-using Patten et al. (3.34 mm); per-object results include 1.95 mm on potted meat, 2.91 mm on cracker box, and 3.01 mm on sugar box, with the worst cases on objects lacking both geometric and texture features (pitcher base 9.21 mm, bleach cleanser 5.63 mm), and failure on scissors' thin structure for both this method and COLMAP. COLMAP only succeeds on richly textured objects (cracker box 4.08, sugar box 6.66) and fails entirely on banana and scissors. For pose trajectories, the method's average ATE AUC (10 cm threshold) is 4.5 against COLMAP's 2.9, where COLMAP's low average reflects crashes on non-textured objects rather than accuracy; both methods perform similarly on well-textured objects (7.6 versus 7.4 on cracker box). Recovered texture is on par with UNISURF using ground-truth poses: average PSNR 31.01 versus 31.02, SSIM 0.77 versus 0.75, LPIPS 0.32 versus 0.34. The ablation on the largest HO-3D segment shows that removing the synthetic-depth, optical-flow, or shape-regularization losses collapses the ATE AUC from 5.8 and 8.1 (all terms, on sequences MDF14 and SM2) to as low as 4.9/1.0, 4.8/2.9, and 1.1/0.5 respectively, and the paper demonstrates that continuing incremental tracking past a segment boundary degrades reconstruction exactly when previously unseen parts appear.
+
+## Limitations
+
+The method requires per-sequence optimization (6K iterations per tracking step plus 25K per segment pair for the global stage) and object/hand segmentation masks as input, and assumes a solid non-translucent object, approximately distant lighting under the Phong model, coverage of the object from all sides, and modest object translation (rotation-dominated manipulation). Objects lacking both geometric and texture features (pitcher base, banana) and thin structures (scissors) remain failure cases; reconstruction is defined only up to scale, requiring ICP with scale alignment for evaluation.

@@ -1,43 +1,38 @@
 # BIGS: Bimanual Category-agnostic Interaction Reconstruction from Monocular Videos via 3D Gaussian Splatting
 
+**Authors:** Jeongwan On, Kyeonghwan Gwak, Gunyoung Kang, Junuk Cha, Soohyun Hwang, Hyein Hwang, Seungryul Baek  
+**Date:** 2025-04-12  
+**Identifier:** [arXiv:2504.09097](https://arxiv.org/abs/2504.09097)  
+**Zotero item:** `69J5HA88` ([Zotero](zotero://select/library/items/69J5HA88))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-Reconstructs bimanual hand-object interactions from monocular video using 3D Gaussian Splatting (3DGS), achieving faster optimization and higher-quality rendering compared to NeRF-based methods while handling two hands and an unknown object.
 
-## 1. Problem and Setting
-- Joint reconstruction of two hands and an unknown object from monocular video.
-- Input: monocular RGB video; output: MANO meshes for both hands per frame + object 3D Gaussian representation + per-frame poses.
-- Bimanual interaction (two hands manipulating one or more objects), template-free, category-agnostic. Video-based per-scene optimization.
+BIGS (Bimanual Interaction 3D Gaussian Splatting) is a per-video optimization pipeline that reconstructs 3D Gaussians of two hands and an unknown object from a monocular RGB video. It handles the severe occlusions of bimanual interaction with two key mechanisms: a score distillation sampling (SDS) loss with a pre-trained text-to-image diffusion prior that hallucinates unseen object surfaces, and a single canonical hand Gaussian shared (mirrored) between the two hands to accumulate hand evidence from limited views. A two-stage optimization (separate hand/object fitting, then joint interacting-subjects refinement with a contact regularization) aligns hands and objects in 3D. On ARCTIC and HO3Dv3 it surpasses HOLD in hand pose (MPJPE), object reconstruction (Chamfer distance, F10), contact reconstruction, and rendering quality (e.g., 24.87 vs 12.83 PSNR on ARCTIC).
 
-## 2. Core Method
-- Replaces NeRF-based object representations (used in HOMAN, HOLD) with 3D Gaussian Splatting for the object:
-  - The object is represented as a set of 3D Gaussians (position, covariance, color, opacity) in a canonical frame.
-  - Per frame, the Gaussians are rigidly transformed by the predicted object pose and rendered via splatting.
-- Hands are still represented as MANO meshes, rasterized per frame.
-- Joint optimization: MANO parameters + object Gaussian parameters + per-frame object poses are optimized to minimize photometric loss.
-- 3DGS enables much faster rendering and optimization than NeRF-based volumetric rendering (minutes vs. hours).
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: per-video optimization (test-time only).
-- Supervision: RGB pixels, 2D hand keypoints, optional object masks.
-- Uses MANO for both hands.
-- Assumes object is rigid; two-hand interaction; sufficient viewpoints captured in video.
+Reconstructing 3D hand-object interaction (HOI) is fundamental for VR/AR, remote robot control, and human-computer interaction, but existing pipelines cover only restricted cases. Template-based methods require pre-scanned object CAD models (typically limited to 10-20 shapes); HOLD achieves category-agnostic reconstruction with SDFs but is NeRF-based and slow to fit and render; MANUS uses 3D Gaussian Splatting (3DGS) for fast fitting but requires multi-view images of the scene. Moreover, category-agnostic methods largely assume only one hand interacts with the object. Bimanual interaction with an unknown object introduces dramatic occlusion patterns between two hands and the object, so many object pixels are never observed and dedicated mechanisms are needed to reconstruct the missing surfaces. The paper defines the task: from a monocular RGB video of two hands manipulating an unknown object, recover 3D Gaussians of the hands and the object, supporting novel-view/novel-pose rendering and accurate 3D hand pose, object shape, and hand-object contact.
 
-## 4. Experiments and Findings
-- Datasets: HOI4D, ARCTIC, custom bimanual captures.
-- Metrics: PSNR, SSIM (rendering); Chamfer Distance (object); MPJPE (hands).
-- 10-100x faster optimization than NeRF-based methods (HOMAN, HOLD) with comparable or better visual quality. Handles bimanual interactions robustly.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- 3DGS representation dramatically accelerates both optimization and rendering.
-- Explicit point-based representation enables easier geometry extraction.
-- Handles bimanual interactions naturally.
+Pre-processing extracts per-frame inputs: the HaMeR Transformer-based hand regressor estimates MANO pose, shape (shared across frames, taken from the first frame's right hand), global orientation, and translation; an SfM method (HLoc) yields an object point cloud plus per-frame object rotation and translation; hand-object meshes are aligned following HOLD. Canonical 3D Gaussians are then built for hands and objects. Hand Gaussians are constructed once for the right hand in canonical space: TriplaneNet features at each Gaussian center feed three MLPs predicting color/opacity (appearance), center offset, rotation, and scale (geometry), and LBS weights (deformation), so Gaussians are posed via MANO linear blend skinning. The same canonical hand Gaussian is shared by both hands by flipping centers along the x-axis, accumulating information from two hands in one representation and regularizing occluded hand parts. Object Gaussians likewise use a TriplaneNet with appearance and geometry MLPs. Optimization proceeds in two stages. In the single-subject stage, hand and object Gaussians are optimized separately with an image consistency loss (masked L1, SSIM, VGG, plus rendering-quality regularizers and a mask regularizer confining Gaussians to the foreground), a hand loss with pose/translation temporal smoothness and LBS-weight regularization toward pseudo ground truth, and an object loss that is an SDS loss using a Stable Diffusion prior: textual inversion first learns a prompt ("A photo of <token> <object>"), and a PiDi boundary-conditioned ControlNet keeps the diffusion-generated object aligned with the rendered virtual views so unseen object surfaces are plausibly completed; SDS is applied only to the object since MANO priors and hand sharing already constrain hands. In the interacting-subjects stage, per-frame hand translations are re-optimized with a contact regularization that pulls hand translations toward the object translation (small weight 1.0 to avoid degenerate solutions), jointly with image and mask losses.
 
-### Limitations
-- 3DGS may produce floaters or noisy geometry in unseen regions.
-- Gaussian optimization can be sensitive to initialization.
-- Still a per-video optimization (not feed-forward).
-- Requires good initial hand pose estimates.
+## Contributions
 
-## 6. Takeaway
-BIGS demonstrated that 3D Gaussian Splatting is a superior representation for hand-object reconstruction compared to NeRF, offering faster optimization while maintaining quality. This shift from NeRF to 3DGS mirrors the broader trend in dynamic scene reconstruction and has been rapidly adopted by follow-up hand-object works.
+- The first comprehensive 3DGS-based pipeline for bimanual, category-agnostic interaction reconstruction from a single monocular RGB video, where prior category-agnostic methods (HOLD, MANUS) were limited to single-hand or multi-view settings.
+- A diffusion-prior strategy for occlusion: an SDS loss with textual inversion and PiDi-boundary ControlNet conditioning that reconstructs object parts never visible in the video, applied selectively to object Gaussians while hands rely on MANO priors.
+- A single canonical hand Gaussian shared across both hands via x-axis flipping, which accumulates 3D hand information from limited views and mitigates bimanual self-occlusion.
+- A two-stage optimization decomposition (separate single-subject fitting, then interacting-subjects refinement with a contact regularization term) that improves 3D hand-object alignment.
+
+## Experimental Setup
+
+Evaluation uses two datasets. ARCTIC provides bimanual manipulation sequences; following the ECCV 2024 HANDS workshop challenge setting, training uses 9 objects, subject 3, camera index 1, only "grab" sequences (keeping the object rigid), and 300 frames where hands and objects are most clearly visible. HO3Dv3 provides one-hand interactions; following HOLD, 18 sequences are used ("Full View"), and a harder "Limited View" setting samples 25% of frames per sequence so full object viewpoints are no longer observed. Metrics: MPJPE for hand pose; Chamfer distance (CDo) and F-score at 10 mm (F10) for object shape; hand-relative Chamfer distances CDl and CDr for hand-object contact; PSNR, SSIM, and LPIPS for rendering. Baselines include HOLD (NeRF/SDF, category-agnostic), HaMeR (hand-only regressor), iHOI, DiffHOI, HOMan, and the raw HLoc object initialization. Loss weights: lambda values 0.2 (SSIM), 1.0 (VGG), 0.1 (color), 100.0 (scale), 10.0 (mask), LBS weight 10^3, contact weight 1.0.
+
+## Results
+
+On ARCTIC (two-hand setting), BIGS reaches CDl 46.11 cm^2, CDr 31.28 cm^2, CDo 1.28 cm^2, F10 83.93%, MPJPEl 24.63 mm, and MPJPEr 24.35 mm, versus HOLD's 105.92, 123.54, 2.07, 63.92, 27.13, and 24.70 respectively — reducing contact Chamfer by 60-75% and raising object F10 by 20.01 points, while the HaMeR initialization alone gives 27.23/24.37 mm MPJPE. On HO3Dv3 (Full View), BIGS attains CDr 11.1, CDo 0.3, F10 96.7%, MPJPEr 23.9 mm, slightly ahead of HOLD (11.3, 0.4, 96.5, 24.2) and clearly ahead of HOMan, iHOI, and DiffHOI (e.g., iHOI: CDo 3.8, F10 41.7%; DiffHOI: MPJPEr 32.3 mm). On the HO3D Limited View setting, BIGS retains most accuracy (CDr 21.70, CDo 1.24, F10 84.02%, MPJPEr 24.22) whereas HOLD degrades severely (CDr 95.63, CDo 3.39, F10 74.90%). Rendering quality is also far better than the NeRF-based HOLD: on ARCTIC two-hand, PSNR 24.87 vs 12.83, SSIM 0.96 vs 0.66, LPIPS 0.05 vs 0.32; on one-hand, 24.51/0.92/0.07 vs 16.20/0.74/0.21. The ablation on ARCTIC shows each component matters: starting from 96.56/117.72 CDl/CDr, 1.36 CDo, 81.78 F10, 27.22/25.08 MPJPE, adding the smoothness term and hand sharing lowers hand MPJPE to 24.63/24.35 and contact CD substantially (CDl 50.78, CDr 35.57 with Lcontact and Lsmt), and the full model with sharing further improves to 46.11/31.28 CD, 1.28 CDo, and 83.93 F10; the text additionally notes SDS improves both contact and object reconstruction (CDo/F10).
+
+## Limitations
+
+The authors state reconstruction is limited to articulated hands whose LBS skinning is known (via MANO) or to rigid objects; reconstructing articulated unknown objects from a monocular video remains an open challenge and is suggested as future work. Because it is a per-video optimization method, a new 3D Gaussian set must be fitted for each input video (no feed-forward generalization is reported). The ARCTIC evaluation also restricts to "grab" sequences and 300 selected frames where hands and objects are clearly visible, and object meshes for visualization require an additional convex-hull step since only object point-cloud Gaussians are estimated.

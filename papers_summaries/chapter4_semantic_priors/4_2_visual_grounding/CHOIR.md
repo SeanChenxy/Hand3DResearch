@@ -1,46 +1,37 @@
-# CHOIR: Contact-aware 4D Hand-Object Interaction Reconstruction (Cross-reference)
+# CHOIR: Contact-aware 4D Hand-Object Interaction Reconstruction
+
+**Authors:** Hao Xu, Yilin Liu, Yinqiao Wang, Chi-Wing Fu, Niloy J. Mitra  
+**Date:** 2026-05-20  
+**Identifier:** [arXiv:2605.20992](https://arxiv.org/abs/2605.20992)  
+**Zotero item:** `XYG5ZQDU` ([Zotero](zotero://select/library/items/XYG5ZQDU))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-This entry is a cross-reference to the detailed summary in Chapter 3 (3D Geometry Priors, section 3.4 Spatial Geometry). CHOIR presents a versatile and differentiable hand-object interaction representation that supports multiple downstream tasks (reconstruction, refinement, synthesis) by encoding the spatial and contact relationships between hand and object in an end-to-end learnable manner.
 
-## 1. Problem and Setting
-- Creating a general-purpose, differentiable representation of hand-object interaction that is useful across reconstruction, pose refinement, and grasp synthesis tasks.
-- Input: hand mesh (MANO) and object mesh (or point cloud) with known relative pose.
-- Output: a differentiable encoding of their spatial interaction (distance fields, contact maps, penetration maps).
-- Visual grounding prior: the differentiable HOI representation serves as a visual-grounded signal (through contact, penetration, and distance) for downstream tasks.
+CHOIR turns open-world monocular RGB videos into 4D hand-object interaction traces — articulated hand motion, object shape with 6D pose trajectory, and explicit contact evidence — by treating contact as an explicit coupling signal. A three-stage pipeline first builds a coarse contact-agnostic 4D sequence from open-world visual priors, then a flow-matching generative module rectifies hand-object relative placement by predicting ray-depth corrections before any contact reasoning, and finally a contact-aware joint optimization with dynamically rebuilt soft contact constraints refines the sequence. On HO3D it reports object Chamfer Distance of 0.77 cm and F@10 of 96.03% with penetration ratio 4.58%, and on a 100-video in-the-wild benchmark (TASTE-Rob plus self-captured clips) it reconstructs all videos while HOLD and MagicHOI succeed on only 30 and 22 respectively.
 
-## 2. Core Method
-- A differentiable hand-object interaction (HOI) representation that encodes:
-  - Signed distance field (SDF) between hand vertices and object surface (and vice versa).
-  - Contact probability map (per-vertex likelihood of contact).
-  - Penetration map indicating where hand vertices penetrate the object.
-- All components are computed differentiably from hand and object meshes.
-- Usable as: (a) a differentiable loss for refining hand-object poses; (b) a conditioning signal for grasp synthesis; (c) an evaluation metric.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- The representation itself is hand-crafted (not learned from data).
-- For training downstream models that use this representation, standard HOI datasets apply.
-- Assumes access to hand mesh (typically MANO) and object mesh at test time.
-- No training is needed for the representation itself.
+The paper asks whether everyday open-world monocular videos can be converted into reusable 4D interaction primitives for scalable mining of real interactions and scene-aware synthesis and planning. Existing HOI methods often assume known object models or categories, curated scenes, limited clutter, or mild occlusion, and estimate hands and objects with weak coupling; performance degrades precisely on casual monocular videos (e.g., Epic-Kitchens, TASTE-Rob) with unseen, occluded, or visually ambiguous objects. The problem is defined as recovering, from a monocular RGB video of a complete atomic interaction (approach, grasp/manipulate, release) or of the manipulation phase only, a coherent 4D HOI: hand motion, rigid object shape, object 6D pose trajectory, and contact evidence. Three challenges are identified: (i) a 2D perception dilemma — specialized interaction detectors fail to generalize while general foundation models do not understand HOI semantics out of the box; (ii) 3D spatial ambiguity — monocular depth and scale ambiguity under occlusion misaligns hand and object, so proximity-based contact search fails or attaches to wrong surfaces; (iii) 4D physical complexity — contact validity is sparse and phase-dependent, and enforcing it naively risks interpenetration, floating artifacts, or temporal drift. A key observation is that contact is a strong coupling cue but becomes reliable only after relative hand-object placement has been corrected, motivating a staged design.
 
-## 4. Experiments and Findings
-- Multi-task evaluation: pose refinement, grasp synthesis, reconstruction evaluation.
-- The HOI representation as a refinement loss consistently improves hand-object pose accuracy.
-- The contact probability component is effective for grasp synthesis.
-- Provides physically meaningful supervision without requiring contact annotations.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Versatile representation applicable to multiple tasks.
-- Fully differentiable for end-to-end integration.
-- Provides physically meaningful signals (contact, penetration).
-- Task- and architecture-agnostic.
+CHOIR runs three stages. Stage 1 (open-world HOI analysis) extracts per-frame 2D cues — hand box, chirality, 2D joints, interacting-object box, modal/amodal masks — via a self-adaptation procedure that mines object pseudo-labels around a motion-selected interaction frame (first local minimum of fingertip velocity) to fine-tune WiLoR with an added object-box head, plus SAM 2 propagation with amodal video segmentation; HaMeR initializes MANO poses, VIPE provides camera estimates, Dyn-HaMR stabilizes the 4D hand trajectory, and SAM-3D-Objects reconstructs a canonical object mesh with metric scale from an anchor frame, then acts as a guarded follow tracker (shape/scale latents frozen, pose latents updated, outlier poses rejected via a 60-degree angular guard, missing poses interpolated). A coarse isolated fitting then optimizes hand MANO parameters (2D alignment, wrist-depth, anatomy, HaMeR prior, temporal terms) and object pose with complementary silhouette losses (a repulsion term penalizing spill outside the amodal mask and an attraction term pulling vertices toward uncovered target-mask pixels), followed by a ray-scale alignment that slides the object along the camera ray to match interaction-depth statistics of the hand. Stage 2 (generative HOI spatial rectification) models the dominant monocular failure mode — depth ambiguity — as a 1D offset along the camera ray and trains a flow-matching Transformer (object geometry encoded PointNet++-style, AdaLN time conditioning) on GraspPair, a synthetic dataset of roughly 500k physically filtered grasp pairs built from DexGraspNet grasps over 5,355 objects in 133 categories, where unstable grasps are pruned in PyBullet and noisy sources are created by anisotropic ray-aligned perturbations; sampling the conditional flow rectifies hand-object placement per interaction frame, from which initial contact correspondences are read out as MANO contact vertices paired with barycentric object anchors (K=50 nearest of 10,000 canonical surface samples, kept only under a 2 cm distance and 60-degree normal-cone criteria). Stage 3 (contact-aware optimization) jointly refines hand and object trajectories over phases (pre-static, approach, manipulation, release, post-static) by minimizing contact, penetration, silhouette, anchor, and temporal losses; a soft top-K contact cache is periodically rebuilt from the current geometry with confidence gates from proximity, normal compatibility, and temporal memory, and a one-sided penetration term pushes hand vertices inside the object back toward its surface.
 
-### Limitations
-- Not a learned representation; may not capture functional interaction semantics.
-- Requires known hand and object meshes at inference.
-- Computational cost scales with mesh resolution.
-- Captures geometric but not dynamic interaction.
+## Contributions
 
-## 6. Takeaway
-CHOIR highlights the value of a well-designed, differentiable hand-object interaction representation that serves as a bridge between geometric reconstruction and physical reasoning. In the context of visual grounding (chapter 4), it provides a visual-grounded, differentiable contact signal that downstream tasks can leverage. See chapter 3 section 3.4 for the full technical details.
+- An open-world monocular 4D HOI reconstruction method that extracts 2D interaction cues, performs guarded SAM-3D-Objects follow tracking, and produces a coarse contact-agnostic 4D sequence without known object models or curated capture.
+- Generative HOI spatial rectification: a flow-matching model trained on physically filtered synthetic grasp pairs that predicts ray-depth corrections to fix hand-object relative placement before contact correspondence construction, treating contact as a consequence of spatial correction rather than a standalone contact-map prediction problem.
+- A contact-aware joint optimization with dynamically rebuilt soft contact constraints (barycentric anchors, confidence gates, temporal memory) combined with silhouette, penetration, anchor, and temporal losses, validated on controlled (HO3D) and in-the-wild videos with reference-free physical and temporal metrics.
+
+## Experimental Setup
+
+Baselines are five template-free HOI reconstruction methods: iHOI, DiffHOI, HOLD, EasyHOI, and MagicHOI. The rectification module is trained on GraspPair (about 500k paired grasps, 5,355 object instances, 133 categories, roughly 200 valid grasps per object on average, physics-filtered with PyBullet). Evaluation uses HO3D (14-sequence subset with 3D ground truth, following HOLD/MagicHOI protocols) and a 100-video in-the-wild benchmark of 70 challenging TASTE-Rob single-hand clips plus 30 self-captured clips, where baselines are evaluated only on sequences with at least one-third of frames reconstructed (HOLD succeeds on 30, MagicHOI on 22, CHOIR on all 100). Metrics: with ground truth — root-relative hand MPJPE, object Chamfer Distance (cm), F-scores at 5 mm and 10 mm (MagicHOI protocol), hand-relative Chamfer Distance (CDh), and Relative Scale error (RS, ICP-scale deviation from 1); reference-free — mask mIoU, penetration ratio (percent of hand vertices inside the object), hand-object closest distance, and hand/object acceleration in cm/frame2, with mean, standard deviation, and median reported for in-the-wild results. Implementation is in PyTorch with Adam; runtimes per roughly 200-frame video on RTX 4090 are about 30 minutes for CHOIR (Stage 1 about 25.5 minutes, Stage 2 about 10 seconds, Stage 3 about 2 minutes), versus about 2 hours for MagicHOI, about 9 hours for EasyHOI, and about 10 hours for HOLD.
+
+## Results
+
+On HO3D, CHOIR achieves object CD 0.77 cm, F@5 72.33%, F@10 96.03%, MPJPE 5.55 mm, CDh 2.41 cm, and RS 0.10, beating all baselines on object shape and scale metrics (HOLD: CD 1.31, F@5 57.20, RS 0.62; MagicHOI: CD 0.87, F@5 69.72, RS 0.11); MagicHOI attains a lower MPJPE (4.62 mm) because it freezes the HaMeR hand estimate, whereas CHOIR jointly optimizes hand and object. On reference-free HO3D metrics CHOIR reports mIoU 85.87%, penetration ratio 4.58%, and hand-object distance 0.06 cm, versus HOLD (mIoU 75.01%, penetration 17.72%) and MagicHOI (mIoU 70.57%, penetration 14.11%). On the in-the-wild benchmark over all 100 videos CHOIR reports mIoU 76.65% (median 79.13%), penetration ratio 5.81%, hand-object distance 0.10 cm, and hand/object acceleration 0.42/0.12 cm/frame2; even restricted to the baselines' own valid subsets, CHOIR reaches mIoU 78.85% (HOLD-valid) and 77.89% (MagicHOI-valid) with penetration ratios of 6.12% and 6.51%, against baseline means of 1.08% and 3.95% mIoU respectively and hand-object distances of 194.71 cm and 6.82 cm, since most baseline failures stem from COLMAP-based tracking breakdowns. Ablations on the in-the-wild set show that removing Stage 1 repulsion/attraction losses drops mIoU to 59.24%/53.06%, removing Stage 2 rectification roughly doubles the hand-object distance (0.10 to 0.22 cm) at similar mIoU, and removing the Stage 3 penetration, contact, or temporal terms raises penetration ratio to 6.37%/4.61%/5.90% versus 5.81% for the full model, with the authors noting penetration should be read jointly with hand-object distance since separation can also lower it. Qualitative results cover small objects, time-varying contacts, and transparent objects, with contact maps revealing localized plausible contact regions.
+
+## Limitations
+
+CHOIR assumes a single hand manipulating a rigid object in a monocular RGB video; it does not handle arbitrary re-grasping, non-rigid or articulated object deformation, or full bimanual joint optimization (the supplementary shows only post-hoc bimanual composition for visualization). It relies on upstream 2D and 3D initialization, so errors in segmentation, tracking, metric scale estimation, or anchor-frame reconstruction propagate to the final result; optimization degrades when objects are heavily occluded at sequence start or end, strongly rotationally symmetric objects make the spin angle unobservable from silhouettes and contacts, and representative failure cases include incomplete 2D detection/segmentation, incorrect metric scale, and pose-tracking ambiguity for symmetric objects under rapid motion. Future work includes refining object geometry with multi-view cues, extending to bimanual interactions, and moving from iterative optimization toward a feed-forward model.

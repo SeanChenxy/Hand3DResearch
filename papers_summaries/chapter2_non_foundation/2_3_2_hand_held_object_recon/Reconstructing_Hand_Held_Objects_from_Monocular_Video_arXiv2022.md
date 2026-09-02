@@ -1,42 +1,37 @@
 # Reconstructing Hand-Held Objects from Monocular Video
 
+**Authors:** Di Huang, Xiaopeng Ji, Xingyi He, Jiaming Sun, Tong He, Qing Shuai, Wanli Ouyang, Xiaowei Zhou  
+**Date:** 2022-11-30  
+**Identifier:** [arXiv:2211.16835](https://arxiv.org/abs/2211.16835), DOI [10.1145/3550469.3555401](https://doi.org/10.1145/3550469.3555401)  
+**Zotero item:** `B7FYLC9L` ([Zotero](zotero://select/library/items/B7FYLC9L))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-Reconstructs a hand-held object's 3D shape from monocular video via per-video optimization, using the hand as a moving "structured light" proxy to observe the object from multiple views as the hand rotates it.
 
-## 1. Problem and Setting
-- Reconstruct the 3D shape of an unknown hand-held object from a monocular video showing the object being manipulated/rotated.
-- Input: monocular RGB video; output: 3D object mesh + hand pose per frame.
-- Template-free object reconstruction. The hand naturally rotates the object, providing multiple views. Both hand and object need to be reconstructed.
+HHOR reconstructs an object held by a hand with a fixed grasping gesture in front of a static RGB camera, without any learned object prior: hand motion tracked through a MANO fitter converts the video into calibrated multi-view images, and the object geometry is then recovered with a NeuS-style signed-distance-field optimization upgraded with camera pose refinement, a deformation field for small hand-object relative motion, and semantics-guided ray sampling that concentrates 80% of rays on the object. On its new HOD dataset of 35 objects (14 with scanned ground truth), HHOR reduces the mean Chamfer distance to 0.249 versus 3.391 for NeuS fed with the same poses and 3.163-6.802 for single-view learning methods (ObMan, GF, IHOI), and it even beats those learning baselines when their per-frame predictions are selected or fused against ground truth.
 
-## 2. Core Method
-- Per-video optimization pipeline: given an input video, the method alternates between hand pose estimation (MANO fitting) and object shape optimization.
-- Hand pose is estimated per frame using existing detectors (FrankMocap-style), then refined via photometric consistency.
-- Object shape is represented as a deformable mesh (initialized as a sphere) and optimized via differentiable rendering across all video frames, with silhouette and photometric losses.
-- Key insight: the hand's manipulation naturally provides multi-view observations of the object, analogous to "hand as a turntable."
-- Uses a texture representation for the object to enable photometric loss computation.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: no training data needed (per-video optimization from scratch).
-- Supervision: 2D photometric and silhouette consistency across video frames; 2D hand keypoints from off-the-shelf detectors.
-- Uses MANO for hand.
-- Assumes the object is rigid; the hand sufficiently rotates the object during the video to expose different viewpoints; lighting is roughly constant; object texture is reasonably Lambertian.
+Capturing a 3D object by grasping and rotating it before a fixed camera is a user-friendly alternative to walking around a static object, and it reaches surfaces that static capture cannot (objects that cannot stand upright, bottom faces). The setting breaks standard pipelines in three ways: structure from motion assumes a rigid scene while the object moves independently of the background; traditional 6DoF object tracking needs CAD models or rich textures, absent for textureless hand-held objects; and learning-based single-view reconstruction generalizes poorly beyond trained categories while inherently losing detail. Even with multi-view machinery, three specific degradations arise in this scenario: imprecise hand-pose-derived camera poses under heavy hand-object occlusion, small residual relative motion between hand and object that violates the rigid multi-view assumption, and inefficient optimization because the hand dominates the image while the object is small. HHOR's key insight is that the physical hand-object coupling turns hand tracking into object motion estimation, so a reliable hand pose tracker plus a neural implicit reconstruction adapted to the three degradations can recover detailed, prior-free geometry.
 
-## 4. Experiments and Findings
-- Datasets: self-captured in-hand object rotation videos, HO3D.
-- Metrics: Chamfer Distance, photometric error.
-- Can reconstruct plausible object shapes from as few as ~100 frames of hand manipulation. Quality depends heavily on the diversity of viewpoints observed.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- No 3D training data required — works purely from test-time video optimization.
-- Elegant use of natural hand manipulation as a multi-view capture mechanism.
-- Conceptually simple pipeline.
+The pipeline has two stages. Hand tracking fits the MANO model (pose theta, shape beta, plus wrist-to-camera rotation R and translation T) to 2D keypoints detected by a ResNet-50 network trained on a mixture of egocentric and interaction datasets (FreiHand, InterHand, MTC, RHD, Ego3D, HO3D), with foreground masks from background matting and hand masks from a DeepLabv3+ network trained on 3,000 newly annotated egocentric images. Uniquely, theta and beta are shared across the whole video (only R, T vary per frame), which cuts fitting time from about 4,600 to 420 seconds for a 1,800-frame video and stabilizes tracking under occlusion because other frames can correct outliers; fitting is initialized by an HMR-style MANO network and optimized in stages with LBFGS, first for R, T, then for all parameters, with temporal smoothness and regularization terms. Dense reconstruction represents the scene as SDF and color fields optimized by NeuS volume rendering, with ray bounds determined automatically from 3D hand keypoints. Three components address the identified issues: (1) camera pose refinement jointly optimizes per-frame poses with the SDF using BARF/Nerfies-style coarse-to-fine activation of positional encodings; (2) a deformation field, Nerfies-inspired, maps each 3D point with a per-frame temporal embedding to a canonical space via a per-point SE(3) transform, absorbing small hand-object relative motion; (3) semantics-guided sampling draws 80% of rays from the object region and 20% from hand and background, while a semantic head renders 3D semantic logits supervised by the 2D maps, both improving object detail and enabling post-hoc hand-object mesh separation; object meshes are then extracted with Marching Cubes and holes are filled by Poisson reconstruction. Losses combine color rendering, Eikonal (0.1), mask cross-entropy (5.0), semantic cross-entropy (0.1), and a deformation regularization (10.0). Capture uses a 4K 30 fps video of about 1,800 frames downsampled to 6 fps; a one-minute video takes about 15 minutes for hand motion capture, 6 minutes for segmentation, and 30 hours of neural reconstruction on one NVIDIA TITAN RTX.
 
-### Limitations
-- Very slow (per-video optimization takes minutes to hours).
-- Fails if the hand does not significantly rotate the object (few viewpoints).
-- Requires reasonably good initial hand pose estimates.
-- Cannot handle deformable objects or objects with textureless surfaces.
+## Contributions
 
-## 6. Takeaway
-This paper pioneered the "hand as a turntable" paradigm for object scanning, showing that everyday hand manipulation naturally provides multi-view observations sufficient for 3D reconstruction. The per-video optimization approach, while slow, demonstrated the feasibility of zero-shot object reconstruction from casual video capture.
+- A prior-free, per-video framework that treats hand-object coupling as a motion cue: tracked hand pose supplies camera calibration for multi-view reconstruction of a moving, possibly textureless object from monocular RGB, sidestepping SfM's rigidity assumption.
+- Three targeted extensions of NeuS — joint camera-pose refinement with coarse-to-fine positional encoding, a canonical-space deformation field for residual hand-object motion, and semantics-guided ray sampling with a rendered semantic head for hand-object separation — each validated as individually necessary.
+- The Hand-held Object Dataset (HOD): 35 objects in Sculptures (five textureless human sculptures with complex geometry) and Daily Objects (30 everyday items) subsets, each with a captured video, 14 objects paired with high-fidelity scanned ground-truth meshes, and additional videos per object under different grasping gestures and larger hand-object relative motion to support future work.
+
+## Experimental Setup
+
+Quantitative evaluation is on HOD's 14 ground-truth objects, measuring Chamfer distance after unit-size normalization and point-to-point ICP registration. Baselines are NeuS (given the same hand-tracked camera poses, since COLMAP cannot handle the moving object), and the single-view learning methods ObMan (Hasson et al.), Grasping Field, and iHOI, evaluated per frame and averaged; supplementary comparisons include ground-truth-selected per-frame meshes, temporally fused occupancy volumes of the learning baselines, and a static-object-capture setting with COLMAP and NeuS on an extra video per object. An ablation adds the three modules sequentially to vanilla NeuS, measured by object-region PSNR. Robustness is probed across three motion speeds (half, normal, twice normal) and different grasping gestures with weak and strong occlusion.
+
+## Results
+
+On HOD, HHOR achieves a mean Chamfer distance of 0.249, versus 3.391 for NeuS with the same poses, 3.163 for ObMan, 6.802 for iHOI, and 68.682 for Grasping Field; gains are largest on complex, textureless objects (cat 0.225 versus NeuS 11.192; Apollo 0.164 versus 8.724; airpods 0.083). HHOR also dominates the learning baselines under favorable treatment for the latter — ground-truth-selected best frames (mean 0.249 versus 1.152-1.688) and temporal occupancy fusion (0.302 versus 2.090-3.332), with the only exceptions being cylinder-like objects (plastic box, bottle) that suit ObMan's learned prior. Against static capture with accurate poses, NeuS remains better (mean 0.154 versus 0.302) while HHOR clearly beats COLMAP (0.688), and the hand-held setting uniquely captures objects that cannot stand upright and their bottom surfaces. The ablation shows object-region PSNR rising from 18.102 (vanilla NeuS) to 19.685 with pose refinement, 20.504 with the deformation field, and 27.266 with semantics-guided sampling; the sampling strategy is the largest single contributor. Robustness tests show little degradation across slow/normal speeds and a strong-occlusion gesture raising object-only CD from about 0.18 to about 0.61 because Poisson hole filling struggles when the hand covers a large portion of the object.
+
+## Limitations
+
+The authors state that Poisson-based hole filling is unsuitable for large holes and thin structures, so heavily occluded regions can retain artifacts; reconstruction takes hours (30 hours of SDF optimization per video) rather than the near-real-time feedback of depth-based in-hand scanning; and the method assumes a fixed camera, a single grasping gesture over the whole sequence, and only small hand-object relative motion. Acceleration via techniques such as TensoRF or Instant-NGP and relaxing the grasp-motion constraints are named as future work.

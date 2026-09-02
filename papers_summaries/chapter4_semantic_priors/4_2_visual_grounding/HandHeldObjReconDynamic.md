@@ -1,43 +1,38 @@
-# Hand-held Object Reconstruction from RGB Video with Dynamic Interaction (Cross-reference)
+# Hand-held Object Reconstruction from RGB Video with Dynamic Interaction
+
+**Authors:** Shijian Jiang, Qi Ye, Rengan Xie, Yuchi Huo, Jiming Chen  
+**Date:** 2025-06-10  
+**Identifier:** CVPR 2025, DOI [10.1109/CVPR52734.2025.01141](https://doi.org/10.1109/CVPR52734.2025.01141)  
+**Zotero item:** `ET7FEGDR` ([Zotero](zotero://select/library/items/ET7FEGDR))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-This entry is a cross-reference to the detailed summary in Chapter 3 (3D Geometry Priors, section 3.2 Shape Completion). The work presents a scalable paradigm for hand-held object reconstruction from monocular RGB video that combines a single-frame joint reconstruction model (MCC-Hand-Object) with retrieval-augmented reconstruction (RAR) using a text-to-3D generative model prompted by GPT-4(V), achieving state-of-the-art performance on lab and Internet video datasets.
 
-## 1. Problem and Setting
-- Reconstruction of hand-held object geometry (manipulanda) from monocular Internet RGB videos.
-- Input: monocular RGB video of hand manipulating an object; 3D hand estimates per frame.
-- Output: 3D object geometry aligned with hands and images across the video.
-- Visual grounding prior: the retrieval component uses vision foundation models to match observed object appearance to 3D database models, providing a visual-grounded prior for the object shape.
+This CVPR 2025 paper (often referred to by its project page as DynHOR) reconstructs the 3D geometry of a rigid object manipulated by one or both hands from a single monocular RGB video, without requiring textured objects, SfM, or hand-pose priors. The core idea is to replace hand/SfM-based relative pose estimation with a prior from a pre-trained text-to-3D generation model: ChatGPT describes the held object from the first frame, Genie generates candidate textured meshes, and the best candidate is selected by OpenShape 3D-image similarity; because generated priors differ from the real object in shape and texture, poses are initialized by render-and-compare in the DINO semantic-feature space rather than by appearance or mask alone. A NeuS-style signed distance field and the per-frame object poses are then jointly optimized with monocular normal and dense-correspondence constraints, and a pose outlier voting strategy based on Sampson distance and PSNR detects and re-initializes badly wrong poses. On HO3D it reaches a Chamfer distance of 0.51 cm2 and F5 of 78.2% versus 1.82 cm2 and 63.6% for HOLD, and it also handles two-hand interactions on HOPE (CD 0.29 cm2 versus 0.96 for a COLMAP-initialized BARF baseline).
 
-## 2. Core Method
-- MCC-Hand-Object (MCC-HO): a single-frame joint reconstruction model taking a single RGB image and inferred 3D hand as input, producing hand and object geometry.
-- Retrieval-Augmented Reconstruction (RAR): uses GPT-4(V) to prompt a text-to-3D generative model to retrieve a 3D object model that matches the object in the image(s); the retrieved model is then rigidly aligned with the input images and 3D MCC-HO observations in a temporally consistent manner.
-- How visual grounding prior is injected: vision foundation models ground the object appearance in 3D shape database entries, providing a complete shape prior for observed manipulanda.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Foundation models: GPT-4(V) for retrieval prompting; text-to-3D generative model for shape synthesis; FM-based 3D hand pose estimators.
-- Domain knowledge: hand-object spatial constraints; the manipulanda set is small relative to all possible objects.
-- Training data: pretrains the 3D hand estimators; RAR is zero-shot at inference.
-- Assumption: text-to-3D models can generate recognizable manipulanda; the retrieved shape matches the in-video object.
+The task is hand-held object reconstruction: recovering the complete 3D surface of a rigid object that a user rotates in front of a camera by one or both hands, which is more convenient than manually moving a camera and naturally reveals the object's underside. The central difficulty is estimating the relative motion between the object and the camera in a dynamic scene. Existing strategies each have failure modes: hand-pose trackers assume a firm grasp, which consistently occludes the same object parts and limits quality; SfM assumes a static scene and fails under occlusion, texture-less or thin-structured objects, and dynamic motion, and hand-prior refinement restricts it to single-hand interactions; incremental segment-based joint shape-pose optimization (Hampali et al.) handles two hands but struggles with texture-less or thin objects and accumulates pose errors at segment boundaries; learning-based single-image methods generalize poorly due to limited hand-object training data. DynHOR instead removes the unstable high-DOF hand from the pipeline entirely, using generated 3D object priors to constrain the pose space, and addresses the resulting shape/texture discrepancy between prior and observation with semantic (foundation-feature) consistency.
 
-## 4. Experiments and Findings
-- Datasets: lab HOI datasets and Internet image/video datasets.
-- Metrics: 3D object shape accuracy (Chamfer, F-score), temporal consistency, hand-object alignment.
-- Achieves state-of-the-art performance on both lab and Internet image/video datasets.
-- The combination of MCC-HO (per-frame joint reconstruction) and RAR (retrieval-based shape) outperforms either alone.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Scalable paradigm leveraging large language/vision models and 3D object datasets.
-- Unified object geometry across all frames via RAR provides strong temporal consistency.
-- Works on in-the-wild Internet videos where prior methods fail.
-- Modular: the per-frame model and the retrieval module can be independently improved.
+The pipeline has three components. (1) Prior generation and pose initialization: ChatGPT is prompted with the first frame to produce a textual description of the held object; the text drives the Genie text-to-3D generator to produce NV = 12 candidate textured meshes, of which the one with the highest 3D-image similarity measured by OpenShape is kept. For each frame, the 6DoF object pose is initialized by minimizing a render-and-compare energy combining a mask projection loss with a semantic consistency loss — the pixel-wise cosine distance between DINO (ViT-B/14) feature maps of the input image and of the differentiable rendering of the posed prior — plus a temporal smoothness term on consecutive rotations and translations; this semantic alignment tolerates shape and texture discrepancy and disambiguates poses that yield identical masks. (2) Joint shape-pose optimization: the object is represented as a NeuS signed distance field (geometry and color MLPs) trained by volume rendering with photometric, Eikonal, and mask losses; camera poses are treated as optimizable parameters as in BARF, and two geometric constraints are added — a normal consistency loss against StableNormal monocular normal predictions and a multi-view correspondence loss on DKM dense matches weighted by correspondence confidence. (3) Pose outlier voting: for each frame within a local window of 2K neighbors, the method computes the PSNR of the rendering and a Sampson inconsistency rate (fraction of 2D correspondence pairs whose Sampson distance under the fundamental matrix implied by the current poses exceeds a threshold); frames that are both far below the window's mean PSNR and highly Sampson-inconsistent are voted as pose outliers and re-initialized by spherical interpolation from neighboring inlier poses, with detection and re-initialization of pose and geometry MLPs performed at 20k of 120k training iterations.
 
-### Limitations
-- Depends on text-to-3D models covering the manipulanda category.
-- Retrieval quality depends on the LLM/VLM correctly identifying the object.
-- Per-frame MCC-HO may still struggle with severe occlusion.
-- Temporal alignment of retrieved shape to video may introduce jitter.
+## Contributions
 
-## 6. Takeaway
-This work presents a scalable paradigm for hand-held object reconstruction that capitalizes on the small size of the manipulanda category: by using foundation models (GPT-4V, text-to-3D) to retrieve a 3D shape, then aligning it with per-frame 3D hand estimates, the system achieves temporally consistent reconstruction on Internet videos. In the context of semantic/visual-grounding priors (chapter 4), this work exemplifies the visual grounding paradigm where object appearance is grounded to 3D shape via foundation model retrieval. See chapter 3 section 3.2 for the full technical details.
+- A hand-held object reconstruction method for dynamic single- and two-hand interactions from monocular RGB video that replaces SfM and hand-pose priors with priors from a pre-trained 3D generation model.
+- A frame-to-model pose initialization scheme with semantic consistency that aligns generated 3D priors to input images in DINO feature space, resolving shape and texture discrepancy and enabling pose estimation for poorly textured and thin-structured objects.
+- A pose outlier voting strategy that combines Sampson distance-based inter-view consistency with rendering PSNR to detect large pose errors and re-initialize them from neighboring inliers, improving both pose accuracy and reconstruction quality.
+- State-of-the-art reconstruction quality across HO3D, HOD, and HOPE, and demonstrated real-world applicability through in-hand scanning with a mobile phone.
+
+## Experimental Setup
+
+Evaluation uses three real-world datasets: HO3D v3 (RGB videos of a hand manipulating YCB objects with ground-truth poses; two sequences per object, one matching the sequence of Hampali et al., for 20 sequences total), HOD (7 sequences of hand-held objects recorded by a static RGB camera, with more complex shapes and challenging appearances), and HOPE v2 (8 sequences of two hands rotating grocery objects). Reconstruction is scored by ICP-registered Chamfer Distance in squared centimeters and F-score at 5 mm and 10 mm (CD normalized to unit size for HOD, where scale is unknown); pose accuracy is scored with visual-odometry metrics — Absolute Trajectory Error and Relative Pose Error (rotation and translation) after Umeyama alignment. Baselines: HOLD (SfM-initialized state of the art for monocular hand-object reconstruction, with added ground-truth-pose noise for banana and scissors where SfM fails), IHOI (learning-based single-image in-hand reconstruction), Hampali et al. (same HO3D sequences, compared via released models), and for two-hand scenarios COLMAP-initialized BARF, since no prior work addresses that setting. Implementation uses SAM-v2 for masks, StableNormal for normals, DINO ViT-B/14 features, NeuS architecture, Adam with learning rate 5e-4 and cosine decay, 1024 rays per batch over 120k iterations; training on 100 frames takes about 1 hour for pose initialization and 8 hours for reconstruction on an NVIDIA RTX 3090.
+
+## Results
+
+On HO3D, DynHOR achieves CD 0.51 cm2, F5 78.2%, F10 95.4%, versus HOLD at 1.82/63.6/85.1 and IHOI at 4.78/53.6/77.4; pose accuracy also surpasses HOLD with RPEt 2.129 cm versus 4.143, RPEr 2.962 degrees versus 5.974, and ATE 0.072 m versus 0.265. On the more challenging HOD dataset, CD is 0.44 (unit size) versus 1.27 for HOLD and 7.28 for IHOI, the latter of which fails to produce valid meshes on unseen objects. Against Hampali et al. on the same HO3D sequence, CD improves from 1.4 to 0.6 cm2, F5 from 57.4% to 76.0%, and F10 from 79.9% to 94.4%. In the two-hand setting on HOPE, DynHOR reaches CD 0.29 cm2, F5 85.4%, F10 96.9% versus 0.96/62.5/79.8 for COLMAP-BARF. Ablations show robustness to prior quality: a Genie prior (prior-to-ground-truth Chamfer 1.05) yields final CD 0.51 cm2, a lower-quality Shap-e prior (1.67) still yields 1.11 cm2 — better than all baselines — and a ground-truth template prior gives 0.43, nearly matching Genie. Component-wise, starting poses from identity (plain BARF) collapses to CD 7.948 cm2; mask-only initialization without the semantic loss gives 4.17; adding semantic-consistency initialization gives 0.65; adding the geometric constraints 0.62; PSNR-only outlier re-initialization 0.58; and the full Sampson-based voting 0.51 cm2, confirming that every component contributes.
+
+## Limitations
+
+The authors note two main limitations. First, effectiveness depends on the quality of the generated prior, which may be poor for unique objects that current text-to-3D generators cannot represent accurately. Second, DINO can produce nearly identical semantic features for different sides of an object, occasionally causing incorrect pose estimations; the authors suggest that advances in geometry-aware semantic correspondence could mitigate this. Practically, the method is offline per-sequence optimization (about 9 hours total for 100 frames on an RTX 3090), requires object masks and monocular normals from auxiliary models, and — like all render-and-compare initialization pipelines — its upper bound is tied to how semantically close the generated prior is to the true object, as shown by the remaining gap to the ground-truth-prior result (CD 0.43 versus 0.51 cm2 on HO3D).

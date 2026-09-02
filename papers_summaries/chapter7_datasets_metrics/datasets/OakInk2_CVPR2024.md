@@ -1,50 +1,35 @@
-# OakInk2 (CVPR 2024)
+# OakInk2: A Dataset of Bimanual Hands-Object Manipulation in Complex Task Completion
 
-> Zhan, Yang, Zhao, Mao, Xu, Lin, Li, Lu. *OakInk2: A Dataset of Bimanual Hands-Object Manipulation in Complex Task Completion.* CVPR 2024. DOI: 10.1109/CVPR52733.2024.00050. Zotero Key: `QVCEJ5AW`.
+**Authors:** Xinyu Zhan, Lixin Yang, Yifei Zhao, Kangrui Mao, Hanlin Xu, Zenan Lin, Kailin Li, Cewu Lu  
+**Date:** 2024-03-28  
+**Identifier:** [arXiv:2403.19417](https://arxiv.org/abs/2403.19417); DOI `10.1109/CVPR52733.2024.00050`  
+**Zotero item:** `QVCEJ5AW` ([Zotero](zotero://select/library/items/QVCEJ5AW))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-OakInk2 is the bi-manual + complex-task expansion of OakInk: focused on 3D bi-manual HOI reconstruction and generation under "bi-manual + multi-step task" scenarios, providing task-level task labels, bi-manual affordance, and long-term sequences (each task contains multiple sub-steps on average). It is a composite benchmark for bi-manual complex-task HOI.
 
-## 1. Dataset Purpose
-- Solves the limitation of "OakInk v1 only has single-hand / simple grasping". OakInk2 directly addresses bi-manual + multi-step tasks.
-- Tasks: (1) bi-manual 3D hand pose estimation; (2) bi-manual 6D object pose estimation; (3) task-level HOI generation (bi-manual affordance + task progress); (4) bi-manual handover and tool use.
-- Provides task-level semantic labels (task name / sub-step / affordance chain), supporting "task-level HOI evaluation".
-- Complements ARCTIC: ARCTIC's strength is articulated-object 4D mesh, while OakInk2's strength is task-level semantics.
+OakInk2 is a large-scale bimanual hand-object interaction dataset of 627 sequences containing 4.01 million image frames, captured with multi-view RGB cameras and an optical motion capture system and annotated with SMPL-X body plus MANO hand fits. Its defining feature is a three-level abstraction that connects object affordances to primitive manipulation tasks and then to long-horizon complex tasks, each represented as a Primitive Dependency Graph. The authors further derive two benchmarks: a hand mesh recovery (HMR) benchmark for monocular and multi-view bimanual reconstruction, and a Task-oriented Motion Fusion (TaMF) task with a dedicated motion-diffusion baseline, together with a Complete Task by Connection (CTC) framework that composes primitive motions into complex-task executions.
 
-## 2. Data Composition
-- Source: mocap + object scanning, in the same studio as OakInk. Bi-manual subjects perform predefined tasks.
-- Viewpoint: mocap coordinates, no RGB.
-- Scale: significantly expanded compared to OakInk v1 (specific numbers to be confirmed in the paper; Zotero only has the title + DOI).
-- Object and action: household, kitchen utensils, tools, and other categories; tasks cover open a box, use screwdriver, pour from bottle, fold cloth, cut food, etc., with 50+ task categories.
-- Each task contains 5–15 sub-steps on average, and the sequence length can reach tens of seconds.
+## Background and Motivation
 
-## 3. Annotation and Supervision
-- Bi-manual: 3D 21 joints × 2 hands, MANO β / θ, bi-manual SMPL-X mesh.
-- Object: 6D pose, 3D mesh, affordance region.
-- Interaction: task-level label (50+ tasks), sub-step label, intent label, contact map (hand-object + object-object).
-- Scene: mocap coordinates; no RGB.
-- No language instruction (but task labels can serve as a language proxy), no robot, no tactile.
+Prior hand-object datasets largely capture short, repetitive, single-hand or loosely bimanual interactions, which limits the study of how humans organize manipulation into goal-directed, long-horizon activities. The OakInk2 authors argue that real-world task completion requires understanding at multiple levels of abstraction: the functional affordances of objects, the primitive actions those affordances enable, and the composition of primitives into complex tasks. Capturing this structure in data, they contend, is a prerequisite for both hand motion understanding (reconstruction) and generation (task-oriented synthesis of bimanual manipulation), and no existing dataset jointly provided long-horizon bimanual sequences, dense 3D annotations, and such task-level semantic structure.
 
-## 4. Supported Evaluation
-- Benchmark tasks: (1) bi-manual 3D hand pose (MPJPE / Mesh Error); (2) bi-manual 6D object pose; (3) task-level HOI generation (task completion rate / step accuracy); (4) bi-manual affordance prediction.
-- Key metrics: hand MPJPE, object pose error, task completion rate, step prediction Top-1.
-- Provides task-level + sub-step-level split, evaluating long-horizon task completion.
-- Cross-subject split: subjects can be left out for evaluation.
+## Dataset Construction
 
-## 5. Why It Matters
-- The first dataset that takes "bi-manual + complex task + multi-step" as a unified evaluation dimension.
-- Task-level + sub-step-level labels inspire subsequent HOI generation papers to take "task progress" as the generation target.
-- Promotes bi-manual HOI from "short-term grasping" to "long-term tasks".
-- Can be used as "task-level HOI simulation ground truth" in the Ch6 "robot learning" section.
-- Complements ARCTIC: ARCTIC measures 4D mesh, OakInk2 measures task-level semantics.
+Data were recorded in four manipulation scenarios with 75 objects and 9 invited subjects, using 12 OptiTrack Prime 13W motion capture cameras and 4 synchronized commodity RGB cameras at 848 x 480 resolution and 30 fps, one egocentric and three allocentric views. Three levels of abstraction organize the data: 39 object affordances map to 60 types of Primitive Tasks, and 38 long-horizon manipulation goals instantiate 150 Complex Tasks, each encoded as a Primitive Dependency Graph that specifies how primitive actions depend on one another. The corpus comprises 627 sequences in total, 363 Primitive Task sequences and 264 Complex Task sequences, amounting to 4.01M frames. Annotation proceeds through a two-stage body fitting pipeline aligned with MoSH++-based motion capture, from which SMPL-X body parameters are fitted and MANO hand parameters are derived; expert commentary on the manipulations was additionally collected and refined with GPT-4 to support the task-level semantics.
 
-## 6. Limitations and Biases
-- Still mocap-only: no RGB annotation, RGB-based vision models cannot be directly trained.
-- Limited task set (~50 tasks): long-horizon task diversity is limited.
-- No specialized articulated-object joint-angle design (only basic actions such as "open/close").
-- No language instruction (only task labels), limiting direct VLA application.
-- No tactile, no force, no dynamic contact annotation.
-- The annotation pipeline shares with OakInk v1, and some systematic biases remain.
+## Evaluation Protocol
 
-## 7. Takeaway
-OakInk2 is best for demonstrating the capability of "bi-manual + multi-step task HOI generation", especially task-level completion rate and sub-step prediction. **Not suitable** for evaluating RGB-based vision tasks, articulated 4D mesh reconstruction, language-conditioned, or in-the-wild egocentric tasks. In this survey, OakInk2 plays the role of "task-level bi-manual HOI main benchmark" and serves as the hard anchor for evaluating "structured HOI supervision" in Ch6 for imitation learning / policy learning.
+Two evaluation tracks are built on the data. The HMR benchmark evaluates hand mesh recovery from monocular and multi-view inputs on a train/test split of the sequences, with baselines including METRO, RLE with HandTailor, a keypoint-based fitting method, and POEM, measured by MPJPE, MPVPE, and AUC-style metrics. The TaMF (Task-oriented Motion Fusion) task asks a model to fuse object-centric motion cues into bimanual hand motion; the authors provide MF-MDM, a motion-fusion conditioned motion diffusion model, evaluated with contact ratio (CR), Single Interaction Volume (SIV), FID, and a human perceptual study scored against ground-truth motions. The CTC framework is demonstrated as a system-level protocol: GPT-4 generates primitive-task programs from language descriptions, oracle trajectories are re-targeted to the subject's body, and TaMF synthesizes the final bimanual motion.
+
+## Findings and Analysis
+
+On the HMR benchmark, bimanual and hand-hand occlusion-heavy frames remain challenging for existing monocular methods, while multi-view input improves reconstruction, quantifying the difficulty gap introduced by two-hand interaction. On TaMF, MF-MDM achieves a contact ratio of 0.90, an SIV of 4.17 cubic centimeters, and an FID of 1.369, and its generated motions score 4.66 +/- 0.48 in the perceptual study versus 3.64 +/- 0.85 for ground-truth sequences under the study's scoring scale, indicating that fused motions are judged comparable to real captures. The CTC experiments show that decomposing a complex goal into a Primitive Dependency Graph and executing primitives sequentially allows the pipeline to complete long-horizon tasks, supporting the paper's claim that the abstraction levels transfer between understanding and generation.
+
+## Contributions
+
+A large-scale bimanual hands-object manipulation dataset (627 sequences, 4.01M frames, four views, dense SMPL-X/MANO annotations); a three-level semantic abstraction linking affordances, primitive tasks, and complex tasks via Primitive Dependency Graphs; a two-track benchmark suite covering bimanual hand mesh recovery and task-oriented motion fusion with strong diffusion-based baselines; and the CTC framework demonstrating language-driven composition of primitive motions into complex task completion.
+
+## Limitations
+
+The paper does not include a dedicated limitations section. Points that can be gathered from the text: articulated object parts are tracked via few markers, which constrains the fidelity of part-level object pose; the perceptual scoring of generated motions is based on a single study protocol; and the authors position the current Primitive Task taxonomy and CTC program generation as a first step, listing extension of the task abstraction and generation quality as future work.

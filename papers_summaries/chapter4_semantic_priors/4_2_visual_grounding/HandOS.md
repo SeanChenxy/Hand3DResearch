@@ -1,45 +1,37 @@
 # HandOS: 3D Hand Reconstruction in One Stage
 
+**Authors:** Xingyu Chen, Zhuheng Song, Xiaoke Jiang, Yaoqing Hu, Junzhi Yu, Lei Zhang  
+**Date:** 2024-12-02  
+**Identifier:** [arXiv:2412.01537](https://arxiv.org/abs/2412.01537)  
+**Zotero item:** `WWQH7F3H` ([Zotero](zotero://select/library/items/WWQH7F3H))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-HandOS is an end-to-end one-stage framework for 3D hand reconstruction that integrates hand detection, 2D pose estimation, and 3D mesh reconstruction by leveraging a frozen detector as the foundation with auxiliary 2D and 3D keypoint modules, eliminating the need for left-right classification and achieving state-of-the-art performance on FreiHAND and HInt-Ego4D.
 
-## 1. Problem and Setting
-- 3D hand reconstruction from images, replacing the traditional multi-stage pipeline (detection, left-right classification, pose estimation) with a single end-to-end framework.
-- Input: RGB image (with hand).
-- Output: 3D hand mesh (MANO parameters), 2D pose, 3D joints, hand bounding box.
-- Hand-only setting; classified here under visual grounding priors because the framework uses detection cues as visual grounding for pose estimation.
+HandOS unifies hand detection, left-right awareness, 2D pose estimation, and 3D mesh reconstruction into a single end-to-end stage, removing the conventional detection-crop-flip-reconstruct pipeline whose intermediate errors are significant (the paper notes an 11.2% detection plus left-right classification error rate for ViTPose on the HInt benchmark). It builds on a frozen Grounding DINO 1.5 detector prompted with "Hand", adds a side-tuning network for keypoint-oriented features, and introduces an interactive 2D-3D decoder that expands instance queries into 2D joint queries, lifts them to 3D vertex and camera-translation queries via a learnable matrix initialized with MANO skinning weights, and couples them with hierarchical attention. Left and right hands share one keypoint representation, so no left-right classifier or flipping is needed. HandOS reaches 5.0 mm PA-MPJPE on FreiHand, 5.2 mm on DexYCB, and 64.6% PCK@0.05 on HInt-Ego4D, the latter with less than one-tenth of the training data used by HaMeR.
 
-## 2. Core Method
-- A frozen detector serves as the foundation for 3D hand reconstruction.
-- An interactive 2D-3D decoder: 2D joint semantics is derived from detection cues while 3D representation is lifted from those of 2D joints.
-- Hierarchical attention enables concurrent modeling of 2D joints, 3D vertices, and camera translation.
-- Eliminates the left-right classification step entirely (an intermediate step that introduces errors).
-- The one-stage design means detection, 2D pose, and 3D mesh are jointly learned.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Pretrained frozen detector provides visual grounding.
-- Supervision: 3D hand keypoints, MANO parameters, 2D joint heatmaps, detection bounding boxes.
-- Uses MANO for hand parametric model.
-- The frozen detector acts as a prior on where the hand is in the image, providing a strong inductive bias for downstream tasks.
+Given a single RGB image, the goal is to output 2D joints (J = 21), 3D vertices (V = 778), and camera translation, from which the full 3D hand mesh follows. Existing 3D hand reconstruction systems—parametric MANO-based methods, voxel/2.5D-heatmap methods, and vertex-regression transformers alike—operate in a multi-stage paradigm: an external detector localizes and upscales the hand region (necessary because hands occupy a small image area), a left-right classifier flips left hands to a canonical right-hand representation (necessary because MANO pose spaces are symmetric rather than homogeneous), and only then does pose estimation run. This design is computationally redundant and accumulates errors: samples can be discarded or doomed before pose estimation even begins. The paper reframes hand reconstruction as a one-stage set-prediction problem, asking how pose estimation capability can be injected into a pre-trained open-set detector while unifying left- and right-hand representation and simultaneously estimating 2D joints, 3D vertices, and camera translation in one decoder.
 
-## 4. Experiments and Findings
-- Datasets: FreiHAND, HInt-Ego4D.
-- Metrics: PA-MPJPE, PCK@0.05, F-score.
-- Achieves 5.0 PA-MPJPE on FreiHAND and 64.6% PCK@0.05 on HInt-Ego4D, state-of-the-art performance.
-- The one-stage design eliminates redundant computation and cumulative errors of the multi-stage pipeline.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- One-stage design is more efficient than multi-stage pipelines.
-- Eliminates left-right classification error.
-- Hierarchical attention provides joint 2D-3D reasoning.
-- State-of-the-art on standard benchmarks.
+HandOS keeps all parameters of a DETR-like detector (Grounding DINO 1.5, with the text prompt "Hand") frozen and attaches two learnable components. First, a side-tuning network consumes shadow (shallow) layers of the frozen visual backbone and produces complementary features that are concatenated with the deepest encoder feature, restoring the fine detail needed for keypoint estimation that detection training does not provide. Second, an interactive 2D-3D decoder (6 layers: two 2D layers followed by four interactive layers) processes the detector's queries, boxes, and scores. Instance query filtering selects positive queries with a SimOTA assigner during training (combining classification cost and IoU) and score/NMS thresholds at inference (0.1/0.9). Instance-to-joint query expansion adds a learnable embedding to each instance query to create 21 joint queries with derived reference boxes (EDPose-style), letting joint semantics be extracted from the full-resolution image via deformable attention instead of from a cropped patch. A 2D-to-3D query lifting then maps joint queries and reference boxes to 3D vertex queries and a camera-translation query through a learnable lifting matrix of shape (V+1) x J initialized with MANO skinning weights; ablations show the learned lifting patterns are semantically consistent (vertex queries originate from their corresponding joints). Hierarchical attention exploits the different transformation properties of the three output types: 2D joints and 3D vertices are translation- and scale-invariant and attend to each other, while the camera translation is sensitive to both and attends to the keypoint queries—but not vice versa—preventing camera position from corrupting the relative spatial structure. Training uses L1 and OKS losses for 2D joints; L1 vertex/joint, edge-length, and normal-similarity losses for the mesh; and weakly supervised projection plus normal-consistency losses that let 2D-annotated in-the-wild data supervise the 3D mesh. Left-right awareness emerges for free: applying right-hand face topology to a reconstructed mesh yields inward-pointing normals for a left hand and outward normals for a right hand, so the category can be read off the geometry without any classifier. 3D joints are regressed from vertices with the fixed MANO joint regressor.
 
-### Limitations
-- Hand-only; no object reconstruction.
-- Requires a frozen detector that may bias the model.
-- The interactive 2D-3D decoder may be more complex to train than separate decoders.
-- Limited to single-hand reconstruction (two-hand would need adaptation).
+## Contributions
 
-## 6. Takeaway
-HandOS demonstrates that unifying hand detection, 2D pose, and 3D mesh reconstruction into a single end-to-end framework — leveraging a frozen detector as a visual grounding prior — outperforms traditional multi-stage pipelines. The work exemplifies the "foundation model as prior" paradigm applied to hand reconstruction, where a pretrained detector's outputs serve as a strong inductive bias that removes the need for explicit intermediate steps.
+1. An end-to-end one-stage 3D hand reconstruction framework that integrates pose estimation into a frozen pre-trained detector via side-tuning, eliminating the multi-stage pipeline's redundant computation and cumulative detection/classification errors, and removing the left-right classification prerequisite through a unified keypoint representation shared by both hands.
+2. An interactive 2D-3D decoder combining instance-to-joint query expansion, 2D-to-3D query lifting (MANO-skinning-initialized), and hierarchical attention, which concurrently models 2D joints, 3D vertices, and camera translation with appropriate invariance properties for each.
+3. State-of-the-art accuracy across benchmarks—5.0/8.4/5.2 mm PA-MPJPE on FreiHand/HO3Dv3/DexYCB and 64.6% PCK@0.05 on HInt-Ego4D—evaluated without the perfect-detection assumption that prior works rely on, so reported errors include detection and left-right awareness mistakes.
+
+## Experimental Setup
+
+Training uses the FreiHand, HO3Dv3, and DexYCB training sets for their respective benchmarks; for the HInt benchmark (HInt, New Days, VISOR, Ego4D test splits), training aggregates FreiHand, HInt, COCO-WholeBody, and Onehand10K into 204K samples—a subset of the 2,749K samples used by HaMeR. The detector is Grounding DINO 1.5 with full images (long edge 1280 pixels) as input. Optimization uses Adam (learning rate 0.001, batch size 16, 40 epochs, cosine decay from epoch 25); FreiHand training takes about 6 days on 8 A100-80G GPUs. Metrics are PA-MPJPE (PJ), PA-MPVPE (PV), F-score at 5 and 15 mm, PCK, and AUC, with score thresholds TS = 0.1 and TNMS = 0.9. Unlike prior work that assumes a perfect ground-truth box, the paper measures its own detection at 0.44 hand box AP on COCO val2017 and propagates missed detections into the 3D metrics (zero vertices, zero PCK/AUC), so results reflect mixed detection, left-right, and reconstruction errors. Baselines include METRO, MeshGraphormer, MobRecon, PointHMR, Zhou et al., HaMeR, and Hamba for FreiHand/HO3Dv3, and Spurr et al., MobRecon, HandOccNet, H2ONet, and Zhou et al. for DexYCB; HInt comparisons are against HaMeR and Hamba. Because FreiHand contains only right hands, flipped images provide left-hand training samples for the unified-representation ablation.
+
+## Results
+
+On FreiHand, HandOS achieves 5.0 mm PA-MPJPE, 5.3 mm PA-MPVPE, F@5 0.812, and F@15 0.991, improving over Hamba (5.8/5.5/0.798/0.991), HaMeR (6.0/5.7/0.785/0.990), and MobRecon (5.7/5.8/0.784/0.986). Training with both flipped left-hand and original right-hand images degrades results only to 5.3/5.6/0.799/0.989, supporting the unified left-right representation. On HO3Dv3 (object manipulation, heavy occlusion), HandOS reports 8.4/8.4/0.584/0.962 under its no-perfect-detection protocol, and 6.8/6.7/0.688/0.983 with extra training data, slightly ahead of Hamba's 6.9/6.8/0.681/0.982; the paper argues that prior numbers assuming ground-truth boxes are unrealistic because on occluded samples the detector sees only part of the hand. On DexYCB, HandOS reaches 5.2 mm PA-MPJPE, 5.0 mm PA-MPVPE, and AUC 0.896, versus 5.5/5.5 for Zhou et al. and 5.7/5.5 for H2ONet. On HInt, with under one-tenth of the competitors' training data, HandOS-2D attains the best PCK@0.05 on all four test sets—including 64.6% on HInt-Ego4D versus HaMeR's 46.9%—and outperforms HaMeR and Hamba on most PCK settings, with the largest margins on first-person (Ego4D) imagery. Splitting predictions shows 2D-query outputs are stronger on visible joints while 3D-projected outputs are stronger on occluded joints, confirming the value of 2D-3D interaction. Ablations favor instance-specific queries over unified queries, deepest-feature deformable attention with side tuning over shallower features or a from-scratch Swin backbone (73.8/82.5/86.7 PCK@0.1 on New Days/VISOR/Ego4D versus 64.7/75.6/80.1 from scratch), and hierarchical attention over independent, unidirectional, and fully-connected attention policies (best on both HInt PCK and FreiHand PA-MPVPE).
+
+## Limitations
+
+The paper does not include a dedicated limitations section, but several constraints are evidenced in the text. The one-stage design inherits the frozen detector's accuracy ceiling: with 0.44 hand box AP on COCO val2017, heavily occluded hands can be only partially detected, and missed detections are scored as failures in the protocol—the paper itself uses this to argue HO3Dv3 evaluation is pessimistic under occlusion. Unified left-right training requires data augmentation (image flipping) when a benchmark contains only right hands, and costs a small accuracy drop (5.0 to 5.3 mm PA-MPJPE on FreiHand). Training is expensive (about 6 days on 8 A100-80G GPUs for FreiHand), and evaluation depends on a specific commercial-grade detector (Grounding DINO 1.5), although the framework is stated to be adaptable to other DETR-like detectors. The method targets single-hand reconstruction and does not model interacting hands, which the authors position as orthogonal to two-hand interaction works.

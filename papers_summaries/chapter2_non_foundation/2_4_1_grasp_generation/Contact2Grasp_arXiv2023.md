@@ -1,38 +1,38 @@
 # Contact2Grasp: 3D Grasp Synthesis via Hand-Object Contact Constraint
 
+**Authors:** Haoming Li, Xinzhuo Lin, Yang Zhou, Xiang Li, Yuchi Huo, Jiming Chen, Qi Ye  
+**Date:** 2023-05-06  
+**Identifier:** [arXiv:2210.09245](https://arxiv.org/abs/2210.09245)  
+**Zotero item:** `5Q454TFA` ([Zotero](zotero://select/library/items/5Q454TFA))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-Decouples grasp generation into two stages — first predicting an object-centric contact map (where and which hand part contacts), then optimizing MANO parameters to satisfy the contact constraints — achieving state-of-the-art physical plausibility.
 
-## 1. Problem and Setting
-- Task: given a 3D object mesh, generate a physically plausible static human grasp.
-- Input: 3D object point cloud; Output: MANO hand parameters achieving stable contact.
-- Key challenge: the direct mapping from object geometry to high-dimensional MANO parameters is highly nonlinear and small changes in hand pose can drastically change contact quality.
+Contact2Grasp (IJCAI 2023) factorizes dexterous grasp generation into two sequential stages — a ContactCVAE that samples plausible object contact maps, followed by a GraspNet that maps each contact map to MANO hand pose — plus a penetration-aware partial (PAP) optimization that refines only the penetrated hand parts using the generated contacts as a consistency constraint. On Obman it reaches 0.44 cm penetration depth, 3.94 cm3 penetration volume, 100% contact rate, and 61.37% grasp success rate (versus 47.88% for GraspTTA and 27.60% for GrabNet); on ContactPose it attains 58.97% success rate with 0.36 cm penetration depth, exceeding even ground-truth grasps on penetration. The intermediate contact manifold is smooth, so small changes in a valid contact map yield another valid grasp, improving diversity and generalization over direct object-to-pose generation.
 
-## 2. Core Method
-- Stage 1 (Contact Prediction): a PointNet++ encoder processes the object point cloud; an MLP decoder predicts per-object-point contact probability and associated hand-part labels (which finger/palm region contacts each point).
-- Stage 2 (Grasp Fitting): given the predicted contact map and object-point-to-hand-part associations, optimize MANO pose and translation by minimizing: (a) distance between object contact points and their corresponding hand-part vertices, (b) normal alignment between contacting surfaces, (c) penetration penalty, and (d) joint angle limits.
-- Key innovation: explicit contact-as-constraint formulation — the grasp fitting is cast as a constrained optimization rather than a regression, providing better physical grounding.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: GRAB dataset + ObMan synthetic grasps.
-- Supervision: per-object-point contact and hand-part labels extracted from fitted MANO meshes via proximity thresholding and MANO part segmentation.
-- Domain knowledge: MANO model with kinematic tree; hand surface segmentation into functional contact parts.
-- Assumption: the object geometry is known and static; single-hand grasp only.
+3D grasp synthesis generates grasping poses for an input object, with applications in animation, human-computer interaction, and robotic grasping. Prior deep-learning approaches (GrabNet, GraspField, GraspTTA) learn a direct, black-box conditional distribution from 3D object representations to hand pose parameters (usually MANO). The authors identify two defects of this formulation: the mapping from object space to rotation-based pose space is highly non-linear, and physical contact is extremely sensitive to pose — a sub-millimeter change in fingertip position normal to a surface can turn a valid grasp into a dropped object (citing ContactOpt) — making the object-to-pose mapping non-smooth and hard to learn or generalize. Contact information is known to help (thermal-image contact maps in robotic grasp filtering, contact consistency in GraspTTA), but existing uses treat contact as a loss or post-hoc refinement, assume a single contact point, or assume one grasp per object. The paper instead poses grasp generation as contact-conditioned generation: learn the distribution of contact maps first, then learn the contact-to-pose mapping under the assumption that a grasp pose is fully constrained given its contact map.
 
-## 4. Experiments and Findings
-- Datasets: GRAB (test split), ObMan, and self-captured real object scans.
-- Metrics: contact IoU, interpenetration depth, simulation-based grasp success rate (force closure in GraspIt!).
-- Main findings: Contact2Grasp achieves higher physical plausibility (lower penetration, higher contact accuracy) than direct regression methods; the decoupled approach generalizes better to novel object shapes; grasp success rate in simulation confirms real-world applicability.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Two-stage decoupling (predict contact first, then fit grasp) is simple, interpretable, and yields physically grounded results.
-- Contact constraints directly encode the physics of interaction.
+The pipeline has three stages. (1) ContactCVAE: a conditional variational autoencoder over binary contact maps for N = 2048 object points. A PointNet Condition-Encoder extracts local (N x 64) and global (1024-d) point-cloud features; the training encoder embeds (object, contact map) pairs into a 64-d latent z, and a shared-weights MLP decoder classifies each point as contact or not, merging global, local, and latent features. Training uses binary cross-entropy plus a dice loss for small contact regions and KL regularization (weights 0.5, 0.5, 1e-3); at inference, latent samples from a standard Gaussian produce diverse contact maps. (2) GraspNet: a PointNet plus four-layer MLP regresses MANO pose parameters from the object point cloud concatenated with the (reconstructed or generated) contact map; training combines vertex L2, translation L1, and geodesic pose losses (weights 35, 0.1, 0.1), a penetration loss on object points inside the hand, and a contact-consistency loss between the input contact map and the one re-derived from the predicted mesh (weights 5 and 0.05), the latter following GraspTTA. (3) Penetration-aware partial optimization: the hand mesh is split into six parts (five fingers and palm); penetration detection determines which partial poses to optimize — a penetrated finger updates only that finger's poses, palm penetration updates everything — while the optimization loss couples contact consistency, penetration penalty, and a regularizer keeping the refined pose near the generated one (weights 0.1, 2, 0.2). Unlike global optimization, gradients from erroneous parts do not disturb well-posed joints, yielding more reliable small-scale refinement.
 
-### Limitations
-- Grasp fitting via optimization is iterative and can be slow; sensitive to initialization.
-- Hand-part labels are coarse (pre-segmented MANO parts); fine-grained contact (e.g., specific phalanges) is lost.
-- Single-hand, static grasp only.
+## Contributions
 
-## 6. Takeaway
-Contact2Grasp reinforced the "contact-first, grasp-second" paradigm: predicting an intermediate contact representation and then fitting hand parameters to satisfy those contacts consistently yields grasps with superior physical plausibility compared to end-to-end regression. This decoupled design pattern has become a dominant approach in the grasp generation literature.
+- Reformulation of grasp generation as a two-stage factorization (objects-to-contact-maps, then contact-maps-to-grasps), which replaces a highly non-smooth object-to-pose mapping with map generation on a low-dimensional, smooth manifold where small contact perturbations remain valid; contact maps act as an intermediate learning constraint rather than a refinement loss.
+- ContactCVAE, a CVAE that learns the contact-map distribution with dice-loss handling of small contact regions, enabling diverse and interpolatable contacts whose corresponding grasps transition smoothly (e.g., holding to pressing a phone).
+- Penetration-aware partial optimization that detects which of the six hand parts penetrate the object and refines only those partial poses under contact-map consistency, outperforming global optimization in grasp quality.
+- State-of-the-art quantitative results on Obman and ContactPose, with new grasp success rate and diversity metrics that jointly consider penetration and simulation stability.
+
+## Experimental Setup
+
+Models are trained on Obman (synthetic hands from GraspIt! over 2,772 ShapeNet meshes in 8 object categories, contacts obtained by thresholding normalized object-hand distances) and on ContactPose (real grasps with thermal-camera contact maps; 25 household objects, 2,306 grasp contacts; the authors' split reserves cup, toothpaste, stapler, and flashlight — 336 grasp contacts — for testing). Inputs are 2,048-point object clouds with random translation ([-1, 1] cm) and XYZ rotation augmentation. Training uses Adam (learning rate 1e-4, batch size 32, 130 epochs) on a single RTX 3090 (24 GB); inference refinement runs Adam at 2e-4 for 200 steps per grasp. Metrics: penetration depth and volume (0.5 cm voxelization), simulation displacement in a physics simulator, contact rate, grasp success rate (penetration volume < 5 cm3 and mean displacement < 2 cm), and diversity measured as mean pairwise MAE over generated pose parameters.
+
+## Results
+
+On the Obman test set, Contact2Grasp achieves 0.44 cm penetration depth, 3.94 cm3 penetration volume, 1.60 cm mean simulation displacement, 100% contact rate, 10.14 cm diversity, and 61.37% grasp success rate, versus GraspTTA (0.45 cm, 5.14 cm3, 1.62 cm, 99.05%, 8.07 cm, 47.88%), GrabNet (0.61 cm, 8.31 cm3, 1.78 cm, 98.25%, 7.93 cm, 27.60%), and GraspField (0.56 cm, 6.05 cm3, 2.07 cm, 89.40% contact rate); ground truth scores 0.01 cm, 1.70 cm3, 1.66 cm, 100%, 7.86 cm, 87.12%. On ContactPose it reaches 0.36 cm depth, 4.15 cm3 volume, 98.85% contact rate, 7.91 cm diversity, and 58.97% success rate against GraspTTA's 0.79 cm, 6.01 cm3, 97.67%, 7.32 cm, 42.31% and GrabNet's 0.92 cm, 16.74 cm3, 97.42%, 5.92 cm, 16.89%; notably the generated grasps show lower penetration depth than real ground-truth grasps (0.36 vs. 0.51 cm) on this set. Ablations on ContactPose show the two-stage factorization alone (Ours w/o PAP, 35.71% GSR) improves penetration volume, depth, and GSR by 57%, 38%, and 68% over an end-to-end Param2Mesh CVAE baseline (21.19% GSR, 17.18 cm3); PAP optimization lifts GSR to 58.97% versus 39.27% for global optimization; and training GraspNet on generated maps instead of ground-truth maps only degrades depth from 0.40 to 0.36 cm-class margins (0.36 cm generated vs. 0.40 cm ground-truth contact), indicating high first-stage contact quality. t-SNE visualization of 200 successful grasps per object shows generated pose distributions closer to ground truth than GraspTTA's, and latent interpolation of contact maps produces correspondingly smooth grasp transitions.
+
+## Limitations
+
+The authors explicitly note that generated contact maps are sometimes ambiguous and admit more than one plausible grasp, so the core assumption that a grasp is fully constrained by its contact map does not always hold; they suggest that contact maps with finer hand-part segmentation would provide stronger constraints and reduce ambiguity. The evaluation also relies on a physics-simulator-based success metric that the authors themselves caution is only a rough reference, since high-penetration grasps can still be stable in simulation. The method assumes MANO parameterization with mean shape, single-hand static grasps, and datasets providing object-hand distance-derived or thermal ground-truth contact; performance on articulated objects, bimanual grasps, or contact maps requiring sensor instrumentation at scale is not addressed in the paper.

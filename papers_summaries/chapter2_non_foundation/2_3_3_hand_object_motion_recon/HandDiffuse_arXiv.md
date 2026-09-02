@@ -1,43 +1,34 @@
 # HandDiffuse: Generative Controllers for Two-Hand Interactions via Diffusion Models
+**Authors:** Pei Lin, Sihang Xu, Hongdi Yang, Yiran Liu, Xin Chen, Jingya Wang, Jingyi Yu, Lan Xu  
+**Date:** 2025-04-23  
+**Identifier:** [arXiv:2312.04867](https://arxiv.org/abs/2312.04867) (v2, AAAI 2025)  
+**Zotero item:** `AP7IIXUH` ([Zotero](zotero://select/library/items/AP7IIXUH))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-Introduces a large-scale two-hand interaction dataset (HandDiffuse12.5M) and a diffusion-based generative model for synthesizing diverse, realistic two-hand interaction motions.
 
-## 1. Problem and Setting
-- Generate realistic two-hand interaction motions (bimanual, with or without objects).
-- Input: optional condition signals (hand pose seed, interaction type); output: two-hand MANO motion sequence.
-- Two-hand motion generation. Addresses the severe data scarcity in bimanual hand interaction data.
+The paper tackles interacting two-hand motion generation through a dataset-plus-baseline contribution. It releases HandDiffuse12.5M, the largest real two-hand interaction dataset to date (250K temporal frames, roughly 2 hours, 12.5M images from 50 synchronized RGB cameras), covering random complex interactions, daily communication, finger tutting, and Chinese sign language with a 57.3% contacting-hands ratio. On top of it, HandDiffuse is a diffusion-based generator with explicit controllers (keyframes, wrist trajectories, 2D keypoints), a modular two-denoiser design (Single Hand Denoiser plus Interacting Hands Denoiser), two task-specific motion representations, and an Interaction Loss that reduces joint penetration. It outperforms adapted MDM, InterGen, BUDDI, and InterHandGen across unconditional generation, in-betweening, and trajectory control.
 
-## 2. Core Method
-- First contribution: HandDiffuse12.5M, a large-scale dataset of 12.5 million two-hand interaction frames, created through a combination of motion capture, procedural generation, and data augmentation of existing datasets.
-- Second contribution: a diffusion-based generative controller for two-hand interactions:
-  - A transformer-based diffusion model denoises two-hand MANO parameter sequences.
-  - Supports multiple conditioning signals: initial hand pose, desired interaction type, object category.
-  - A cross-hand attention mechanism ensures the two hands move in coordinated, physically plausible ways.
-  - The model can generate both short-range (grasping) and long-range (extended manipulation) interactions.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: HandDiffuse12.5M (custom large-scale dataset), supplemented by InterHand2.6M, GRAB.
-- Supervision: MANO parameters.
-- Uses MANO for hand.
-- Assumes large-scale data enables learning diverse interaction patterns.
+Existing hand datasets are dominated by short-range, weakly interacting content: self-occlusion, self-similarity, and complex articulation make real capture of strong two-hand interaction expensive, and large frame collections such as InterHand2.6M, Two-hand 500K, and RenderIH provide only sparse temporal sequences, while the concurrent Re:InterHand targets motion capture under diverse lighting rather than generation. This data scarcity has left temporal two-hand interaction motion generation essentially unaddressed: body-motion diffusion models (e.g., MDM) do not model finger-level interaction, and hand motion is hard to describe with text prompts, so the authors argue control must be explicit (keyframes, trajectories, 2D keypoints). The paper defines two problems: (1) build a large-scale real dataset of temporally continuous strongly interacting two-hand motions with accurate annotations, and (2) establish a strong controllable generation baseline that also supports downstream applications such as motion in-betweening, trajectory-conditioned completion connecting hand and body motion, and hand motion reconstruction.
 
-## 4. Experiments and Findings
-- Datasets: InterHand2.6M, GRAB, custom test set.
-- Metrics: FID, diversity, physical plausibility (penetration, contact), user study.
-- The scale of HandDiffuse12.5M significantly improves generation quality and diversity compared to models trained on existing smaller datasets. Generates realistic long-range two-hand interactions.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Large-scale dataset addresses the fundamental data bottleneck in two-hand interaction.
-- Diffusion model generates diverse, realistic bimanual motions.
-- Multiple conditioning modes provide flexible control.
+HandDiffuse12.5M capture: 50 mounted RGB cameras record at 30-60 fps and 3840x2160; 2D keypoints are detected with DWPose, triangulated into world-coordinate 3D keypoints, and fitted with differentiable MANO optimization, with failed frames manually re-annotated (240K images manually annotated in total). Generation: a DDPM backbone (T = 1000 diffusion steps, cosine noise schedule, MDM-style encoder-only transformer with 8 layers, 4 heads, feed-forward dimension 1024) is decomposed into two denoisers. The Single Hand Denoiser (SHDe) learns local single-hand motion by zeroing global translation and rotation and using joint positions/velocities plus MANO pose, trained once and shared across hands via right-to-left mirroring; its frozen output is concatenated with global noise and fed, in a task-specific motion representation, to the Interacting Hands Denoiser (IHDe), which models the dynamic interaction process and finetunes local motion. Two representations are proposed: a local representation inspired by HumanML3D (root angular velocity and linear velocity, local joint positions/velocities, 15 MANO joint rotations, with the right hand carrying initial relative rotation/translation and sequences aligned to the first-frame left wrist) and a global representation (world-coordinate joint positions, velocities, and rotations for both hands). At inference the framework re-adds t-1 step noise after each denoising round (Interacting Hands DDIM). The Interaction Loss combines a contact potential term computed on a 25x25 inter-hand joint distance matrix (spring elastic potential with a distance threshold, plus a cross-product direction term to disambiguate penetration, inspired by Contact Potential Field) and a shape loss enforcing left-right bone-length consistency and agreement with ground-truth bone lengths.
 
-### Limitations
-- Dataset quality may vary (procedural generation introduces artifacts).
-- Generated motions may lack fine-grained contact details.
-- Evaluation of two-hand interaction realism is challenging.
-- Requires significant compute for training.
+## Contributions
 
-## 6. Takeaway
-HandDiffuse demonstrated that scale matters for hand interaction generation, following the broader deep learning trend. The HandDiffuse12.5M dataset is a valuable resource for the community, and the diffusion-based approach shows that two-hand interactions can be learned from data without hand-crafted physical constraints.
+1. HandDiffuse12.5M, the largest available interacting-hands dataset in both duration and image count, with strong interaction, temporal continuity, 50-view RGB, and manual annotation for occluded regions. 2. The first method specifically targeting hand-only interaction motion generation, with explicit controllers (keyframes, wrist trajectories, 2D keypoints) enabling motion in-betweening, trajectory control, and reconstruction-style conditioning. 3. Interacting Hands DDIM: a modular two-denoiser architecture plus two task-adapted motion representations and an Interaction Loss that quantifies the dynamic interaction process to reduce penetration artifacts. 4. Demonstration that generated motions can serve as data augmentation, improving the accuracy of existing hand motion capture algorithms, with dataset and code to be released publicly.
+
+## Experimental Setup
+
+Training uses T = 1000 diffusion steps with a cosine schedule, generated sequences of length N = 200, and a single NVIDIA GeForce RTX 3090 for about two days. Evaluation covers three tasks: unconditional generation, keyframe-controlled in-betweening (first 5 and last 5 ground-truth frames given), and wrist trajectory control (root angular and linear velocity per frame), with 2D-keypoint control reported in the appendix. Metrics are Frechet Inception Distance (FID, realism), Diversity, and an SDF penetration metric that takes positive values when hand joints penetrate (computed following MotionCLIP-style evaluation protocol). Baselines are adapted to hand motion: MDM (single-human generation), InterGen (interacting multi-human generation), BUDDI (interacting-human latents, per-frame tokens with person embedding distinguishing hands), and InterHandGen (cascaded single-frame generation, left hand then right hand conditioned on it).
+
+## Results
+
+Against ground-truth real motions (FID 0.050, Diversity 12.034, SDF 1.146), HandDiffuse is closest overall. Unconditioned: FID 0.161, Diversity 11.829, SDF 1.553 versus MDM 0.526/10.366/1.74, InterGen 0.251/4.928/0 (static mean-pose motion yields low FID but low diversity and no penetration), BUDDI 0.853/8.282/2.293, and InterHandGen 0.437/10.238/1.731. In-betweening: HandDiffuse 0.273 FID / 11.554 Diversity / 1.562 SDF, with the best diversity and competitive FID (InterGen 0.269 FID but Diversity 5.385). Trajectory control: HandDiffuse 0.173 FID / 11.758 Diversity / 1.141 SDF, beating MDM (0.205/11.265/1.572), InterGen (0.402/9.102/3.572), BUDDI, and InterHandGen. Ablations (Table 3) confirm the representation choice is task-dependent: the global representation wins for unconditioned (FID 0.161 vs 0.431 local) and in-betweening (0.273 vs 0.567), while the local representation wins for trajectory control (0.173 vs 0.418). Removing SHDe slightly hurts trajectory control (FID 0.182, SDF 1.538 vs 1.141); removing the contact potential loss raises SDF across tasks (e.g., trajectory 1.614 vs 1.141); and removing the shape loss is most damaging to FID (unconditioned 0.390, in-betweening 0.512, trajectory 0.380).
+
+## Limitations
+
+The paper does not include a dedicated limitations section, and the authors themselves frame controllable hand motion generation as remaining a challenging open problem. Observable constraints from the paper: each captured sequence is limited to roughly one minute by hardware, and the dataset was recorded in a lab setting; penetration is reduced but not eliminated (SDF 1.553 unconditioned and 1.562 in-betweening versus 1.146 for real data); the choice between the two motion representations must be made per task rather than unified; the controller set is restricted to explicit signals (keyframes, wrist trajectory, 2D keypoints), with text conditioning deemed unsuitable for fine-grained hand interaction; and quantitative comparison required non-trivial adaptation of body- or image-level baselines, whose results may understate their potential in their original settings.

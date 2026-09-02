@@ -1,51 +1,38 @@
-# H2O (ICCV 2021)
+# H2O: Two Hands Manipulating Objects for First Person Interaction Recognition
 
-> Kwon, Tekin, Stuhmer, Bogo, Pollefeys. *H2O: Two Hands Manipulating Objects for First Person Interaction Recognition.* ICCV 2021. DOI: 10.1109/ICCV48922.2021.00998. Zotero Key: `6PAC4ZEZ`.
+**Authors:** Taein Kwon, Bugra Tekin, Jan Stuhmer, Federica Bogo, Marc Pollefeys  
+**Date:** 2021-04-22  
+**Identifier:** [arXiv:2104.11181](https://arxiv.org/abs/2104.11181); DOI `10.1109/ICCV48922.2021.00998`  
+**Zotero item:** `6PAC4ZEZ` ([Zotero](zotero://select/library/items/6PAC4ZEZ))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-H2O is the first 3D first-person HOI benchmark that provides bi-manual 3D pose + 6D object pose + egocentric RGB-D + interaction-category labels simultaneously: about 360K frames, 4 scenes, 8 everyday objects, and 11 bi-manual action categories. It is an early authoritative benchmark for egocentric bi-manual 3D HOI reconstruction and first-person action recognition.
 
-## 1. Dataset Purpose
-- Solves the lack of "bi-manual + object 3D pose" ground truth in first-person view. While HO-3D focuses on the third view, H2O directly targets AR/VR headsets.
-- Tasks: (1) bi-manual 3D pose estimation from first-person view; (2) 6D object pose estimation from first-person view; (3) interaction recognition from first-person view (action classification).
-- Anchors "first-person interaction" as an independent sub-task and provides a data foundation for AR/VR headset scenarios.
-- A Graph Convolutional Network baseline is proposed that considers both intra-/inter-hand and hand-object dependencies.
+This ICCV 2021 paper introduces H2O (2 Hands and Objects), the first benchmark for egocentric 3D interaction recognition with markerless 3D annotations of two hands manipulating objects: 571,645 synchronized multi-view RGB-D frames from 5 Azure Kinect cameras (one helmet-mounted), 4 subjects, 8 objects, and 36 verb-noun action classes, with ground-truth left/right hand poses, 6D object poses, camera poses, object meshes, and scene point clouds. The authors also propose the first single-RGB method that jointly predicts both hand poses, object 6D pose, and interaction class, using a topology-aware graph convolutional network (TA-GCN) that reaches 79.25% test accuracy and outperforms SlowFast, I3D, and ST-GCN baselines.
 
-## 2. Data Composition
-- Source: real capture. Multiple subjects manipulate everyday objects bi-manually under the first-person view.
-- Viewpoint: first-person multi-view (4 synchronized RGB-D cameras, with the subject's head fixed).
-- Scale: about 360K frames, 4 scenes, 36 subjects.
-- Object and action: 8 everyday objects (box, milk, bottle, can, bowl, cup, phone, sponge) + 11 bi-manual actions (pass, give, take, pour, etc.).
-- Contains natural occlusion, bi-manual inter-occlusion, and the self-occlusion characteristic of the first-person view.
-- No specialized articulated-object design (simple open/close of box, etc.), no bi-manual tool use.
+## Background and Motivation
 
-## 3. Annotation and Supervision
-- Hand: bi-manual 3D 21 joints (multi-view optimization + automatic refinement); MANO shape / pose.
-- Object: 6D pose (jointly optimized with hands).
-- Interaction: 11 bi-manual action labels, object class.
-- Scene: 4-view RGB + depth, camera intrinsics / extrinsics, point-cloud fusion, object meshes.
-- No language, no robot, no tactile.
+Egocentric action recognition trails its third-person counterpart largely because existing first-person datasets provide only 2D cues such as bounding boxes and segmentations, without 3D reasoning about hands and manipulated objects. Prior 3D hand-object datasets cover single-hand scenarios (HOnnotate, ObMan, DexYCB-style setups), rely on intrusive motion capture that pollutes RGB images (FPHA), or are synthetic (ObMan), while two-hand interaction is the more representative real-world scenario but had no benchmark with paired 3D poses and action labels. Recognizing interactions also requires more than pose: pose alone lacks the semantic meaning of the action, so the authors aim for a unified framework that couples 3D pose estimation with interaction recognition, handling egocentric-specific difficulties such as fast camera motion, large occlusions, and background clutter.
 
-## 4. Supported Evaluation
-- Benchmark tasks: (1) hand pose (MPJPE / PA-MPJPE, per left / right hand); (2) object pose (ADD-S / AUC); (3) interaction recognition (Top-1 / Top-5 accuracy).
-- Provides unique metrics such as "inter-hand distance / inter-hand contact".
-- Key metrics: bi-manual hand MPJPE, object AUC-ADDS, action classification accuracy.
-- Training + evaluation + held-out split are all public.
+## Dataset Construction
 
-## 5. Why It Matters
-- The first public "first-person bi-manual HOI" ground-truth dataset, establishing the egocentric HOI reconstruction paradigm.
-- The "graph convolutional baseline" is the first-generation bi-manual reconstruction baseline and has been cited for a long time.
-- The 11 interaction labels enable first-person action recognition benchmarks on this dataset.
-- H2O + HO-3D form a "first-person vs third-person" comparison, becoming the de facto reference for follow-up AR/VR research.
-- Promotes AR/VR-headset hand-object tracking from single-hand to bi-manual.
+Data are recorded with five Azure Kinect cameras (four static plus one helmet-mounted egocentric camera) at 1280x720 and 30 fps, synchronized by physical cables to under 100 microseconds with 160-microsecond depth-capture offsets (maximum 0.74 ms inter-camera delay). Extrinsic calibration uses nine IR reflective spheres placed in the scene and solved with PnP, with Kalman-filter smoothing of the head-mounted camera pose. Object meshes are reconstructed with BADSLAM RGB-D SLAM from hand-held scans and textured in Blender by projecting scan-time RGB images. Object 6D poses are tracked by a Mask R-CNN mask predictor (trained on masks projected from the reconstructed models) feeding DenseFusion, with the highest-confidence view selected and refined by ICP against the merged five-view point cloud. Hand poses are obtained by fitting MANO per frame to multi-view depth, minimizing silhouette, 2D/3D OpenPose joint, mesh-surface depth, pose-regularizer, and hand-object interpenetration terms, with per-subject shape parameters fixed after a single-frame fit; failing frames are manually removed and temporally smoothed. Actions are manually labeled in VIA as verb-noun pairs from 11 verbs (grab, place, open, close, pour, take out, put in, apply, read, spray, squeeze) and 8 nouns (book, espresso, lotion, spray, milk, cocoa, chips, cappuccino), yielding 36 non-overlapping action classes captured in three environments (hall, office, kitchen). The subject-based split assigns 344,645 frames to training, 73,380 to validation, and 153,620 to testing; both hands are used in 57.8% of the data, only the left hand in 12.4%, and only the right hand in 29.8%.
 
-## 6. Limitations and Biases
-- 8 everyday objects: low diversity, methods easily overfit specific object appearances.
-- Bi-manual style of 36 subjects is still affected by culture / left-right dominance.
-- 11 interactions: limited action categories; labels are "actions" rather than "task goals", language is missing.
-- Joint mesh ground truth of hands + objects is missing (only 6D pose + joints), so a joint mesh reconstruction benchmark cannot be performed.
-- No articulated object, no tool use, no long-horizon tasks, no contact-map ground truth.
-- Under the first-person view, "the subject cannot see his own hand", leading to noisier annotations on some frames.
+## Evaluation Protocol
 
-## 7. Takeaway
-H2O is best for demonstrating the accuracy of "bi-manual + object 3D pose reconstruction + action recognition" in the first-person view, especially bi-manual tracking in AR/VR headset scenarios. **Not suitable** for evaluating articulated object, tool use, long-horizon task, language-conditioned generation, or dexterous embodiment. In this survey, H2O plays the role of "first-person bi-manual 3D HOI main benchmark + first-person action recognition benchmark" and serves as a hard anchor for evaluating "video-based headset-data pretraining" in Ch5.
+Annotation quality is verified on 500 images across the five views by manually marking fingertips and predefined object keypoints, triangulating them to 3D, and measuring distances to the automatic annotations. Downstream evaluation uses a subject-based leave-one-out split with 3D PCK for hand pose, 2D reprojection and ADD metrics for object pose, and top-1 accuracy on the 36 action classes. The recognition baseline consumes poses predicted from RGB by the authors' single-shot network (a YOLOv2-backbone fully convolutional model with a 3D output grid carrying per-cell left-hand, right-hand, and object-box predictions), so the benchmark measures the full RGB-to-recognition pipeline rather than oracle poses.
+
+## Findings and Analysis
+
+Verification shows annotation errors within about 1 cm (object 1.10 +/- 0.37 cm, left hand 0.82 +/- 0.43 cm, right hand 0.93 +/- 0.57 cm), comparable to HOnnotate and FreiHAND despite the extra occlusion of two-hand manipulation, and the pose data supports contact and affordance modeling via 2 cm-threshold contact maps on MANO and object meshes. For interaction recognition, pose inputs dominate: using only the right hand reaches 52.70% accuracy, both hands 58.92%, and adding the object pose lifts performance to 79.25%, confirming the complementary contributions of hand and object 3D cues. The TA-GCN ablations show that learned interconnections matter: removing the learned hands-object adjacency drops accuracy to 75.52% and removing the learned intra-graph term to 76.76%, while the fixed ST-GCN baseline scores 73.86%; the learned graph attends more to fingertips and DIP joints and weights hand-object links above hand-hand links during object interaction. Against video models trained with the PySlowFast recipe (ResNet-50 backbone, 64-frame windows), TA-GCN obtains 79.25% test accuracy versus 77.69% for SlowFast, 75.21% for I3D, 70.66% for C2D, 68.88% for H+O, and 73.86% for ST-GCN fed with the same estimated poses. For joint two-hand and object pose estimation from a single RGB image, the method attains 41.45 mm (left hand), 37.21 mm (right hand), and 47.90 mm (object) errors, competitive with single-hand specialists (Hasson et al. and H+O) trained separately per hand, and constitutes the first baseline for this setting.
+
+## Contributions
+
+- H2O, the first dataset for egocentric 3D interaction recognition with markerless 3D annotations of two hands and manipulated objects, including synchronized five-view RGB-D frames, 6D object poses, camera poses, object meshes, scene point clouds, and per-frame action labels (571,645 frames, 36 classes).
+- A practical semi-automatic annotation pipeline combining IR-sphere calibration, BADSLAM-based object reconstruction, DenseFusion-plus-ICP object tracking, and MANO fitting to multi-view depth, verified to roughly 1 cm accuracy.
+- The first single-RGB method to jointly predict 3D poses of two interacting hands and 6D object pose together with action and object classes.
+- A topology-aware graph convolutional network (TA-GCN) with learnable intra- and inter-graph adjacency that models hand-hand, hand-object, and intra-entity dependencies, establishing the state of the art on H2O recognition.
+
+## Limitations
+
+The dataset covers only 4 subjects and 8 everyday objects in 3 indoor environments, so demographic and object diversity are limited even though action instances are reasonably balanced (the least frequent action still appears 21 times). Ground truth comes from depth-based fitting and tracking with manual removal of failures, giving roughly 1 cm accuracy rather than mocap-grade precision, and frames where the automatic pipeline failed are discarded and interpolated rather than recovered. The recognition experiments rely on poses predicted from RGB rather than ground truth at test time, and the 36-class verb-noun taxonomy assigns exactly one verb and one noun per frame, which excludes multi-action or overlapping interaction labels.

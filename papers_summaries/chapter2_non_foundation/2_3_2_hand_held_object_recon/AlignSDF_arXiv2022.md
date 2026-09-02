@@ -1,41 +1,39 @@
 # AlignSDF: Pose-Aligned Signed Distance Fields for Hand-Object Reconstruction
 
+**Authors:** Zerui Chen, Yana Hasson, Cordelia Schmid, Ivan Laptev  
+**Date:** 2022-07-26  
+**Identifier:** [arXiv:2207.12909](https://arxiv.org/abs/2207.12909)  
+**Zotero item:** `7JI6KI72` ([Zotero](zotero://select/library/items/7JI6KI72))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-Jointly reconstructs hand and object as pose-aligned SDFs from monocular RGB images, bridging the gap between parametric mesh and implicit surface representations through a unified coordinate-aligned framework.
 
-## 1. Problem and Setting
-- Joint 3D reconstruction of both the hand and the manipulated object from a single RGB image.
-- Input: single RGB image; output: 3D hand mesh (MANO) + 3D object surface (SDF).
-- The hand is parametric (MANO), the object is represented as a signed distance field (SDF) in a pose-aligned coordinate frame.
+AlignSDF combines the complementary strengths of parametric mesh models and signed distance functions (SDFs) for joint hand-object reconstruction from monocular RGB images. A MANO network and an object pose network estimate the hand pose and the object translation, and these estimated poses are used to transform 3D query points into pose-normalized canonical frames before SDF prediction, so that the SDF decoders can concentrate on learning shape rather than global pose. On ObMan, the full model reaches an object shape error of 3.38 cm2 versus 3.60 for the parametric-mesh baseline of Hasson et al. and 5.70–6.80 for the model-free Grasping Field, while on DexYCB it improves hand shape error by 29.4% and object shape error by 20.5% over prior work.
 
-## 2. Core Method
-- A shared image encoder feeds two task-specific heads: a hand head predicting MANO parameters, and an object head predicting SDF values.
-- Pose-aligned SDF: the object SDF is predicted in a canonical coordinate frame aligned to the hand pose (specifically to each finger bone). This decomposes the object shape into per-finger-aligned local patches that are easier to learn.
-- Each query point is transformed to multiple local coordinate systems (one per finger bone) before querying the SDF decoder, enabling the model to reason about object shape relative to each finger's configuration.
-- Final SDF is aggregated from per-bone predictions via a learned fusion module.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: synthetic data from ObMan + real images from HO3D.
-- Supervision: 3D object SDF values (from synthetic data), 2D/3D hand keypoints, MANO pose parameters.
-- Uses MANO for hand.
-- Assumes the object is rigid; single-hand interaction; the hand pose is reasonably predictable from the image.
+Joint reconstruction of a hand and the object it manipulates from a single monocular RGB image is challenging because of partial visibility and strong mutual occlusion. Prior approaches fall into two groups with opposite trade-offs. Parametric-mesh methods build on MANO and benefit from strong prior shape knowledge, producing anthropomorphically valid hands, but their resolution is limited, so fine details such as hand-object contact surfaces are hard to recover, and their object reconstructions (e.g., AtlasNet-based meshes in Hasson et al.) are limited to simple sphere-deformable shapes. Some methods sidestep shape estimation entirely by assuming the ground-truth 3D object model is available at test time and predicting only its 6D pose. Implicit SDF methods, most prominently the model-free Grasping Field of Karunratanakul et al., can represent arbitrary shapes at unlimited resolution and model hand-object interactions, but lack explicit priors, which makes direct SDF learning over wide distributions of objects and grasp types difficult. The problem AlignSDF addresses is how to inject the prior knowledge of parametric representations into SDF learning so that SDF networks focus on shape detail instead of having to simultaneously explain global pose variation.
 
-## 4. Experiments and Findings
-- Datasets: HO3D, ObMan.
-- Metrics: Chamfer Distance, F-score (object); MPJPE, PA-MPJPE (hand).
-- Pose-aligned SDF significantly outperforms global SDF representations for object reconstruction, particularly for articulated grasping poses where global coordinate reasoning is ambiguous.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Pose-aligned representation elegantly decomposes the complex 3D reasoning task into simpler per-bone sub-problems.
-- Unified framework handles both hand and object in a single forward pass.
-- Better generalization to novel grasping poses compared to global SDF methods.
+AlignSDF splits the model into a pose part and a shape part for both the hand and the object, training everything end-to-end. The hand branch feeds ResNet-18 image features to a hand encoder that regresses MANO pose and shape parameters; MANO is integrated as a differentiable layer, and the hand is supervised with a joint-location loss plus weak shape and pose regularizers that pull predictions toward the MANO training-set mean. The object branch predicts only the 3D translation of the object centroid relative to the hand wrist (the origin of the coordinate system), avoiding the ambiguity of estimating 3D rotation for unknown, possibly symmetric objects; translation is obtained from 64x64x64 volumetric heatmaps with a soft-argmax operator.
 
-### Limitations
-- Still requires synthetic data with 3D supervision for training.
-- Object SDF quality is bounded by hand pose accuracy.
-- Only single-hand, single-rigid-object settings.
-- Fusion of per-bone predictions can produce artifacts at bone boundaries.
+For shape, an SDF decoder predicts the signed distance of a query point to the hand surface, and a second decoder predicts the signed distance to the object surface. The key mechanism is pose normalization: the estimated global hand rotation and wrist position transform each query point into a canonical hand frame (global rotation zeroed out), and the estimated object translation transforms the same point into a canonical object frame. Each decoder receives the concatenation of the original point and its canonical counterpart together with image features, so it learns shape in a pose-normalized space. The decoders are trained with an L1 loss against ground-truth SDFs on 1,000 sampled points per image (500 outside, 500 inside the surface), and meshes are extracted at test time via Marching Cubes.
 
-## 6. Takeaway
-AlignSDF introduced the idea that aligning the object representation to the articulated hand structure dramatically simplifies learning. This "pose-aligned" or "articulation-aware" coordinate frame concept became influential in subsequent hand-object reconstruction works, particularly gSDF and geometry-driven methods.
+## Contributions
+
+- A joint hand-object reconstruction framework that merges parametric mesh models and deep implicit functions, using estimated MANO poses and object translations as priors for SDF learning.
+- A pose-shape disentanglement scheme: pose networks (MANO network and object pose network) solve global pose, while hand and object SDF decoders learn geometry in pose-normalized canonical frames, reducing the difficulty of SDF learning over diverse objects and grasp types.
+- Comprehensive ablations on ObMan that isolate the effect of aligning SDFs with predicted poses, plus state-of-the-art results on ObMan and DexYCB with contact-aware interaction metrics (contact ratio, penetration depth, intersection volume).
+
+## Experimental Setup
+
+Training uses ObMan (synthetic; 87,190 training samples after discarding meshes with too many double-sided triangles, 6,285 test samples; meshes normalized to a unit cube and 40,000 points sampled to build SDF supervision) and DexYCB (the largest real benchmark with 582K grasping frames of 20 YCB objects; right-hand samples of the official S0 split, filtering out frames whose minimum hand-object mesh distance exceeds 5 mm, giving 148,415 training and 29,466 test samples). Inputs are 256x256 RGB images processed by a ResNet-18 backbone. Ablations cover hand-only baselines (with and without MANO-based canonical alignment, plus a ground-truth-pose upper bound) and hand-object baselines combining the two alignment modules. Metrics include hand shape error (Hse), hand validity error (Hve), object shape error (Ose), all in cm2 after scale-and-translation (Hse, Ose) or full Procrustes (Hve) alignment; hand joint error (Hje, cm); object translation error (Ote, cm); contact ratio (Cr); penetration depth (Pd, cm); and intersection volume (Iv, cm3). The model trains with Adam, batch size 256, learning rate 1e-4 halved every 600 (ObMan) or 300 (DexYCB) epochs, for 1,600/800 epochs, about 90 hours on four NVIDIA 1080 Ti GPUs.
+
+## Results
+
+On ObMan, the full model reaches Hse 0.136 cm2, Hve 0.121 cm2, Ose 3.38 cm2, Hje 1.27 cm, Ote 3.29 cm, Cr 95.5%, Pd 0.66 cm, and Iv 2.81 cm3. This substantially improves on Hasson et al. (Hse 0.415, Ose 3.60, Pd 1.20, Iv 6.25) and on the model-free Grasping Field (Hse 0.261/0.237 for 1D/2D embedding variants, Ose 5.70-6.80), while producing far more hand-object contact than Grasping Field's 1D variant (5.63% contact ratio). On DexYCB, the method reaches Hse 0.523 cm2, Hve 0.375 cm2, Ose 3.5 cm2, Hje 1.9 cm, Ote 2.7 cm, Cr 96.1%, Pd 0.71 cm, Iv 3.45 cm3, i.e., a 29.4% improvement in Hse and 20.5% in Ose over prior state of the art (Hasson et al.: Hse 0.785, Ose 4.4, Iv 7.67; Grasping Field: Hse 0.741, Ose 5.8). Ablations attribute the gains to the alignment modules: adding MANO-based canonical alignment improves Hse/Hve by 6.4%/8.8% over a no-alignment baseline, and object pose alignment reduces Ose from 4.09 to 3.36 cm2; with only 30K ObMan training samples the hand-only alignment brings more than 8% Hse/Hve improvement, indicating the priors matter most in low-data regimes. Training with ground-truth hand poses and object translations (upper bound) yields Hse 0.111 and Ose 2.11 cm2 on ObMan, showing remaining headroom from pose estimation errors.
+
+## Limitations
+
+The paper reports four typical failure modes on DexYCB: heavy occlusion of hand or object, motion blur, thin structures, and objects with complex fine details. Because only the object translation is predicted (rotation is deemed ambiguous for unknown, possibly symmetric objects), object orientation is implicitly tied to what the SDF can express in the canonical frame. Evaluation also relies on optimized scale and translation alignment to handle monocular scale ambiguity, and the authors note that leveraging temporal information from videos could help address the noise and detail-recovery issues left open by the single-image formulation.

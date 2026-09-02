@@ -1,43 +1,42 @@
-# InteractionFusion: Real-Time Reconstruction of Hand Poses and Deformable Objects in Hand-Object Interactions
+# InteractionFusion: Real-time Reconstruction of Hand Poses and Deformable Objects in Hand-Object Interactions
+
+**Authors:** Hao Zhang, Zi-Hao Bo, Jun-Hai Yong, Feng Xu  
+**Date:** 2019-07-31  
+**Identifier:** [DOI: 10.1145/3306346.3322998](https://doi.org/10.1145/3306346.3322998)  
+**Zotero item:** `L7GU3STF` ([Zotero](zotero://select/library/items/L7GU3STF))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-First real-time system for jointly tracking hand poses and reconstructing deforming objects from RGB-D input, using a unified probabilistic optimization framework with hand-object collision constraints.
 
-## 1. Problem and Setting
-- Real-time joint reconstruction of 3D hand poses and deformable/non-rigid object shapes during manipulation.
-- Input: RGB-D video stream; output: MANO hand pose per frame + deforming object mesh per frame.
-- RGB-D input (not RGB-only); real-time performance; handles deformable objects (e.g., clay, cloth).
+InteractionFusion is the first system to simultaneously track hand poses, fuse a complete 3D object model, and reconstruct both rigid and non-rigid object motions from hand-object interaction sequences in real time (about 40 ms per frame). It combines a DNN that segments hand and object in paired depth streams, an LSTM that predicts hand poses under occlusion, and a unified Gauss-Newton optimization that integrates segmented depth, predicted poses, a spatial-temporal varying rigidity regularizer, and an efficient sphere-based contact constraint, followed by DynamicFusion-style non-rigid TSDF fusion of the object. Ablations show the interaction term cuts fingertip tracking error on a pepper-rotation sequence from 28.4 to 14.4 pixels, and the varying-rigidity design resolves the conflict between loop closure and non-rigid motion tracking.
 
-## 2. Core Method
-- A unified energy minimization framework that jointly optimizes:
-  1. Hand tracking: MANO parameters fitted to RGB-D observations (depth, 2D keypoints).
-  2. Object reconstruction: non-rigid deformation field applied to an initial object scan, refined over time as new depth observations become available.
-  3. Hand-object collision: explicit penalty preventing hand mesh vertices from penetrating the object surface.
-- The object model starts from an initial depth scan (or a simple geometric primitive) and is progressively refined via a volumetric TSDF fusion approach adapted for non-rigid deformation.
-- Hand-object interactions are modeled via a penalty-based collision term that pushes intersecting hand vertices out of the object.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: none (online optimization, no learning).
-- Supervision: depth maps, RGB images (for keypoint detection), collision constraints.
-- Uses MANO for hand.
-- Assumes RGB-D sensor available; initial object scan or primitive available; object deformation is smooth and relatively slow.
+Hands are primarily used for manipulating objects, but prior work handles either side in isolation: hand-tracking methods assume a known object shape and do not reconstruct it, while in-hand scanning methods reconstruct the object but discard the hand or require offline processing and initial object templates. Existing joint hand-object approaches handle only rigid or articulated objects with pre-scanned templates, and no prior system reconstructs hand motion, object shape, and object rigid/non-rigid motion simultaneously, let alone in real time. The core difficulties are the mutual occlusions between hand and object, which drastically amplify pose ambiguity for both, the high-dimensional joint solution space of hand articulation plus object geometry and motion, and the real-time requirement that rules out expensive contact checks between all surface points.
 
-## 4. Experiments and Findings
-- Datasets: custom captures with deformable objects (clay, foam).
-- Metrics: hand tracking error, object reconstruction error (against ground-truth scans), runtime.
-- Real-time performance (~30 fps) with reasonable hand tracking and object deformation reconstruction quality. Collision constraints improve both hand and object accuracy.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Real-time performance — one of the first real-time joint hand-object systems.
-- Handles deformable objects (unique at the time).
-- Probabilistic framework with principled collision modeling.
+The system uses two pre-calibrated RealSense SR300 depth cameras recording from opposite directions at 30 Hz, producing synchronized paired depth frames processed frame-by-frame. A DNN segmentation network (DenseAttentionSeg, an encoder-decoder with attention-enhanced skip connections running at 320x240) separates hand, object, and background in each frame, while a 3-layer LSTM (256 units per layer) consumes the previous 22 hand DoFs (the 6 global palm DoFs are excluded) and outputs a predicted pose that serves as a corrective motion prior for fully occluded fingers and segmentation errors; the LSTM is trained on 34 interaction sequences (~20K frames from one person) with Gaussian noise injected to mimic tracker errors and smoothed ground truth. Joint hand-object motion tracking then minimizes a unified energy with three groups: object terms (projective-ICP point-to-plane depth alignment, a linear 2D silhouette term against the object mask, and a regularizer whose rigidity weight varies spatially and temporally according to each deformation node's distance to the nearest detected contact point, so contact regions deform freely while distant regions stay rigid); hand terms (depth-to-model, model-to-visual-hull, pose prior, joint limits, finger self-collision, temporal continuity from a sphere-mesh hand model, plus the novel LSTM prediction term); and an interaction contact term that, for real-time efficiency, samples a small number of auxiliary spheres on the skeletons of the hand's sphere meshes and penalizes object surface points falling inside the nearest sphere, doubling as the contact detector. The energy is minimized by alternating Gauss-Newton iterations (5 per frame). Finally, object depth is fused into a canonical TSDF model via a node-graph deformation field with dual-quaternion blending (2 mm voxels, ~10 mm node spacing, 4 nearest nodes per vertex), after rejecting depth points within 7 mm of the tracked hand to remove segmentation outliers.
 
-### Limitations
-- Requires RGB-D sensor (depth camera), not RGB-only.
-- Needs an initial object scan/model.
-- Object deformation model is simple (cannot handle topological changes).
-- Limited to scenes where the depth sensor has clear view of both hand and object.
+## Contributions
 
-## 6. Takeaway
-InteractionFusion showed that real-time joint hand-object tracking is achievable with RGB-D input, and that physical constraints (collision) provide crucial regularization. While superseded by learning-based RGB-only methods for pose estimation, its probabilistic collision modeling and real-time fusion approach influenced downstream robotics and AR applications.
+- The first system achieving hand tracking, object model fusion, and non-rigid object motion tracking simultaneously in real time, without object templates or pre-scans.
+- An LSTM-based hand pose predictor trained with error-modeled noisy inputs that handles long-duration occlusions, segmentation faults, and high-frequency jitter, beyond what short-horizon temporal terms can fix.
+- A spatial-temporal varying rigidity regularizer that resolves the previously conflicting requirements of loop closure (strong rigidity in invisible regions) and non-rigid deformation tracking (weak rigidity near contacts), and also reduces error accumulation.
+- A new, efficient contact/interaction constraint formulation based on skeleton-sampled spheres of the hand model that keeps the optimization real-time while enforcing hand-object non-intersection.
+
+## Experimental Setup
+
+All experiments use the two-camera depth capture rig (30 Hz). The LSTM is trained for 100 epochs with Adam (learning rate 0.001) on sub-sequences up to 100 frames; its evaluation reports radian errors over all and noise-selected DoFs on train and held-out splits. Hand-tracking accuracy is measured by the average projection error of five manually annotated fingertips onto a 640x480 reference color image on three sequences (RotatePepper, 440 frames; PourBottle, 280 frames; ReconstructCat, 890 frames), comparing the sphere-mesh tracking baseline against baseline plus the interaction term and/or the LSTM. Object tracking accuracy is measured with colored markers: four markers on a cube versus KinectFusion (sequence MoveCube) and nine markers on a deformable toy versus DynamicFusion (sequence PressToy), with marker ground truth obtained by color thresholding. Runtime is reported per pipeline stage on a TITAN Xp GPU plus a second GPU server for segmentation and prediction.
+
+## Results
+
+- Runtime: the full pipeline runs at about 40 ms per frame (tracking 36 ms, fusion 2 ms on one GPU; segmentation plus LSTM about 22 ms on a second GPU, pipelined), i.e., real time with a 40 ms delay.
+- LSTM predictor: mean radian errors of 0.0399 (all DoFs) and 0.0465 (selected DoFs) on the evaluation set, against an injected noise standard deviation of about 0.45 for the selected DoFs.
+- Hand tracking: average fingertip pixel errors on RotatePepper drop from 28.4 (baseline) to 14.4 with the interaction term, 17.1 with the LSTM, and 14.1 with both; on PourBottle from 7.1 to 6.4 (both), and on ReconstructCat from 12.5 to 11.5 (both). The interaction term mainly resolves occlusion-induced ambiguity; the LSTM mainly corrects segmentation errors and jitter.
+- Object tracking: the varying-rigidity regularizer (weights ranging 5-60 with distance to contact points) simultaneously achieves good loop closure and accurate non-rigid motion, which fixed-strength settings cannot (small weights break loop closure, large weights suppress non-rigid motion); the silhouette term prevents systematic geometric errors such as an over-long reconstructed paper tube; the interaction term enables correct tracking of an object pressed by fingers despite heavy occlusion. Compared systems: the method yields smaller marker-projection errors than KinectFusion on rigid cube rotation and than DynamicFusion on deformable toy pressing.
+- Qualitative results cover rigid and non-rigid objects of various shapes and materials (paper, cloth, elastic and slow-rebounding polyurethane) with delicate individual finger motions.
+
+## Limitations
+
+The authors state that color is not incorporated into the main system and that the contact constraint is simplified rather than a full physical regularizer, so some geometric ambiguities remain — for example, only translation but not rotation can be reconstructed for objects with high rotational symmetry in hand. The system fails on strong cloth deformations and very fast interactions, and severe segmentation errors break hand tracking. It handles neither two hands nor multiple objects, and does not consider topology changes during interaction. Quantitative accuracy values for object reconstruction are only given as marker-projection error curves rather than absolute mm errors.

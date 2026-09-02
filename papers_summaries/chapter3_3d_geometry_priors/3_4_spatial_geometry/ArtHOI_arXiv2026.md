@@ -1,47 +1,43 @@
 # ArtHOI: Taming Foundation Models for Monocular 4D Reconstruction of Hand-Articulated-Object Interactions
 
+**Authors:** Zikai Wang, Zhilu Zhang, Yiqing Wang, Hui Li, Wangmeng Zuo  
+**Date:** 2026-03-26  
+**Identifier:** [arXiv:2603.25791](https://arxiv.org/abs/2603.25791)  
+**Zotero item:** `QE8QZ72C` ([Zotero](zotero://select/library/items/QE8QZ72C))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-ArtHOI is an optimization-based framework that integrates and refines priors from multiple foundation models (3D generative models, MLLMs) to reconstruct 4D human-articulated-object interactions from a single monocular RGB video, addressing the highly ill-posed problem of articulated HOI without requiring pre-scanning or multi-view input, and contributes two new datasets (ArtHOI-RGBD, ArtHOI-Wild) for evaluation.
 
-## 1. Problem and Setting
-- 4D reconstruction of human-articulated-object interactions from a single monocular RGB video.
-- Input: monocular RGB video of a hand interacting with an articulated object (e.g., laptop, scissors, pliers, drawer).
-- Output: 4D articulated object reconstruction (per-part pose trajectory) and hand pose over time.
-- Task: hand-articulated-object interaction reconstruction; uses foundation model priors (shape, contact reasoning).
+ArtHOI is an optimization-based framework that reconstructs 4D hand-articulated-object interactions from a single monocular RGB video, without pre-scanned object templates or multi-view initialization. It integrates priors from multiple foundation models (image-to-3D generation, 6-DoF pose estimation, dense point tracking, monocular metric depth, hand estimation, and multimodal large language models) and fixes their mutual inconsistencies through two key mechanisms: Adaptive Sampling Refinement (ASR) to recover the object's metric scale and 6-DoF pose in world space, and an MLLM-guided contact-reasoning stage that drives joint hand-object alignment. The authors also contribute two benchmark sets, ArtHOI-RGBD and ArtHOI-Wild. On their RGBD data the method reaches Chamfer distances of 3.3-8.1 mm across five articulated objects, outperforming the pre-scanning-based RSRD baseline on most objects, and it is the only compared method that runs on in-the-wild internet videos.
 
-## 2. Core Method
-- Optimization-based framework that integrates and refines priors from multiple foundation models.
-- Novel methodologies to resolve the inherent inaccuracies and physical unreality of these priors:
-  1. Adaptive Sampling Refinement (ASR): optimizes the object's metric scale and pose for grounding its normalized mesh in world space.
-  2. MLLM-guided hand-object alignment: uses contact reasoning from a Multimodal Large Language Model as constraints of hand-object mesh composition optimization.
-- How FM priors are injected: 3D generative FMs provide initial articulated object shape; MLLMs provide contact reasoning for hand-object alignment.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Foundation models: 3D generative model for articulated object shape; MLLM for contact reasoning.
-- Domain knowledge: articulated object URDF structure; hand-object physical constraints.
-- Training data: pretraining on general 3D object datasets; the optimization is test-time.
-- New datasets: ArtHOI-RGBD (lab-captured) and ArtHOI-Wild (in-the-wild).
-- Assumption: articulated object category can be recognized by MLLM; the initial 3D shape prior is approximately correct up to metric scale.
+Hand-object interaction (HOI) reconstruction typically targets rigid objects, with template-based, category-specific, or template-free-but-rigid assumptions, while 4D reconstruction of articulated objects generally requires a pre-scanned canonical model or multi-view video. Reconstructing 4D human-articulated-object interactions (e.g., manipulating scissors, eyeglasses, or laptops) from a casually captured monocular RGB video remained unexplored and is highly ill-posed due to limited visual cues and frequent hand-part and part-part occlusions. The authors observe that humans resolve this ambiguity using accumulated knowledge, motivating the use of foundation-model priors: image-to-3D models (e.g., HunYuan3D) for object geometry, 6-DoF pose estimators (e.g., FoundationPose) for camera-relative transformation, metric depth estimators and dense trackers for geometry and motion cues, hand estimators (e.g., WiLoR) for hand mesh, and MLLMs for interaction-state reasoning. However, naive integration fails for two reasons: image-to-3D outputs live in a normalized object-centric frame lacking the metric scale needed to ground the mesh in world space, and separately reconstructed hands and articulated objects compose into physically implausible results (interpenetration or disjointed contact) because of spatial misalignment. The paper defines the task as jointly recovering a canonical articulated mesh, per-part SE(3) motion over time, and 4D MANO hands that are physically consistent with the object, all from one monocular RGB video.
 
-## 4. Experiments and Findings
-- Datasets: ArtHOI-RGBD and ArtHOI-Wild (introduced), plus HOI4D and similar.
-- Metrics: per-part pose error, hand-object contact accuracy, articulation angle error, rendering quality.
-- Validates robustness and effectiveness across diverse objects and interactions.
-- The ASR and MLLM-guided alignment components both contribute to final accuracy.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- First framework specifically for monocular 4D articulated HOI reconstruction.
-- Multiple foundation model priors combined with principled optimization.
-- Adaptive Sampling Refinement handles the metric-scale ambiguity of generated 3D shapes.
-- MLLM-based contact reasoning provides physically grounded alignment.
-- New datasets enable systematic evaluation of articulated HOI.
+The pipeline has four stages. (1) Data preprocessing: a video segmentation model (Segment-Anything 2) extracts object and human masks; Video-Depth-Anything with UniDepthV2 provides metric depth and camera intrinsics; a video inpainting model (DiffuEraser) removes the human to yield object-only video, and HunYuan3D generates a normalized canonical mesh from the inpainted canonical frame. (2) Metric scale and pose optimization via Adaptive Sampling Refinement (ASR): a coarse scale is estimated by comparing the bounding boxes of the normalized mesh and the back-projected (mask-eroded, outlier-filtered) metric depth; ASR then iteratively samples candidate scales from an adaptive range, queries FoundationPose for a pose hypothesis at each candidate, renders the posed mesh, and scores it by silhouette IoU against the object mask, expanding the sampling range when no recent improvement occurs and keeping the best-scoring scale-pose pair. (3) Part-wise motion reconstruction: PartField features plus part masks partition the canonical mesh into K parts; CoTrackerV3 produces 2D point tracks with per-frame visibilities on the inpainted video, which are lifted to 3D with the estimated depth; per-part SE(3) transformations are optimized with a visibility-masked tracking loss against sampled reference frames plus a second-order temporal smoothness penalty. (4) MLLM-guided articulated HOI alignment: WiLoR reconstructs MANO hands, temporally filled via SLERP where occlusions cause missing detections; Qwen-VLMax infers per-frame contact state and contacting fingers using a three-stage structured prompt (camera-perspective detection, left-right hand mapping, then frame-wise contact reasoning over a large image prompt concatenating neighboring RGB frames and colorized depth maps, with an explicit bias toward rejecting mere proximity to suppress false positives). Contact sets then constrain a two-stage optimization: first the object scale is refined against the metrically reliable hand, then hand pose and global transforms are jointly optimized with a fingertip-to-object-surface contact loss, an acceleration prior, and an l1 fidelity term to the initial pose.
 
-### Limitations
-- Optimization-based pipeline is slow.
-- Depends on the quality of the initial 3D shape prior (which may be inaccurate for unusual articulated objects).
-- MLLM contact reasoning is approximate.
-- The optimization may get stuck in local minima.
+## Contributions
 
-## 6. Takeaway
-ArtHOI tackles the unexplored but significant problem of 4D articulated HOI reconstruction from a single monocular video by combining multiple foundation model priors (3D generation, MLLM reasoning) with novel optimization techniques. The work represents a sophisticated "FM-orchestrated" approach where the strengths of different foundation models are combined to solve a problem no single FM can handle alone, contributing both a method and new datasets that advance the field.
+- An optimization-based framework for 4D hand-articulated-object reconstruction from monocular RGB video that coordinates heterogeneous foundation-model priors while explicitly repairing their cross-prior inconsistencies; no pre-scanned object, template, or multi-view capture is required.
+- The Adaptive Sampling Refinement (ASR) method, which grounds the normalized image-to-3D mesh in world space by jointly searching metric scale and 6-DoF pose with rendered-silhouette feedback, yielding a 100% optimization success rate versus 57-78% for direct FoundationPose or Any6D use in the authors' tests.
+- An MLLM-guided hand-object alignment method with a structured three-stage contact-reasoning prompting strategy (perspective detection, hand mapping, frame-wise contact with depth augmentation and false-positive suppression), converting contact reasoning into optimization constraints for hand-object mesh composition.
+- Two new evaluation datasets, ArtHOI-RGBD (five RealSense RGBD demonstration sequences with part-motion and contact annotations via a Viser-based annotation tool) and ArtHOI-Wild (eight in-the-wild clips), plus experiments on RSRD and an ARCTIC subset.
+
+## Experimental Setup
+
+Training-free; the system runs on a single NVIDIA A6000 GPU with about 1 hour total computation for a 100-frame 960x540 video. Component models: Video-Depth-Anything (depth), UniDepthV2 (metric scaling and camera parameters), SAM2 (segmentation), DiffuEraser (inpainting), HunYuan3D (canonical mesh), CoTrackerV3 (tracking), PartField (part partition), WiLoR (hands), Qwen-VLMax (contact reasoning). ASR runs 20 iterations with initial sampling range 0.03; part-motion optimization uses 500 iterations per frame with Adam (learning rate decayed 0.02 to 0.02-0.002 linearly) and loss weights 1.0 (tracking) and 0.01 (smoothness); HOI alignment uses 800 Adam steps with learning rate 1e-3 to 1e-4 and weights 1 (contact), 1 (acceleration), 50.0 (pose fidelity). Evaluation covers ArtHOI-RGBD (five objects: headphone, scissor, candy box, CD drive, stapler), nine RSRD videos (scissor, LED light, bear, sunglasses), a three-object ARCTIC subset (mixer, box, scissors), and ArtHOI-Wild. Metrics: Chamfer distance (CD), Maximum Symmetry-Aware Surface Distance (MSSD), and F-score at 5/10 mm for object reconstruction; the Open3DHOI Collision-Contact (Co2) score for alignment quality; binary contact accuracy and main contacting finger accuracy for MLLM reasoning. Baselines: RSRD (pre-scanning-based 4D articulated HOI method, with hand estimates from WiLoR for fairness) and EasyHOI (monocular image HOI, applied frame-by-frame).
+
+## Results
+
+- Articulated object reconstruction (ArtHOI-RGBD): ArtHOI achieves the lowest error on all five objects; examples include CD drive CD 3.334 mm (RSRD 282.330, EasyHOI 648.704), stapler CD 4.487 mm (RSRD 288.704), scissor CD 4.256 mm (RSRD 13.841), headphone CD 8.124 mm (RSRD 14.708). F-scores at 10 mm reach 92.57 (scissor), 96.01 (CD drive), and 91.63 (stapler).
+- RSRD dataset (comparable to RSRD without any pre-scanning): ArtHOI attains CD 5.447 mm on scissor versus RSRD's 68.564 and CD 9.956 mm on sunglasses versus 31.985, while RSRD remains better on LED light (10.144 vs 10.836) and bear (8.739 vs 12.374). On ARCTIC, RSRD fails to reconstruct the articulated objects, whereas ArtHOI reports CD 12.1 (mixer), 14.0 (box), and 58.6 mm (scissors).
+- HOI alignment (Co2, lower is better): Ours w/ MLLM reaches 0.029 on ArtHOI-RGBD, 0.022 on RSRD, and 0.039 on ArtHOI-Wild, versus 0.972/0.517/0.514 without alignment and 0.392/0.166/N-A for RSRD with WiLoR hands; RSRD cannot process ArtHOI-Wild at all because it needs a surrounding object scan. Replacing MLLM reasoning with a mask-intersection contact heuristic raises Co2 to 0.046/0.035/0.059.
+- ASR ablation: ASR attains silhouette IoU of 0.905 (ArtHOI-RGBD), 0.876 (RSRD), and 0.882 (ArtHOI-Wild) with a 100% success rate, versus FoundationPose (0.820/0.706/0.749, 60-78% success) and Any6D (0.876/0.857/0.683, 57-78% success).
+- MLLM contact reasoning: progressively enabling prompting components (temporal context, perspective cues, false-positive suppression, depth augmentation) improves accuracy from 81.53% (FP 18.24%) to 88.58% (FP 11.20%) on RSRD videos and to 86.56% (FP 9.81%) on ArtHOI-Wild; compared with a mask-intersection heuristic, the MLLM judge is robust on in-the-wild data (0.87 accuracy, 0.10 FP versus 0.76 and 0.23).
+- Runtime: preprocessing and mesh generation take about 10-15 minutes, ASR under 2 minutes, part-wise motion recovery about 30 minutes, and HOI alignment up to 5 minutes for a 150-frame video; by contrast, EasyHOI applied per-frame needs roughly 3 hours for a 100-frame sequence and does not produce temporally coherent results.
+
+## Limitations
+
+The method's accuracy depends on the quality of upstream foundation-model predictions; the paper's motivation section notes that generated meshes are inconsistent with noisy estimated depth, which is precisely why ASR and joint refinement are needed, and residual misalignment is handled only through optimization rather than guaranteed away. MLLM-based contact reasoning, despite the prompting strategy, still produces about 10-11% false-positive contact predictions on RSRD and ArtHOI-Wild videos, and the paper notes that distinguishing true physical contact from mere proximity remains hard from limited RGB cues. Accuracy degrades on some objects: on the RSRD dataset the pre-scanning-based RSRD method still outperforms ArtHOI on the bear and LED light objects, and the ARCTIC scissors sequence shows a substantially higher CD (58.6 mm) than other ARCTIC objects. The pipeline is computationally heavy at roughly 1 hour for a 100-frame video, dominated by part-wise motion reconstruction, which the authors state could be accelerated with a more optimized implementation. The paper concludes that leveraging and unifying foundation-model priors through explicit optimization enables model-free 4D HOI reconstruction that outperforms pre-scanning-dependent approaches and generalizes to in-the-wild internet videos.

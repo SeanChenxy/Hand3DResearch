@@ -1,56 +1,29 @@
 # Frozen in Time: A Joint Video and Image Encoder for End-to-End Retrieval
 
+**Authors:** Max Bain, Arsha Nagrani, Gul Varol, Andrew Zisserman  
+**Date:** 2021-04-01  
+**Identifier:** [arXiv:2104.00650](https://arxiv.org/abs/2104.00650); DOI `10.1109/ICCV48922.2021.00175`  
+**Zotero item:** `95KWJVHE` ([Zotero](zotero://select/library/items/95KWJVHE))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-This paper proposes "Frozen in Time," an end-to-end dual-encoder architecture that unifies image-text and video-text retrieval by treating images as single-frame videos, trained jointly on image and video captioning datasets using a space-time transformer encoder with a curriculum learning schedule.
+Frozen in Time (ICCV 2021) is an end-to-end dual-encoder model for video-text retrieval whose space-time transformer, inspired by ViT and TimeSformer, applies divided space-time attention directly to pixels and treats images as single-frame videos, enabling joint training on image and video captioning data with a curriculum that starts "frozen" on images and gradually expands temporal context. Together with the new WebVid-2M dataset (2.5M web video-text pairs), it sets state-of-the-art results on MSR-VTT, MSVD, DiDeMo, and LSMDC while pretraining on roughly 20x fewer pairs than HowTo100M-based competitors.
 
-## 1. Problem and Setting
-Video-text retrieval faces two key challenges: (1) designing visual architectures that effectively handle both spatial and temporal information, and (2) dealing with noisy large-scale video-text training datasets (e.g., HowTo100M) that require significant computational resources for competitive performance. The authors aim to create a unified model that leverages both large-scale image-caption and video-caption datasets efficiently without relying on pre-extracted expert features.
+## Background and Problem
+Joint visual-text models were developing on two separate tracks for images and videos, and dominant video-retrieval methods relied on pre-extracted "expert" features (face, scene, action, sound, speech models). Large video-text datasets such as HowTo100M are noisy, so competitive performance previously required very large compute and scale; the paper targets an efficient, end-to-end trainable joint embedding for text-to-video retrieval that exploits both image and video data.
 
-## 2. Core Method
-**Architecture**: A dual-encoder system with a visual encoder and a text encoder. The visual encoder uses a space-time transformer that extends ViT and TimeSformer architectures. Videos are decomposed into M×N patches (M frames × N spatial patches per frame), while images are treated as 1×N (single-frame videos).
+## Method
+The visual encoder is a transformer operating on patched pixels with divided space-time attention and additive spatial plus temporal positional embeddings; images are handled as 1xN single-frame inputs and videos as MxN token grids, so one encoder trains flexibly on both. A text encoder (BERT-style transformer) with a CLS token forms the other branch; the dual encoders are trained end-to-end with a contrastive NCE-style objective over the joint embedding space. A curriculum learning schedule begins with image-only training, then interpolates (or zero-pads) temporal embeddings as the number of training frames grows, letting short-frame models cover more data early. The authors also introduce WebVid-2M, over 2 million videos with weak alt-text captions scraped from stock-footage sites, plus an additional 0.5M pairs in the combined 2.5M-pair pretraining set.
 
-**Key Innovation**: Modified divided space-time attention where:
-- Patches from the same frame receive the same temporal position embedding
-- Patches at the same spatial location across frames receive the same spatial position embedding
-- A residual connection connects block input to spatial attention output (not temporal)
+## Contributions
+(i) An end-to-end video retrieval model using no expert features, applying divided space-time attention directly to pixels; (ii) an architecture that gracefully handles variable-length inputs, enabling joint image-video training with a temporal curriculum that speeds training and improves accuracy; (iii) the WebVid-2M video-text pretraining dataset; (iv) state-of-the-art video-only retrieval results on MSR-VTT, MSVD, DiDeMo, and LSMDC (LSMDC in the supplementary), beating expert-feature methods and HowTo100M-pretrained systems.
 
-**Training Strategy**: Curriculum learning that:
-1. Starts training on images (treated as "frozen" video snapshots)
-2. Gradually increases temporal context through temporal embedding interpolation
-3. Progresses to full video training
+## Experimental Setup
+Pretraining uses CC3M (3M image-text pairs), WebVid-2M, and optionally COCO Captions, versus a 17.1M-pair HowTo100M subset (19K hours) used for comparison; downstream finetuning and evaluation are on MSR-VTT (1K-A split), MSVD, DiDeMo, and LSMDC, reporting R@1/R@5/R@10 and Median Rank for text-to-video retrieval, with ablations on frame count, curriculum, and temporal embedding expansion.
 
-This approach allows flexible training on images-only, videos-only, or both datasets jointly.
+## Results
+Pretraining ablation on MSR-VTT: CC3M + WebVid2M reaches R@1 27.3 and R@10 68.1 (MedR 4.0), beating a 17.1M-pair HowTo100M subset (24.1/63.9) despite 3x fewer pairs, confirming HowTo100M's noise. Finetuned MSR-VTT (Table 4): R@1 32.5, R@5 61.5, R@10 71.2 with CC3M+WebVid2M+COCO (6.1M pairs), versus Support Set's 30.1/58.5/69.3 pretrained on 136M HowTo100M pairs. Zero-shot MSR-VTT: R@1 23.2 versus 7.5 (MIL-NCE) and 8.7 (Support Set). MSVD: R@1 33.7, R@5 64.7, R@10 76.3 (MedR 3.0), surpassing Support Set (HowTo PT) at 28.4 R@1. On DiDeMo, zero-shot performance matches ClipBERT's finetuned results, and finetuning adds a further 14.2% R@1.
 
-## 3. Knowledge, Supervision, and Assumptions
-**Data Sources**:
-- **WebVid-2M**: New dataset introduced with 2.5M video-text pairs scraped from the web
-- **Conceptual Captions**: Large-scale image-captioning dataset
-- **No reliance on pre-extracted expert features** (unlike prior works MoEE, CE, MMT)
+## Limitations
+The paper has no dedicated limitations section. The conclusion states performance is not yet saturated and could improve by training on the full HowTo100M, larger weakly paired image datasets such as Google3BN, and multi-dataset combinations. WebVid-2M captions are weak (alt-text) and web-scraped, and the paper notes HowTo100M's noise as a data-quality constraint on the field; other failure modes are not reported in the paper.
 
-**Pretraining**: The model is trained end-to-end from scratch using contrastive learning, without relying on frozen expert networks pretrained on external datasets.
-
-**Assumptions**: Images contain overlapping semantic information with videos and can serve as "frozen snapshots" to bootstrap temporal reasoning.
-
-## 4. Experiments and Findings
-**Datasets**: MSR-VTT, MSVD, DiDeMo, LSMDC (standard video-retrieval benchmarks)
-
-**Results**: State-of-the-art performance on all four benchmarks, outperforming:
-- Methods using pre-extracted expert features (MoEE, CE, MMT)
-- Methods pretrained on HowTo100M (20× larger than WebVid-2M)
-
-**Key Finding**: Despite training on datasets an order of magnitude smaller than competing approaches, the unified image-video training strategy yields superior performance with less computational cost.
-
-## 5. Strengths and Limitations
-**Strengths**:
-- Unified architecture elegantly handles both images and videos without architectural changes
-- End-to-end training eliminates dependence on frozen expert networks
-- Curriculum learning improves training efficiency
-- New WebVid-2M dataset provides valuable large-scale video-text data
-
-**Limitations**:
-- WebVid-2M data is scraped from web alt-text, which may be noisy
-- Model still requires significant computational resources for transformer-based processing
-- Paper excerpt ends before showing complete experimental results or ablation studies
-
-## 6. Takeaway
-The key insight is that images and videos share substantial semantic overlap, and treating images as "frozen in time" single-frame videos enables effective joint training. This unified approach with curriculum learning allows the model to efficiently transfer spatial knowledge from images to temporal reasoning in videos, achieving state-of-the-art results with smaller datasets and less compute than previous approaches that rely on large-scale noisy video datasets or complex expert feature ensembles.
