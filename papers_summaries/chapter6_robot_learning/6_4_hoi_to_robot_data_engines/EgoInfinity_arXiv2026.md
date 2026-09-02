@@ -2,7 +2,7 @@
 
 **Authors:** Gaotian Wang, Kejia Ren, Andrew Morgan, Yiting Chen, Howard H. Qian, Podshara Chanrungmaneekul, Kaiyu Hang  
 **Date:** 2026-06-16  
-**Identifier:** [arXiv:2606.17385](https://arxiv.org/abs/2606.17385); DOI `10.48550/arXiv.2606.17385`  
+**Identifier:** [arXiv:2606.17385](https://arxiv.org/abs/2606.17385)  
 **Zotero item:** `54JNCRCL` ([Zotero](zotero://select/library/items/54JNCRCL))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

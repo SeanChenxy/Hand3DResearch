@@ -2,7 +2,7 @@
 
 **Authors:** Seonghyeon Ye, Joel Jang, Byeongguk Jeon, Sejune Joo, Jianwei Yang, Baolin Peng, Ajay Mandlekar, Reuben Tan, Yu-Wei Chao, Bill Yuchen Lin, Lars Liden, Kimin Lee, Jianfeng Gao, Luke Zettlemoyer, Dieter Fox, Minjoon Seo  
 **Date:** 2025-05-15 (ICLR 2025)  
-**Identifier:** [arXiv:2410.11758](https://arxiv.org/abs/2410.11758); DOI `10.48550/arXiv.2410.11758`  
+**Identifier:** [arXiv:2410.11758](https://arxiv.org/abs/2410.11758)  
 **Zotero item:** `8FUI3IKS` ([Zotero](zotero://select/library/items/8FUI3IKS))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

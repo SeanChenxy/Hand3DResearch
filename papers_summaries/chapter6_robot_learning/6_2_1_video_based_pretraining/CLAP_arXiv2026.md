@@ -2,7 +2,7 @@
 
 **Authors:** Chubin Zhang, Jianan Wang, Zifeng Gao, Yue Su, Tianru Dai, Cai Zhou, Jiwen Lu, Yansong Tang  
 **Date:** 2026  
-**Identifier:** [arXiv:2601.04061](https://arxiv.org/abs/2601.04061); DOI `10.48550/ARXIV.2601.04061`  
+**Identifier:** [arXiv:2601.04061](https://arxiv.org/abs/2601.04061)  
 **Zotero item:** `24YW5KBX` ([Zotero](zotero://select/library/items/24YW5KBX))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

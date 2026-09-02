@@ -2,7 +2,7 @@
 
 **Authors:** Yangcen Liu, Shuo Cheng, Xinchen Yin, Woo Chul Shin, Alfred Cueva, Yiran Yang, Zhenyang Chen, Chuye Zhang, Danfei Xu  
 **Date:** 2026-06-10  
-**Identifier:** [arXiv:2606.12604](https://arxiv.org/abs/2606.12604); DOI `10.48550/arXiv.2606.12604`  
+**Identifier:** [arXiv:2606.12604](https://arxiv.org/abs/2606.12604)  
 **Zotero item:** `QW5ACQLV` ([Zotero](zotero://select/library/items/QW5ACQLV))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

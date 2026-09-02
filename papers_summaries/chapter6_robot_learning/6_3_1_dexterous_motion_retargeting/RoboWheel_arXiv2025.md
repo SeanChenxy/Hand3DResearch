@@ -2,7 +2,7 @@
 
 **Authors:** Yuhong Zhang, Zihan Gao, Shengpeng Li, Ling-Hao Chen, Kaisheng Liu, Runqing Cheng, Xiao Lin, Junjia Liu, Zhuoheng Li, Jingyi Feng, Ziyan He, Jintian Lin, Zheyan Huang, Zhifang Liu, Haoqian Wang  
 **Date:** 2025-12-02  
-**Identifier:** [arXiv:2512.02729](https://arxiv.org/abs/2512.02729); DOI `10.48550/arXiv.2512.02729`  
+**Identifier:** [arXiv:2512.02729](https://arxiv.org/abs/2512.02729)  
 **Zotero item:** `T6KVH9YL` ([Zotero](zotero://select/library/items/T6KVH9YL))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

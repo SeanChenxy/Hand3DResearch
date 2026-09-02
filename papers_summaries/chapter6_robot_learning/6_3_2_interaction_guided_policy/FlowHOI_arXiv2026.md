@@ -2,7 +2,7 @@
 
 **Authors:** Huajian Zeng, Lingyun Chen, Jiaqi Yang, Yuantai Zhang, Fan Shi, Peidong Liu, Xingxing Zuo  
 **Date:** 2026-02-13 (arXiv preprint)  
-**Identifier:** [arXiv:2602.13444](https://arxiv.org/abs/2602.13444); DOI `10.48550/arXiv.2602.13444`  
+**Identifier:** [arXiv:2602.13444](https://arxiv.org/abs/2602.13444)  
 **Zotero item:** `II4NURRU` ([Zotero](zotero://select/library/items/II4NURRU))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

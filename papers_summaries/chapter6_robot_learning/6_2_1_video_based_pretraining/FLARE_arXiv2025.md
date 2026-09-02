@@ -2,7 +2,7 @@
 
 **Authors:** Ruijie Zheng, Jing Wang, Scott Reed, Johan Bjorck, Yu Fang, Fengyuan Hu, Joel Jang, Kaushil Kundalia, Zongyu Lin, Loic Magne, Avnish Narayan, You Liang Tan, Guanzhi Wang, Qi Wang, Jiannan Xiang, Yinzhen Xu, Seonghyeon Ye, Jan Kautz, Furong Huang, Yuke Zhu, Linxi Fan  
 **Date:** 2025-05-21  
-**Identifier:** [arXiv:2505.15659](https://arxiv.org/abs/2505.15659); DOI `10.48550/arXiv.2505.15659`  
+**Identifier:** [arXiv:2505.15659](https://arxiv.org/abs/2505.15659)  
 **Zotero item:** `SXPU7G8N` ([Zotero](zotero://select/library/items/SXPU7G8N))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

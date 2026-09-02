@@ -2,7 +2,7 @@
 
 **Authors:** Hongtao Wu, Ya Jing, Chilam Cheang, Guangzeng Chen, Jiafeng Xu, Xinghang Li, Minghuan Liu, Hang Li, Tao Kong  
 **Date:** 2023-12-21  
-**Identifier:** [arXiv:2312.13139](https://arxiv.org/abs/2312.13139); DOI `10.48550/arXiv.2312.13139`  
+**Identifier:** [arXiv:2312.13139](https://arxiv.org/abs/2312.13139)  
 **Zotero item:** `9G23VIKN` ([Zotero](zotero://select/library/items/9G23VIKN))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

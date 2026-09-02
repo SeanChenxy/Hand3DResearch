@@ -2,7 +2,7 @@
 
 **Authors:** Yucheng Hu, Yanjiang Guo, Pengchao Wang, Xiaoyu Chen, Yen-Jen Wang, Jianke Zhang, Koushil Sreenath, Chaochao Lu, Jianyu Chen  
 **Date:** 2025-05-04 (ICML 2025 Spotlight)  
-**Identifier:** [arXiv:2412.14803](https://arxiv.org/abs/2412.14803); DOI `10.48550/arXiv.2412.14803`  
+**Identifier:** [arXiv:2412.14803](https://arxiv.org/abs/2412.14803)  
 **Zotero item:** `KZI3TTUD` ([Zotero](zotero://select/library/items/KZI3TTUD))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

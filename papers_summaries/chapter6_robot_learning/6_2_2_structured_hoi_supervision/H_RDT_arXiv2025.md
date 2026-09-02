@@ -2,7 +2,7 @@
 
 **Authors:** Hongzhe Bi, Lingxuan Wu, Tianwei Lin, Hengkai Tan, Zhizhong Su, Hang Su, Jun Zhu  
 **Date:** 2025-08-01  
-**Identifier:** [arXiv:2507.23523](https://arxiv.org/abs/2507.23523); DOI `10.48550/arXiv.2507.23523`  
+**Identifier:** [arXiv:2507.23523](https://arxiv.org/abs/2507.23523)  
 **Zotero item:** `TMNZCWNT` ([Zotero](zotero://select/library/items/TMNZCWNT))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

@@ -2,7 +2,7 @@
 
 **Authors:** Bhawna Paliwal, Haritheja Etukuru, William Liang, Pieter Abbeel, Nur Muhammad Mahi Shafiullah, Jitendra Malik  
 **Date:** 2026-06-17  
-**Identifier:** [arXiv:2606.19333](https://arxiv.org/abs/2606.19333); DOI `10.48550/arXiv.2606.19333`  
+**Identifier:** [arXiv:2606.19333](https://arxiv.org/abs/2606.19333)  
 **Zotero item:** `KWD632PM` ([Zotero](zotero://select/library/items/KWD632PM))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

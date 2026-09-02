@@ -2,7 +2,7 @@
 
 **Authors:** Ruixiang Wang, Huayi Zhou, Xinyue Yao, Guiliang Liu, and Kui Jia  
 **Date:** 2025-03-08  
-**Identifier:** [arXiv:2503.06227](https://arxiv.org/abs/2503.06227); DOI `10.48550/arXiv.2503.06227`  
+**Identifier:** [arXiv:2503.06227](https://arxiv.org/abs/2503.06227)  
 **Zotero item:** `K5CBJACJ` ([Zotero](zotero://select/library/items/K5CBJACJ))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

@@ -2,7 +2,7 @@
 
 **Authors:** Jonas Pai, Liam Achenbach, Victoriano Montesinos, Benedek Forrai, Oier Mees, Elvis Nava  
 **Date:** 2025-12-19  
-**Identifier:** [arXiv:2512.15692](https://arxiv.org/abs/2512.15692); DOI `10.48550/arXiv.2512.15692`  
+**Identifier:** [arXiv:2512.15692](https://arxiv.org/abs/2512.15692)  
 **Zotero item:** `U87UUQYY` ([Zotero](zotero://select/library/items/U87UUQYY))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

@@ -2,7 +2,7 @@
 
 **Authors:** Chi-Lam Cheang, Guangzeng Chen, Ya Jing, Tao Kong, Hang Li, Yifeng Li, Yuxiao Liu, Hongtao Wu, Jiafeng Xu, Yichu Yang, Hanbo Zhang, Minzhao Zhu (ByteDance Research; alphabetical order)  
 **Date:** 2024-10-08  
-**Identifier:** [arXiv:2410.06158](https://arxiv.org/abs/2410.06158); DOI `10.48550/arXiv.2410.06158`  
+**Identifier:** [arXiv:2410.06158](https://arxiv.org/abs/2410.06158)  
 **Zotero item:** `2IJFQ6CJ` ([Zotero](zotero://select/library/items/2IJFQ6CJ))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

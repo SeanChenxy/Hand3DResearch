@@ -2,7 +2,7 @@
 
 **Authors:** Chuan Wen, Xingyu Lin, John So, Kai Chen, Qi Dou, Yang Gao, Pieter Abbeel  
 **Date:** 2024-07-12 (arXiv preprint)  
-**Identifier:** [arXiv:2401.00025](https://arxiv.org/abs/2401.00025); DOI `10.48550/arXiv.2401.00025`  
+**Identifier:** [arXiv:2401.00025](https://arxiv.org/abs/2401.00025)  
 **Zotero item:** `BX6TZEY8` ([Zotero](zotero://select/library/items/BX6TZEY8))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

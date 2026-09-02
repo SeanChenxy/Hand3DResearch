@@ -2,7 +2,7 @@
 
 **Authors:** Huayi Zhou, Ruixiang Wang, Yunxin Tai, Yueci Deng, Guiliang Liu, Kui Jia  
 **Date:** 2025-04-27 (RSS 2025)  
-**Identifier:** [arXiv:2501.14208](https://arxiv.org/abs/2501.14208); DOI `10.48550/arXiv.2501.14208`  
+**Identifier:** [arXiv:2501.14208](https://arxiv.org/abs/2501.14208)  
 **Zotero item:** `JUL46LHA` ([Zotero](zotero://select/library/items/JUL46LHA))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

@@ -2,7 +2,7 @@
 
 **Authors:** Zhao Mandi, Yifan Hou, Dieter Fox, Yashraj Narang, Ajay Mandlekar, Shuran Song  
 **Date:** 2025-05-30  
-**Identifier:** [arXiv:2505.24853](https://arxiv.org/abs/2505.24853); DOI `10.48550/arXiv.2505.24853`  
+**Identifier:** [arXiv:2505.24853](https://arxiv.org/abs/2505.24853)  
 **Zotero item:** `P9PAL4AJ` ([Zotero](zotero://select/library/items/P9PAL4AJ))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

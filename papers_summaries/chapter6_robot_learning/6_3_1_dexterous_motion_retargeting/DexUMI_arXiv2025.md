@@ -2,7 +2,7 @@
 
 **Authors:** Mengda Xu, Han Zhang, Yifan Hou, Zhenjia Xu, Linxi Fan, Manuela Veloso, Shuran Song  
 **Date:** 2025-10-02 (CoRL 2025)  
-**Identifier:** [arXiv:2505.21864](https://arxiv.org/abs/2505.21864); DOI `10.48550/arXiv.2505.21864`  
+**Identifier:** [arXiv:2505.21864](https://arxiv.org/abs/2505.21864)  
 **Zotero item:** `HMWGACS8` ([Zotero](zotero://select/library/items/HMWGACS8))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

@@ -2,7 +2,7 @@
 
 **Authors:** Hongzhe Bi, Hengkai Tan, Shenghao Xie, Zeyuan Wang, Shuhe Huang, Haitian Liu, Ruowen Zhao, Yao Feng, Chendong Xiang, Yinze Rong, Hongyan Zhao, Hanyu Liu, Zhizhong Su, Lei Ma, Hang Su, Jun Zhu  
 **Date:** 2025  
-**Identifier:** [arXiv:2512.13030](https://arxiv.org/abs/2512.13030); DOI `10.48550/ARXIV.2512.13030`  
+**Identifier:** [arXiv:2512.13030](https://arxiv.org/abs/2512.13030)  
 **Zotero item:** `2338RB22` ([Zotero](zotero://select/library/items/2338RB22))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

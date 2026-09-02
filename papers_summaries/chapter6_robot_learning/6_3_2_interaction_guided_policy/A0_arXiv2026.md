@@ -2,7 +2,7 @@
 
 **Authors:** Rongtao Xu, Jian Zhang, Minghao Guo, Youpeng Wen, Haoting Yang, Min Lin, Jianzheng Huang, Zhe Li, Kaidong Zhang, Liqiong Wang, Yuxuan Kuang, Meng Cao, Feng Zheng, and Xiaodan Liang  
 **Date:** 2026-01-20  
-**Identifier:** [arXiv:2504.12636](https://arxiv.org/abs/2504.12636); DOI `10.48550/arXiv.2504.12636`  
+**Identifier:** [arXiv:2504.12636](https://arxiv.org/abs/2504.12636)  
 **Zotero item:** `4AC4JCSQ` ([Zotero](zotero://select/library/items/4AC4JCSQ))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

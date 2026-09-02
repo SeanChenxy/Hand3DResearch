@@ -2,7 +2,7 @@
 
 **Authors:** Zikai Wang, Zhilu Zhang, Yiqing Wang, Hui Li, Wangmeng Zuo  
 **Date:** 2026 (CVPR 2026; arXiv March 2026)  
-**Identifier:** [arXiv:2603.25791](https://arxiv.org/abs/2603.25791); DOI `10.48550/arXiv.2603.25791`  
+**Identifier:** [arXiv:2603.25791](https://arxiv.org/abs/2603.25791)  
 **Zotero item:** `ISKVHBWR` ([Zotero](zotero://select/library/items/ISKVHBWR))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

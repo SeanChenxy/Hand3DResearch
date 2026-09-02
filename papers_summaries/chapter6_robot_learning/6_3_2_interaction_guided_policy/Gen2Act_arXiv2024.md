@@ -2,7 +2,7 @@
 
 **Authors:** Homanga Bharadhwaj, Debidatta Dwibedi, Abhinav Gupta, Shubham Tulsiani, Carl Doersch, Ted Xiao, Dhruv Shah, Fei Xia, Dorsa Sadigh, Sean Kirmani  
 **Date:** 2024-09-24 (arXiv preprint, under review)  
-**Identifier:** [arXiv:2409.16283](https://arxiv.org/abs/2409.16283); DOI `10.48550/arXiv.2409.16283`  
+**Identifier:** [arXiv:2409.16283](https://arxiv.org/abs/2409.16283)  
 **Zotero item:** `TB54WNUX` ([Zotero](zotero://select/library/items/TB54WNUX))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

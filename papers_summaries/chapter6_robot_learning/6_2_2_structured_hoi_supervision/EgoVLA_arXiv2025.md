@@ -2,7 +2,7 @@
 
 **Authors:** Ruihan Yang, Qinxi Yu, Yecheng Wu, Rui Yan, Borui Li, An-Chieh Cheng, Xueyan Zou, Yunhao Fang, Xuxin Cheng, Ri-Zhao Qiu, Hongxu Yin, Sifei Liu, Song Han, Yao Lu, Xiaolong Wang  
 **Date:** 2025-07-18  
-**Identifier:** [arXiv:2507.12440](https://arxiv.org/abs/2507.12440); DOI `10.48550/arXiv.2507.12440`  
+**Identifier:** [arXiv:2507.12440](https://arxiv.org/abs/2507.12440)  
 **Zotero item:** `MWHAIMSV` ([Zotero](zotero://select/library/items/MWHAIMSV))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

@@ -2,7 +2,7 @@
 
 **Authors:** Hai Ci, Xiaokang Liu, Pei Yang, Yiren Song, Mike Zheng Shou  
 **Date:** 2025-12-10  
-**Identifier:** [arXiv:2512.09406](https://arxiv.org/abs/2512.09406); DOI `10.48550/arXiv.2512.09406`  
+**Identifier:** [arXiv:2512.09406](https://arxiv.org/abs/2512.09406)  
 **Zotero item:** `YFS6IY7N` ([Zotero](zotero://select/library/items/YFS6IY7N))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
