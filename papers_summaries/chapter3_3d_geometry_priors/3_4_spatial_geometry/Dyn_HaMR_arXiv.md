@@ -1,47 +1,43 @@
 # Dyn-HaMR: Recovering 4D Interacting Hand Motion from a Dynamic Camera
 
+**Authors:** Zhengdi Yu, Stefanos Zafeiriou, Tolga Birdal  
+**Date:** 2024-12-17  
+**Identifier:** [arXiv:2412.12861](https://arxiv.org/abs/2412.12861)  
+**Zotero item:** `XPGSG36R` ([Zotero](zotero://select/library/items/XPGSG36R))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-Dyn-HaMR is the first approach to reconstruct 4D global hand motion from monocular videos recorded by dynamic cameras in the wild, using a multi-stage, multi-objective optimization pipeline that combines SLAM-based camera motion estimation, an interacting-hand prior for generative infilling and interaction refinement, and hierarchical initialization from state-of-the-art hand tracking methods.
 
-## 1. Problem and Setting
-- 4D global (world-space) hand mesh recovery from monocular videos captured by dynamic/moving cameras.
-- Input: monocular RGB video from a moving camera.
-- Output: 4D hand meshes in global coordinates over time, with realistic interaction dynamics.
-- Task: world-space hand motion reconstruction from dynamic camera; uses 3D scene geometry priors (SLAM).
+Dyn-HaMR is, to the authors' knowledge, the first optimization-based approach that reconstructs the 4D global motion (trajectory plus pose and shape) of two interacting hands from monocular in-the-wild videos recorded by a dynamic (moving) camera. It disentangles hand motion from camera motion using a three-stage multi-objective optimization pipeline: hierarchical initialization of per-frame hand states with generative motion infilling from a learned interacting-hand prior, global optimization that couples the hand trajectories with SLAM-estimated camera motion and an optimized world scale factor, and a final interaction optimization combining the motion prior, biomechanical constraints, and a penetration loss. It reduces global pose error dramatically relative to prior methods, for example G-MPJPE of 45.6 mm on H2O versus 96.9 mm for the best baseline, and establishes a new benchmark for hand motion reconstruction under moving cameras.
 
-## 2. Core Method
-- Multi-stage, multi-objective optimization pipeline factoring in:
-  1. SLAM to robustly estimate relative camera motion.
-  2. An interacting-hand prior for generative infilling and to refine interaction dynamics, ensuring plausible recovery under (self-)occlusions.
-  3. Hierarchical initialization through a combination of state-of-the-art hand tracking methods.
-- The pipeline jointly optimizes camera motion, hand motion, and interaction dynamics, with the interacting-hand prior serving as a generative regularizer.
-- How FM prior is injected: SLAM foundation models (likely based on DROID-SLAM or 3D foundation models) for camera trajectory; the interacting-hand prior acts as a generative prior over hand motion.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Foundation model: SLAM foundation model for camera pose estimation; interacting-hand prior as a learned generative model.
-- Domain knowledge: hand model (MANO); SLAM principles; hand-hand and hand-object interaction constraints.
-- Training data: in-the-wild and indoor hand video datasets; state-of-the-art hand tracking methods for initialization.
-- Assumption: SLAM can robustly estimate relative camera motion even in dynamic scenes.
+Monocular 3D hand reconstruction is important for human behavior understanding and AR/VR, where a body-mounted camera typically observes two interacting hands while the camera itself moves (especially in egocentric capture), creating an intricate entanglement of hand and camera motion. Existing monocular hand reconstruction methods assume a weak-perspective camera model and estimate poses in camera or root-relative coordinates, relying only on 2D cues; they therefore suffer from depth ambiguity, produce noisy depth, and fail to recover accurate 3D global hand trajectories under moving cameras. Interacting hands add frequent self-occlusions, truncation, and missed detections, and prior work either handles single hands or reconstructs interacting hands without global trajectories; even with static cameras, the lack of strong interaction priors prevents realistic two-hand reconstruction under occlusion. The paper also notes that no publicly available dataset had sufficient temporal annotations to enable learning 4D global interactions. The problem addressed is: given an RGB video of two possibly interacting hands captured by a camera undergoing arbitrary 6D motion, recover the global trajectory of both hands in the world coordinate system, formalized as MANO hand states (local pose, shape, root orientation, translation) over time, with a time-invariant shape per hand.
 
-## 4. Experiments and Findings
-- Datasets: in-the-wild and indoor datasets (likely Aria, HOT3D, Epic-Kitchens).
-- Metrics: 4D global mesh recovery (MPJPE in world frame), trajectory accuracy, interaction plausibility.
-- Significantly outperforms state-of-the-art methods in 4D global mesh recovery.
-- Establishes a new benchmark for hand motion reconstruction from monocular video with moving cameras.
-- The interacting-hand prior and SLAM-based camera estimation are both critical for performance.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- First method specifically for 4D global hand motion from dynamic camera videos.
-- Multi-objective optimization jointly handles camera motion, hand motion, and interactions.
-- Interacting-hand prior provides plausible recovery under occlusions.
-- Establishes a new benchmark for the field.
+Dyn-HaMR uses the HMP hand motion prior (a neural motion field over kinematic poses trained on ARCTIC) both as a generative infiller and as a plausibility regularizer, and proceeds in three stages. Stage I, hand tracking and hierarchical initialization: a fine-tuned ViTPose model yields per-hand bounding boxes; MediaPipe, HaMeR, and ACR are applied to the crops to initialize per-frame MANO states in the camera frame; because interactions cause missed detections and non-temporal outputs, the HMP latent code is optimized to fit frames with detections (initialized by slerp pose interpolation) to hallucinate smooth motion infill, and a mean shape is computed; 2D observations are built from ViTPose and MediaPipe keypoint detections fused with HaMeR reprojections through a confidence-guided filter, with missing 2D keypoints filled by weak-perspective reprojection of the initialized 3D joints. Stage II, 4D global motion optimization: the DPVO SLAM system estimates relative camera motion (world-to-camera transforms), providing the initial world-frame trajectory by composing camera and hand motions; a learnable world scale factor omega explicitly models the relative scale between camera displacement and hand motion, inspired by decoupled human-camera motion recovery; all variables (world-frame global trajectories, local poses, shape, scale, and camera extrinsics) are jointly optimized against perspective-projected 2D keypoint observations with a Geman-McClure robust loss, plus temporal smoothness regularizers on hand and camera motion and standard pose and shape priors, first optimizing root orientation and translation for 20 steps, then all variables for 60 steps. Stage III, interacting motion prior optimization: the HMP latent code (discarding its decoded global orientation), world-frame global motion, and the scale factor are further optimized with the Stage II losses plus a prior loss (negative log-likelihood under the motion prior plus consistency of global orientation and translation), biomechanical constraints (joint-angle convex-hull priors per finger bone, bone-length interval constraints, and palmar curvature/angular-range constraints), and a penetration loss that pushes apart vertices of intersecting left- and right-hand meshes; optimization runs 200 steps on root orientation and translation, then 200 steps adding the latent code, local pose, and camera parameters.
 
-### Limitations
-- Multi-stage optimization is slow (offline).
-- Depends on SLAM accuracy in dynamic scenes.
-- The interacting-hand prior is limited to motions seen during training.
-- May not handle extreme motion or fast camera movement well.
+## Contributions
 
-## 6. Takeaway
-Dyn-HaMR establishes a new benchmark for 4D hand motion reconstruction from monocular videos with dynamic cameras, showing that combining SLAM-based camera motion estimation, generative hand priors, and hierarchical initialization enables plausible world-space hand motion recovery where prior methods (which assumed a weak-perspective camera model) failed. The work is particularly relevant for AR/VR and embodied AI applications where world-space hand motion is essential.
+- The first optimization-based approach capable of disentangling and reconstructing global 4D pose and shape of two interacting hands together with the camera trajectory from monocular video captured by dynamic cameras in the wild, bypassing the need for precise 3D scene reconstruction.
+- Integration of a data-driven interacting-hand motion prior (HMP) with biomechanical constraints, used both for generative infilling of missed detections and for plausibility-guided optimization of complex hand interactions.
+- Joint optimization of a world scale factor alongside hand trajectories and camera extrinsics to disambiguate the relative contributions of camera displacement and hand motion, improving depth reasoning.
+- Comprehensive experiments on in-the-wild dynamic videos and established benchmarks (H2O, HOI4D, FPHA, EgoDexter, InterHand2.6M, Ego-Exo4D, HOT3D) showing substantial improvements over state-of-the-art monocular hand reconstruction methods in 4D global motion recovery, with the implementation to be released publicly.
+
+## Experimental Setup
+
+Implemented in PyTorch with L-BFGS optimization (learning rate 1) over three stages; Stage II uses loss weights 0.001 (2D reprojection), 10 (smoothness), 100 (camera displacement), 0.04 (pose), 0.05 (shape); Stage III uses 200 (latent), 2 (orientation), 10 (translation), 10 (penetration), 0.05 (shape), and 1 for each biomechanical term. Two-hand states are initialized from HaMeR for the reported tables, with the hierarchical tracker fusing ViTPose, MediaPipe, HaMeR, and ACR. Baselines are ACR, IntagHand, HaMeR (monocular reconstruction), InterWild and DIR on InterHand2.6M, and a HaMeR+DPVO combination on egocentric benchmarks. Metrics: local pose and shape quality via MPJPE, MPVPE, and acceleration error (mm/s^2) after root alignment; global motion via G-MPJPE and GA-MPJPE computed on 128-frame segments aligned with ground truth using the first two frames or the whole segment respectively; PA-MPJPE and jerk on Ego-Exo4D and HOT3D, where ground-truth global annotations are discrete or unavailable. Datasets: InterHand2.6M (30 fps interacting-hand subset with human and machine annotations, static cameras), egocentric dynamic datasets H2O (egocentric view), HOI4D, FPHA, EgoDexter, plus Ego-Exo4D (hand ego-pose subset) and HOT3D (validation sets, since test annotations for global motion were not public).
+
+## Results
+
+- Static cameras (InterHand2.6M 30 fps): Dyn-HaMR reaches MPJPE 7.94 mm, MPVPE 8.15 mm, and acceleration error 2.76 mm/s^2, outperforming ACR (8.75/9.01/3.99), DIR (9.09/9.43/8.92), IntagHand (9.26/9.71/4.41), HaMeR (9.84/10.13/5.13), and InterWild (12.35/13.45/6.68), despite being designed for dynamic settings; the gain is attributed mainly to Stage III's prior, biomechanical, and penetration constraints.
+- Global motion on H2O (egocentric): G-MPJPE 45.6 mm and GA-MPJPE 34.2 mm versus HaMeR 96.9/75.7, IntagHand 105.5/81.5, and ACR 113.6/88.5; local MPJPE 22.5 mm and acceleration error 4.2 mm/s^2 (best).
+- Global motion on HOI4D: G-MPJPE 58.5 mm and GA-MPJPE 45.6 mm versus HaMeR 201.6/129.7 and ACR 251.1/153.5; MPJPE 19.5 mm and acceleration error 4.1 mm/s^2 (best).
+- Ego-Exo4D hand ego-pose: G-MPJPE 53.89 mm versus 213.75 for HaMeR+DPVO and 291.34 for ACR; jerk 5.26 versus 195.45-245.12 for baselines; PA-MPJPE 14.34 mm (best).
+- HOT3D: G-MPJPE 42.36 mm versus 129.45 (HaMeR+DPVO), 155.98 (HaMeR), and 159.34 (ACR); jerk 4.18, PA-MPJPE 8.87 mm, acceleration error 4.95 mm/s^2, all best among compared methods.
+- Ablations on H2O: Stage I alone gives G-MPJPE 84.5; adding Stage II reduces it to 51.9; the full pipeline reaches 45.6; removing biomechanical constraints, the penetration loss, or generative infilling (replaced by simple interpolation) raises G-MPJPE to 49.6, 46.3, and 48.9 respectively, confirming each component contributes.
+
+## Limitations
+
+The authors explicitly state that Dyn-HaMR works for limited time horizons and that extending it to long sequences with generative extrapolation capability remains unexplored; they propose developing a regression-based method as one possible direction for long sequences. They further list as future work improving the hand priors (extending neural riemannian distance fields for pose priors) and incorporating object interactions, indicating that the current method models the two hands but not the manipulated object. The pipeline is an iterative multi-stage test-time optimization relying on SLAM quality and multiple off-the-shelf detectors, rather than a feed-forward model.

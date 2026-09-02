@@ -1,69 +1,38 @@
 # Objaverse: A Universe of Annotated 3D Objects
 
-# Paper Summary
+**Authors:** Matt Deitke, Dustin Schwenk, Jordi Salvador, Luca Weihs, Oscar Michel, Eli VanderBilt, Ludwig Schmidt, Kiana Ehsani, Aniruddha Kembhavi, Ali Farhadi  
+**Date:** 2022-12-15  
+**Identifier:** [arXiv:2212.08051](https://arxiv.org/abs/2212.08051); DOI: [10.1109/CVPR52729.2023.01263](https://doi.org/10.1109/CVPR52729.2023.01263)  
+**Zotero item:** `P64AN2G3` ([Zotero](zotero://select/library/items/P64AN2G3))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-Objaverse is a large-scale dataset of 800K+ annotated 3D objects sourced from Sketchfab that enables breakthroughs in 3D vision, 2D long-tail recognition, and embodied AI through unprecedented scale, diversity, and richness of annotations.
 
-## 1. Problem and Setting
-- **Task**: Creating a large-scale, diverse, and richly annotated 3D object dataset to support training data-hungry deep learning models
-- **Inputs**: 3D models from Sketchfab with Creative Commons licenses
-- **Outputs**: A dataset containing 818K+ 3D objects with metadata including names, categories, tags, natural language descriptions, and animations
-- **Difficulty**: Existing 3D datasets are severely limited in scale (tens of thousands at most), lack diversity within categories, and have limited annotations. This constrains progress in 3D vision compared to 2D vision which has benefited from massive datasets like ImageNet, LAION, and Conceptual Captions
+Objaverse 1.0 is a large-scale, openly licensed dataset of 818K textured 3D models scraped from the Sketchfab platform, each paired with creator-supplied captions, tags, categories, and (for many assets) animations. The paper argues that 3D vision lacks the massive data corpora that drove progress in language and 2D vision, and demonstrates the dataset's utility through four applications: training category-level 3D generative models with GET3D, improving long-tail instance segmentation on LVIS via a 3D copy-paste augmentation (CP3D), introducing open-vocabulary object navigation in ProcTHOR with 1.1K target categories, and building a rotational-robustness benchmark showing that zero-shot CLIP models degrade sharply on non-canonical object viewpoints. For HOI research, Objaverse serves as a foundational prior-source repository: its scale, category coverage, and per-object text metadata make it a standard asset pool for shape retrieval, generative 3D priors, and synthetic training data in object- and hand-object-centric pipelines.
 
-## 2. Core Method
-**Data Collection Pipeline**:
-1. **Source Selection**: Objects sourced from Sketchfab using their public API
-2. **Filtering**: Only models with distributable Creative Commons licenses are selected; models marked as restricted (objectionable/adult content) are excluded
-3. **Metadata Inheritance**: Each object inherits foundational annotations from its creator including name, category assignments, tags, and natural language description
-4. **LVIS Categorization** (Objaverse-LVIS subset): A 47K object subset where objects are assigned to one of 1,156 LVIS categories using CLIP classifier predictions and filtering
+## Background and Problem
 
-Key innovation: **Scalability through web sourcing** - leveraging an existing platform (Sketchfab) with 150K+ contributing artists rather than manual curation, enabling 16x more objects than ShapeNet
+Massive web-harvested corpora such as WebText, Conceptual Captions, WebImageText, and LAION enabled landmark models (GPT-3, CLIP, Stable Diffusion), but the analogous resource for 3D was missing: generative 3D models were trained on at most on the order of thousands of assets, and embodied-AI simulators contained only a few dozen to a thousand unique scenes. Existing 3D object datasets each fall short on at least one of scale, category diversity, and realism. Image-calibrated sets (YCB, BigBIRD, KIT, IKEA, Pix3D) contain only a few hundred objects; EGAD procedurally generates 2K unrealistic grasping objects; GSO, PhotoShape, ABO, 3D-Future, and ShapeNet reach the tens of thousands at most (ShapeNet: 51K objects, 55 classes); CAD repositories (ModelNet, DeepCAD, ABC) lack textures; and scan collections are small. Language-3D pairs (Text2Shape, ShapeGlot) are similarly small, which the authors note is why contemporary text-to-3D systems abandoned 3D supervision in favor of 2D image-text losses. The problem the paper addresses is therefore: build a 3D corpus matching the scale, diversity, and realism standards of modern 2D datasets, and demonstrate that such a corpus transfers to concrete gains across 3D generation, 2D perception, embodied AI, and robustness analysis.
 
-## 3. Knowledge, Supervision, and Assumptions
-- **Training Data**: Uses Sketchfab as the data source - models created by over 150K artists
-- **Pretrained Models Used**: CLIP classifier is used to categorize objects into LVIS categories for the Objaverse-LVIS subset
-- **Annotations Provided**: 
-  - Names from creators
-  - 18 coarse categories from Sketchfab's scheme
-  - Unrestricted tags from creators
-  - Natural language descriptions from creators
-  - Animations (where available)
-- **Learned vs Provided**: The dataset itself provides the raw data and annotations; models trained on it (e.g., GET3D for generation) learn from this data
-- **Assumptions**: Assumes Creative Commons licensing allows distribution and research use; assumes creator-provided metadata is sufficiently accurate for downstream tasks
+## Method
 
-## 4. Experiments and Findings
-**Application 1: 3D Generative Modeling**
-- Dataset: Objaverse subset used to train GET3D
-- Finding: Generated objects rated by human annotators as more diverse than ShapeNet-trained models in 91% of cases
+Objaverse 1.0 was collected through Sketchfab's public API, keeping only models under distributable Creative Commons licenses and excluding restricted or adult content. Each asset inherits creator metadata: a name, one of 18 coarse Sketchfab categories, unrestricted free-form tags, a natural-language description, and rendering statistics. Because the native categorization is too coarse for most applications, the authors construct Objaverse-LVIS, a curated subset of 47K objects uniquely assigned to 1,156 LVIS categories by combining CLIP-classifier predictions with human verification (roughly 500 candidates per category). Beyond individual objects, the dataset contains over 16K interior scenes (houses, classrooms, offices) with objects separable into parts, as well as scanned buildings and exteriors, covering visual styles from photorealistic PBR assets to low-poly, voxel, and scan-derived content. The paper is primarily a dataset contribution; the methodological novelty lies in the curation pipeline (license filtering, LVIS re-annotation, CLIP-assisted candidate retrieval) and in four downstream application recipes: (1) fine-tuning GET3D on Objaverse subsets; (2) CP3D, a copy-paste augmentation that renders five views of each LVIS-annotated asset and pastes 1-3 random objects onto LVIS training images with probability 0.5; (3) procedurally generating 10K ProcTHOR homes populated with Objaverse-LVIS assets after annotating per-category placement constraints (floor/surface/wall, center/edge) and maximum bounding-box dimensions, then compressing assets for AI2-THOR (mesh joining, decimation to at most 5K vertices, baked UV textures, V-HACD colliders); and (4) rendering 12 images of each Objaverse-LVIS object from random orientations on an ImageNet mean-RGB background to probe orientation robustness.
 
-**Application 2: Long-tail Instance Segmentation**
-- Dataset: LVIS benchmark (1,230 categories)
-- Method: Copy+Paste augmentation using Objaverse assets
-- Finding: Improves performance on tail categories compared to state-of-the-art segmentation methods (specific metrics not mentioned)
+## Contributions
 
-**Application 3: Robustness Benchmark**
-- Dataset: Rendered Objaverse objects from random orientations
-- Finding: State-of-the-art CLIP-style visual backbones show dramatic performance degradation when classifying objects from arbitrary views
+1. Objaverse 1.0: 818K 3D objects from 160K artists with text descriptions, titles, and tags — an order of magnitude larger than ShapeNet, with ~21K estimated WordNet entity coverage, >2.35M tags (>170K unique), and uploads spanning 2012-2022 (over 200K objects in 2021 alone).
+2. Objaverse-LVIS: a 47K-object, 1,156-category long-tail subset with verified single-label categorization, reusable for classification, segmentation augmentation, and simulation.
+3. Four demonstration applications establishing dataset value: category-level 3D generation with GET3D, CP3D copy-paste segmentation augmentation for LVIS, the new open-vocabulary ObjectNav task (targets scaled from ~20 to 1.1K categories; simulated objects from ~2K to 36K), and a rotational robustness benchmark for vision models.
+4. Evidence that current vision models are strongly overfit to canonical object viewpoints, quantified at scale using 3D assets — a diagnostic only practical with a large 3D corpus.
 
-**Application 4: Embodied AI - Object Navigation**
-- Dataset: ProcTHOR simulated environments populated with Objaverse assets
-- Finding: Enables open-vocabulary object navigation for 1.1K semantic categories (~50x increase over previous 108 categories)
+## Experimental Setup
 
-## 5. Strengths and Limitations
+Four self-contained evaluations. (1) 3D generation: GET3D trained separately on 143 Objaverse shoes, 816 bags, and 571 fruits and vegetables (116 apples, 112 gourds, 92 mushrooms, 68 bananas, 52 oranges, 52 pears, 31 potatoes, 24 lemons, 24 pineapples), against a baseline GET3D trained on 83 ShapeNet bags; diversity judged by crowdworkers comparing collections of nine random generations. (2) Segmentation: CP3D augmentation of the LVIS training set, fine-tuning the pretrained ResNet-50 Mask R-CNN from GOL for 24 epochs; metrics are AP with rare (APr), common (APc), and frequent (APf) splits. (3) Open-vocabulary ObjectNav: agents trained with DD-PPO in the AllenAct framework on 10K procedurally generated ProcTHOR homes populated with Objaverse-LVIS objects; observations encoded by the frozen ResNet-50 CLIP visual branch, targets described by CLIP text embeddings of templates like "a {name} {category}"; evaluation on unseen floor plans, objects, and descriptions. (4) Robustness: zero-shot classification of CLIP-style backbones (OpenAI-400M, LAION-400M, LAION-2B variants up to ViT-H/14) restricted to ~1,200 LVIS categories on the random-orientation renders, reporting Top-1/Top-5 under Random Rotation versus Any Rotation (correct in at least one of the 12 views).
 
-### Strengths
-- **Unprecedented Scale**: 818K objects, 16x larger than ShapeNet
-- **Diverse Sources**: Objects from 150K+ artists across different 3D creation platforms, not limited to a single tool like ShapeNet's SketchUp-only models
-- **Rich Annotations**: Natural language descriptions, tags, and animations enable multi-modal research
-- **Realistic Quality**: Artist-designed and scanned objects with textures/materials, unlike CAD-only datasets
-- **Legal Clarity**: Creative Commons licensing ensures free use for research
+## Results
 
-### Limitations
-- **Metadata Noise**: Creator-provided names, categories, and tags have inherent noise and varying specificity
-- **Coarse Native Categorization**: Sketchfab's 18-category scheme is too coarse for most applications, requiring additional categorization efforts
-- **Rendering Required**: For 2D vision applications, objects must be rendered (computational cost)
-- **Not Mentioned**: Quality filtering beyond licensing and content restrictions, potential class imbalance details
+Generation: crowdworkers rated Objaverse-trained GET3D bag generations as more diverse than ShapeNet-trained ones in 91% of comparisons; the nine-variety fruit-and-vegetable model produced the highest-quality outputs, including smooth latent interpolations (pumpkin to mushroom). Segmentation: GOL baseline 27.7 AP (APr 21.4, APc 27.7, APf 30.4) improves to 28.3 AP (APr 21.8, APc 28.3, APf 31.1) with CP3D, outperforming prior long-tail methods such as RFS (23.7), EQLv2 (25.5), LOCE (26.6), NorCal (25.2), and Seesaw (26.4). ObjectNav: the trained agent reaches a 19.9% success rate versus 5.1% for a random policy, with the task covering roughly a 50x increase in navigable categories relative to prior ObjectNav settings. Robustness: all zero-shot CLIP models degrade dramatically under arbitrary orientations — OpenAI-400M ViT-L/14 falls from 52.3% Top-1 (Any Rotation) to 29.1% (Random Rotation), a 23.2-point gap; LAION-2B ViT-H/14 falls from 50.1% to 32.3% (17.8-point gap), and even the strongest backbones never exceed 32.9% Top-1 on random views, confirming severe canonical-pose overfitting.
 
-## 6. Takeaway
-Objaverse demonstrates that **scaling 3D datasets to hundreds of thousands of diverse, artist-created objects with rich annotations** can unlock progress across multiple AI domains: enabling higher-quality 3D generation, improving long-tail 2D recognition through synthetic data augmentation, revealing robustness issues in current vision models, and scaling embodied AI to open-vocabulary navigation. It establishes that web-sourced 3D assets can provide the same scaling benefits for 3D vision that web-scraped image-text datasets provided for multimodal 2D vision.
+## Limitations
+
+The paper relies on creator-supplied metadata, which is noisy and coarse (Sketchfab's 18 categories motivated the curated LVIS subset, and tags include substantial noise); assets may be uploaded at unnatural scales, requiring per-category size correction before simulation; asset geometry and texture quality vary widely, and simulator use required lossy preprocessing (decimation to at most 5K vertices, baked textures). The four applications are explicitly framed as proof-of-concept "glimpses" of the dataset's potential rather than state-of-the-art pushes: open-vocabulary ObjectNav success remains 19.9%, and the generation study is qualitative plus a single diversity human study on bags. Objects lacking plausible home placement (e.g., a jet plane) were filtered for the navigation task, so the demonstrated embodied-AI use covers only a home-oriented slice of the corpus. Version 1.0's scale, while an order of magnitude beyond prior 3D datasets, remains small by web-corpus standards — the paper itself describes the collection as "800K+ (and growing)".

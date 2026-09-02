@@ -1,41 +1,38 @@
 # gSDF: Geometry-Driven Signed Distance Functions for 3D Hand-Object Reconstruction
 
+**Authors:** Zerui Chen, Shizhe Chen, Cordelia Schmid, Ivan Laptev  
+**Date:** 2023-04-24  
+**Identifier:** [arXiv:2304.11970](https://arxiv.org/abs/2304.11970)  
+**Zotero item:** `HTWW7L9D` ([Zotero](zotero://select/library/items/HTWW7L9D))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-Improves hand-object SDF reconstruction by explicitly using geometric priors (surface normals and hand-part segmentation) to guide the SDF learning, achieving state-of-the-art object reconstruction quality.
 
-## 1. Problem and Setting
-- Joint reconstruction of hand and manipulated object 3D shape from a single RGB image.
-- Input: single RGB image; output: MANO hand mesh + object SDF.
-- Template-free object reconstruction. Builds on AlignSDF but adds richer geometric supervision signals.
+gSDF jointly reconstructs hand and object meshes from monocular RGB images by injecting explicit 3D geometry into signed-distance-function learning: the network first predicts sparse 3D hand joints, derives full kinematic chains of per-joint pose transformations by inverse kinematics, and transforms every SDF query point into the canonical frames of all hand joints (for the hand) and of the object center, hand joints, and wrist (for the object), yielding kinematic features that disentangle pose from shape. Geometry-aligned local visual features, refined across video frames by a spatio-temporal transformer for robustness to occlusion and motion blur, are concatenated with these kinematic features in separate hand and object SDF decoders. The method sets a new state of the art on ObMan (hand Chamfer distance 0.112 cm2 and object CD 3.14 cm2, improvements of 17.6% and 7.1%) and DexYCB (hand CD 0.302 and object CD 1.55, improvements of 12.2% and 14.4%) over prior methods including AlignSDF.
 
-## 2. Core Method
-- Extends the AlignSDF framework with two key geometric priors:
-  - Surface normal prediction: an additional decoder head predicts surface normals for each 3D query point. The normals provide local geometric orientation cues that help the SDF decoder learn sharper surfaces.
-  - Hand-part segmentation guidance: uses predicted 2D hand-part segmentation to inform which finger regions are in contact with the object, improving spatial reasoning about where the object should be relative to each finger.
-- The normal prediction is jointly trained and used as an auxiliary loss, ensuring the SDF field respects local surface orientation.
-- Maintains the pose-aligned coordinate frame from AlignSDF.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: ObMan (synthetic) + HO3D (real) + ContactPose (real).
-- Supervision: 3D SDF values, surface normals (computed from ground-truth meshes), 2D hand-part segmentation, MANO parameters.
-- Uses MANO for hand representation.
-- Assumes object is rigid and single-hand grasping; surface normal supervision is available from training meshes.
+Signed distance functions generalize across shape resolutions and topologies, making them attractive for high-resolution hand-object reconstruction beyond the limited mesh resolution of MANO, but standard SDF pipelines lack explicit modeling of the underlying 3D geometry. Prior template-free lines of work each fall short: Grasping Field predicts joint hand-object SDFs without any pose prior, which can produce unrealistic geometry; AlignSDF aligns SDFs only with global poses (the hand wrist transformation and object translation), which is too coarse for complex manipulations involving multiple articulated fingers; Ye et al. use hand poses to condition object reconstruction only, without reconstructing the hand. The problem addressed is monocular RGB joint hand-object mesh reconstruction in which strong, fine-grained pose priors are embedded directly into SDF learning, while remaining robust to inaccurate pose estimates caused by occlusion and motion blur.
 
-## 4. Experiments and Findings
-- Datasets: HO3D, ObMan, ContactPose.
-- Metrics: Chamfer Distance, F-score, Normal Consistency for object; MPJPE for hand.
-- Outperforms AlSDF and DDF-HO on object reconstruction metrics. Normal supervision leads to visibly sharper object surfaces. Hand-part segmentation improves contact-region accuracy.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Geometry-driven losses produce sharper, more accurate object surfaces than purely occupancy/SDF-based approaches.
-- Normal prediction provides dense 3D supervision without requiring explicit 3D mesh labels.
+The model learns two signed distance functions, one for the hand and one for the object, each fed by a concatenation of a kinematic feature and a visual feature for a query point. Kinematic features come from a pose-estimation front end: volumetric heatmaps (64x64x64) with soft-argmax predict 21 3D hand joint locations, from which inverse kinematics analytically solves per-joint rotations along the MANO kinematic chains (wrist pose first, then recursively per finger, using default limb lengths); object pose is estimated only as a center translation, following AlignSDF, because object rotation is difficult under symmetry and occlusion. The hand kinematic feature transforms the query point into each of the 16 joint canonical frames by inverting the accumulated chain transformation, concatenated into a 51-dimensional vector; the object kinematic feature (72-dimensional) combines the point relative to the estimated object center, relative to each of the 21 hand joint positions, and in the wrist canonical frame, which normalizes grasp orientation. Visual features are geometry-aligned: the query point is projected onto a 16x16 ResNet-18 feature map and bilinearly sampled, replacing the global pooled features of AlignSDF and Grasping Field; for videos, a 16-layer, 4-head spatio-temporal transformer attends over flattened tokens from three neighboring frames (3x16x16 tokens) to refine the feature map, explicitly without assuming the frames show a rigid scene. Training is two-stage: the hand joint predictor is trained first (L2 joint loss plus an ordinal depth-ordering loss over 20 random virtual views) and then frozen, after which all remaining modules train end-to-end with object-pose L2 loss plus 0.5-weighted hand and object SDF L1 losses. The best backbone-sharing strategy is asymmetric: a separate backbone predicts hand pose while the object-pose predictor and SDF encoder share one. Training uses 256x256 inputs, 1,000 SDF samples per shape (500 inside, 500 outside), batch size 256, 1,600 epochs with Adam (learning rate 1e-4, halved every 600 epochs) on 4 NVIDIA RTX 3090 GPUs, taking 22 hours on DexYCB and 60 hours on ObMan.
 
-### Limitations
-- The normal prediction head adds computational overhead.
-- Performance still degrades under heavy occlusion from the hand.
-- Relies on having 3D mesh training data to compute surface normal ground truth.
-- Single-hand, rigid-object constraint.
+## Contributions
 
-## 6. Takeaway
-gSDF demonstrated that enriching implicit representations with mid-level geometric cues (normals, part segmentation) substantially improves reconstruction fidelity. This "geometry-driven" philosophy — using predictable geometric properties as auxiliary supervision — has been broadly adopted in later implicit 3D reconstruction works.
+- Kinematic-chain pose alignment for SDFs: aligning shape reconstruction with pose transformations of all hand joints derived by inverse kinematics from predicted sparse 3D joints, a strictly finer-grained pose prior than the global wrist-object alignment of AlignSDF.
+- Geometry-aligned local visual features enhanced with spatio-temporal transformer context from video, improving robustness to occlusion and motion blur without assuming rigid multi-view frames.
+- A two-stage training scheme (pre-trained, frozen hand-joint predictor followed by end-to-end shape learning) with an asymmetric backbone-sharing strategy, plus comprehensive ablations, advancing state-of-the-art hand and object reconstruction accuracy on ObMan and DexYCB.
+
+## Experimental Setup
+
+Training data follows the AlignSDF protocol: for ObMan, 87,190 hand-object meshes (after removing meshes with too many double-sided triangles) are fitted into a unit cube with 40,000 sampled points per mesh labeled with ground-truth hand and object signed distances, testing on the full 6,285-sample test set; for DexYCB, the official s0 split with right-hand samples, downsampled to 6 fps, yielding 29,656 training and 5,928 test samples. Metrics are median hand Chamfer distance in cm2 and F-scores at 1 mm and 5 mm after scale-and-translation alignment (30,000 sampled points), object Chamfer distance and F-scores at 5 mm and 10 mm (transformed with the hand scale), mean hand joint error relative to the wrist, object center error, and contact ratio, penetration depth, and intersection volume for interaction quality. Baselines on ObMan are Hasson et al., Grasping Field, Ye et al., and AlignSDF; on DexYCB the same set plus AlignSDF retrained with the asymmetric two-backbone structure for fairness. Ablations on DexYCB vary hand and object kinematic features, visual features (global, local, plus spatial-only and spatial-temporal transformer), and backbone sharing.
+
+## Results
+
+On ObMan (no temporal transformer, since the dataset is single-frame), gSDF reaches hand CD 0.112, FSh@1 0.332, FSh@5 0.935, object CD 3.14, FSo@5 0.438, FSo@10 0.660, and hand joint error 0.93 cm, versus AlignSDF at 0.136 / 0.302 / 0.913 / 3.38 / 0.404 / 0.636 / 1.27 — a 17.6% hand-CD and 7.1% object-CD improvement over the previous state of the art (Hasson et al.: 0.415 / 3.60; Grasping Field: 0.261 / 6.80; Ye et al.: 0.420 / 0.630 on object F-scores); object center error is 3.43, comparable to AlignSDF's 3.29. On DexYCB, gSDF reaches 0.302 / 0.177 / 0.801 for hand CD / FSh@1 / FSh@5 and 1.55 / 0.437 / 0.709 for object CD / FSo@5 / FSo@10 with joint error 1.44 cm, versus AlignSDF at 0.358 / 0.162 / 0.767 / 1.83 / 0.410 / 0.679 / 1.58 and AlignSDF with two backbones at 0.344 / 0.167 / 0.776 / 1.81 / 0.413 / 0.687 / 1.57 — improvements of 12.2% and 14.4% on hand and object Chamfer distance. Ablations attribute the gains to each component: moving from no pose prior to wrist-only to all-joint kinematic features improves hand CD from 0.364 to 0.344 to 0.317 (7.8% from wrist to all joints); adding object-center and then hand-pose terms to the object kinematic feature improves object CD from 2.06 to 1.93 to 1.71 (11% and 5.5% on FSo@5 over center-only); switching from global to geometry-aligned local features reduces hand CD to 0.310, adding the transformer gives 0.304 (spatial only) and 0.302 (spatio-temporal), with the temporal model visibly more robust on motion-blurred frames; and the asymmetric backbone outperforms single (hand CD 0.411) and symmetric (0.324) sharing, with joint pose and shape training also improving object-pose accuracy.
+
+## Limitations
+
+The paper does not include an explicit limitations section, but its experiments indicate several constraints. Accuracy depends on a hand-joint predictor that is pre-trained and then frozen, so joint-prediction errors propagate into the kinematic features; the spatio-temporal transformer requires video input and is therefore not applicable to single-image datasets such as ObMan, where only the spatial variant is used; object pose is modeled as a translation only (no rotation), inherited from AlignSDF; training is computationally heavy (1,600 epochs, up to 60 hours on ObMan with 4 RTX 3090 GPUs); and on ObMan the object center error (3.43) is slightly higher than AlignSDF's (3.29).
+

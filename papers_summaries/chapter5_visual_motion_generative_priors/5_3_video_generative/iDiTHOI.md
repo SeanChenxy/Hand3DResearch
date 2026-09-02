@@ -1,45 +1,35 @@
 # iDiT-HOI: Inpainting-based Hand Object Interaction Reenactment via Video Diffusion Transformer
 
+**Authors:** Zhelun Shen, Chenming Wu, Junsheng Zhou, Chen Zhao, Kaisiyuan Wang, Hang Zhou, Yingying Li, Haocheng Feng, Wei He, Jingdong Wang  
+**Date:** 2025-06-15  
+**Identifier:** [arXiv:2506.12847](https://arxiv.org/abs/2506.12847)  
+**Zotero item:** `U87FNG9M` ([Zotero](zotero://select/library/items/U87FNG9M))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-iDiT-HOI is a novel framework that enables in-the-wild HOI reenactment generation by inpainting the hand-object interaction into a target video, addressing occlusion between hands and objects, variations in object shapes and orientations, and the need to generalize to unseen humans and objects, all via a Video Diffusion Transformer backbone.
 
-## 1. Problem and Setting
-- Realistic Hand-Object Interaction (HOI) reenactment generation in digital human videos.
-- Input: target video + reference HOI (e.g., hand pose and object trajectory).
-- Output: the target video with the reference HOI reenacted in a natural, plausible way.
-- Video-generative prior: a Video Diffusion Transformer (DiT) provides the inpainting and video generation capability.
+iDiT-HOI is a two-stage video diffusion transformer (DiT) framework for hand-object interaction (HOI) reenactment: given a masked source video and a reference object image, it re-inserts the object into the hands and regenerates the interaction. Its Inpainting-based Token Process Unit (Inp-TPU) reuses the pretrained DiT's own attention parameters on masked tokens to inject object information with zero new parameters, yielding strong generalization to unseen objects and in-the-wild e-commerce livestreaming scenes and naturally supporting long-video generation.
 
-## 2. Core Method
-- An inpainting-based framework: the reference HOI is inpainted into the target video, replacing the original hand-object scene.
-- A Video Diffusion Transformer (DiT) backbone generates the inpainted video with realistic hand-object interactions.
-- Handles occlusions between hands and objects, variations in object shapes/orientations, and generalizes to unseen humans and objects.
-- How FM prior is injected: the Video DiT provides the generative prior; inpainting-conditioned generation enables controllable HOI reenactment.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: HOI video datasets, in-the-wild human video datasets.
-- Supervision: video diffusion loss, HOI consistency, inpainting supervision.
-- Foundation model: pretrained Video DiT.
-- Domain knowledge: hand-object interaction, video inpainting, DiT-based generation.
-- Assumption: the Video DiT can effectively handle inpainting with HOI conditions.
+Digital human video generation is advancing, but realistic HOI remains a bottleneck: hands and objects occlude each other, object shapes and orientations vary widely, physically precise contact is required, and methods must generalize to unseen humans and objects. Prior reenactment methods have drawbacks: HOI-Swap handles only object-centric single-hand grasping and generalizes poorly to novel objects; Re-HOLD needs human-curated layout videos and rendered hand meshes at inference and duplicates the main diffusion network to preserve object identity, inflating parameters; general video inpainting/editing models (e.g., VACE, AVID, COCOCO) rely on dual-stream or duplicated-parameter designs and struggle with fine-grained HOI. The problem is high-fidelity HOI reenactment from a source video plus a reference object image, without extra parameters or inference-time human input, extending beyond source domains to in-the-wild scenarios.
 
-## 4. Experiments and Findings
-- Datasets: in-the-wild human video datasets; HOI benchmarks.
-- Metrics: video quality, HOI realism, generalization to unseen humans and objects.
-- Generates realistic HOI reenactments in in-the-wild videos.
-- Generalizes to unseen humans and objects.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Inpainting-based design enables flexible HOI reenactment.
-- Video DiT backbone provides high video quality.
-- Generalizes to unseen humans and objects.
-- Handles complex occlusions and object variations.
+The framework trains a DiT (built on the pretrained Wan-14B I2V model plus FLUX.1-dev) in a self-supervised reconstruction manner: masked video and reference object image, both derived from the source video, condition reconstruction of the original video from noise in a VAE latent space. Inp-TPU temporally extends the reference image to video length, spatially aligns it to masked regions via mask centroids and sizes, VAE-encodes and patchifies both streams, downsamples the mask to latent resolution, and forms conditional tokens as Xcond = (1 - XM) * X_masked + XM * X_ref — reusing existing masked-region attention parameters instead of adding modules. Generation follows an image-then-video paradigm: stage 1 (Mimg) inserts the object into the hand region of a key frame via image-to-image denoising; stage 2 (Mvid) generates the remaining frames conditioned on the key frame. An adaptive masking strategy builds a soft ellipsoid mask from the oriented bounding box (axes enlarged by sqrt(2), aspect ratio matched to the target object) for shape-aware inpainting. Long videos chain clips: each clip's last frame seeds the next, requiring no dedicated long-video model.
 
-### Limitations
-- Requires a reference HOI for reenactment.
-- Quality depends on the Video DiT backbone.
-- May struggle with very large occlusions.
-- Computational cost of Video DiT inference.
+## Contributions
 
-## 6. Takeaway
-iDiT-HOI demonstrates that inpainting-based HOI reenactment in a Video DiT framework enables realistic and generalizable HOI generation in in-the-wild videos. The work exemplifies the "video-generative prior" paradigm where the Video DiT is conditioned on HOI for controllable reenactment.
+(1) A unified inpainting-based token processing method (Inp-TPU) inside a DiT architecture that handles hand movements and object details while ensuring natural contact, without new trainable parameters. (2) Efficient reuse of the pretrained model's context perception capabilities, improving real-world generalization for HOI tasks such as object swapping, unlike duplicated-parameter approaches (Re-HOLD, VACE). (3) Extensive self-reenactment and cross-reenactment experiments, including challenging in-the-wild scenarios, demonstrating potential for industrial-scale HOI video generation.
+
+## Experimental Setup
+
+Training used 19,000 video clips on 8x NVIDIA H100 80G GPUs with full fine-tuning. Evaluation uses Re-HOLD (139 self-reenactment and 140 cross-reenactment videos, in-domain) and HOI-ITW (30 self-reenactment and 10 cross-reenactment videos collected in e-commerce livestreaming, unseen by training). Metrics: PSNR and FID (self-reenactment, computed on a fixed 81 frames), subject consistency, and motion smoothness, plus an IRB-approved user study (10 participants; 12 Re-HOLD and 10 HOI-ITW videos; 1-5 ratings on video quality, reference fidelity, temporal consistency). Baselines: Re-HOLD, HOI-Swap, VACE, AnimateAnyone, AnyV2V, RealisDance, VideoSwap.
+
+## Results
+
+On Re-HOLD (81-frame setting), iDiT-HOI achieves the best FID of 12.07 and PSNR 33.74 in self-reenactment (Re-HOLD: 13.79/32.96; VACE: 27.34/35.86), ranking top in 4 of 6 metrics. On the unseen HOI-ITW set, FID is 35.01 versus VACE's 59.94 and Re-HOLD's 127.8; cross-reenactment subject consistency is 0.953 (VACE 0.954, Re-HOLD 0.923). In the user study, iDiT-HOI scores 3.80/3.87/3.90 (video quality/reference fidelity/temporal consistency) on Re-HOLD and 3.525/3.875/3.55 on HOI-ITW, where Re-HOLD collapses (1.125/1.7/1.1) and VACE's reference fidelity drops from 2.78 to 1.55. Overall the method is top in 7 of 9 metrics. Ablations on HOI-ITW: removing key frame generation degrades all metrics (FID 81.81 in cross-reenactment), and removing object fusion in Inp-TPU causes a 27.08% FID drop (48.25 vs. 35.01).
+
+## Limitations
+
+The paper itself states: (1) the two-stage pipeline requires denoising twice rather than once; (2) generation relies solely on the object image and masked video, limiting fine-grained manipulations such as object rotation and flipping, which the authors propose to address in future work by incorporating 6D object pose information.

@@ -1,45 +1,42 @@
 # SIGHT: Synthesizing Image-Text Conditioned and Geometry-Guided 3D Hand-Object Trajectories
 
+**Authors:** Alexey Gavryushin, Alexandros Delitzas, Luc Van Gool, Marc Pollefeys, Kaichun Mo, Xi Wang  
+**Date:** 2025-03-28  
+**Identifier:** [arXiv:2503.22869](https://arxiv.org/abs/2503.22869)  
+**Zotero item:** `SWK4U4HV` ([Zotero](zotero://select/library/items/SWK4U4HV))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-Generates 3D hand-object interaction trajectories conditioned on text descriptions and object geometry, using a diffusion model that jointly synthesizes hand motion and object manipulation paths.
 
-## 1. Problem and Setting
-- Generate 3D hand-object interaction trajectories (hand poses + object motion over time) from text descriptions and object geometry.
-- Input: text description + 3D object model; output: time-varying MANO hand poses + 6D object pose trajectory.
-- Motion generation (not reconstruction). Text-conditioned, geometry-guided generative modeling.
+SIGHT defines a new task: given a single image of a hand (or two hands) interacting with an object plus a short verb-noun task description (e.g., "pour kettle"), generate a realistic, physically plausible 3D hand-object trajectory that completes the depicted action. The proposed SIGHT-Fusion is a diffusion-based motion generator conditioned on CLIP text features and SigLIP visual features of a wrist-centered crop; at inference it retrieves the most visually similar 3D object mesh from a database and applies a novel interpenetration-loss diffusion guidance to enforce plausible hand-object contact. On HOI4D it achieves the best FID (0.078 versus 0.099-0.238 for adapted MDM, MotionDiffuse, and ReMoDiffuse baselines) and near-ground-truth interpenetration (ID 2.93 cm versus GT 2.74 cm), and on the bimanual H2O dataset it attains the best FID (0.087) and contact ratio (0.092 versus GT 0.084).
 
-## 2. Core Method
-- A diffusion-based generative model operating in the space of hand-object trajectories.
-- The trajectory is represented as a sequence of MANO parameters + object 6D poses over a fixed time horizon.
-- Conditioning signals:
-  1. Text: encoded via a pretrained CLIP text encoder, providing semantic intent (e.g., "lift the mug", "pour water").
-  2. Object geometry: encoded via a PointNet-style point cloud encoder from the input 3D object mesh.
-- The diffusion model denoises a random trajectory into a coherent hand-object motion that satisfies the semantic intent and is geometrically compatible with the object.
-- Additional geometric guidance ensures hand-object contact consistency and non-penetration during the denoising process.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: hand-object interaction motion datasets (GRAB, ARCTIC) with associated text descriptions (manually annotated or generated).
-- Supervision: ground-truth MANO parameters and object trajectories.
-- Uses MANO for hand.
-- Pretrained models: CLIP for text encoding; PointNet for object geometry encoding.
-- Assumes object 3D model is known; interaction follows the textual description.
+Prior hand-object work concentrates on detection/segmentation or 3D reconstruction of static interactions, while human motion generation has focused on whole-body synthesis; generating dynamic, task-appropriate 3D hand-object trajectories is underexplored. Existing trajectory generators (Text2HOI, MACS, DiffH2O, ManiDext, CAMS, BimArt) require 3D object meshes and/or object motion sequences as input, and RL-based approaches need simulated environments and mostly address grasping — inputs that are costly to obtain in real generative settings. The SIGHT task deliberately uses only inexpensive inputs: one static image of the ongoing interaction and a brief textual task description. The output is a sequence of F frames of MANO-parameterized hand poses (16 joint rotations in 6D form plus wrist translation per hand; the right wrist is normalized to the origin in the first frame) and object rotations/translations, with a unified representation covering both rigid objects and objects with one articulated part. The task is challenging because a single frame and short text under-constrain the future motion, which must remain physically plausible, contact-consistent, and semantically aligned with the intended action.
 
-## 4. Experiments and Findings
-- Datasets: GRAB, ARCTIC.
-- Metrics: FID (trajectory quality), contact accuracy, diversity, text-trajectory alignment.
-- Generated trajectories are diverse, semantically aligned with text, and geometrically compatible with object shape. Outperforms unconditional and text-only baselines.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Multi-modal conditioning (text + geometry) enables fine-grained control.
-- Diffusion model produces diverse, high-quality trajectories.
-- Geometry guidance ensures physical compatibility with the object.
+SIGHT-Fusion first crops a square region around the wrist detected with an off-the-shelf hand model (HaMeR; complemented by Florence-2 + SAM-2 grounding for single-hand data, where a Florence-2-only fallback achieves 100% detection), capturing the hand and manipulated object while discarding background; CLIP encodes the task text and SigLIP encodes the crop. A transformer-decoder denoiser (adopting the ReMoDiffuse architecture) is trained with DDPM over 1,000 steps on the joint hand-object motion sequence — with object motion encoded relative to the right wrist per frame — using an MSE reconstruction loss plus a velocity loss (weight 1) that penalizes discrepancies in temporal differences to suppress jitter. Because a monocular image gives limited access to object geometry and the training prior alone cannot guarantee physical plausibility, inference is guided by diffusion guidance: at each denoising step, an interpenetration loss penalizes squared distances between MANO hand vertices lying inside the object mesh (transformed by the currently synthesized object motion) and the surface. The required 3D mesh is obtained at inference time by retrieval from a database whose keys are (task description, wrist-crop visual feature) pairs with associated object meshes; the mesh with maximal cosine similarity of its crop feature — further filtered by text similarity — is retrieved, an inference-time optimization equally applicable to unseen objects where a learned mesh predictor might generalize poorly. Guidance uses a constant scale of 7 applied after the first 100 denoising steps. Models are trained for 250 epochs; MDM-based baselines use learning rate 1e-4 and batch 64, ReMoDiffuse/MotionDiffuse-based ones 2e-4 and 128.
 
-### Limitations
-- Requires full 3D object model as input (not RGB).
-- Training requires text annotations on motion data (scarce).
-- Generated trajectories may not be physically realizable (no physics simulation).
-- Limited to the interaction types present in training data.
+## Contributions
 
-## 6. Takeaway
-SIGHT represents the growing trend of using diffusion models for controllable HOI generation, showing that text + geometry conditioning can produce semantically meaningful and geometrically valid manipulation trajectories. This line of work bridges language understanding and 3D interaction modeling.
+- The definition of the SIGHT task: generating 3D hand-object interaction trajectories from a single image and a brief textual task description, covering single- and dual-hand interactions and rigid or articulated objects.
+- SIGHT-Fusion, an image-text conditioned diffusion motion generator with a velocity loss, producing diverse and realistic hand-object trajectories without requiring 3D object input.
+- A geometry-based inference-time diffusion guidance that enforces hand-object interpenetration constraints using a 3D mesh retrieved by visual-similarity matching from a database, removing the need for a known object mesh.
+- New benchmarks and baselines for the task on HOI4D (with a purpose-built cross-instance split) and H2O, with metrics spanning trajectory accuracy/diversity/fidelity and interaction quality (interpenetration depth and volume, contact ratio), on which the method outperforms adapted state-of-the-art motion generators.
+
+## Experimental Setup
+
+HOI4D provides egocentric videos, 3D object instance scans, and 3D hand and 6D object poses for 16 everyday-object categories; the original 31 tasks are grouped into 10 actions (e.g., bind, clamp, cut, fill, open/close, pour variants, slice), and a new instance split assigns disjoint object instances per category-action to train and test, testing cross-instance generalization (9 object categories used). H2O contains bimanual interactions with 8 objects across 36 action classes with 3D hand and 6D object annotations and official action split. Metrics: action-classifier accuracy (ACC), diversity (FID between halves of the generated group, best when close to ground truth), FID to ground-truth motions, maximum interpenetration depth (ID, cm, over all frames of the validation set), interpenetration volume at the max-depth frame (IV, cm3), and contact ratio (CR, fraction of hand vertices within 5 mm of the object, best when close to ground truth). All methods generate 196-frame motions; checkpoint selection follows the lowest test FID; HOI4D scores are averaged over 20 evaluations and H2O over 5, with 95% confidence intervals. Baselines are MDM, MotionDiffuse, and ReMoDiffuse adapted to the task, each in a text-only version and an image-augmented (-I) version.
+
+## Results
+
+- HOI4D: SIGHT-Fusion achieves ACC 1.000, DIV 11.820 (GT 11.782), FID 0.078, ID 2.928 cm (GT 2.742), IV 23.108 cm3 (GT 14.981), CR 0.069 (GT 0.063) — best on four of six metrics; the strongest baselines are ReMoDiffuse-I (FID 0.099, IV 74.467) and MotionDiffuse-I (ID 2.995), while text-only ReMoDiffuse yields FID 0.238 and ID 4.315.
+- H2O: ACC 0.869, DIV 12.810, FID 0.087 (best), CR 0.092 (best; GT 0.084), ID 3.618 and IV 20.111 (second best behind MotionDiffuse 3.542 and MDM 17.455); the paper attributes the reduced margin to H2O's single object instance per task favoring memorization of training trajectories over geometric reasoning.
+- Conditioning ablation (HOI4D): text-only FID 0.238; whole-scene image 0.106; object-crop image 0.129 (best ACC/DIV); text plus scene 0.099; text plus object-crop 0.079; adding guidance keeps FID 0.078 while cutting IV from 30.773 to 23.108 cm3 and CR from 0.071 to 0.069.
+- Guidance ablation: with the ground-truth mesh IV is 21.207 cm3; without guidance 30.773; with a random same-category mesh 24.132; with the proposed retrieval 23.108 — retrieval nearly matches ground-truth-mesh guidance and beats random meshes without worsening trajectory metrics.
+- Retrieval quality: mean Chamfer distance of the retrieved mesh to the ground-truth mesh is 1.618 cm using wrist-crop visual features, versus 1.718 cm for whole-image features and 1.955 cm for random same-category meshes.
+
+## Limitations
+
+The authors state that the method relies on datasets providing both interaction videos and 3D object motions to construct the retrieval database, and that integrating existing image-to-3D generation pipelines could improve generalization. Despite the interpenetration guidance, generated sequences can still exhibit hand-object penetrations, motivating new formulations that guarantee valid contacts. The paper also notes the H2O setting under-tests geometric reasoning due to its one-instance-per-task design, and left-hand detection on bimanual data relies on HaMeR because Florence-2 confuses hand sides. Applications such as action anticipation and robotic object manipulation are proposed as future directions.

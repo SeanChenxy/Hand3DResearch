@@ -1,51 +1,38 @@
-# InterHand2.6M (ECCV 2020)
+# InterHand2.6M: A Dataset and Baseline for 3D Interacting Hand Pose Estimation from a Single RGB Image
 
-> Moon, Yu, Wen, Shiratori, Lee. *InterHand2.6M: A Dataset and Baseline for 3D Interacting Hand Pose Estimation from a Single RGB Image.* ECCV 2020. DOI: 10.1007/978-3-030-58565-5_33. Zotero Key: `NRYI9CR8`.
+**Authors:** Gyeongsik Moon, Shoou-I Yu, He Wen, Takaaki Shiratori, Kyoung Mu Lee  
+**Date:** 2020-08-21  
+**Identifier:** [arXiv:2008.09309](https://arxiv.org/abs/2008.09309); DOI `10.1007/978-3-030-58565-5_33`  
+**Zotero item:** `NRYI9CR8` ([Zotero](zotero://select/library/items/NRYI9CR8))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-InterHand2.6M is the first large-scale, single-RGB-image, bi-manual interacting (interacting hands) 3D hand pose dataset: 2.6M annotated frames covering a variety of two-person / one-person two-hand / hand-self / hand-other poses. It is the de facto standard benchmark for monocular interacting hand pose estimation.
 
-## 1. Dataset Purpose
-- Solves the problem that "existing hand pose datasets are dominated by single hands, and the data scale of interacting hands is very small".
-- Tasks: 3D hand pose estimation of (a) single hand; (b) bi-manual interacting hand from a single RGB image.
-- Does not contain objects; focused on hand-only bi-manual interaction ("shaking hands", "one hand holding the other", "clapping", etc.).
-- The proposed InterNet baseline supports both single-hand and interacting-hand tasks.
+This ECCV 2020 paper contributes both InterHand2.6M, the first large-scale real RGB 3D hand pose dataset covering single and interacting hands (2.6M labeled frames from 26 subjects captured with 80-140 calibrated studio cameras), and InterNet, the first single-RGB baseline that simultaneously estimates handedness, 2.5D poses of both hands, and right-hand-relative left-hand depth. Experiments show that models trained without interacting-hand data fail badly on interacting hands (51.19 mm versus 16.86 mm interacting-hand MPJPE), establishing that interacting-hand data is essential and that single-RGB interacting-hand pose estimation (16.02 mm MPJPE) remains far from solved.
 
-## 2. Data Composition
-- Source: real capture. Multiple people perform various hand poses under a controlled green screen + multiple RGB cameras.
-- Viewpoint: 80 calibrated RGB cameras surrounding the capture space; a monocular in-the-wild evaluation set is also provided.
-- Scale: 2.6M annotated frames, dozens of subjects; divided into three subsets: H (Hands, single hand) / IH (Interacting Hands) / IHO (Interacting Hands + Object).
-- Action coverage: shaking, holding, crossing, pointing at, interlocking fingers, self-touching, etc.
-- Object coverage: the IHO subset introduces simple everyday objects (cube, bottle, cup, etc.) but only to assist hand-pose variation.
-- No 6D object pose annotation, no articulated object.
+## Background and Motivation
 
-## 3. Annotation and Supervision
-- Hand: bi-manual 3D 21 joints (multi-view + automatic pipeline); hand mesh obtained by MANO fitting.
-- Object: the IHO subset provides 3D object mesh / 6D pose (simplified), but mainly used to assist hand localization.
-- Interaction: interaction labels (self / other person / object / single hand).
-- Scene: multi-view RGB, camera intrinsics / extrinsics, in-the-wild test set for cross-domain evaluation.
-- No language, no tactile.
+Most 3D hand pose estimation research targets a single isolated hand, yet realistic human hand postures frequently involve the two hands interacting with each other and with objects. Existing resources could not support learning this case: the synthetic RHP dataset shows two hands performing separate actions, the Tzionas et al. interacting-hand sequences provide only 2D annotations at small scale, Mueller et al. rely on largely synthetic depth maps, and Simon et al. is small with unstable annotations, while RGB-based datasets in general were limited to tens of thousands of frames because accurate 3D annotation from RGB is difficult. The authors therefore combine a precisely calibrated multi-view studio with a semi-automatic annotation pipeline to make large-scale, accurate 3D interacting-hand annotation practical, and design a network that handles both single and interacting hands in one model, including an explicit mechanism for the depth ambiguity that arises when lifting two hands from a cropped single image.
 
-## 4. Supported Evaluation
-- Benchmark tasks: (1) single-hand 3D pose (MPJPE / PA-MPJPE); (2) interacting-hand 3D pose (left / right hand independent MPJPE / relative MPJPE); (3) mesh error.
-- Key metrics: MPJPE / PA-MPJPE / Mesh Error.
-- Provides single-hand split, interacting-hand split, and in-the-wild test set; the cross-domain evaluation protocol is complete.
-- The de facto evaluation standard for hand-only bi-manual interaction.
+## Dataset Construction
 
-## 5. Why It Matters
-- Systematizes "interacting hands" as an independent sub-task for the first time, establishing the paradigm of the direction (Moon et al.'s later InterWild and ReInterHand are all based on this).
-- The 2.6M-frame scale + 80-view multi-view scheme becomes a standard reference for follow-up dual-hand datasets.
-- The InterNet baseline has long been used as the reference on InterHand2.6M.
-- Standard training / evaluation source for all hand-only bi-manual models (especially ReFormer, TCP-Net, HRNet-InterHand, etc.).
-- In this survey, it complements FreiHAND: FreiHAND evaluates single-hand mesh, InterHand2.6M evaluates bi-manual joint / mesh.
+InterHand2.6M was captured in a multi-view studio of 80-140 high-resolution cameras running at 30-90 fps with 350-450 directional LED lights for uniform illumination (two settings: roughly 34 RGB plus 46 monochrome cameras at 90 fps, and roughly 139 color cameras at 30 fps). Calibration with a 3D target achieved 0.42-0.48 pixel RMSE. Thirty-six recordings cover 26 unique subjects (19 male, 7 female) in two sequence families: peak pose (PP) transitions from a neutral pose to pre-defined poses and back, with 40 poses per single hand and 13 for interacting hands including sign-language gestures and extreme finger bends; range of motion (ROM) captures conversational gestures under minimal instruction, with 15 single-hand and 17 interacting-hand gestures. Images were captured at 4096x2668 and released downscaled to 512x334 to protect fingerprint privacy. Annotation uses a 42-keypoint scheme (21 per hand including the wrist) with two stages: human annotators labeled 94,914 2D images from 9,036 unique time instants using a tool that triangulates joints from two views and re-projects them to the other views, yielding 698,922 2D-labeled images, after which a machine annotator (a state-of-the-art 2D keypoint detector with an EfficientNet backbone) labels the remaining frames with RANSAC triangulation across roughly 80 views; the machine annotation reaches 2.78 mm 3D error when all 90 views are used. The released splits comprise Train (H) with 528K frames, Train (M) with 909K, Train (H+M) with 1,361K, Val (M) with 380K, Test (H) with 122K, Test (M) with 728K, and Test (H+M) with 849K frames; the M splits contain subjects and poses unseen in training and only ROM sequences, simulating real-world conditions.
 
-## 6. Limitations and Biases
-- Still hand-hand dominated, with no real hand-object manipulation: cannot directly evaluate "what the hand is doing".
-- Green-screen background: a domain gap to in-the-wild RGB.
-- The IHO subset has a small number of objects and simplified pose ground truth.
-- No contact map, no affordance, no scene context.
-- Annotation depends on MANO, which has limited expressiveness for severe hand-hand occlusion or special hand shapes.
-- No language; the action label is weak.
+## Evaluation Protocol
 
-## 7. Takeaway
-InterHand2.6M is best for demonstrating the recovery accuracy of "bi-manual interacting pose" from monocular RGB. **Not suitable** for evaluating hand-object manipulation, bi-manual tool use, articulated objects, or in-the-wild egocentric tasks. In this survey, it plays the role of "hand-only bi-manual interaction main benchmark" and serves as the unified evaluation source for all "dual-hand mesh reconstruction methods" in Ch2 on hand-only tasks. Together with FreiHAND, it forms the two hand-only anchors of "single hand vs two hands".
+Three metrics are used on InterHand2.6M: average precision of handedness estimation (APh), mean per joint position error (MPJPE) after root alignment performed separately for each hand, and mean relative-root position error (MRRPE) measuring the right-hand-root-relative left-hand-root position. The ablations train InterNet variants on human-only, machine-only, and combined annotations and on single-hand-only versus interacting-hand-only data, and evaluate on the four test configurations. External comparison uses end point error (EPE) on STB and RHP, and the machine annotator's accuracy is measured on Test (H) as a function of the number of triangulated views, averaging 100 random view subsets per view count.
+
+## Findings and Analysis
+
+The central dataset finding is that single-hand data is insufficient for interacting hands: a model trained only on single-hand data achieves 13.08 mm single-hand MPJPE but 51.19 mm on interacting hands, whereas a model trained only on interacting-hand data achieves 16.86 mm, and the combined model reaches 12.16 mm and 16.02 mm, improving both tasks. Human annotations are individually more accurate than machine annotations (Train (H) beats Train (M) on most test sets), but combining them gives the best results because machine labels add coverage of the hand pose space, confirmed by t-SNE visualization. On Test (H+M), InterNet reaches 99.09 APh, 32.57 mm MRRPE, and 14.22 mm MPJPE; using the predicted right-hand-relative left-hand depth instead of the left hand's RootNet depth cuts MRRPE from 92.14 mm to 32.57 mm, demonstrating that relative depth between visible hands largely resolves monocular depth ambiguity. Training on all views rather than only four canonical views improves MPJPE from 26.80 mm to 14.22 mm and MRRPE from 61.90 mm to 32.57 mm, showing the value of the dense camera array. Interacting-hand error is 32% higher than single-hand error, and since state-of-the-art depth-based methods reach 8-9 mm on depth datasets, the paper concludes that single-RGB interacting-hand pose estimation is far from solved. On STB and RHP, InterNet (7.95 and 20.89 mm EPE) outperforms prior methods without using ground-truth scale or handedness at inference. With additional 2D supervision from the Tzionas dataset, InterNet produces plausible 3D interacting-hand results on general in-the-wild images.
+
+## Contributions
+
+- InterHand2.6M, the first large-scale real RGB 3D hand pose dataset with single and interacting hand sequences: 2.6M frames, 26 subjects, multi-view capture at 4096x2668 native resolution, and 42-keypoint 3D annotations at roughly 2.78 mm machine-annotation accuracy.
+- A scalable semi-automatic annotation protocol combining a two-view triangulation human tool with a multi-view machine annotator, avoiding iterative bootstrapping thanks to high-resolution images and dense views.
+- InterNet, the first single-RGB network to jointly predict handedness, 2.5D poses of both hands, and right-hand-relative left-hand depth, handling presence and absence of each hand at test time.
+- Empirical proof that interacting-hand training data is essential for interacting-hand pose estimation, with public baselines and splits for future benchmarking.
+
+## Limitations
+
+The dataset provides only 3D joint coordinates, without fitted hand model parameters or meshes, which the authors list as future work. Released images are downscaled from 4096x2668 to 512x334 at 5 fps (the paper's reported configuration) for fingerprint privacy, sacrificing detail relative to capture quality. Performance still degrades badly under severe mutual occlusion, which causes both the 2.5D pose and the relative-depth estimates to fail, and the 32% error gap between interacting and single hands shows the task remains unsolved. Annotation quality also depends on the studio's dense camera coverage, so the 2.78 mm machine-annotation accuracy is tied to this multi-view setup rather than being achievable from sparse views.

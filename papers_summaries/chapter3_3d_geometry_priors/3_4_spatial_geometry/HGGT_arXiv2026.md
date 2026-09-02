@@ -1,46 +1,42 @@
 # HGGT: Robust and Flexible 3D Hand Mesh Reconstruction from Uncalibrated Images
 
+**Authors:** Yumeng Liu, Xiao-Xiao Long, Marc Habermann, Xuanze Yang, Cheng Lin, Yuan Liu, Yuexin Ma, Wenping Wang, Ligang Liu  
+**Date:** 2026-03-26  
+**Identifier:** [arXiv:2603.23997](https://arxiv.org/abs/2603.23997)  
+**Zotero item:** `ZC23RX6L` ([Zotero](zotero://select/library/items/ZC23RX6L))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-HGGT reformulates hand reconstruction from arbitrary views as a visual-geometry grounded task, leveraging 3D foundation models to learn explicit geometry from visual data, and proposes a feed-forward architecture that jointly infers 3D hand meshes and camera poses from uncalibrated views, bridging the gap between single-view and calibrated multi-view hand reconstruction.
 
-## 1. Problem and Setting
-- 3D hand mesh reconstruction from uncalibrated arbitrary views, with applications in robotics, animation, and VR/AR.
-- Input: uncalibrated multi-view images (potentially from the internet or consumer cameras).
-- Output: 3D hand mesh (MANO) per view, plus joint camera pose estimation.
-- Task: hand reconstruction; uses 3D foundation model geometric priors.
+HGGT (Hand Geometry Grounding Transformer) is a feed-forward transformer that, for the first time in the literature, jointly infers 3D hand meshes (MANO parameters) and camera poses from an arbitrary number of uncalibrated RGB views in a single forward pass. Built on the VGGT visual-geometry backbone with a unified cross-attention refinement module over learnable hand and camera tokens, and trained on a mixture of large-scale single-view data, real multi-view data, and a newly created large-scale synthetic multi-view dataset of hand-object interactions, it outperforms the calibration-dependent state of the art POEM on several benchmarks without any calibration — e.g., 9.98 mm root-relative MPVPE on HO3D, beating even GT-camera POEMv2-large (10.58 mm) — and runs at 0.23 s per frame.
 
-## 2. Core Method
-- Draws inspiration from 3D foundation models that learn explicit geometry directly from visual data.
-- Reformulates hand reconstruction from arbitrary views as a visual-geometry grounded task.
-- A feed-forward architecture that jointly infers 3D hand meshes and camera poses from uncalibrated views — the first literature to do so.
-- The 3D foundation model provides geometric priors that ground the visual features.
-- How FM prior is injected: a 3D foundation model pretrained on large-scale 3D visual data supplies the explicit geometry understanding that disambiguates hand reconstruction across views.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Foundation model: 3D foundation model trained on large-scale visual data (likely DUSt3R / Mast3R-style).
-- Domain knowledge: hand-specific adaptations on top of general 3D priors.
-- Training data: uses large-scale uncalibrated image collections; can leverage internet images.
-- Assumption: the 3D foundation model's geometric understanding transfers to hands.
+Recovering high-fidelity 3D hand geometry from images matters for robotics, animation, and VR/AR, and scalable deployment requires both accuracy and flexibility: the ability to exploit unstructured internet images and to run on consumer-grade RGB cameras without complex calibration. Existing methods face a dilemma. Single-view regressors such as HaMeR scale well via ViT backbones but suffer from depth ambiguity and occlusion. Multi-view methods such as POEM (a Point-Embedded Transformer that fuses features onto 3D basis points) resolve these ambiguities but require accurate camera calibration, limiting in-the-wild utility. Meanwhile, feed-forward 3D foundation models (DUSt3R, MASt3R, VGGT) learn camera extrinsics, depth, and point maps directly from data; concurrent works (Human3R, UniSH) mostly treat such models as frozen scene-reconstruction modules and align human poses to the reconstructed scene, and direct application to hands remains unexplored. The paper observes that feeding multi-view hand images to off-the-shelf VGGT fails badly: cropped hand views have minimal visual overlap, so camera estimation collapses (e.g., VGGT-predicted cameras give POEM a 39.08 mm MPVPE on DexYCB versus 7.21 mm with ground-truth cameras), because VGGT's camera estimation is dominated by static, high-texture background features rather than the small, weakly textured hand. The formal problem: given S images from unknown viewpoints, jointly predict (i) MANO parameters (theta in R48 axis-angle, beta in R10 shape, t in R3 translation) defined in the first camera coordinate system, and (ii) per-view camera pose encodings, with no prior calibration and no iterative optimization.
 
-## 4. Experiments and Findings
-- Datasets: standard hand reconstruction benchmarks + uncalibrated in-the-wild scenarios.
-- Metrics: hand mesh accuracy (MPJPE, MPVPE, F-score), camera pose accuracy.
-- Outperforms state-of-the-art benchmarks and demonstrates strong generalization to uncalibrated, in-the-wild scenarios.
-- The visual-geometry grounding enables both single-view and multi-view capabilities.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Bridges single-view and multi-view hand reconstruction paradigms.
-- Uncalibrated — works without complex camera calibration.
-- Strong generalization to in-the-wild images.
-- Feed-forward inference is fast.
-- Joint mesh and camera pose estimation.
+HGGT is a VGGT-based feed-forward architecture with three stages. (1) Multi-view feature aggregation: the VGGT alternating-attention aggregator encodes multi-view inputs into image tokens and initial camera tokens, with pretrained weights resumed and all aggregator layers unfrozen. (2) Unified cross-attention refinement: a set of learnable latent "hand tokens" representing global hand geometry is concatenated with the camera tokens and processed by 4 stacked cross-attention blocks (16 heads, MLP ratio 4); the task-specific hand and camera tokens serve as queries while multi-view image features serve as keys/values, letting hand tokens aggregate geometric cues across uncalibrated views. (3) Task-specific heads: a Camera Head (same architecture as VGGT's) predicts a 9-dimensional per-view encoding relative to the first frame — translation (3), unit-quaternion rotation (4), and field of view (2); a Hand Head (a lightweight MLP) regresses MANO pose, shape, and translation, which pass through the differentiable MANO layer to yield 778 vertices and 21 joints. Training uses three loss families: a hand loss on MANO parameters and root-relative 3D joints (masked where 3D ground truth is unavailable, e.g., single-view samples); a camera loss on translation, geodesic rotation distance on SO(3), and FoV, active only for multi-view samples (S > 1); and a projection-consistency loss combining 2D keypoint reprojection (the sole 3D-agnostic supervision for single-view data) with a negative-depth penalty that forbids solutions behind the camera. Hand and camera losses are applied with intermediate supervision at every block under exponentially increasing stage weights (gamma = 0.6, the best of three strategies ablated), while the projection loss is applied only to the final block. A gradient-accumulation strategy alternates single-view and multi-view steps and enforces a constant image budget (batch size B = floor(N_img/S)) to handle heterogeneous view counts from S = 1 to 24 within one weight update.
 
-### Limitations
-- Depends on the 3D foundation model's capability.
-- Hand-only; no object reconstruction or interaction modeling.
-- May inherit biases of the underlying foundation model.
-- Performance on extreme hand poses not extensively verified.
+## Contributions
 
-## 6. Takeaway
-HGGT demonstrates that reformulating hand reconstruction as a visual-geometry grounded task — leveraging 3D foundation models to supply geometric priors — enables robust performance across both single-view and multi-view settings without calibration. The work exemplifies the trend of building specialized vision tasks on top of general 3D foundation models, providing flexibility and in-the-wild generalization that prior hand-specific architectures lacked.
+- The first feed-forward framework for calibration-free multi-view hand geometry recovery: a unified VGGT-based transformer jointly estimates camera poses and hand meshes, eliminating precalibration and iterative optimization; the authors show naive reuse of off-the-shelf VGGT collapses on hands and that joint hand-camera reasoning is necessary.
+- A new large-scale synthetic multi-view hand-object dataset and a mixed-data training strategy combining real monocular data (about 2.7M examples from the HaMeR collection, ~5% in-the-wild), real calibrated multi-view data (about 438K frames from the POEM collection over DexYCB, HO3D, OakInk, ARCTIC, InterHand2.6M), and 85,683 training / 21,242 validation rendered sets of 10 views each (856,830 synthetic training images) built from GraspXL grasping motions on Objaverse objects with DART photorealistic hand textures.
+- Extensive benchmarking showing superior robustness in uncalibrated settings: HGGT outperforms state-of-the-art methods in both 3D mesh recovery and 2D keypoint detection across DexYCB, OakInk, InterHand2.6M, ARCTIC, and HO3D multi-view protocols, and generalizes to in-the-wild two-smartphone video capture.
+
+## Experimental Setup
+
+The model has approximately 1.4 billion parameters and was trained in PyTorch on 8 NVIDIA A100 GPUs for 80,000 iterations (about 5 days) with AdamW (weight decay 0.05), BF16 mixed precision, gradient clipping at L2 norm 1.0, micro-batch size 32 images per GPU, and 4-step gradient accumulation. The learning rate warms up linearly from 1e-8 to 1e-6 over the first 5% of training and cosine-decays back to 1e-8. Multi-view frame counts are sampled as N in [2,10] for the synthetic data, [2,5] for HO3D, [2,8] for DexYCB/ARCTIC/InterHand2.6M, and [2,4] for OakInk; images use patch size 14, maximum dimension 518 px, randomized aspect ratios 0.5-1.0, and VGGT-style photometric augmentation (color jitter, Gaussian blur, grayscale). Evaluation reports MPJPE and MPVPE in millimeters plus AUC of PCK (AUC20/AUC50); because absolute wrist depth is unobservable from uncalibrated views, results are reported under root-relative (RR) and Procrustes-aligned (PA) protocols. Baselines include POEMv1 and POEMv2-large with ground-truth cameras (upper bound), VGGT-predicted cameras feeding POEM, and POEM fed HGGT-predicted cameras, on DexYCB-Mv (8 views), OakInk-Mv (4 views), InterHand-Mv (8 views), ARCTIC-Mv (8 views), and HO3D-Mv (5 views).
+
+## Results
+
+- Calibration-free HO3D-Mv: HGGT achieves 9.98 mm RR MPVPE / 10.03 mm RR MPJPE and 3.30 / 3.33 mm under PA, surpassing even the GT-camera-aided POEMv2-large (10.58 / 10.58 RR). On DexYCB-Mv HGGT reaches 13.29 mm RR MPVPE (PA 4.47) versus 7.21 mm for GT-camera POEMv1; on OakInk-Mv 20.13 mm RR (PA 6.14) versus 7.63 mm GT-camera POEMv1.
+- Calibration-free comparison: replacing VGGT cameras with HGGT cameras improves POEM dramatically (e.g., DexYCB RR MPVPE from 39.08 to 19.69 mm; HO3D from 56.07 to 28.48 mm), and the full HGGT still surpasses POEM on the majority of benchmarks, with only a marginal deficit observed on the OakInk dataset.
+- Backbone freezing ablation (HO3D): fully unfreezing VGGT (1.37B trainable) yields 9.98 mm RR MPVPE versus 25.87 mm when all 24 layers are frozen (0.46B trainable), and 12.57 mm when 10 layers are frozen — the pre-training/hand domain gap is significant.
+- Data ablation (HO3D): Real-only training gives 15.30 mm RR MPVPE (PA 5.97); adding the synthetic dataset improves this to 9.98 mm (PA 3.30), attributed to perfect annotations and viewpoint/pose diversity acting as regularization.
+- Architecture ablations (PA-MPVPE on HO3D): 4 cross-attention blocks beat 2 (4.51 mm) and 3 (3.67 mm); exponential intermediate supervision (3.30 mm) beats none (3.52 mm) and constant weights (3.38 mm); applying the 2D projection loss only at the final block (3.30 mm) beats applying it at all blocks (3.47 mm).
+- Qualitatively, HGGT is robust to severe motion blur and heavy occlusion (e.g., the right hand visible in only 2 of 8 views), and matches GT-camera POEM quality in visual comparisons; inference takes 0.23 s per frame, though an external ViTPose hand detector adds about 1.2 s per frame.
+
+## Limitations
+
+The framework relies on off-the-shelf 2D detectors (e.g., ViTPose) for hand localization and cropping in unconstrained settings, and this external detection dominates runtime (~1.2 s versus 0.23 s per frame). Estimated cameras live in a normalized coordinate space, so recovering the absolute metric depth of the wrist from uncalibrated images remains an open challenge that the authors flag as future work. Comparisons also show a residual accuracy gap to GT-camera methods on several datasets (e.g., DexYCB, OakInk), and the paper reports evaluation under root-relative/Procrustes protocols rather than absolute metric error.

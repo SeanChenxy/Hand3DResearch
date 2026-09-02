@@ -1,39 +1,38 @@
 # ContactGen: Generative Contact Modeling for Grasp Generation
 
+**Authors:** Shaowei Liu, Yang Zhou, Jimei Yang, Saurabh Gupta, Shenlong Wang  
+**Date:** 2023-10-05  
+**Identifier:** [arXiv:2310.03740](https://arxiv.org/abs/2310.03740), [DOI: 10.1109/ICCV51070.2023.01884](https://doi.org/10.1109/ICCV51070.2023.01884)  
+**Zotero item:** `TM24M3FA` ([Zotero](zotero://select/library/items/TM24M3FA))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-Proposes ContactGen, an object-centric contact representation (contact map + hand-part map + direction map) generated via a conditional diffusion model, which then guides MANO parameter optimization to produce diverse and accurate grasps.
 
-## 1. Problem and Setting
-- Task: given a 3D object mesh or point cloud, generate diverse and physically plausible static hand grasps.
-- Input: 3D object shape; Output: MANO hand parameters achieving realistic contact with the object.
-- Key challenge: directly regressing MANO parameters from object shape yields limited diversity; contact-based methods enable diversity but need an expressive, learnable contact representation that captures where, with which hand part, and in what direction the hand should contact.
+ContactGen (ICCV 2023) proposes an object-centric contact representation with three maps over the object surface — a contact map (where the object is touched), a part map (which of 16 hand parts touches it), and a direction map (the touch direction within each part) — learned with a sequential conditional VAE and decoded into grasps by a model-based contact solver built on a piecewise hand SDF. Because the representation is complete, ground-truth ContactGen recovers hand poses with 1.49 cm mesh endpoint error versus 3.44 cm for TOCH-style correspondences and 7.00 cm for ContactOpt-style contact maps. For generative synthesis on GRAB, it achieves the lowest penetration (2.72 vs. 3.61/3.65 for HALO/GrabNet), the highest contact ratio (0.96), and nearly double the grasp diversity (cluster size 4.11 vs. about 2), and it transfers to out-of-domain HO3D objects while remaining the most diverse method.
 
-## 2. Core Method
-- ContactGen representation: for each point on the object surface, predict three components: (a) a contact map (binary: is this point contacted by the hand?), (b) a part map (which hand part — palm, thumb, index, etc. — contacts it?), and (c) a direction map (surface normal direction of the contacting hand part).
-- Diffusion model: a 3D point-wise diffusion model (DDPM) trained to generate ContactGen maps conditioned on object geometry (encoded via a point-wise transformer).
-- Grasp fitting: given generated ContactGen maps, optimize MANO parameters by minimizing an energy that attracts corresponding hand vertices to contact points along predicted directions, with penalties for penetration and joint violation.
-- Key innovation: the combination of spatial (where), semantic (which part), and directional (how oriented) contact channels provides a richer, more constraining contact prior than binary contact alone.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: GRAB dataset (real human grasps), ObMan (synthetic), and a custom ContactPose dataset.
-- Supervision: ground-truth ContactGen maps derived from fitted MANO-object mesh pairs in the training data (contact via proximity, hand part via nearest MANO part segmentation, direction via hand vertex normals).
-- Domain knowledge: MANO hand model with part segmentation.
-- Assumption: static grasp; rigid, known object mesh.
+Realistic hand-object interaction requires knowing which object regions are touched, which hand parts make contact, contact strength, and contact direction; the paper argues that conventional contact maps (a [0,1] scalar per object point) are incomplete because ambiguities remain about which hand region is in contact and how, and because a single map cannot express the structured, multi-modal uncertainty of grasping. Existing grasp generators model uncertainty in the hand space (sampling MANO parameters or joints with CVAEs such as GrabNet, GraspTTA, HALO, Grasping Field), which tends to overfit to prevalent grasp patterns and produce low diversity; TOCH encodes sparse object-to-hand correspondences but not detailed contact directions. ContactGen instead models grasp uncertainty in the object space: the task is defined as generating a full object-centric contact description from an object point cloud, then deterministically recovering a diverse, geometrically feasible grasp via optimization. A further obstacle is that contact and penetration objectives in MANO-based optimization conflict, and mesh discretization limits spatial resolution, motivating an SDF-based hand model that cleanly separates contact (SDF = 0) from penetration (SDF < 0).
 
-## 4. Experiments and Findings
-- Datasets: GRAB, ObMan, ContactPose.
-- Metrics: contact IoU, part accuracy, penetration depth, grasp diversity (coverage), and user preference study.
-- Main findings: ContactGen significantly outperforms prior contact-free and simple-contact-based methods on all metrics; the three-channel representation reduces ambiguities in grasp fitting compared to binary-contact-only methods; diffusion-based generation yields diverse grasps that cover the feasible contact manifold.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Rich three-channel contact representation resolves ambiguities that binary contact cannot.
-- Diffusion prior naturally captures the multi-modal distribution of plausible contacts.
+The representation F = (C, P, D) is defined over N = 2048 points sampled from the object surface: contact map C in [0,1]^N gives per-point contact probability; part map P is a one-hot vector over B = 16 hand parts indicating the closest contacting part (fingertip regions, palm, etc.); direction map D records, per point, the unit direction from the contacted part's center — like a ray from a part-centered unit sphere — which uniquely locates the contact point by marching until the part SDF equals zero. Generative modeling uses a sequential CVAE that factorizes p(F|O) = p(D|P,O) p(P|C,O) p(C|O): shared PointNet++ features condition three encoders/decoders with 16-d Gaussian latents, each map's generation conditioned on the previously sampled ones, ensuring cross-map consistency while decomposing uncertainty. Training minimizes per-point reconstruction losses (L1 on C, cross-entropy on P, cosine similarity on D) weighted by W_C = C + delta to emphasize contacting points, plus KL regularization on all three latents with the weight annealed from 0 to 5e-2. Grasp synthesis converts sampled ContactGen into a hand pose with a contact solver over a piecewise hand SDF articulation model (trained on Freihand, 32,560 samples), where each of the 16 parts has its own SDF and pose T_b and parameters are shared with MANO for easy conversion; the solver minimizes a contact loss pushing each part's SDF toward zero at its assigned contact points, a direction-matching cosine loss, a penetration loss on object points inside the hand, and an L2 regularizer, optimized from scratch in two Adam stages (global pose first, then pose and shape).
 
-### Limitations
-- Requires per-point hand-part annotation on the object (computed from data but not always available).
-- Grasp fitting step is slow (iterative optimization) and can produce failures if diffusion generates inconsistent contact maps.
-- GRAB-centric training data limits object diversity.
+## Contributions
 
-## 6. Takeaway
-ContactGen demonstrates that a richer contact representation (where + which part + which direction) enables far more constrained and accurate grasp fitting than binary contact alone, and that diffusion models are well-suited for capturing the multi-modal nature of plausible human-object contact. The ContactGen representation has become a key reference point for contact-driven grasp generation.
+- ContactGen, an object-centric contact representation that concurrently models contact location, contacting hand part, and per-part contact direction, making it complete enough to recover the underlying grasp from contact alone — unlike contact maps (ContactOpt) or sparse correspondences (TOCH).
+- A sequential CVAE that explicitly factorizes grasp uncertainty into contact, part, and direction components, yielding consistent, diverse samples where joint or fully separate modeling of the three latents fails.
+- A grasp synthesis algorithm combining the generative contact model with model-based optimization over a piecewise hand SDF articulation model compatible with MANO parameters, improving contact, penetration, stability, and diversity relative to hand-space CVAE generators.
+- Demonstration that the representation generalizes beyond grasping: the same pipeline synthesizes hand-hand interactions by treating one hand as the "object" (trained on InterHand2.6M).
+
+## Experimental Setup
+
+The ContactGen CVAE is trained on GRAB (real grasps of 51 objects by 10 subjects, official split; the test set has six unseen objects) and evaluated on those unseen GRAB objects plus out-of-domain HO3D test objects. Inputs are 2048-point object clouds randomly rotated within [-pi/6, pi/6] per axis for augmentation; the CVAE (latent dimension 16) trains with Adam (learning rate 1.6e-3, batch size 256) for 3000 epochs. Inference optimization runs 200 iterations at learning rate 5e-2 for global hand pose and 1000 iterations at 5e-3 for pose and shape. Evaluation follows HALO's protocol: penetration volume (1 mm3 voxelization), contact ratio (fraction of grasps touching the object), simulation displacement of the object's center of mass in a physics simulator, diversity via K-means clustering (20 clusters) of 3D hand keypoints measured by entropy and average cluster size, plus a human study (12 objects, 10 participants, 5-point naturalness and stability ratings against GT and HALO grasps).
+
+## Results
+
+Recovering grasps from ground-truth contact representations, ContactGen reaches 1.49 cm endpoint error, 0.77 AUC, 0.55 F-score at 5 mm, and 0.91 at 15 mm, versus TOCH (3.44 cm, 0.51, 0.39, 0.72) and ContactOpt given GT hand and object contact maps (7.00 cm, 0.26, 0.24, 0.50), confirming the completeness of the representation. For generative synthesis on GRAB (20 random grasps per object), ContactGen attains penetration 2.72, contact ratio 0.96, simulation displacement 2.16, entropy 2.88, and cluster size 4.11, compared to HALO (3.61, 0.94, 2.09, 2.88, 2.15) and GrabNet (3.65, 0.96, 1.72, 2.72, 1.93) — best penetration and contact with roughly twice the diversity. On out-of-domain HO3D objects it scores 9.96 penetration, 0.97 contact ratio, 2.70 simulation displacement, and 5.04 cluster size, against GraspTTA (7.37, 0.76, 5.34, 1.43), GrabNet (15.50, 0.99, 2.34, 2.06), Grasping Field (93.01, 1.00, simulation infeasible, 3.44), and HALO (25.84, 0.97, 3.02, 4.87) — near-best on every quality metric with the highest diversity. In the human study, ContactGen is rated above HALO on both naturalness and stability on GRAB (3.21/3.23 vs. 2.59/2.68) and HO3D (3.17/2.87 vs. 2.23/2.09), though still below ground-truth GRAB grasps (3.93/3.73). Ablations on GRAB show that joint or separate (non-sequential) latent modeling degrades consistency (contact ratio drops to 0.95/0.89, displacement rises to 3.29/3.58), that removing the part map is catastrophic for the SDF model (penetration 20.13, contact 0.69, simulation infeasible), that adding the direction map restores stability (2.16 vs. 6.81 without it), and that the piecewise SDF model yields higher diversity (cluster size 4.11 vs. 3.56 with MANO at equal physical quality).
+
+## Limitations
+
+The authors identify two failure modes: some sampled ContactGen decodes into touch-like interactions rather than proper grasps (fingers reach the object but do not wrap it), and on out-of-domain objects such as those from HO3D the CVAE occasionally samples unrealistic combinations of contact map, part map, and direction map, producing grasps with insufficient contact or significant penetration. They attribute both to the simple Gaussian prior N(0, I) of the VAE and suggest stronger priors, for example diffusion models, as future work. The evaluation is limited to static single-hand grasps (plus an initial hand-hand extension), and the contact solver requires per-sample optimization, so inference cost and dynamic manipulation sequences are not addressed in the paper.

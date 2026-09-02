@@ -1,38 +1,29 @@
-# CogVideoX: Text-to-Video Diffusion Model
+# CogVideoX: Text-to-Video Diffusion Models with An Expert Transformer
+
+**Authors:** Zhuoyi Yang, Jiayan Teng, Wendi Zheng, Ming Ding, Shiyu Huang, Jiazheng Xu, Yuanming Yang, Wenyi Hong, Xiaohan Zhang, Guanyu Feng, Da Yin, Yuxuan Zhang, Weihan Wang, Yean Cheng, Bin Xu, Xiaotao Gu, Yuxiao Dong, Jie Tang  
+**Date:** 2024-08-12  
+**Identifier:** [arXiv:2408.06072](https://arxiv.org/abs/2408.06072)  
+**Zotero item:** `QZY5PR2M` ([Zotero](zotero://select/library/items/QZY5PR2M))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-CogVideoX is a text-to-video diffusion transformer model that generates 10-second, 768×1360 pixel videos at 16 fps through a 3D causal VAE for efficient compression and an expert transformer with adaptive LayerNorm for improved text-video alignment.
+CogVideoX is a diffusion-transformer text-to-video model from Zhipu AI and Tsinghua University, released in 2B and 5B parameter sizes, that generates 10-second, 16 fps videos at up to 768x1360 resolution with coherent, high-motion content. Its three core designs are a 3D causal VAE that compresses video jointly in space and time (8x8x4), an expert transformer with modality-specific adaptive LayerNorm plus 3D full attention for deep text-video fusion, and progressive training with multi-resolution frame packing. CogVideoX-5B reports state-of-the-art automated and human-evaluation results, beating the closed-source Kling in human preference.
 
-## 1. Problem and Setting
-Text-to-video generation models struggle with producing long-duration, temporally consistent videos with dynamic motion and coherent narratives. Key challenges include: (1) efficiently handling high-dimensional video data, (2) maintaining alignment between text prompts and generated video content, and (3) ensuring temporal coherence across extended sequences. The paper targets generation of 10-second videos at 16 fps with 768×1360 resolution.
+## Background and Problem
+DiT-based text-to-video models (e.g., following Sora) still struggle with limited motion, short durations, and incoherent long-duration narratives. Two technical bottlenecks are how to efficiently consume high-dimensional video data and how to fuse text and video modalities within one transformer. Prior approaches that fine-tune 2D VAEs into video VAEs suffer from flickering and long latent sequences, and naive concatenation of text and video embeddings mixes feature spaces of very different scales.
 
-## 2. Core Method
-**3D Causal VAE**: A video compression module using 3D convolutions for spatial-temporal compression (8×8×4 ratio) with temporally causal convolutions to prevent future information leakage. Context parallel distributes computation across devices.
+## Method
+(1) A 3D causal VAE with temporally causal convolution compresses videos 8x8x4 (channels x height x width x time), trained with L1 reconstruction, LPIPS, KL, and a GAN loss from a 3D discriminator; an ablation over compression/latent-channel variants shows reduced inter-frame flickering versus an SDXL 2D VAE baseline (variant B, 8x8x4 with 16 latent channels, flickering 86.3 and PSNR 28.7 vs baseline 93.2/28.4). (2) The expert transformer patchifies video latents, applies 3D-RoPE positional encoding, concatenates text (T5 embeddings) and video tokens along the sequence, and uses 3D full attention over the joint sequence; Expert Adaptive LayerNorm applies separate vision and text expert modulation (timestep-conditioned, DiT-style) so each modality is normalized independently. (3) Progressive training with multi-resolution frame packing and Explicit Uniform Sampling (different timestep sampling intervals per data-parallel rank) stabilize and speed up training. Data: filtering yields about 35M single-shot clips averaging 6 seconds plus 2B aesthetic-filtered images from LAION-5B and COYO-700M; dense captions are produced via a Panda70M-style short-caption model, per-frame dense image captions, GPT-4 summaries, and a fine-tuned Llama 2 recaptioner.
 
-**Expert Transformer**: Uses expert adaptive LayerNorm (Vision Expert AdaLN and Text Expert AdaLN) to independently process vision and text modalities within the same sequence, addressing differing feature spaces and numerical scales.
+## Contributions
+A simple, scalable text-to-video architecture combining 3D causal VAE and expert transformer for coherent, long, high-action videos with multiple aspect ratios (up to 768x1360, 10 s, 16 fps); an effective text-video data preprocessing and recaptioning pipeline; and state-of-the-art automated and human evaluation with released code, checkpoints, VAE, and captioning model (github.com/THUDM/CogVideo). The paper was published at ICLR 2025.
 
-**3D-RoPE**: Extension of Rotary Position Embedding to 3D coordinates (x, y, t), with 1D-RoPE independently applied to each dimension (3/8, 3/8, 2/8 channel allocation).
+## Experimental Setup
+Two model sizes (2B and 5B) are trained. Automated evaluation uses VBench-derived metrics (Action Degree, Human Motion, Multiple Objects, Dynamic Objects, Appearance Style), plus Dynamic Quality and a GPT4o-MT metamorphic-amplitude score, compared against T2V-Turbo, AnimateDiff, VideoCrafter-2.0, OpenSora V1.2, Show-1, Gen-2, Pika, and LaVie-2. Human evaluation scores Sensory Quality, Instruction Following, Physics Simulation, and Cover Quality on 0/0.5/1 levels, comparing CogVideoX-5B with Kling (2024.7).
 
-**Progressive Training**: Multi-resolution frame packing and resolution progressive training with Explicit Uniform Sampling for stable loss curves.
+## Results
+CogVideoX-5B is best in five of seven automated metrics: Action Degree 96.8, Human Motion 55.44, Multiple Objects 62.22, Dynamic Objects 70.95, Appearance Style 24.44, Dynamic Quality 69.5, and GPT4o-MT 3.36 (versus 2.68 for VideoCrafter-2.0 and 2.52 for OpenSora V1.2). CogVideoX-2B is competitive (e.g., Multiple Objects 66.39, GPT4o-MT 3.09). In human evaluation, CogVideoX-5B totals 2.74 versus Kling's 2.17 (Sensory 0.722 vs 0.638; Instruction Following 0.495 vs 0.367; Physics Simulation 0.667 vs 0.561; Cover Quality 0.712 vs 0.668), winning across all aspects.
 
-## 3. Knowledge, Supervision, and Assumptions
-**Data Pipeline**: Video captioning pipeline generates accurate textual descriptions for training data without original labels. Preprocessing strategies for both text and video data.
+## Limitations
+The paper contains no dedicated limitations section. The conclusion frames current scale as a starting point, stating the authors are exploring scaling laws to train larger models generating longer, higher-quality videos, implying that the released 2B/5B models do not exhaust the achievable scale or duration. Detailed failure modes are not reported in the paper.
 
-**Pretrained Components**: T5 (Raffel et al., 2020) for text encoding. 3D VAE trained at 256×256 resolution, 17 frames, then fine-tuned on 161-frame videos using context parallel.
-
-**Loss Functions**: Weighted combination of L1 reconstruction loss, LPIPS perceptual loss, KL loss, and 3D discriminator GAN loss after initial training steps.
-
-## 4. Experiments and Findings
-**Models**: Two sizes trained—5B and 2B parameters. Both text-to-video and image-to-video versions released.
-
-**Evaluation**: Automated metric evaluation and human assessment compared against openly-accessible text-to-video models. CogVideoX-5B achieves state-of-the-art performance; CogVideoX-2B competitive across dimensions.
-
-**Ablation**: 3D VAE variants tested (Table 1) showing reduced flickering (86.3 L1 difference) and improved PSNR (28.7) with 8×8×4 compression and 16 latent channels. Higher compression (16×16×8) leads to convergence difficulties.
-
-## 5. Strengths and Limitations
-**Strengths**: First commercial-grade open-source video generation models; supports multiple aspect ratios; scalable architecture with performance improving at larger scales; comprehensive open release including code, checkpoints, VAE, and captioning models.
-
-**Limitations**: Aggressive spatial-temporal compression (16×16×8) causes convergence difficulties; processing long-duration videos requires significant GPU memory addressed only through context parallel; captioning pipeline quality depends on pre-processing strategies.
-
-## 6. Takeaway
-CogVideoX demonstrates that 3D causal VAE compression combined with expert transformer architectures enables efficient, high-quality long-form video generation. The open release of commercial-grade models (5B/2B) with supporting components (VAE, captioning) provides a foundation for advancing video generation research. The scalable architecture suggests continued performance gains with increased model size, data volume, and training compute.

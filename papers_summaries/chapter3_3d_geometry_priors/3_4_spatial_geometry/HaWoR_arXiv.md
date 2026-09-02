@@ -1,44 +1,41 @@
 # HaWoR: World-Space Hand Motion Reconstruction from Egocentric Videos
 
+**Authors:** Jinglei Zhang, Jiankang Deng, Chao Ma, Rolandos Alexandros Potamias  
+**Date:** 2025-01-06  
+**Identifier:** [arXiv:2501.02973](https://arxiv.org/abs/2501.02973)  
+**Zotero item:** `PF98EQS3` ([Zotero](zotero://select/library/items/PF98EQS3))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-> HaWoR tackles the challenge of reconstructing 3D hand motion in the **world coordinate frame** (not just camera-relative) from egocentric videos by leveraging camera motion estimation and scene geometry cues -- effectively using spatial reasoning about the 3D environment as the foundational prior to lift hand poses from the camera's perspective to a globally consistent world reference frame.
 
-## 1. Problem and Setting
-- **Task**: Reconstructing 3D hand motion trajectories in a globally consistent world coordinate system from first-person (egocentric) video.
-- **Input**: An egocentric video (head-mounted camera) showing hands performing manipulation tasks.
-- **Output**: 3D hand joint/mesh trajectories expressed in a fixed world coordinate frame (not just relative to the moving camera).
-- **Which HOI task**: Hand motion reconstruction in world space. Classified under spatial geometry priors because the core technical challenge is establishing the spatial relationship between the moving camera frame and the static world frame -- a geometry problem that benefits from FM priors for camera egomotion and scene structure estimation.
+HaWoR is the first method, to the authors' knowledge, for 3D hand motion reconstruction in the world coordinate system from monocular egocentric video. It decouples the task into camera-frame hand motion estimation, world-space camera trajectory estimation, and motion infilling: a WiLoR-based temporal transformer with Image Attention and Pose Attention modules reconstructs camera-space MANO motion, an adaptive egocentric SLAM (hand-masked DROID-SLAM plus Metric3D-based scale normalization) recovers the world-frame camera trajectory, and a transformer motion-inbetweening infiller completes frames where hands leave the view frustum. On HOT3D it reduces world-frame hand error (W-MPJPE) to 33.20 mm versus 119-156 mm for SLAM-based baselines, and runs in a single 40 ms forward pass per frame.
 
-## 2. Core Method
-- **Key innovation**: A two-stage pipeline that first estimates camera egomotion (head motion) and sparse scene geometry from the egocentric video, then uses this world-space understanding to transform per-frame hand poses (estimated in camera space) into a consistent global reference frame, enabling reconstruction of absolute hand trajectories in the world.
-- **How it works**: (1) Camera egomotion is estimated from the egocentric video using visual SLAM or a deep learning-based visual odometry method (potentially leveraging pre-trained optical flow or depth models). (2) Sparse 3D scene points are reconstructed and serve as a static world reference. (3) Hand pose is estimated per frame in camera coordinates using a standard 3D hand mesh regressor. (4) The hand poses are transformed to world coordinates using the estimated camera trajectory. (5) A global optimization enforces temporal smoothness and physical consistency of hand motion in world space. (6) Optional: when hands interact with static scene elements, geometric consistency between hands and scene points provides additional constraints.
-- **How FM prior is injected**: The camera egomotion and scene geometry estimation can leverage pre-trained depth estimation FMs (e.g., Depth Anything), optical flow FMs, or visual odometry models. The spatial geometry prior is the estimated 3D scene structure and camera trajectory, which provides the global reference frame.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- **Which FM prior**: Potentially uses pre-trained monocular depth estimation models (Depth Anything, ZoeDepth) for scene geometry; pre-trained optical flow or SLAM systems for camera motion; pre-trained hand mesh reconstruction models for per-frame hand pose.
-- **How used**: Depth FM provides scene geometry for world reference; optical flow/SLAM provides camera trajectory; hand model provides per-frame camera-space hand pose.
-- **Domain knowledge**: Multi-view geometry; hand kinematic model (MANO); assumption of static background scene (for SLAM-based camera tracking).
-- **Training data**: Uses off-the-shelf models pre-trained on their respective domains. May require fine-tuning of the global optimization on egocentric hand motion datasets.
+Most 3D hand pose estimation methods reconstruct hands in the camera frame from single images, overlooking the hands' world-space trajectories — a limitation that blocks direct use in egocentric video, where hands and camera move simultaneously and monocular scale ambiguity makes global hand trajectories hard to recover. Egocentric settings add two hand-specific difficulties compared with third-person body recovery: the scale of hand trajectories is more complex, and hands frequently leave the field of view or suffer severe occlusion; moreover, large-scale hand motion-capture data for learning motion priors is scarce. Prior world-space approaches for bodies either rely on multi-view rigs and wearables, on heavy optimization schemes that align human motion to SLAM trajectories (e.g., SLAHMR), or on regression networks predicting camera-to-world transforms (WHAM, TRAM), but none target hands. Given an egocentric video V of T frames, the paper reconstructs, per hand, MANO pose (15 joints x 3 axis-angle), shape (10 coefficients), global orientation, and root translation expressed in world coordinates. The formal decomposition: estimate camera-space hand motion with a high-fidelity transformer, estimate the world-space camera trajectory with an adaptive egocentric SLAM, and fill invisible/occluded frames with a motion infiller.
 
-## 4. Experiments and Findings
-- **Datasets**: Egocentric hand interaction datasets (e.g., EPIC-KITCHENS, H2O, Assembly101, or specialized egocentric HOI datasets), and possibly HOT3D or similar.
-- **Key metrics**: World-space hand trajectory error (ATE -- Absolute Trajectory Error), hand joint error in world coordinates, and relative pose error.
-- **Main quantitative results**: HaWoR achieves significantly more accurate world-space hand trajectories compared to naive accumulation of camera-space hand poses (which drifts over time). The integration of scene geometry and camera motion estimation is critical for global consistency.
-- **Evidence of FM prior gain**: Using FM-based depth estimation for scene geometry provides a more robust world reference than feature-based SLAM alone, especially in texture-poor environments.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Addresses a practically important limitation: most hand reconstruction methods operate in camera space, while many downstream applications (robotics, AR, activity understanding) require world-space trajectories.
-- Combines multiple geometric cues (camera motion, scene structure, hand pose) in a coherent global optimization.
-- Leverages off-the-shelf FM priors for sub-components (depth, hand pose, camera motion).
-- Temporal smoothness in world space is more physically meaningful than in camera space.
+The framework has three modules. (1) Hand motion estimation network M: after off-the-shelf multi-hand detection (WiLoR) and tracking (BoT-SORT) obtain per-hand box sequences, the pretrained ViT backbone of WiLoR extracts image-aligned features per frame. A temporal Image Attention Module (IAM) applies self-attention across adjacent frames to fuse appearance features, mitigating the boundary truncation that egocentric hands suffer from limited field of view; the extended WiLoR token then regresses MANO pose, shape, orientation, and camera-space translation. A Pose Attention Module (PAM) additionally applies temporal self-attention directly to the MANO pose parameters, learning a hand motion prior that improves temporal coherence where ViT features still carry baked-in appearance and background cues. Training uses L1 losses on 3D and 2D joints plus MANO parameter supervision. (2) Camera trajectory estimation: an adaptive version of DROID-SLAM excludes hands from bundle adjustment — the reconstructed 3D hands are projected to form a per-frame hand mask that is applied to both the input images and DROID-SLAM's confidence maps, so only background pixels contribute to the dense bundle adjustment reprojection error. Because monocular SLAM recovers translation only up to arbitrary scale, a metric scale module uses Metric3D v2 to predict metric depth per SLAM keyframe, and an adaptive sampling module (AdaSM) restricts scale estimation to reliable points outside the hand mask and within an optimized intermediate depth interval [Dmin, Dmax]; the scale alpha is fit by aligning SLAM depths to Metric3D depths with a German-McClure robust loss. (3) Hand motion infiller F: the incomplete camera-space MANO sequence (missing frames zeroed) is first transformed to a canonical space that decouples camera motion and zeroes the first-frame pose; a transformer-encoder motion-inbetweening network with positional embeddings and a fully-connected decoder predicts the complete canonical MANO sequence, which is finally mapped to world space via the canonical-to-world transform. The infiller is trained on HOT3D (whose third-person views make it possible to label out-of-frustum frames), with random segment masking augmentation and SLERP/linear interpolation initialization of missing frames; its loss penalizes world translation, orientation, pose, and shape.
 
-### Limitations
-- Camera egomotion estimation is error-prone, especially under fast head motion or motion blur.
-- Static scene assumption may fail in dynamic environments.
-- Accumulated drift in camera tracking directly affects world-space hand trajectory accuracy; no loop closure typically possible.
-- Multi-component pipeline means errors propagate.
-- Computationally intensive for long videos.
+## Contributions
 
-## 6. Takeaway
-HaWoR highlights an underexplored dimension of HOI reconstruction: the spatial reference frame. By shifting from camera-relative to world-space reconstruction, it connects HOI to the broader SLAM/3D vision literature and demonstrates that spatial geometry priors (camera motion, scene structure) are essential for producing globally meaningful hand motion trajectories. This world-space perspective is increasingly important as HOI reconstruction moves toward embodied AI applications where interactions must be situated in a global environment.
+- The first world-coordinate 3D hand motion estimation framework for egocentric video, decoupling the problem into camera-space hand motion and world-space camera trajectory rather than direct video-to-world mapping or costly joint optimization.
+- A camera-frame hand motion estimator with two data-driven temporal priors (IAM on image features, PAM on MANO parameters) that remains robust under truncation and heavy occlusion, plus a novel motion infiller network that completes missing frames when hands exit the view frustum.
+- A robust single-pass egocentric camera trajectory pipeline — hand-masked adaptive DROID-SLAM with Metric3D-based dynamic-sampling scale normalization — that achieves state-of-the-art world-frame camera and hand trajectories on egocentric benchmarks, at 40 ms per frame versus 160 ms for optimization-based HMP-SLAM.
+
+## Experimental Setup
+
+Camera-frame hand motion is evaluated on DexYCB (static cameras, explicit occlusion annotations), comparing against image-based methods (Spurr et al., MeshGraphormer, SemiHandObj, HandOccNet, WiLoR) and temporal methods (S2HAND, VIBE, TCMR, Deformer) using PA-MPJPE and AUC under occlusion-ratio splits (all, 50%-75%, 75%-100%). World-space evaluation uses HOT3D, which provides egocentric videos with ground-truth camera trajectories and world-coordinate MANO annotations. Metrics are World MPJPE (W-MPJPE), World Aligned MPJPE (WA-MPJPE), root translation error (RTE), acceleration error (Accel), and FID for infilling quality; camera trajectories are scored with ATE (scale-aligned) and ATE-S (estimated scale), also split by short, medium (3-5 m), and long (> 5 m) displacements. World-frame baselines couple strong hand pose estimators (HaMeR, WiLoR, HandDGP) with DROID-SLAM, plus an optimization-based method following SLAHMR that aligns hand poses to DROID-SLAM trajectories using the HMP hand motion prior. Camera-scale ablations compare DROID-SLAM combined with ZoeDepth, DepthAnythingV2, and Metric3D v2.
+
+## Results
+
+- Camera-frame (DexYCB): HaWoR reaches 4.76 mm PA-MPJPE and 90.5 AUC overall, beating WiLoR (5.01 mm / 90.0) and Deformer (5.22 mm / 89.6); under severe occlusion (75%-100% of frames occluded) HaWoR achieves 5.07 mm versus 5.68 mm for WiLoR and 6.34 mm for Deformer, showing the largest gains exactly where baselines degrade.
+- Camera trajectory (HOT3D): the adaptive SLAM attains 3.36 mm ATE versus 3.80 mm for vanilla DROID-SLAM, and 14.61 mm ATE-S overall versus 21.07 mm for DROID-SLAM + Metric3D v2 (75.95/43.58 mm for ZoeDepth/DepthAnythingV2 combinations); on long displacements (> 5 m) the proposed method scores 19.26 mm ATE-S versus 29.10 mm for the best naive combination. Removing AdaSM raises ATE-S to 20.97 mm.
+- World-space hand motion (HOT3D): HaWoR achieves 4.79 mm PA-MPJPE, 33.20 mm W-MPJPE, 11.27 mm WA-MPJPE, 0.78 RTE, and 5.41 Accel, versus WiLoR-SLAM at 6.00/151.67/39.49/2.99/8.02 and HMP-SLAM at 10.51/119.41/39.46/2.79/5.50 — a roughly 4x reduction in world-frame hand error over the best baselines.
+- Inference takes a single 40 ms forward pass per frame, about 75% faster than the optimization-based HMP-SLAM (160 ms per frame).
+- Ablations: removing the pretrained ViT raises PA-MPJPE from 4.79 to 7.59 mm and W-MPJPE from 33.20 to 86.80 mm; removing IAM and PAM gives 5.07/44.60 mm and removing PAM alone gives 4.80/36.32 mm. For infilling on invisible HOT3D validation sequences, the learned infiller obtains FID 0.57, W-MPJPE 66.25 mm, and RTE 7.41 mm versus naive last-pose repetition (FID 1.52, W-MPJPE 116.79 mm) and linear/SLERP interpolation (FID 1.42, W-MPJPE 75.01 mm).
+
+## Limitations
+
+The authors note that despite being far faster than optimization-based alternatives, HaWoR's runtime is still far from real-time, and suggest exploring foundation models that directly estimate world-space camera trajectories as a step toward real-time world-frame hand motion estimation. The pipeline also depends on off-the-shelf hand detection and tracking for input box sequences, and metric scale estimation relies on a monocular metric depth network whose reliability is confined (by design) to an intermediate depth range.

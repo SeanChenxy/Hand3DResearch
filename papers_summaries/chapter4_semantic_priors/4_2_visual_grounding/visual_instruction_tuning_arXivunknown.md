@@ -1,58 +1,44 @@
 # Visual Instruction Tuning
 
+**Authors:** Haotian Liu, Chunyuan Li, Qingyang Wu, Yong Jae Lee  
+**Date:** 2023-04-17  
+**Identifier:** [arXiv:2304.08485](https://arxiv.org/abs/2304.08485)  
+**Zotero item:** `ZEZCDWJU` ([Zotero](zotero://select/library/items/ZEZCDWJU))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-This paper introduces visual instruction tuning for multimodal large language models, using GPT-4 to generate diverse instruction-following data that bridges vision and language, enabling the creation of LLaVA, an end-to-end trained large multimodal model that achieves impressive multimodal chat capabilities and state-of-the-art performance on Science QA.
 
-## 1. Problem and Setting
-- **Task**: Creating a general-purpose visual assistant that can follow multimodal vision-and-language instructions to complete various real-world tasks
-- **Inputs**: Images paired with natural language instructions/questions
-- **Outputs**: Natural language responses that appropriately follow the given visual instructions
-- **Difficulty**: The lack of multimodal instruction-following data was a key challenge—existing vision-language models were designed for specific tasks with limited interactivity, while instruction tuning had only been explored in language-only models
+This NeurIPS 2023 paper (published at the 37th NeurIPS) presents visual instruction tuning, the first attempt to extend LLM instruction tuning to the language-image multimodal space: language-only GPT-4 is prompted with textual captions and bounding boxes symbolically representing an image to generate 158K multimodal instruction-following samples (LLaVA-Instruct-158K). Instruction-tuning on this data yields LLaVA (Large Language and Vision Assistant), an end-to-trained large multimodal model connecting a CLIP ViT-L/14 vision encoder to the Vicuna LLM through a single linear projection. LLaVA shows impressive multimodal chat and reasoning abilities on unseen images, scores 85.1% relative to text-only GPT-4 on a synthetic instruction-following benchmark (versus 38.1% for BLIP-2 and 19.1% for OpenFlamingo in-the-wild), and, fine-tuned on ScienceQA and ensembled with GPT-4 as a judge, sets a new state of the art of 92.53% accuracy. Data, benchmarks, model, and code are released.
 
-## 2. Core Method
-The complete pipeline operates as follows:
+## Background and Problem
 
-**Data Generation**: Image-text pairs → Symbolic representation (captions + bounding boxes) → GPT-4 generates instruction-following data → Three types: conversations, detailed descriptions, complex reasoning
+Instruction tuning with machine-generated instruction-following data (Alpaca, Vicuna, GPT-4-LLM) has proven effective at aligning text-only LLMs to user intent and improving zero-shot generalization, but this idea was unexplored in the multimodal field. Prior multimodal agents either solve each task with a separate end-to-end model (e.g., vision-language navigation, InstructPix2Pix) or coordinate multiple models through an LLM harness (Visual ChatGPT, MM-REACT, VisProg, ViperGPT); existing open multimodal LLMs built on LLaMA (OpenFlamingo, LLaMA-Adapter) and image-text-pair-trained LMMs (BLIP-2, FROMAGe, KOSMOS-1) show task transfer but are not explicitly tuned with vision-language instruction data and underperform on instruction following. The paper identifies two problems: the lack of vision-language instruction-following data (human crowd collection is time-consuming and ill-defined), and the need for an end-to-end trained multimodal model that treats language as a universal task interface for a general-purpose visual assistant.
 
-**Model Architecture**: Input image → CLIP ViT-L/14 visual encoder → Trainable projection matrix → Language embedding tokens → Vicuna LLM → Response generation
+## Method
 
-**Training**: Two-stage instruction tuning:
-- Stage 1: Pre-training for feature alignment on filtered CC3M (595K images)
-- Stage 2: Fine-tuning on 158K generated instruction-following samples
+GPT-assisted data generation. For a COCO image with its caption and object bounding boxes, the image is encoded into an LLM-recognizable symbolic representation — captions describing the scene and boxes localizing objects with normalized coordinates — which prompts the text-only ChatGPT/GPT-4 (the image itself is never shown to GPT). Three response types are generated using a handful of manually designed seed examples for in-context learning (the only human annotations): (1) conversation — multi-turn question answering about object types, counts, actions, locations, and relative positions, restricted to questions with definite answers; (2) detailed description — comprehensive scene descriptions; (3) complex reasoning — questions requiring step-by-step logical reasoning. This yields 158K unique language-image instruction-following samples: 58K conversations, 23K detailed descriptions, 77K complex reasoning. GPT-4 was found to consistently produce higher-quality data than ChatGPT, especially for spatial reasoning.
 
-**Key Innovations**:
-- First to use language-only GPT-4 to generate multimodal instruction-following data by converting images to symbolic representations (captions, bounding boxes)
-- Simple yet effective linear projection connecting CLIP features to Vicuna's embedding space
-- End-to-end training of vision encoder and LLM on generated multimodal instruction data
-- Essential difference from existing methods: Explicit visual instruction tuning vs. implicit task-specific training or zero-shot transfer without instruction alignment
+Architecture and training. LLaVA uses the pre-trained CLIP ViT-L/14 visual encoder (grid features) and Vicuna as the LLM, connected by a single trainable linear projection matrix W that maps visual features into the LLM's word-embedding space, chosen deliberately lightweight to enable fast data-centric iteration (gated cross-attention or Q-Former designs are left as future work). Multi-turn conversations are serialized in the Vicuna format with only assistant answer tokens contributing to the autoregressive loss. Stage 1 (feature alignment pre-training) filters CC3M to 595K image-text pairs converted to naive single-turn instruction data; the vision encoder and LLM are frozen and only W is trained (1 epoch, learning rate 2e-3, batch size 128), effectively learning a compatible visual tokenizer for the frozen LLM. Stage 2 (end-to-end fine-tuning) keeps the visual encoder frozen and updates W and the LLM (3 epochs, learning rate 2e-5, batch size 32, on 8x A100s) either on the 158K instruction data for the multimodal chatbot or on ScienceQA organized as single-turn conversations with reasoning plus answer as the response.
 
-## 3. Knowledge, Supervision, and Assumptions
-- **Training Data**: 158K GPT-4 generated instruction-following samples (58K conversations, 23K detailed descriptions, 77K complex reasoning) from COCO images; 595K CC3M images for pre-training
-- **Supervision**: Auto-regressive language modeling loss on assistant responses; only few manually designed seed examples for in-context learning with GPT-4
-- **Pretrained Models**: CLIP ViT-L/14 (vision encoder, frozen), Vicuna (LLM based on LLaMA, fine-tuned)
-- **Learning vs. Provided**: The projection matrix W and LLM weights are learned from data; visual features and LLM base capabilities are provided by pretrained models
+## Contributions
 
-## 4. Experiments and Findings
-- **Datasets**: LLaVA-Bench (two new benchmarks with diverse application-oriented tasks), Science QA multimodal dataset
-- **Metrics**: Relative score compared to GPT-4 on synthetic instruction-following dataset; accuracy on Science QA
-- **Key Results**: 
-  - 85.1% relative score compared with GPT-4 on synthetic multimodal instruction-following dataset
-  - When fine-tuned on Science QA, achieved new state-of-the-art accuracy of 92.53% (synergy with GPT-4)
-  - Demonstrated impressive multimodal chat abilities on unseen images/instructions
+- The first pipeline for multimodal (language-image) instruction-following data generation using language-only GPT-4, via a data reformation perspective that converts existing image-text pairs into instruction format using caption and bounding-box symbolic representations, producing LLaVA-Instruct-158K.
+- LLaVA, an end-to-end trained large multimodal model (CLIP ViT-L/14 + linear projection + Vicuna) demonstrating that GPT-4-generated instruction data is effective for multimodal instruction tuning, with practical training tips (two-stage alignment-then-tuning, feature choice, reasoning order, model scale).
+- LLaVA-Bench, two multimodal instruction-following benchmarks with diverse paired images, questions, and detailed annotations: LLaVA-Bench (COCO) with 30 images and 90 questions, and LLaVA-Bench (In-the-Wild) with 24 challenging out-of-domain images (memes, paintings, sketches, indoor/outdoor scenes) and 60 questions with human-curated descriptions.
+- A GPT-4-as-judge evaluation protocol that scores candidate responses against a text-only GPT-4 reference on helpfulness, relevance, accuracy, and detail, plus a novel model-ensembling scheme in which GPT-4 arbitrates disagreements between LLaVA and itself, achieving state-of-the-art ScienceQA accuracy.
+- Open-source release of the generated instruction data, codebase, checkpoints, and visual chat demo.
 
-## 5. Strengths and Limitations
+## Experimental Setup
 
-### Strengths
-- Successfully extends instruction tuning from language-only to multimodal domain
-- Demonstrates that GPT-4 can effectively generate high-quality multimodal instruction data without requiring visual input
-- Achieves strong performance with simple linear projection architecture
-- Provides comprehensive open-source release (data, code, model checkpoints)
+All models are trained on 8x A100s with Vicuna's hyperparameters: pre-training on the filtered CC-595K subset for 1 epoch (learning rate 2e-3, batch 128), then fine-tuning on LLaVA-Instruct-158K for 3 epochs (learning rate 2e-5, batch 32). The chatbot is evaluated qualitatively on examples from the GPT-4 paper (e.g., the "extreme ironing" image) against quoted multimodal GPT-4 responses and queried BLIP-2 and OpenFlamingo checkpoints, and quantitatively with the GPT-4-judge relative-score protocol (1-10 scale, reported relative to text-only GPT-4 given ground-truth visual descriptions) on the two LLaVA-Bench variants, with three inference runs and error bars. ScienceQA (21K multimodal multiple-choice questions across 3 subjects, 26 topics, 127 categories, 379 skills; 12726/4241/4241 train/val/test splits) is evaluated against GPT-3.5 with and without chain-of-thought, LLaMA-Adapter, and MM-CoT (the reported SoTA); the LLaVA variant for ScienceQA uses features before the last CLIP layer, reasoning-before-answer prediction, and 12 epochs of training. Ablations cover visual feature layer, reasoning order, pre-training, and 7B versus 13B model size.
 
-### Limitations
-- Relies on symbolic representation of images rather than direct visual understanding by GPT-4 during data generation
-- Simple projection layer may not be optimal—more sophisticated architectures like gated cross-attention were not explored
-- Evaluation primarily on synthetic benchmarks and one academic dataset (Science QA)
-- May struggle with highly detailed visual reasoning requiring fine-grained spatial understanding
+## Results
 
-## 6. Takeaway
-Visual instruction tuning using GPT-4 generated data is an effective approach for building general-purpose multimodal assistants—bridging pretrained vision encoders and LLMs through instruction-following data enables strong zero-shot multimodal capabilities, sometimes approaching GPT-4 performance on visual tasks.
+- Instruction following (LLaVA-Bench COCO, relative to text-only GPT-4): with all three data types LLaVA scores 83.1 conversation, 75.3 detailed description, 96.5 complex reasoning, and 85.1 overall; training on conversation data only drops overall to 73.8, and removing instruction tuning collapses it to 21.5, showing instruction tuning contributes over 50 points and that reasoning data (even Detail+Complex only, 81.9) improves conversational ability as well.
+- LLaVA-Bench (In-the-Wild): LLaVA achieves 67.3 ± 2.0 overall versus 38.1 ± 1.0 for BLIP-2 and 19.1 ± 0.4 for OpenFlamingo (+29% and +48% relative gains), including 81.7 ± 1.8 on complex reasoning questions, with GPT-4 judging consistently across repeated evaluations; on the GPT-4-paper examples LLaVA follows instructions like multimodal GPT-4, whereas BLIP-2 and OpenFlamingo merely describe the scene.
+- ScienceQA: LLaVA alone reaches 90.92% accuracy, close to the then-SoTA MM-CoT-Large at 91.68% (Human 88.40%); text-only GPT-4 with 2-shot in-context learning obtains 82.69% (versus 75.17% for GPT-3.5 with CoT); the LLaVA+GPT-4 judge ensemble achieves a new SoTA of 92.53% with consistent gains in every category (e.g., NAT 91.56, SOC 96.74, IMG 88.99, G7-12 92.16), remarkably improving even image-context questions because some do not require the image and the judge can correct such errors — the first reported use of GPT-4 for model ensembling.
+- Design ablations (ScienceQA accuracy): features before CLIP's last layer give 90.92% versus 89.96% for last-layer features; reasoning-first training converges faster (89.77% in 6 epochs) but answer-first matches it at 12 epochs with no gain at 24; skipping alignment pre-training drops accuracy to 85.81% (−5.11), demonstrating its importance; the 7B model loses 1.08 points versus 13B.
+
+## Limitations
+
+The paper itself highlights weaknesses exposed by LLaVA-Bench (In-the-Wild): answering fine-grained questions requires broad knowledge coverage and multilingual understanding (identifying the ICHIRAN restaurant), information retrieval beyond the image (side-dish details), and high-resolution processing (perceiving the Fage yogurt brand in a packed fridge). The authors report an instructive failure in which LLaVA answers "yes" when asked whether strawberry-flavored yogurt is in a fridge containing only yogurt and strawberries, indicating that LLaVA sometimes perceives the image as a "bag of patches" without grasping complex intra-image semantics. The architecture's simple linear projection is deliberately minimal, with more sophisticated connection schemes (Flamingo's gated cross-attention, BLIP-2's Q-Former) explicitly deferred to future work, and the conclusion characterizes the work as an initial step in visual instruction tuning focused mainly on real-life tasks, referring readers to the follow-up "Improved Baselines with Visual Instruction Tuning" for academic-benchmark results. The GPT-4-judge evaluation also inherits any biases of the GPT-4 model used as referee, though the paper reports consistent scores across repeated queries.

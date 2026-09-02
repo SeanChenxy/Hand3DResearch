@@ -1,45 +1,34 @@
 # HOLD: Category-Agnostic 3D Reconstruction of Interacting Hands and Objects from Video
+**Authors:** Zicong Fan, Maria Parelli, Maria Eleni Kadoglou, Xu Chen, Muhammed Kocabas, Michael J. Black, Otmar Hilliges  
+**Date:** 2024-06-16  
+**Identifier:** [DOI 10.1109/CVPR52733.2024.00054](https://doi.org/10.1109/CVPR52733.2024.00054) (CVPR 2024, pp. 494-504)  
+**Zotero item:** `RRJDT6JV` ([Zotero](zotero://select/library/items/RRJDT6JV))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-HOLD reconstructs 3D hands and unknown objects from monocular video using a compositional implicit representation with explicit hand-object contact modeling, producing state-of-the-art results without any object templates or category priors.
 
-## 1. Problem and Setting
-- Joint 3D reconstruction of interacting hands and manipulated objects from monocular RGB video.
-- Input: monocular RGB video; output: MANO hand meshes per frame + object 3D shape (implicit SDF) + object 6D pose per frame.
-- Template-free, category-agnostic, single-hand or bimanual interaction. Camera may be static or in mild motion.
+HOLD is presented as the first category-agnostic method that jointly reconstructs an articulated hand and an unknown object in 3D from a single monocular interaction video, requiring neither a pre-scanned object template nor any 3D hand-object annotation. The method couples a compositional neural implicit model (canonical signed-distance and texture fields for hand, object, and background, volumetrically rendered) with a hand-object contact-based pose refinement stage. On HO3D-v3 it achieves 24.2 mm hand MPJPE and 0.4 cm^2 object Chamfer distance, substantially outperforming fully-supervised baselines iHOI and DiffHOI, and it generalizes to in-the-wild egocentric videos.
 
-## 2. Core Method
-- A per-video optimization framework with compositional neural implicit representations:
-  1. Hand representation: MANO parametric model, with per-frame pose optimized.
-  2. Object representation: a canonical SDF modeled by an MLP, shared across all frames, with per-frame 6D rigid transformation.
-  3. Contact modeling: key innovation — an explicit hand-object contact field that encourages the hand to touch (but not penetrate) the object at contact regions. The contact prior is learned from a large-scale hand-object interaction dataset.
-- Renders both hand (mesh rasterization) and object (volumetric SDF rendering) for photometric loss.
-- Additional losses: 2D hand keypoints, hand mask, temporal smoothness, contact consistency.
-- Can optionally take a coarse object mask as initialization.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: the contact prior is pretrained on hand-object interaction data (GRAB, ARCTIC); the per-video reconstruction itself is test-time optimization.
-- Supervision: RGB pixels, 2D hand keypoints, optional object masks, contact priors.
-- Uses MANO for hand.
-- Assumes object is rigid; hand-object interaction involves meaningful contact; video captures sufficient viewpoints; lighting is consistent.
+Most hand-object reconstruction methods from RGB assume a pre-scanned object template and estimate only poses, which prevents scaling to unconstrained scenarios; template-free methods trained on limited 3D hand-object data generalize poorly, and category-specific priors (e.g., DiffHOI's diffusion prior trained on six object categories) restrict reconstruction to those training categories. A separate line of in-hand object scanning aggregates multiple rigid hand poses to recover a canonical object shape but ignores hand articulation and cannot handle dexterous interaction. The paper therefore defines the new task of category-agnostic interaction reconstruction: given a monocular RGB video of a hand manipulating an unknown object, reconstruct per-frame 3D hand and object surfaces without object templates, object categories, or 3D hand-object supervision. The key insight is that hands and objects in contact provide complementary constraints on each other's shapes and poses (e.g., hand geometry restricts the shape of a held mug via contact).
 
-## 4. Experiments and Findings
-- Datasets: HO3D, HOI4D, ARCTIC, in-the-wild videos.
-- Metrics: Chamfer Distance, F-score (object); MPJPE (hand); PSNR (rendering).
-- Outperforms HOMAN and other video-based methods on both hand and object metrics. The contact prior significantly improves reconstruction, especially for heavily occluded object regions. Handles bimanual interaction well.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- State-of-the-art template-free hand-object reconstruction at the time.
-- Contact prior provides physically meaningful regularization.
-- Handles bimanual interaction.
-- Works on diverse real-world videos.
+HOLD (Hand and Object reconstruction by Leveraging interaction constraints in three Dimensions) follows a four-stage per-video optimization pipeline. (1) Pose initialization: hand pose (MANO theta, beta, translation) comes from an off-the-shelf hand regressor; object pose is estimated by running structure-from-motion (HLoc) on object-only images produced by a segmentation network (SAM), since category-level pose estimators do not apply to out-of-category objects; a small optimization aligns scales and translations by encouraging hand-object contact while matching 2D reprojections of hand joints and the SfM point cloud. (2) HOLD-Net: a compositional implicit model with a time-independent canonical SDF and texture field for the MANO-driven hand (deformed via inverse Linear Blend Skinning with skinning weights from K-nearest MANO vertices), a canonical object SDF/texture field warped by a rigid transformation with a 32-dimensional per-frame latent code for changing appearance, and a NeRF++-style inverted-sphere dynamic background. SDFs are converted to densities via the cumulative distribution function of a scaled Laplace distribution (VolSDF-style); hand and object samples are sampled independently with error-bounded sampling, merged by depth, and volumetrically rendered together with the background using a foreground-mask compositing rule. Training losses combine RGB photometric consistency, a three-class segmentation loss from SAM-track masks (whose weight is annealed downward), an eikonal regularizer, a MANO-derived SDF shape prior for the hand (on Loop-subdivided meshes), and density sparsity losses for hand and object amodal masks (annealed upward). (3) Pose refinement: after brief pre-training, the learned object mesh is used instead of the noisy SfM cloud to optimize {th, Ro, to, beta, s} with mesh-based contact constraints that pull frequently-contacting fingertip vertices toward object vertices, plus an occlusion-aware Soft Rasterizer amodal-mask loss. (4) Final training: HOLD-Net is retrained from scratch with the refined poses for 200 epochs (pre-training uses 100 epochs, roughly 10 hours on an A100 for the initial stage), yielding per-frame hand and object surfaces.
 
-### Limitations
-- Per-video optimization is slow (~1 hour per sequence).
-- Contact prior is trained on specific datasets and may not generalize to novel interaction types.
-- Struggles with very small or thin objects.
-- Object SDF representation may produce artifacts in completely unobserved regions.
+## Contributions
 
-## 6. Takeaway
-HOLD represented a significant advance by incorporating learned contact priors into the per-video optimization framework, bridging the gap between purely geometric methods and data-driven approaches. The contact-aware compositional representation proved that modeling physical interaction is as important as visual reconstruction quality.
+1. The first category-agnostic method to jointly reconstruct articulated hands and unknown objects from monocular 2D interaction videos, with no pre-scanned object template, no pre-trained object-category prior, and no 3D hand-object annotations. 2. A compositional implicit formulation (canonical hand/object/background SDF fields with compositional volumetric rendering) that disentangles and reconstructs 3D hands and objects from 2D observations. 3. Demonstration that jointly optimizing hand-object interaction constraints yields better reconstruction than treating the hand and object separately, both through contact-based pose refinement and through joint hand-object modeling that explains occlusion. 4. Quantitative and qualitative evaluation on HO3D plus a newly captured in-the-wild "HOLD dataset" of iPhone 14 videos spanning indoor/outdoor scenes, static third-person and moving first-person views, and diverse lighting.
+
+## Experimental Setup
+
+Quantitative evaluation uses HO3D-v3: because test-set annotations are unreleased, the authors evaluate on two annotated training sequences per object (one matching Hampali et al. for comparability, one random with hands and objects kept in frame); banana and scissors are omitted because SfM fails to converge (results with random poses are relegated to supplementary material). For in-the-wild generalization they capture the HOLD dataset of household-item sequences with an iPhone 14 main camera under different lighting, downsampled every 10 frames. Metrics: root-relative mean-per-joint error (MPJPE, mm) for the hand; object Chamfer distance (CD, cm^2) and F-scores (F5/F10, %) after ICP alignment with scale, rotation, and translation to the ground-truth mesh (following DiffHOI) to score template quality independently of pose; and hand-relative object Chamfer distance (CDh) to score the object's spatial arrangement with respect to the hand. Each sequence is optimized with Adam on 10 randomly sampled images per iteration with gradient clipping, using SAM-track point-prompted masks for segmentation supervision.
+
+## Results
+
+On HO3D-v3 (Table 1), HOLD reaches MPJPE 24.2 mm, CD 0.4 cm^2, F10 96.5%, and CDh 11.3 cm^2, versus iHOI (38.4 / 3.8 / 75.8 / 41.7) and DiffHOI (32.3 / 4.3 / 68.8 / 43.8), both of which use 3D supervision during training; HOMan, which assumes a ground-truth object template, scores 32.0 MPJPE and 78.2 CDh. In the generalization split (Table 2), DiffHOI degrades on unseen categories (CD 6.5 cm^2, F10 57.8%) relative to its training categories (CD 1.3, F10 83.5), while HOLD stays consistent on both splits (unseen: CD 0.3, F10 96.9; training categories: CD 0.4, F10 95.9) and even outperforms DiffHOI on the latter. Against the in-hand scanning method of Hampali et al. (Table 3), HOLD's canonical object shapes are more accurate (CD 0.5 vs 1.4 cm^2; F5 84.3 vs 57.4%; F10 94.4 vs 79.9%). Ablations (Table 4) show that removing hand modeling degrades object reconstruction (CD 0.41, F10 95.9 vs full 0.38 / 96.5, with holes in the grasping region) and that removing contact-based pose refinement severely hurts hand-object spatial alignment (CDh 122.1 vs 11.3, MPJPE 24.6 vs 24.2, CD 0.55 vs 0.38), as depth ambiguity otherwise leaves an unrealistic hand-object separation.
+
+## Limitations
+
+The authors state that reconstruction of thin or textureless objects is limited by detector-based SfM pose initialization (suggesting detector-free SfM as a future remedy); reliance on RGB supervision may under-reconstruct rarely observed object regions (potentially addressable with generative priors); and per-sequence optimization is slow, with training time reducible via faster scene representations. The evaluation protocol on HO3D also excludes the two objects for which SfM fails, and quantitative comparisons use a small set of sequences rather than a full benchmark split.

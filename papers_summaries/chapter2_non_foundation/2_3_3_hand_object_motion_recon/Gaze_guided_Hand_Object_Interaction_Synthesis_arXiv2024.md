@@ -1,43 +1,38 @@
 # Gaze-guided Hand-Object Interaction Synthesis: Dataset and Method
 
+**Authors:** Jie Tian, Ran Ji, Lingxiao Yang, Suting Ni, Yuexin Ma, Lan Xu, Jingyi Yu, Ye Shi, Jingya Wang  
+**Date:** 2026-01-28  
+**Identifier:** [arXiv:2403.16169](https://arxiv.org/abs/2403.16169)  
+**Zotero item:** `2LPFZ4UU` ([Zotero](zotero://select/library/items/2LPFZ4UU))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-Introduces gaze as a novel control signal for hand-object interaction synthesis, creating a dataset with synchronized gaze, hand, and object data, and a method that generates natural HOI motions from gaze input.
 
-## 1. Problem and Setting
-- Synthesize 3D hand-object interaction motions given human gaze data as the control/conditioning signal.
-- Input: gaze trajectory (eye fixation points over time); output: MANO hand pose trajectory + object motion.
-- Motion generation. Gaze serves as a natural, implicit indicator of human intention and attention during manipulation.
+This paper (first posted March 2024 on arXiv; the version summarized here was accepted by IEEE Transactions on Multimedia on 2026-01-28) introduces the task of gaze-guided hand-object interaction synthesis: given a 3D gaze sequence, the initial hand poses, initial object pose, and object geometry, generate the subsequent bimanual hand and object motions that match the user's intention. It contributes GazeHOI, the first dataset simultaneously capturing 3D gaze, hand, and object motion (237K frames, 1,378 subsequences, 33 objects, from chess pieces to furniture assembly), and GHO-Diffusion, a stacked diffusion model that first synthesizes object dynamics from a spatial-temporal gaze encoding and then synthesizes hand kinematics with an HOI-Manifold Guidance scheme (kinematic, contact, and penetration guidance under a Spherical Gaussian constraint) that steers sampling without leaving the learned data manifold. Gaze-contact and DTW trajectory consistency scores select the best samples. It outperforms adapted MDM, Text2HOI, and OMOMO baselines on accuracy, contact quality, FID, and user-rated gaze consistency.
 
-## 2. Core Method
-- First contribution: gaze-guided HOI dataset — collected with eye-tracking hardware synchronized with hand-object motion capture, providing aligned gaze, hand, and object trajectories for various manipulation tasks.
-- Second contribution: a gaze-conditioned motion generation model:
-  - Gaze points are encoded as a spatiotemporal sequence.
-  - A transformer-based autoregressive model predicts hand MANO parameters frame by frame, conditioned on the gaze history and the object geometry.
-  - A contact prediction auxiliary task improves the model's understanding of when and where the hand should contact the object.
-- Gaze provides early indicators of intent (humans look at objects before reaching), enabling the model to anticipate future hand motions.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: custom gaze+HOI dataset; also trained on GRAB and ARCTIC with pseudo-gaze generated from head orientation.
-- Supervision: ground-truth MANO parameters, object poses, gaze coordinates.
-- Uses MANO for hand.
-- Assumes gaze data is available (from eye tracker or can be inferred from head pose).
+Gaze reveals attention and intention — where, when, and how a person will interact with an object — yet existing gaze datasets omit either hand poses or object poses (e.g., MoGaze has gaze and object but no hands; GIMO, ActionSense, HoloAssist, EgoBody lack object poses; ADT lacks hands), and existing hand-object datasets (HO-3D, DexYCB, H2O, OakInk, HOI4D, ARCTIC, TACO, OakInk2) contain no gaze annotations at all. Prior HOI motion synthesis relies on motion references (trajectories, grasp references) or text; text is indirect relative to the user's actual intent. The paper defines a novel task with applications in VR/AR interaction and assistive technology for users with disabilities: from an initial state I = {gaze sequence G, initial left/right hand poses, initial object pose, object vertices}, synthesize a gaze-consistent, physically plausible hand-object interaction sequence (MANO hands and SE(3) object trajectory), without historical motion input. Two key challenges are the sparsity and noise of gaze signals and the need for fine-grained hand-object consistency (realistic contact, penetration avoidance) in generated motions.
 
-## 4. Experiments and Findings
-- Datasets: custom gaze-HOI dataset, GRAB, ARCTIC.
-- Metrics: MPJPE (hand), object pose error, contact prediction accuracy.
-- Gaze conditioning produces more natural and anticipatory hand motions compared to unconditional or object-only conditioned models. Gaze is particularly informative for contact timing.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Novel use of gaze as a natural interaction signal.
-- Gaze provides anticipatory cues that improve motion prediction.
-- New dataset fills a gap in multi-modal HOI data.
+GHO-Diffusion decouples the task into two stacked diffusion stages (MDM-style denoisers predicting clean samples with transformer encoders). Stage 1, object dynamics synthesis with spatial-temporal gaze encoding, generates object motion first because gaze points correlate with object surfaces and object motion has fewer degrees of freedom: PointNet++ extracts per-point object spatial features; for each gaze point, the feature of the closest object vertex is weighted by the inverse gaze-to-point distance, and self-attention over time produces the condition feature; training combines the simple diffusion loss with object vertex, translation, and temporal-smoothness losses. Stage 2, hand kinematic synthesis, conditions a second diffusion model on the generated object motions, object geometry, and initial hand pose, using a canonicalized hand representation [J, C, F, v, a] — joint positions, per-joint contact flags (42), hand-object and inter-hand offset vectors, linear/angular velocities, and accelerations — with an additional bone-length loss. During sampling, HOI-Manifold Guidance enforces fine-grained constraints through three losses (kinematic consistency of recomputed offsets/velocities/accelerations, contact attraction for joints within a threshold of the object surface, and penetration penalized via hand-object offset and surface-normal dot products), applied with a Spherical Gaussian constraint (inspired by DSG) whose closed-form step keeps samples in the noisy data distribution, combined with classifier-free-style reweighting at guidance rate 0.99; a post-optimization recovers MANO parameters from joints by matching MCP joints with anatomical pose-angle constraints. Finally, motion selection scores each sample by a gaze-contact consistency score (similarity of contact and gaze maps on the object surface near gaze points) minus a DTW-based trajectory consistency term between gaze and predicted hand/object translations, keeping the top-k (k=1) motions.
 
-### Limitations
-- Requires eye-tracking data (not available from standard RGB video).
-- Dataset is relatively small due to hardware requirements.
-- Pseudo-gaze from head orientation is a noisy approximation.
-- Limited to tasks where gaze and hand movements are correlated.
+## Contributions
 
-## 6. Takeaway
-This paper introduced gaze as a valuable signal for HOI understanding, showing that where a person looks is a strong predictor of what their hands will do next. This opens up applications in intention prediction, assistive robotics, and more natural human-robot interaction.
+- A novel task, gaze-guided hand-object interaction synthesis, which generates intentional bimanual HOI motions directly from gaze without textual annotations, motion references, or historical sequences.
+- GazeHOI, the first dataset with simultaneous 3D modeling of gaze, hand, and object interactions: 237K frames (average 19.1 s per sequence, 2-4 objects per sequence) over 1,378 subsequences with 33 objects spanning 7 cm chess pieces to assemblable furniture, captured on a 1.6 m x 1.2 m platform combining 12 hardware-synchronized ZCAM E2 cameras (4K at 30 fps), 8 OptiTrack Prime13W cameras (120 fps infrared marker tracking), EinScan scanners, and a Pupil Core eye tracker with RealSense D455, with cross-device registration via reflective markers; tasks include repositioning, target selection in clutter, organizing, and furniture assembly.
+- GHO-Diffusion, a stacked diffusion design that reduces generation complexity, plus HOI-Manifold Guidance, a sampling-time guidance mechanism with a Spherical Gaussian constraint that achieves fine-grained physical control while preserving the data manifold (naive guidance is shown to distort motions).
+- A spatial-temporal gaze feature encoding for diffusion conditioning and a gaze-interaction consistency score (local gaze-contact and global DTW trajectory terms) for selecting among sampled motions, and an additional hand-object motion reconstruction benchmark on the dataset.
+
+## Experimental Setup
+
+The 1,378 sequences are split into 1,103 training and 275 test sequences, with the test set containing only objects unseen in training (215 sequences) plus 60 sequences of seen objects in complex tasks (assembly, chess), to test generalization rather than object-specific overfitting. Metrics cover motion accuracy (object MPVPE, Final Object Location error, hand MPJPE), interaction quality (Contact Frame ratio CF, Penetration Depth PD), generation statistics (FID, Diversity; ground-truth diversity 4.227), and a five-point user study on gaze-motion consistency (GMC) and interaction naturalness (IN). Since no prior method addresses the task, baselines are adapted: MDM* (MDM with the gaze encoding and auxiliary translation/offset losses), Text2HOI* (Text2HOI's text encoder replaced by the spatio-temporal gaze encoding for contact-map generation), and OMOMO* (OMOMO conditioned on the Stage-1 object motions). The model uses 1,000 denoising steps, 500 sampled object points, batch size 128, learning rate 1e-5, latent dimensions 128 (object) and 256 (hand), trained on a single RTX 4090. A reconstruction benchmark uses 12 side views (3.0M images) split by subject 8/1/1, evaluating MRRPE, local MPJPE, and Success Rate for ArcticNet (SF and LSTM variants) and Keypoint Transformer.
+
+## Results
+
+On the full test set, GHO-Diffusion achieves MPVPE 117.4, FOL 146.5, MPJPE 144.8, CF 68.10%, PD 2.46, FID 0.044, Diversity 4.217, and user scores GMC 4.75 / IN 4.60, versus the best baselines: MDM* (MPVPE 146.8, FOL 228.0, MPJPE 166.6, CF 62.55, FID 0.071, GMC 3.70), OMOMO* (MPJPE 161.2, CF 62.61, FID 0.051, GMC 4.15), and Text2HOI* (MPVPE 254.2, FOL 286.7, MPJPE 182.2, FID 0.183). On unseen objects the method reaches MPVPE 118.7 / MPJPE 144.3 / CF 70.55, nearly matching its seen-object results (MPVPE 113.1 / MPJPE 146.6 / CF 59.28), demonstrating generalization without object-specific overfitting. Ablations show: gaze points beat gaze rays (MPVPE 117.9 vs 126.7; GMC 4.25 vs 3.95); removing spatial or temporal modeling or gaze post-processing degrades Stage-1 performance (e.g., w/o post-processing MPVPE 134.8); HOI-Manifold Guidance improves CF (65.77 vs 64.65 without guidance) and raises IN to 4.45, whereas naive guidance distorts motion (IN 3.5) and even lowers CF to 63.66; and consistency-score selection improves all metrics over no selection (MPJPE 144.8 vs 154.3, GMC 4.75 vs 4.25), with local selection mainly refining contact details and global selection mainly improving trajectory accuracy (FOL 148.9 vs 156.4 respectively). On the reconstruction benchmark, ArcticNet-LSTM attains the best MPJPE 23.1 mm on test and Keypoint Transformer the best Success Rate 44.9%, establishing reference numbers for the dataset.
+
+## Limitations
+
+The authors state that despite its diversity, GazeHOI currently excludes articulated objects, which introduce unique interaction challenges; future work will extend to articulated interactions and to multi-modal inputs such as text and electromyography (EMG) for more context-aware motion generation. The method also targets rigid objects (object 6D pose annotation is defined for rigid bodies), and motion selection requires sampling multiple candidates since it picks the top-k from generated motions.

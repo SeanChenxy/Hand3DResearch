@@ -1,44 +1,32 @@
 # ViPRA: Video Prediction for Robot Actions
 
+**Authors:** Sandeep Routray, Hengkai Pan, Unnat Jain, Shikhar Bahl, Deepak Pathak  
+**Date:** 2025 (ICLR 2026)  
+**Identifier:** [arXiv:2511.07732](https://arxiv.org/abs/2511.07732); DOI `10.48550/ARXIV.2511.07732`  
+**Zotero item:** `BKE8GLDP` ([Zotero](zotero://select/library/items/BKE8GLDP))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-ViPRA is a simple pretraining-finetuning framework that learns continuous robot control from actionless videos by training a video-language model to predict both future visual observations and latent actions, demonstrating that a video prediction model can be turned into an effective robot policy.
+ViPRA turns a video prediction model into a robot policy. A video-language model is pre-trained on actionless human and robot videos to jointly predict future visual observations and fine-grained motion-centric latent actions (3–6 Hz), with perceptual losses and optical flow consistency keeping the latents physically grounded. Downstream, a chunked flow-matching decoder maps latent actions to continuous robot action sequences using only 100–200 teleoperated demonstrations, supporting smooth high-frequency control up to 22 Hz. ViPRA outperforms strong baselines with a 16% gain on the SIMPLER benchmark and a 13% improvement across real-world manipulation tasks.
 
-## 1. Problem and Setting
-- Videos of humans or teleoperated robots contain rich physical interactions but lack labeled actions, limiting their use in robot learning.
-- Input: actionless video (human or robot demonstrations) + optional robot data for fine-tuning.
-- Output: a continuous robot action policy learned from video.
-- Video-based pretraining prior: video prediction models provide rich physical understanding for robot control.
+## Background and Problem
+Videos capture rich physical interaction but lack action labels, limiting their use in robot learning. Prior latent-action methods treat pre-training as autoregressive policy learning and use temporally coarse task-centric latents. The paper targets continuous robot control learned from actionless videos, explicitly modeling both what changes (video prediction) and how (fine-grained latent motion).
 
-## 2. Core Method
-- A simple pretraining-finetuning framework: pretrain a video-language model to predict both future visual observations and latent actions from video.
-- The learned latent action representation transfers to robot control.
-- Fine-tune on robot data to specialize for the target robot.
-- How FM prior is injected: the video-language model pretrained on large-scale video data provides the foundational representation and latent action understanding.
+## Method
+Pre-training trains a video-language model to predict future observations alongside sequences of motion-centric latent actions over short horizons; perceptual losses and optical flow consistency regularize the latents toward physically plausible behavior. For control, a chunked flow-matching decoder maps latent action chunks to embodiment-specific continuous actions, fine-tuned with only 100–200 teleoperated demonstrations, enabling cross-embodiment generalization and high-frequency (up to 22 Hz) closed-loop execution.
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: actionless video corpus (human or robot); robot trajectory data for fine-tuning.
-- Supervision: video prediction loss + latent action prediction loss (pretraining); action prediction loss (fine-tuning).
-- Foundation model: video-language model (e.g., based on large-scale video pretraining).
-- Domain knowledge: video prediction, latent action representation, robot learning.
-- Assumption: video prediction models can be converted into effective robot policies.
+## Contributions
+- A pretraining–finetuning framework converting video prediction into robot control via motion-centric latent actions.
+- A chunked flow-matching action decoder achieving smooth, high-frequency continuous control from minimal demonstrations.
+- Evidence that modeling state transitions with fine-grained latents outperforms autoregressive latent-action policy pre-training.
 
-## 4. Experiments and Findings
-- Datasets: actionless video corpora; robot manipulation benchmarks.
-- Metrics: robot action prediction accuracy, task success rate.
-- Successfully turns a video prediction model into a robot policy.
-- The framework is simple yet effective.
+## Experimental Setup
+Evaluation covers the SIMPLER benchmark suite (four Bridge tasks, reporting success and grasp rates) and three real-world manipulation tasks with full and partial success rates, including a bimanual setup. Baselines include methods that do not exploit video foundation models and prior latent-action approaches; ablations address multimodal pre-training priors, high-frequency control adaptation, and flow-matching decoding. Complete pre-training corpus statistics are not reproduced from the available evidence.
 
-## 5. Strengths and Limitations
-### Strengths
-- Simple framework.
-- Leverages actionless video (abundant).
-- Pretraining-finetuning paradigm.
+## Results
+- SIMPLER benchmark: a 16% gain over strong baselines.
+- Real-world manipulation tasks: a 13% improvement across the evaluated tasks.
+- ViPRA-FM significantly outperforms baselines in the reported comparisons, and the framework adapts to high-frequency continuous control up to 22 Hz via chunked action decoding.
 
-### Limitations
-- Requires video data (still expensive to curate).
-- Latent action quality may vary.
-- Sim-to-real gap may persist.
-- May not handle very novel actions.
-
-## 6. Takeaway
-ViPRA demonstrates that a video prediction model can be turned into an effective robot policy via a simple pretraining-finetuning framework, with latent action learning bridging the visual prediction and robot control. The work exemplifies the "video-based pretraining" paradigm where video prediction models serve as the foundation for robot learning.
+## Limitations
+Downstream control still requires 100–200 teleoperated demonstrations per setting, so the action gap is reduced rather than eliminated. Latent actions are derived from visual motion, leaving forces and contact states outside the pre-training signal. Full per-task tables and failure cases are not reproduced from the available evidence.

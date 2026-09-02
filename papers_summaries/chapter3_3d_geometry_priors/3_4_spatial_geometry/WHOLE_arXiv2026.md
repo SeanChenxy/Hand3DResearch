@@ -1,44 +1,45 @@
 # WHOLE: World-Grounded Hand-Object Lifted from Egocentric Videos
 
+**Authors:** Yufei Ye, Jiaman Li, Ryan Rong, C. Karen Liu  
+**Date:** 2026-02-25  
+**Identifier:** [arXiv:2602.22209](https://arxiv.org/abs/2602.22209)  
+**Zotero item:** `E57VGB4R` ([Zotero](zotero://select/library/items/E57VGB4R))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-WHOLE holistically reconstructs hand and object motion in world space from egocentric videos by learning a generative prior over hand-object motion that is guided at test time to generate trajectories conforming to video observations, with joint generative reconstruction substantially outperforming approaches that process hands and objects separately.
 
-## 1. Problem and Setting
-- World-space hand and object motion reconstruction from egocentric videos with object templates.
-- Input: egocentric video + object templates; severe occlusions and frequent object entries/exits from the camera view.
-- Output: hand motion and 6D object pose estimation in world space, with consistent hand-object relations.
-- Task: world-space hand-object interaction reconstruction; uses generative priors (hand-object motion prior).
+WHOLE reconstructs both hand articulation and object 6D trajectories in a persistent world coordinate frame from metric-SLAMed egocentric videos, given 3D object templates. Its core idea is to treat reconstruction as guided generation: a diffusion-based generative motion prior, trained on HOT3D-CLIP, jointly models hand poses (MANO), object SE(3) trajectories, and binary bimanual contact labels in a gravity-aware local frame; at test time, classifier guidance steers this pretrained prior with video observations — 2D object masks, 2D hand joints, and contact cues automatically labeled by a VLM enhanced with spatially grounded visual prompts. Long sequences are reconstructed by parallel denoising and blending of overlapping 120-frame windows. On held-out HOT3D sequences, WHOLE achieves state-of-the-art hand motion estimation, 6D object pose estimation, and relative hand-object interaction reconstruction, substantially outperforming combinations of the best hand (HaWoR) and object (FoundationPose) estimators with post-hoc optimization, and it handles truncated and fully out-of-view objects far more robustly.
 
-## 2. Core Method
-- Learns a generative prior over hand-object motion to jointly reason about their interactions (instead of processing them separately and post-processing).
-- At test time, the pretrained generative prior is guided to generate trajectories that conform to the video observations.
-- The hand-object generative prior is the key insight: it captures the natural coupling between hand and object motion during manipulation.
-- How FM prior is injected: the hand-object motion prior is learned as a generative model (likely a diffusion model) on large HOI motion datasets; the FM provides the prior distribution for joint hand-object trajectories.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Foundation model / generative prior: a hand-object motion generative model (likely a diffusion model) trained on large HOI motion datasets.
-- Domain knowledge: hand-object coupling during manipulation; object templates for 6D pose initialization.
-- Training data: hand-object interaction motion datasets (e.g., ARCTIC, HOI4D).
-- Assumption: object templates are available; the test-time video exhibits sufficient motion for guiding the prior.
+Egocentric manipulation videos are hard to reconstruct because the head-mounted camera moves with the wearer (large egomotion even for nearly static objects), objects frequently enter and exit the field of view, and hands and objects severely occlude each other exactly during interaction. Existing methods address pieces of this problem in isolation: monocular hand pose estimators regress MANO parameters in camera-centric or canonical coordinates and cannot recover world-frame trajectories (though recent systems such as HaWoR estimate world-space hand motion, they model hands alone); template-based 6D object pose estimators such as FoundationPose align a known object mesh per frame but fail under truncation and out-of-view conditions; and hand-object interaction (HOI) reconstruction methods recover detailed geometry and contact over short clips in local reference frames. Naively combining hand and object estimators yields predictions whose hand-object relations are mutually inconsistent and that fail when either part is unseen. The paper defines the task as global 4D hand-object reconstruction: predicting how both hands and manipulated objects move coherently through space and time in the world coordinate frame — prioritizing global motion over fine-grained surface geometry — enabling downstream applications such as robot learning from human demonstrations and immersive AR/VR.
 
-## 4. Experiments and Findings
-- Datasets: ARCTIC, HOI4D, egocentric hand-object benchmarks.
-- Metrics: hand motion accuracy, 6D object pose accuracy, hand-object relative pose.
-- Achieves state-of-the-art performance on hand motion estimation, 6D object pose estimation, and their relative interaction reconstruction.
-- Joint generative reconstruction substantially outperforms approaches that process hands and objects separately followed by post-processing.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Generative prior over hand-object motion captures natural coupling.
-- Joint inference ensures consistent hand-object relations.
-- Handles out-of-sight cases via generative prior.
-- Strong empirical performance on multiple tasks.
+WHOLE operates in two stages: learning a generative hand-object motion prior, then reconstruction as guided generation.
 
-### Limitations
-- Requires object templates.
-- Generative model inference is slower than direct prediction.
-- May struggle with novel interaction types not seen in training.
-- The prior is fixed after training; cannot adapt to new object categories without retraining.
+Generative motion prior. The prior is a conditional DDPM whose denoiser is a transformer decoder (4 layers, 4 heads, 12.35M parameters, latent dimension 512), conditioned on the object template encoded as a BPS descriptor in its canonical frame and on an approximated hand trajectory from an off-the-shelf estimator. Within a fixed 120-frame window, it generates hand motions (MANO global orientation, translation, articulation, shape, joint positions and velocities for both hands), object trajectories as SE(3) transforms in the 9D rotation formulation, and two binary contact indicators (left/right hand). Sequences are expressed in a gravity-aware local frame — camera coordinates rotated so the z-axis aligns with gravity at the sequence start — letting the model focus on relative hand-object motion; segments are later transformed back to world coordinates and stitched. To help the model reason about fine-grained contact, an "Ambient Sensor" feature computes, per frame, a BPS of the posed object using hand joints as the vector basis, measuring each joint's displacement to the nearest object-surface point. Because the conditioning hand estimate is imperfect at test time, training synthesizes noisy hand tracks by injecting trajectory-level and per-frame noise into ground-truth MANO parameters and randomly dropping frames to mimic occlusion and truncation, training jointly on synthesized and real estimated conditions. Training uses the conditional DDPM loss plus auxiliary objectives: an interaction loss penalizing hand-object distances under contact and enforcing near-rigid transport of contact points across frames, a consistency loss matching predicted hand features to their MANO forward kinematics, and a temporal smoothness loss penalizing acceleration; the model is warmed up for 10k steps on the DDPM loss alone and trained for 1M iterations with AdamW (learning rate 2e-4).
 
-## 6. Takeaway
-WHOLE demonstrates the power of joint generative modeling for hand-object interaction: by learning a single prior over hand-object motion rather than two separate priors, the model naturally captures the coupling and produces consistent reconstructions, especially in challenging cases (severe occlusions, out-of-sight objects). This "joint generative prior" paradigm is a compelling alternative to the common pipeline of independent hand and object estimation followed by post-hoc alignment.
+Guided generation. Reconstruction is performed with classifier guidance, chosen over score distillation sampling because it requires a single forward generation pass instead of thousands of optimization steps and is less prone to model collapse. The guidance score is modified with the gradient of three objectives: a reprojection term aligning generated samples with 2D observations (contact binaries, 2D hand joints, and a one-way Chamfer loss between the reprojected object and its segmented mask, which handles occlusion and truncation); an interaction term mirroring the training interaction loss; and a temporal smoothness term. Videos are subsampled to 3 fps for the reprojection term. Contact cues come from a vision-language model (GPT-5) prompted with spatially grounded visual prompts: hands and candidate objects are segmented and indexed with overlaid colored masks (green dot for the left hand, red for the right), the VLM returns JSON contact assignments constrained by validation rules — each hand may contact at most one object — and five annotated in-context examples calibrate against false positives; these refinements raised contact detection F1 from 57% to 81%. Sequences longer than 120 frames are split into overlapping sliding windows that are denoised in parallel with blended overlaps (in the spirit of MultiDiffusion) and shared per-frame shape parameters, then refined under the guidance objectives before continuing the diffusion process.
+
+## Contributions
+
+1. A holistic formulation of egocentric HOI reconstruction as guided generation: a diffusion-based generative prior that jointly models hand articulation, object 6D trajectories, and bimanual contact, so hand and object motions are reasoned about together rather than predicted independently and reconciled afterward.
+2. A test-time guidance scheme combining video-derived 2D masks, hand joints, and interaction/smoothness objectives with VLM-annotated contact cues obtained through spatially grounded visual prompting and in-context calibration, enabling robust contact localization in cluttered scenes.
+3. State-of-the-art performance on hand motion estimation, 6D object pose estimation, and relative interaction reconstruction on HOT3D, with marked robustness on truncated and out-of-view frames, plus a demonstrated application to hand-guided HOI motion synthesis without video input.
+
+## Experimental Setup
+
+Training uses HOT3D-CLIP, a curated subset of the HOT3D egocentric dataset (captured with Project Aria glasses, with gravity-aware metric SLAM trajectories, hand-object pose annotations, and object templates), consisting of 150-frame (3-second) sequences; the diffusion model is trained on 2,443 sequences. Evaluation uses 50 dynamic object trajectories (displacement greater than 5 cm) held out from unseen sequences. Training contact labels are defined by proximity (under 5 mm), while evaluation contact labels are produced by prompting GPT-5. Hands are evaluated with W-MPJPE (global alignment using the first two frames), WA-MPJPE (affine alignment on all joints), PA-MPJPE (per-frame Procrustes), and ACC-NORM (normalized joint acceleration error); objects and interactions with AUC of ADD and ADD-S, using a permissive 0.3 threshold because the standard 0.1 threshold saturates under severe egocentric occlusion, truncation, and out-of-view frames; interaction metrics globally align the object trajectory to the predicted hand trajectory first. Baselines are HaMeR (image-based hand estimation), HaWoR (world-space hand motion), and FoundationPose (FP) for 6D object pose — given RGB input, FP is fed Metric3D-predicted metric depth — plus combined baselines FP+HaWoR-simple (joint optimization without the interaction term) and FP+HaWoR-contact (with it), optimized using the same objective terms as WHOLE's guidance. Ablations compare against ground-truth contact labels at 30 fps, a "generate-then-optimize" variant without interleaved guidance, and removal of the interaction loss. Zero-shot generalization is tested on H2O. On an NVIDIA RTX 6000 Blackwell GPU, a 150-frame clip takes 59.34 s on average (59.06 s in guidance, 0.28 s in diffusion) with a 14 GB peak memory footprint, versus roughly 30 hours for HOLD-style and 1 hour for G-HOP-style prior optimization approaches; VLM contact queries average 18.6 s per image.
+
+## Results
+
+- Hand motion: WHOLE achieves WA-MPJPE 3.26 cm, W-MPJPE 10.41 cm, ACC-NORM 0.58, and PA-MPJPE 6.67 mm, the best overall among HaMeR (16.93/28.35/32.31/12.76), HaWoR (3.76/11.26/4.15/8.99), FP+HaWoR-simple (3.34/9.16/0.95/8.99), and FP+HaWoR-contact (5.85/12.19/1.26/8.99) — second-best only on W-MPJPE and ACC-NORM of FP+HaWoR-simple, while clearly improving local pose accuracy (PA-MPJPE) over HaWoR.
+- Object motion: AUC of ADD/ADD-S of 51.1/69.9 on all frames versus 36.1/51.9 for off-the-shelf FoundationPose, 30.4/45.0 for FP+HaWoR-simple, and 31.5/46.9 for FP+HaWoR-contact, with acceleration error 0.11 versus 0.572–0.896 for the optimized baselines. Gains are largest on the hard subsets: truncated 42.5/60.2 versus 18.6–22.7/33.8–35.8 for all baselines, and out-of-view 28.8/43.8 versus 4.8–8.9/13.1–19.6, showing that the generative prior infers plausible motion when the object is partially or fully invisible.
+- Interaction quality: after aligning object poses to the predicted hand trajectory, WHOLE reaches ADD/ADD-S of 53.5/72.3 on all frames versus 36.8/53.8 for FP+HaWoR-contact and 29.0/44.0 for FP+HaWoR-simple; baselines often produce floating objects and unrealistic hand-object relations, which WHOLE avoids.
+- Ablations: using ground-truth contact at 30 fps improves results only marginally over the VLM-based pipeline (hand W-MPJPE 10.79 versus 10.41; object ADD 53.7 versus 51.1), indicating the VLM labels approach the ceiling. Removing interleaved guidance ("Gen+Opt") degrades hand W-MPJPE to 15.92 and object ADD to 44.3, confirming that generation and optimization must be intertwined to keep samples on the data manifold. Removing the interaction loss from training collapses object ADD to 28.5 and interaction ADD to 30.6.
+- Zero-shot generalization: WHOLE trained on HOT3D and tested on the unseen H2O dataset attains object ADD/ADD-S 44.7/64.9 (a moderate drop from 51.1/69.9 in-domain), whereas the RGB-conditioned H2OTR baseline collapses to 3.2/7.7 on HOT3D when tested out-of-distribution; the authors attribute this robustness to the motion-space prior having a smaller domain gap than appearance-based representations.
+
+## Limitations
+
+The authors identify three main limitations: the framework currently reconstructs each hand-object pair independently, and extending to scene-level, multi-object reconstruction through joint diffusion with scene-level objectives is left as future work; the method assumes a known object template, which could be relaxed with LLM-based retrieval or template-free generation; and the generative prior is trained on a single dataset (HOT3D), so scaling with recent large-scale hand-object datasets is needed for generalization, with zero-shot performance on H2O already showing a moderate drop relative to the in-domain setting. Additionally, the evaluation contact labels themselves come from GPT-5 prompting, the VLM contact queries add latency (about 18.6 s per image), and the inference pipeline is dominated by the guidance step (about 59 s per 150-frame clip).

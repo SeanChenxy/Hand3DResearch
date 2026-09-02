@@ -1,56 +1,38 @@
 # Zero-1-to-3: Zero-shot One Image to 3D Object
 
-# Paper Summary
+**Authors:** Ruoshi Liu, Rundi Wu, Basile Van Hoorick, Pavel Tokmakov, Sergey Zakharov, Carl Vondrick  
+**Date:** 2023-03-20  
+**Identifier:** [arXiv:2303.11328](https://arxiv.org/abs/2303.11328)  
+**Zotero item:** `V33MGDZI` ([Zotero](zotero://select/library/items/V33MGDZI))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-Zero-1-to-3 is a zero-shot novel view synthesis framework that leverages geometric priors learned by large-scale diffusion models to generate arbitrary camera viewpoints of objects from a single RGB image.
 
-## 1. Problem and Setting
-- **Task**: Novel view synthesis and 3D reconstruction from a single RGB image of an object
-- **Input**: Single RGB image of an object
-- **Output**: Synthesized image from a specified camera viewpoint (defined by relative camera rotation and translation)
-- **Difficulty**: This is severely under-constrained since a single image provides insufficient geometric information. Traditional methods require expensive 3D annotations (CAD models), category-specific priors, or stereo views with camera poses.
+Zero-1-to-3 turns a pre-trained Stable Diffusion model into a viewpoint-controllable generator: it fine-tunes the latent diffusion model on synthetic multi-view renderings to accept a relative camera rotation and translation, so that a single RGB image of an object can be re-rendered from any specified camera transformation, zero-shot. The same viewpoint-conditioned diffusion model doubles as a learned geometric prior that can be distilled into a NeRF-style representation for single-image 3D reconstruction via Score Jacobian Chaining. On Google Scanned Objects it largely outperforms zero-shot novel view synthesis baselines (PSNR 18.38 versus 8.93 for DietNeRF) and single-view reconstruction baselines (volumetric IoU 0.5052 versus 0.2944 for Point-E), while generalizing to in-the-wild photos, paintings, and generated images. For HOI research the paper is a foundational prior-source reference: its model is the standard NVS/3D diffusion prior later plugged into template-free hand-object reconstruction pipelines (e.g., MagicHOI) to regularize unobserved object regions.
 
-## 2. Core Method
-**Pipeline**: Single RGB image → Viewpoint-conditioned diffusion model → Novel viewpoint image → Optional 3D reconstruction via NeRF distillation
+## Background and Problem
 
-**Key innovations**:
-1. **Viewpoint-conditioned diffusion fine-tuning**: Fine-tunes large-scale diffusion models (Stable Diffusion) on synthetic datasets to learn control over relative camera rotation and translation
-2. **Synthetic training data**: Uses a synthetic dataset with known camera parameters to train the model to control viewpoint without requiring ground truth 3D data
-3. **Image encoding/decoding**: The model learns to encode arbitrary images and decode them to different specified camera viewpoints
+Two tasks are addressed from a single RGB image: novel view synthesis (generate the object under a specified relative camera transformation (R, T)) and 3D reconstruction (recover geometry and appearance). Both are severely under-constrained without priors. Existing single-view 3D methods operate in a closed-world setting, relying on expensive 3D annotations (CAD models) or category-specific priors; even recent open-world approaches pre-trained on large datasets like CO3D still require geometry-related supervision (stereo views or camera poses), so their data scale and diversity remain far below Internet-scale text-image collections. Meanwhile, large diffusion models such as Stable Diffusion — trained on over 5 billion 2D images without camera correspondences — clearly encode semantic knowledge, but two obstacles prevented using them for 3D: their representations do not explicitly encode correspondences between viewpoints, and they inherit Internet viewpoint bias, generating objects in canonical forward-facing poses (e.g., "a chair" prompts in Dall-E 2 and Stable Diffusion yield canonical views). The paper's central question is whether the geometric knowledge inside large diffusion models can be extracted and controlled, enabling zero-shot view synthesis and 3D reconstruction that generalize beyond any 3D training corpus.
 
-**Essential difference from existing methods**:
-- Trains purely on 2D monocular images without camera correspondences
-- Leverages internet-scale pre-training (5B+ images) rather than limited 3D-annotated datasets
-- Does not require geometry-related information during training (no stereo views or poses needed)
+## Method
 
-## 3. Knowledge, Supervision, and Assumptions
-- **Training data**: Synthetic dataset with known camera parameters for viewpoint supervision
-- **Foundation model**: Built on Stable Diffusion, which was pre-trained on over 5 billion internet-scale images
-- **Key insight**: Large diffusion models implicitly learn rich 3D geometric priors despite being trained only on 2D images
-- **Assumptions**: The method assumes the pretrained diffusion model has captured sufficient geometric understanding from massive-scale 2D image data
-- **Learning vs. provided**: Camera viewpoint controls are learned from synthetic data; the geometric priors come implicitly from the pre-trained diffusion model
+The model learns f(x, R, T), synthesizing image x_hat_{R,T} from an input view x and a relative camera rotation R and translation T. Starting from a pre-trained latent diffusion architecture (encoder, denoising U-Net, decoder), the model is fine-tuned with the standard denoising objective on triplets of paired images and relative camera extrinsics, with diffusion timesteps in [1, 1000]. Conditioning is hybrid: one stream concatenates a CLIP embedding of the input image with (R, T) into a "posed CLIP" embedding applied to the U-Net via cross-attention (high-level semantics), while the other channel-concatenates the input image with the latent being denoised (identity and low-level detail preservation). Classifier-free guidance is enabled by randomly replacing the input image and posed CLIP embedding with null vectors during training and scaling the condition at inference, following InstructPix2Pix. Because the fine-tuning only "bolts on" viewpoint controls, the pre-trained model's photorealism and semantic coverage are retained, which is what makes the resulting controls compositional and zero-shot for object classes absent from the fine-tuning data. Fine-tuning uses the Objaverse dataset of 800K+ 3D models by 100K+ artists: for each object, 12 camera extrinsics aimed at the object center are randomly sampled and rendered with a raytracing engine, and training pairs (x, x_{R,T}) are drawn from these views with their relative (R, T) derived analytically. For 3D reconstruction, the paper adopts Score Jacobian Chaining (SJC): a voxel radiance field is optimized by randomly sampling viewpoints, volumetrically rendering images, perturbing them with Gaussian noise, and backpropagating the score of the Zero-1-to-3 denoiser (with classifier-free guidance set significantly higher than usual to trade diversity for fidelity, as in DreamFusion), together with an MSE loss on the input view, a per-viewpoint depth smoothness loss, and a near-view appearance-consistency loss; meshes are extracted by marching cubes on the density field.
 
-## 4. Experiments and Findings
-- **Datasets evaluated on**: Not mentioned in the provided text (paper references Section 4 for quantitative and qualitative experiments)
-- **Metrics**: Not mentioned in the provided text
-- **Results stated**: The paper claims "state-of-the-art results for novel view synthesis and state-of-the-art results for zero-shot 3D reconstruction of objects, both from a single RGB image"
-- **Zero-shot generalization**: Demonstrated on out-of-distribution datasets, in-the-wild images, and even impressionist paintings
-- **Visual evidence**: Figure 1 shows synthesized views for complex transformations (Up 90°, Left 120°, etc.) on objects with complex geometry and artistic styles
+## Contributions
 
-## 5. Strengths and Limitations
+1. Demonstration that large-scale diffusion models trained only on 2D images contain exploitable 3D knowledge, and that relative camera viewpoint controls can be fine-tuned into Stable Diffusion without destroying its generative capabilities.
+2. A viewpoint-conditioned latent diffusion model (posed-CLIP plus channel-concatenated input conditioning, classifier-free guidance) achieving state-of-the-art zero-shot novel view synthesis from a single image, including on out-of-distribution scenes and in-the-wild images such as impressionist paintings.
+3. A zero-shot single-view 3D reconstruction pipeline that distills the viewpoint prior into a NeRF-style voxel field through score Jacobian chaining, outperforming dedicated single-view reconstruction methods in volumetric IoU.
+4. Evidence that the approach composes with text-to-image models, enabling text-to-image-to-3D generation while preserving object identity and lighting details.
 
-### Strengths
-- True zero-shot generalization to out-of-distribution objects and even artistic images
-- Leverages internet-scale pre-training rather than limited 3D-annotated datasets
-- Does not require expensive 3D annotations, stereo views, or camera poses during training
-- Can synthesize large relative camera transformations while maintaining consistency
-- Handles complex geometry and artistic styles that break physical constraints
+## Experimental Setup
 
-### Limitations
-- The method's performance boundaries and failure cases are not detailed in the provided text
-- Computational costs for inference are not mentioned
-- Specific generalization boundaries (what types of objects fail) are not described in the provided excerpt
+The model is fine-tuned exclusively on synthetic Objaverse renderings (12 views per object, raytraced) and evaluated zero-shot — the authors confirm with the Objaverse team that all test data lies outside the fine-tuning set. Novel view synthesis is benchmarked on Google Scanned Objects (high-quality scans of household items) and RTMV (complex scenes of 20 random objects each), against zero-shot single-image baselines DietNeRF (CLIP-consistency-regularized NeRF), Image Variations (Stable Diffusion fine-tuned for image conditioning), and SJC-I (text-to-3D SJC with an image-conditioned diffusion model), using PSNR, SSIM, LPIPS, and FID. 3D reconstruction is evaluated against MCC (a neural-field RGB-D completion model, given MiDaS-estimated pseudo-metric depth), SJC-I, and Point-E (a diffusion model over colorized point clouds trained on a large internal 3D dataset), using Chamfer Distance and volumetric IoU against ground-truth 3D models on GSO and RTMV. Qualitative experiments cover iPhone photos, Internet images, paintings, and Dall-E 2 generations, plus diversity sampling from fixed viewpoints.
 
-## 6. Takeaway
-This paper demonstrates that large-scale diffusion models trained purely on 2D images capture rich 3D geometric priors, enabling zero-shot novel view synthesis and 3D reconstruction from single images. By fine-tuning on synthetic data with camera parameters, these models can be controlled to generate consistent novel viewpoints, achieving state-of-the-art results without requiring any ground truth 3D training data.
+## Results
+
+Novel view synthesis on GSO: Zero-1-to-3 reaches PSNR 18.378, SSIM 0.877, LPIPS 0.088, and FID 0.027, versus DietNeRF 8.933/0.645/0.412/12.919, Image Variations 5.914/0.540/0.545/22.533, and SJC-I 6.573/0.552/0.484/19.783 — a margin the authors describe as significant across all four metrics. On RTMV, which is out-of-distribution from the Objaverse training data, it still leads with PSNR 10.405, SSIM 0.606, LPIPS 0.323, FID 0.319 (DietNeRF 7.130/0.406/0.507/5.143; Image Variations 6.561/0.442/0.564/10.218; SJC-I 7.953/0.456/0.545/10.202), maintaining fidelity under large viewpoint changes while baselines deteriorate drastically. Single-view 3D reconstruction on GSO: Chamfer distance 0.0717 and volumetric IoU 0.5052, versus MCC 0.1230/0.2343, SJC-I 0.2245/0.1332, and Point-E 0.0804/0.2944 — Point-E generalizes well but its 4,096-point sparse clouds leave surface holes, explaining its good CD but much lower IoU, while MCC estimates visible surfaces well but fails on object backs. On RTMV's cluttered scenes all methods degrade, but Zero-1-to-3 remains best (CD 0.1352, IoU 0.2196, versus MCC 0.1578/0.1550, SJC-I 0.1554/0.1380, Point-E 0.1565/0.0784) despite never being explicitly trained for reconstruction. Qualitatively, the model synthesizes detailed, identity-consistent views for challenging geometry, materials, and artistic styles, and exhibits diverse plausible completions of self-occluded regions when sampling repeatedly from one viewpoint.
+
+## Limitations
+
+The method is trained on single objects against plain backgrounds; although it shows some generalization to RTMV's multi-object scenes, quality degrades relative to in-distribution GSO samples, and generalization to scenes with complex backgrounds remains an open challenge, as the authors state in their discussion. The 3D reconstruction route inherits the stochasticity of diffusion-based distillation — gradient updates are highly random, mitigated only by unusually high classifier-free guidance that reduces sample diversity — and requires per-object NeRF optimization rather than feed-forward inference. The probabilistic formulation means unobserved geometry is one plausible hallucination rather than a measurement, and reconstruction metrics on RTMV show that cluttered, multi-object scenes are far from solved (best IoU 0.2196). The synthetic fine-tuning set (Objaverse renderings) also introduces a domain gap that shows up as degraded quality outside object-centric imagery.

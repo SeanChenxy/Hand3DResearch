@@ -1,36 +1,38 @@
-# GHOST: Fast Category-agnostic Hand-Object Interaction Reconstruction from RGB Videos using Gaussian Splatting (Cross-reference)
+# GHOST: Fast Category-agnostic Hand-Object Interaction Reconstruction from RGB Videos using Gaussian Splatting
+
+**Authors:** Ahmed Tawfik Aboukhadra, Marcel Rogge, Nadia Robertini, Abdalla Arafa, Jameel Malik, Ahmed Elhayek, Didier Stricker  
+**Date:** 2026-03-19  
+**Identifier:** [arXiv:2603.18912](https://arxiv.org/abs/2603.18912)  
+**Zotero item:** `8VZLDT97` ([Zotero](zotero://select/library/items/8VZLDT97))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-This entry is a cross-reference to the detailed summary in Chapter 3 (3D Geometry Priors, section 3.3 Shape Retrieval). GHOST is a fast, category-agnostic framework for reconstructing dynamic hand-object interactions from monocular RGB videos using 2D Gaussian Splatting, with three key innovations: geometric-prior retrieval and consistency loss, grasp-aware alignment, and hand-aware background loss.
 
-## 1. Problem and Setting
-- Fast, category-agnostic 3D reconstruction of dynamic hand-object interactions from monocular RGB videos.
-- Input: monocular RGB video of hand-object interaction.
-- Output: 3D hand mesh, 3D object as Gaussians, 6D object pose trajectory.
-- Visual grounding prior: the geometric-prior retrieval grounds the 3D object shape in a database of object embeddings, providing a visual-grounded shape prior.
+GHOST (Gaussian Hand-Object SplaTting) is a fast, category-agnostic framework that reconstructs dynamic bimanual hand-object interactions from a single monocular RGB video by representing both hands and objects as dense, view-consistent 2D Gaussian discs. It combines preprocessing with object geometric priors retrieved from Objaverse via OpenShape text-to-3D matching, grasp-aware alignment of hand translations and object scale, and Gaussian-splatting optimization with two interaction-specific losses: a hand-aware background loss that preserves hand-occluded object regions, and a geometric consistency loss that pulls Gaussians toward the retrieved prior to fill occlusion holes. On the ARCTIC Bi-CAIR benchmark it attains hand-relative interaction Chamfer Distance (CDh) of 18.40 cm2 versus 114.73 (HOLD) and 38.69 (BIGS), while running in about 1 hour per 300-frame sequence — over 13 times faster than prior category-agnostic methods (HOLD 16 h, BIGS 13 h).
 
-## 2. Core Method
-- 2D Gaussian Splatting for both hands and objects.
-- Three innovations: geometric-prior retrieval, grasp-aware alignment, hand-aware background loss.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Foundation model: foundation model embeddings for retrieval; 3D Gaussian Splatting for efficient representation.
-- Domain knowledge: hand model (MANO); physical plausibility constraints.
-- Training data: no HOI-specific training; FM embeddings and 3D object database.
+Realistic 3D hand-object reconstruction from monocular RGB video is fundamental for VR, AR, teleoperation, and embodied AI, but is hampered by mutual hand-object occlusion, wide variation in object topology, and monocular depth ambiguity that destabilizes scale and contact. Existing approaches divide into template-based methods, which produce high-quality meshes but only for a small fixed set of known objects, and category-agnostic methods, which are often computationally expensive (NeRF-based HOLD needs hours of per-sequence optimization), struggle to recover geometry hidden under occlusion, or require multi-view supervision. Gaussian-splatting frameworks such as BIGS improve runtime and yield explicit representations, but still produce unrealistic hand-object contact under severe occlusions and remain time-consuming. GHOST targets complete, physically consistent, animatable reconstructions from one RGB video, at a fraction of the runtime, for bimanual interactions with unknown objects.
 
-## 4. Experiments and Findings
-- Datasets: ARCTIC, HO3D, in-the-wild datasets.
-- State-of-the-art accuracy with order of magnitude faster speed.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Fast reconstruction suitable for interactive applications.
-- Category-agnostic.
-- Combines retrieval and optimization strengths.
+GHOST operates in three stages. (1) Preprocessing: SAM2 segments and tracks object and hand masks; Structure-from-Motion (HLoc with COLMAP, enhanced by temporal-window pairing, or the video-based VGGSfM) estimates intrinsics, relative camera poses, and a sparse object point cloud. For the object geometric prior, a vision-language model (InternVL) describes the manipulated object from sampled frames, OpenShape's CLIP embedding retrieves k candidate meshes from pre-embedded Objaverse models, each candidate is simplified to its outer surface by ray casting and aligned to the observed masks by optimizing quaternion rotation, translation, and scale under an IoU silhouette loss; the best-matching transformed candidate becomes the prior (densified if it has few vertices). Hands are initialized from RTMPose bounding boxes with HaMeR MANO predictions, followed by a frame-rejection post-process that discards unreliable frames based on pose, orientation, and translation jitter against neighboring frames, shape deviation, keypoint confidence, bounding-box area, and box-overlap criteria, re-filling them by linear interpolation of translations and spherical interpolation of rotations; SAM2 hand masks are cropped to exclude the forearm. (2) Hand-object alignment: frames where hand and object motion vectors agree (cosine similarity of x-y projected translation directions above 0.5) are labeled as one- or two-hand grasps; global hand translations and a global object scale are then jointly optimized with a contact loss (Chamfer distance between translated hand vertices and the scaled prior, active only in grasping frames), a hand 2D projection loss against HaMeR's 2D joints (omitting low-confidence, small-bbox hands), and a temporal smoothness loss, weighted 10^3, 10^-1, and 10 respectively; the optimized scale rescales the object point cloud and camera translations. (3) Gaussian-splatting optimization: the object is first fitted with 2D Gaussians (centers, rotations, 2D scales, opacities, spherical harmonics), adding a hand-aware background loss that unions hand and object masks so that hand-occluded object regions are not penalized as background (true background is still removed over time thanks to varying hand-object orientations), and a geometric consistency loss that penalizes Gaussian centers farther than a threshold from the prior surface and prior-surface points with no nearby Gaussian center, thereby completing occluded holes. Hands are then optimized following GaussiansAvatars: Gaussians are attached to MANO mesh faces in a canonical space and deformed by per-face affine transforms (rotation via polar decomposition); only Gaussian scales, opacities, and colors are optimized together with hand translations, with pruning and densification disabled. The result is an animatable joint hand-object Gaussian representation renderable from novel viewpoints.
 
-### Limitations
-- Depends on database coverage.
-- May not capture fine details as well as SDF methods.
+## Contributions
 
-## 6. Takeaway
-GHOST demonstrates a practical synthesis of retrieval and optimization for HOI. In the context of visual grounding (chapter 4), the FM-based retrieval provides a visual-grounded shape prior. See chapter 3 section 3.3 for the full technical details.
+- A fast, category-agnostic framework for reconstructing animatable bimanual hand-object interactions from monocular RGB sequences using 2D Gaussian Splatting, with over 13x runtime improvement over prior category-agnostic approaches.
+- A prior-aware reconstruction strategy that completes occluded object regions by retrieving geometric priors from large-scale 3D databases (Objaverse via OpenShape) and enforcing geometric consistency between Gaussians and the retrieved prior surface.
+- A grasp-aware alignment stage that detects grasping frames from hand-object motion similarity and refines hand translations and object scale for realistic, stable contact.
+- A hand-aware background loss that prevents hand-occluded object regions from being wrongly discarded during object reconstruction, plus state-of-the-art interaction accuracy (hand-relative Chamfer metrics) and rendering quality at approximately 1 hour per sequence on an RTX A6000.
+
+## Experimental Setup
+
+Evaluation uses three data sources: the ARCTIC Bi-CAIR dataset (9 video sequences of two hands interacting with diverse objects), sequences from HO3D (a controlled benchmark for category-agnostic reconstruction under severe hand occlusion), and two self-captured GoPro sequences (Drill and Book) for qualitative generalization. All 3D metrics follow the official HOLD protocol for the ARCTIC Bi-CAIR challenge: root-aligned hand MPJPE (mm); object Chamfer Distance relative to each hand's root (CDr, CDl, cm2) without rigid alignment (thus sensitive to absolute scale), their average CDh, and CDICP computed after ICP alignment to isolate reconstruction quality from scale/translation errors. Photometric fidelity is measured with PSNR, SSIM, and LPIPS on rendered versus ground-truth RGB. Runtime is averaged on a single NVIDIA RTX A6000 GPU over an ARCTIC sequence of 300 bimanual frames; object and joint hand-object optimization each run 30,000 iterations, with priors aligned for 1,500 iterations and HO alignment for 500. Baselines are HOLD (NeRF-based) and BIGS (3D Gaussian Splatting).
+
+## Results
+
+On ARCTIC, GHOST achieves the best interaction and hand metrics: MPJPE-RA of 24.07 mm (average), 25.42 mm (left), 22.71 mm (right), versus HOLD (25.91/27.13/24.70) and BIGS (24.49/24.63/24.35); and CDh of 18.40 cm2 (CDr 13.40, CDl 23.41) versus BIGS (38.69; 31.28/46.11) and HOLD (114.73; 123.54/105.92), which the authors attribute to the grasp-aware contact loss and the new object losses. BIGS retains better ICP-aligned shape metrics (CDICP 1.36 versus 2.26) and F-scores (F@10mm 81.78% and F@5mm 56.41% versus 60.88% and 34.67%). In 2D rendering on ARCTIC, GHOST reaches PSNR 25.93 and LPIPS 0.02 (best), with SSIM 0.88 versus BIGS's 0.96; on HO3D, GHOST reports PSNR 21.37, SSIM 0.75, LPIPS 0.03 versus BIGS (24.51/0.92/0.07) and HOLD (16.20/0.74/0.21). Runtime is approximately 1 hour versus 13 hours (BIGS) and 16 hours (HOLD). The SfM ablation shows category-agnostic reconstruction is highly sensitive to the SfM backend: VGGSfM improved results on ARCTIC relative to the HLoc+COLMAP pipeline (though it is hyperparameter-sensitive and did not transfer the same gains to HO3D and the self-captured data), with VGGSfM variants applying the geometric loss reaching CDh 18.21-18.42 cm2 and CDICP 2.26-3.66 cm2 across threshold settings. On HO3D, GHOST improves CDr on 3 of 5 evaluated YCB-object sequences relative to its no-prior variant, and the Gaussian-per-face study finds m = 55 (about 84k Gaussians per hand) optimal under the fixed 30k-iteration budget.
+
+## Limitations
+
+The geometric consistency loss is only applied when a high-quality prior is retrieved; a misaligned retrieved prior can pull Gaussian centers toward unwanted regions, and retrieved Objaverse models do not always match the target geometry. The hand-aware background loss fails when the hand never changes its contact point on the object, allowing unwanted Gaussians to spawn in the hand region. The pipeline still depends on SfM initialization, which is fragile and hyperparameter-sensitive, and GHOST trails BIGS on ICP-aligned object shape fidelity (CDICP) and on F@5mm/F@10mm scores. In 2D rendering, SSIM on ARCTIC and PSNR on HO3D remain below BIGS. Future work proposed by the authors includes extending to deformable and articulated objects, integrating geometric priors directly within the SfM pipeline, and real-time inference from stereo or RGB-D streams for deployment in teleoperation, interactive AR/VR, robotics, and in-the-wild motion capture.

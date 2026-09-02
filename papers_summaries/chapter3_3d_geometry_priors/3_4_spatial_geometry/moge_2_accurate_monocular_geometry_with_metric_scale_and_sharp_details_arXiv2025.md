@@ -1,76 +1,45 @@
 # MoGe-2: Accurate Monocular Geometry with Metric Scale and Sharp Details
 
-# Paper Summary
+**Authors:** Ruicheng Wang, Sicheng Xu, Yue Dong, Yu Deng, Jianfeng Xiang, Zelong Lv, Guangzhong Sun, Xin Tong, Jiaolong Yang  
+**Date:** 2025-07-03  
+**Identifier:** [arXiv:2507.02546](https://arxiv.org/abs/2507.02546)  
+**Zotero item:** `L7SRWVJR` ([Zotero](zotero://select/library/items/L7SRWVJR))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-MoGe-2 extends the monocular geometry estimation approach MoGe — which predicts affine-invariant 3D point maps from a single image — with a metric scale prediction head and a unified real-data refinement pipeline that injects sharp synthetic-style detail into the geometry predictions, simultaneously achieving state-of-the-art relative geometry accuracy, metric scale precision, and fine-grained detail recovery.
 
-## 1. Problem and Setting
-- **Task**: Monocular geometry estimation (MGE) — predict a metric-scale 3D point map of a scene from a single image, recovering accurate geometry, real-world metric scale, and fine-grained detail simultaneously.
-- **Input/Output**: Single RGB image → metric-scale 3D point map (with predicted camera intrinsics) + metric depth (the z-channel of the point map).
-- **Difficulties**:
-  - Three desirable MGE properties — geometry accuracy, metric scale, and detail granularity — are typically achieved by mutually exclusive design choices; no prior method has all three.
-  - Predicting absolute metric point maps directly suffers from focal-distance ambiguity.
-  - Real training data has noisy and incomplete depth at object boundaries (LiDAR / SfM misalignment), which washes out fine-grained detail.
-  - Synthetic data labels are sharp but have a domain gap to real images; pure synthetic-data methods (Depth Anything V2, Depth Pro second stage) sacrifice accuracy for sharpness.
+MoGe-2 is an open-domain monocular geometry estimation model that recovers a metric-scale 3D point map of a scene from a single image. It extends MoGe — which predicts affine-invariant point maps of unknown scale and shift — with metric scale prediction, using a decoupled design in which the original affine-invariant point-map branch is preserved for accurate relative geometry while a separate MLP head predicts a single global metric scale factor from the DINOv2 encoder's CLS token. To recover fine-grained geometric detail that noisy real-world training labels destroy, the paper introduces a data refinement pipeline that filters mismatched depth values in LiDAR- and SfM-derived data using local alignment against a synthetic-only reference model, then fills the removed regions by log-space Poisson completion with sharp synthetic predictions. Trained on 24 mixed datasets (about 8.9M frames), MoGe-2 simultaneously achieves state-of-the-art relative geometry accuracy, metric scale precision, and boundary sharpness, and was published at NeurIPS 2025.
 
-## 2. Core Method
-**Pipeline**: Single RGB image → DINOv2 ViT backbone → Conv neck + Conv head for affine-invariant point map → MLP head for metric scale factor (decoupled) → metric-scale point map × mask → final metric geometry; trained with mixed synthetic + real data, where real data is refined by synthetic-style sharpness priors.
+## Background and Problem
 
-**Key components**:
-1. **Decoupled affine-invariant point map + global scale factor**: Instead of predicting absolute metric point maps directly (which suffers from focal-distance ambiguity), the model predicts (a) an affine-invariant point map P̂ via the same robust L1 alignment solver as MoGe, and (b) a separate global scale factor ŝ via an MLP head on the CLS token. The metric point map is ŝ · P̂. This decoupled representation mitigates focal-distance ambiguity and yields more accurate results than a fully-metric output.
-2. **DINOv2 ViT backbone**: Inherits DINOv2's strong visual features — same as MoGe.
-3. **Unified real-data refinement pipeline**: To inject sharp detail without sacrificing real-world accuracy, the paper develops a pragmatic data-refinement approach that:
-   - Filters mismatched / false depth values in real training data (mostly at object boundaries).
-   - Performs edge-preserving depth inpainting using a model trained on sharp synthetic data to fill missing regions.
-   - This produces sharp "synthetic-style" labels for real images, retaining their real-world geometry while gaining sharpness.
-4. **Loss**: Robust L1 alignment loss on point maps (same as MoGe) plus metric-scale supervision.
-5. **Mixed training**: Trained on a large corpus of synthetic + real datasets, with real data refined through the unified pipeline.
+Monocular geometry estimation (MGE) predicts the 3D point map of a scene from one image and, unlike depth estimation, also recovers camera intrinsics so that pixels can be lifted into 3D space. The authors define an ideal MGE method by three requirements: geometry accuracy (global and relative shape), metric prediction (scale, needed for SLAM, autonomous driving, and embodied AI), and geometry granularity (sharp fine-grained details, needed for image editing, generation, and world modeling). They argue that no previous method satisfies all three simultaneously: MoGe achieves top relative geometry accuracy with its affine-invariant point map and robust optimal alignment training, but is not metric and lacks fine detail; Metric3D V2 and UniDepth V2 target metric depth with canonical camera transformations or camera embeddings; Depth Anything V2 trains on synthetic labels for sharpness but suffers synthetic-to-real gaps; Depth Pro uses synthetic data and multi-patch transformers for sharp metric depth but falls short in geometric accuracy. A further obstacle is that real training data is noisy — LiDAR scans suffer sensor-synchronization misalignment at object boundaries (e.g., in Argoverse 2), and SfM reconstructions miss reflective surfaces, thin structures, and sharp boundaries (e.g., in ScanNet++) — which caps the detail a model can learn.
 
-**Essential difference from existing methods**:
-- Decoupled affine + global scale avoids focal-distance ambiguity while preserving relative geometry.
-- Real-data refinement injects sharp detail without sacrificing real-world accuracy.
-- First method to simultaneously achieve top scores on relative geometry accuracy, metric scale precision, and detail granularity.
+## Method
 
-## 3. Knowledge, Supervision, and Assumptions
-- **Backbone**: DINOv2 ViT — frozen then adapted for geometry prediction.
-- **Training data**: Mixed corpus of synthetic (sharp labels) and real (LiDAR / SfM-captured, refined by the unified pipeline) datasets.
-- **Supervision**: Robust L1 alignment loss on point maps (vs. ground-truth 3D) + metric-scale supervision.
-- **Foundation-model usage**: Heavy reliance on DINOv2 features; inherits MoGe's alignment solver and multi-scale supervision.
-- **Assumptions**:
-  - The focal-distance ambiguity can be mitigated by decoupling affine-invariant point map prediction from global scale prediction.
-  - Real-data labels can be made "synthetic-style sharp" via filtering + edge-preserving inpainting without losing real-world accuracy.
-  - DINOv2 features are sufficient as the visual backbone for monocular geometry estimation.
-- **Learned vs. provided**: Camera intrinsics, affine-invariant point map, and metric scale are all predicted by the network; ground-truth geometry comes from the training datasets (synthetic + refined real).
+The method builds directly on MoGe, whose base network (a DINOv2 ViT encoder with a shared convolutional neck and task-specific heads) predicts an affine-invariant point map trained with a robust L1 loss in which per-image optimal scale and shift are computed online by a robust and optimal (ROE) alignment solver, plus multi-scale supervision over local spherical regions of the ground-truth point cloud to sharpen local geometry. MoGe-2 adds two components.
 
-## 4. Experiments and Findings
-- **Benchmarks**: Multiple monocular geometry / depth benchmarks — comparison against Depth Anything V2, UniDepth V2, Metric3D V2, Depth Pro, MoGe†.
-- **Metrics**:
-  - Relative Geometry (RG) accuracy.
-  - Metric Geometry (MG) precision.
-  - Sharp Detail (SD) recovery.
-  - Standard monocular depth metrics (AbsRel, RMSE, etc.).
-- **Key results stated**:
-  - MoGe-2 ranks 1st across all three dimensions (RG, MG, SD) in comprehensive evaluations (Fig. 1 of paper) — no prior method achieves all three simultaneously.
-  - Open-domain metric depth predictions outperform UniDepth V2, Metric3D V2, Depth Anything V2, Depth Pro, and MoGe.
-  - Real-data refinement strategy significantly improves sharpness over MoGe without compromising geometric accuracy.
-  - Decoupled scale design yields more accurate results than direct metric point-map prediction.
-- **Ablations** (referenced in paper): shift-invariant vs affine-invariant representation; data refinement contribution; backbone choice.
+Metric scale via decoupled prediction. Directly predicting metric point maps is suboptimal due to the focal-distance ambiguity. The paper explores alternatives. A shift-invariant point map that absorbs metric scale into the point map is entangled: the wide range of open-domain scene scales destabilizes learning, and inaccurate scale predictions produce large gradients that interfere with relative geometry. The adopted design keeps the affine-invariant point-map branch unchanged and adds a scale branch supervised with L_s = ||log(s_hat) − stopgrad(log(s*))||^2, where s* is the optimal scale computed online by the ROE solver between prediction and ground truth; the final metric point map is the predicted scale times the affine-invariant point map. For the scale head, a convolutional head sharing the neck fails to decouple scale from relative geometry, whereas a two-layer MLP reading the DINOv2 CLS token — which carries global scene information — improves metric accuracy while preserving relative geometry, and is adopted as the final configuration.
 
-## 5. Strengths and Limitations
-### Strengths
-- **Simultaneous RG + MG + SD**: First MGE method to achieve top scores on all three.
-- **Decoupled representation**: Affine-invariant point map + global scale avoids focal-distance ambiguity and yields accurate metric geometry.
-- **Unified real-data refinement**: Practical pipeline that makes real labels sharp without losing real-world accuracy — works across LiDAR and SfM artifact types.
-- **Strong baseline performance**: Beats prior SOTA on monocular depth benchmarks.
-- **Open source** (NeurIPS 2025).
+Real data refinement for detail recovery. A MoGe model trained only on synthetic data (G_syn) provides a sharp, color-depth-consistent reference. Mismatch filtering samples local spherical regions around G_syn's predicted points with multi-scale radii r_j proportional to predicted depth and image diagonal (alpha in {1/4, 1/16, 1/64} of image size), aligns the real-captured points within each region to the predictions via the ROE solver, and marks points deviating beyond the radius as outliers; the union of outliers across scales is removed. Using local rather than global alignment avoids the synthetic model's biased global layout estimates. Geometry completion then fills the filtered regions by logarithmic-space Poisson completion, matching the gradient of G_syn's predicted depth while keeping the surviving real depth as boundary conditions, so completed maps retain robust absolute depth with sharp, image-aligned boundaries.
 
-### Limitations
-- **Inherits MoGe's failure modes**: Affine-invariant point map representation is sensitive to scale alignment failures on extreme scenes.
-- **Real-data refinement is a pipeline, not end-to-end**: Requires running an inpainting model on real training data; the quality of refined labels is bounded by the inpainting model.
-- **Two-stage scale prediction**: The metric scale factor is decoupled from per-pixel geometry, which can produce globally-scaled but locally-inaccurate regions in some scenes.
-- **Outdoor / driving focus**: Most detailed comparisons are on indoor + mixed scenes; extreme outdoor / driving conditions are less characterized.
-- **Single-image only**: No temporal or multi-view consistency; out-of-distribution videos may drift.
+## Contributions
 
-## 6. Takeaway
-MoGe-2 demonstrates that **the three long-conflicting goals of monocular geometry estimation — relative geometry accuracy, metric scale precision, and fine-grained detail — can be jointly achieved** by (a) decoupling the affine-invariant point map from the global scale factor to avoid focal-distance ambiguity, and (b) unifying real training data through a synthetic-style sharpness-refinement pipeline. This combination produces the first MGE method that simultaneously ranks first on RG, MG, and SD benchmarks, beating Depth Anything V2, UniDepth V2, Metric3D V2, Depth Pro, and MoGe. For HOI research, MoGe-2's metric-scale point maps provide calibrated single-image geometry priors useful for hand-object reconstruction when multi-view cues are weak, and its sharpness makes it a strong base for downstream contact prediction and grasp synthesis.
+1. A metric monocular geometry estimation framework that decouples the task into affine-invariant point-map prediction and global scale recovery, with insights and ablations showing why the decoupled, CLS-token-conditioned design outperforms entangled shift-invariant prediction and convolution-head alternatives.
+2. A pragmatic real-data refinement approach — local-geometry-based mismatch filtering plus log-space Poisson completion using synthetic labels — that enables sharp detail prediction while fully leveraging large-scale real data for generality, in contrast to prior work that trains on synthetic data alone.
+3. State-of-the-art results in both geometry accuracy and sharpness, significantly surpassing prior methods in global and local relative geometry as well as metric geometry, with no previous method reported to combine all three capabilities.
+
+## Experimental Setup
+
+Training uses 24 datasets: 16 synthetic (e.g., Hypersim, Structured3D, TartanAir, Objaverse, MatrixCity, Synscapes), 3 LiDAR-scanned (A2D2, Argoverse 2, Waymo), and 5 SfM-reconstructed (ARKitScenes, BlendedMVS, MegaDepth, ScanNet++, Taskonomy), totaling about 8.9M frames with dataset weights following MoGe. The backbone is DINOv2 ViT-Large (ViT-Base for ablations); normalization layers are removed from the residual heads to cut inference latency. The full model trains for 120K iterations (ablations 100K) with initial learning rates 1e-5 (backbone) and 1e-4 (neck/heads), halved every 25K steps, on 32 NVIDIA A100 GPUs for 120 hours. Relative geometry is evaluated on 10 datasets (NYUv2, KITTI, ETH3D, iBims-1, GSO, Sintel, DDAD, DIODE, Spring, HAMMER) using MoGe's protocol: relative point/depth error and inlier rates under scale-invariant, affine-invariant, and local point-map alignments plus affine-invariant disparity. Metric geometry is evaluated on 7 metric datasets (NYUv2, KITTI, ETH3D, iBims-1, DDAD, DIODE, HAMMER). Boundary sharpness uses the Depth Pro boundary F1 score on iBims-1, HAMMER, Sintel, and Spring. Baselines include UniDepth V1/V2, Depth Pro, MoGe, MASt3R, Depth Anything V1/V2, ZoeDepth, and Metric3D V2. A supplementary study varies test-time resolution over 1200–8000 image tokens.
+
+## Results
+
+- Relative geometry (averages over 10 datasets): MoGe-2 attains the best average rank (2.05) among the compared methods, ahead of MoGe (2.53) and UniDepth V2 (2.88), confirming that adding metric scale does not compromise relative accuracy. For example, local affine-invariant point error is Relp 5.33 with delta_p1 of 95.9 (MoGe: 5.50/95.6) and affine-invariant depth Reld 5.62/94.8 (MoGe: 5.77/94.5); the scale-invariant point error (10.8) trails MoGe (7.46) on that single alignment variant.
+- Metric geometry (averages over 7 datasets): MoGe-2 achieves point Relp 8.19 with 93.6% inliers (rank 1.64) versus UniDepth V2 at 10.1/91.9 (2.43) and Depth Pro at 13.7/81.9 (3.29); metric depth Reld 15.7 with 76.8% inliers versus UniDepth V2 21.3/75.3. With ground-truth camera intrinsics provided, metric depth improves to 13.6/87.4. Average rank is 1.95, best overall.
+- Boundary sharpness (F1 in %): 17.9 on iBims-1, 5.42 on HAMMER, 35.2 on Sintel, 8.63 on Spring, for an average rank of 1.75 — comparable to Depth Pro (1.50; 14.3/5.36/41.6/11.0) while substantially outperforming it in both relative and metric geometry accuracy.
+- Ablations (ViT-Base): the decoupled CLS-token MLP beats the shift-invariant entangled variant and the convolution-head variant on metric depth (Reld 16.5/72.8 versus 16.9/68.8 and 17.7/68.4) and on local relative geometry (Relp 6.26 versus 6.69 and 6.34). For data, synthetic-only training yields the sharpest boundaries (F1 13.3) but poor metric accuracy (point Relp 12.4); raw real data gives the best metric accuracy (9.01) but the worst sharpness (10.3); refined real data reaches 9.20 with F1 12.5, nearly matching raw-data accuracy while substantially restoring sharpness.
+- Test-time resolution scaling: the model remains top-ranked in accuracy and sharpness across 1200–8000 tokens and trades latency linearly (e.g., about 29 ms at 1200 tokens and 55 ms at 3600 tokens on an A100 in FP16), reaching Depth Pro-level sharpness with fewer tokens.
+
+## Limitations
+
+The authors state that the method struggles with capturing extremely fine structures such as thin lines and hair, and with maintaining straight and aligned structures when there is a significant scale difference between foreground and background. The inherent ambiguity of real-world metric scale can also lead to deviations in out-of-distribution scenarios; the authors plan to address these challenges through enhanced network architectures and more real-world priors. The ablation additionally shows a residual accuracy-sharpness trade-off: refined real data slightly trails raw real data in metric point error (9.20 versus 9.01 Relp), and the scale-invariant point-map alignment variant remains behind MoGe's, indicating a small cost paid for metric and detail capabilities.

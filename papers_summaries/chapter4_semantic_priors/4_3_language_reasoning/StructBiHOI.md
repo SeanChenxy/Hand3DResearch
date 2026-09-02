@@ -1,46 +1,31 @@
 # StructBiHOI: Structured Articulation Modeling for Long-Horizon Bimanual Hand-Object Interaction Generation
 
+**Authors:** Zhi Wang, Liu Liu, Ruonan Liu, Dan Guo, Meng Wang  
+**Date:** 2026-03-09  
+**Identifier:** [arXiv:2603.08390](https://arxiv.org/abs/2603.08390)  
+**Zotero item:** `Y88SEZBT` ([Zotero](zotero://select/library/items/Y88SEZBT))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-StructBiHOI is a structured articulation modeling framework for long-horizon bimanual hand-object interaction generation that structurally disentangles temporal joint planning from frame-level manipulation refinement via a jointVAE (long-term joint evolution) and a maniVAE (frame-level hand pose refinement), with a state-space-inspired (Mamba) diffusion denoiser for long-sequence generation, achieving superior long-horizon stability, motion realism, and computational efficiency.
+StructBiHOI is a structured generative framework for long-horizon bimanual hand-object interaction (HOI) generation that disentangles long-term planning from frame-level articulation: a JointVAE plans articulated object joint trajectories, a ManiVAE refines per-frame two-hand grasps, and a Mamba2-based latent diffusion denoiser with linear complexity stitches them into coherent sequences, beating Text2HOI, LatentHOI, SemGrasp, and MDM on ARCTIC bimanual and single-hand benchmarks.
 
-## 1. Problem and Setting
-- Long-horizon bimanual hand-object interaction (HOI) generation with fine-grained joint articulation and complex cross-hand coordination.
-- Input: object geometry + task semantics (e.g., language description or task specification).
-- Output: long-sequence bimanual hand-object interaction motion, with articulated object state trajectory.
-- Language reasoning prior; uses language to specify the long-horizon task.
+## Background and Problem
+Generating human-like HOI conditioned on object geometry and language instructions matters for dexterous robotics, character animation, and embodied AI. Physics-based RL methods depend on simulator fidelity and reward engineering, while data-driven generative approaches mostly address short-horizon or single-hand settings. Bimanual manipulation adds coordinated control of two articulated kinematic chains with mutual constraints and asymmetric roles, and existing methods fail at long-horizon (over 150 frames) bimanual generation because of three challenges: (1) long-range temporal dependency modeling becomes computationally demanding as sequences grow, especially when diffusion backbones run repeatedly during denoising; (2) fine-grained joint-level articulation and high-level manipulation semantics are entangled, hindering both stable planning and accurate local refinement; and (3) cross-hand coordination errors propagate temporally and spatially. The paper targets generating both a bimanual grasp sequence and the corresponding articulated object motion from an object, a motion instruction, and a hand-type indicator.
 
-## 2. Core Method
-- Structurally disentangles temporal joint planning from frame-level manipulation refinement:
-  1. jointVAE: models long-term joint evolution conditioned on object geometry and task semantics.
-  2. maniVAE: refines fine-grained hand poses at the single-frame level.
-- A state-space-inspired (Mamba-based) diffusion denoiser models long-range dependencies with linear complexity, enabling stable and efficient long-sequence generation.
-- The hierarchical design facilitates coherent dual-hand coordination and articulated object interaction.
-- How language prior is injected: task semantics (often from natural language) condition the jointVAE's temporal planning.
+## Method
+Hands are represented with per-frame left/right 3D translations and 16x6 pose vectors (one global plus 15 joint rotations in 6D); the object state includes translation, 6D rotation, and a 1-D articulated joint angle. The framework has three stages. (1) JointVAE, a conditional VAE, models long-horizon object joint evolution O_gamma conditioned on object geometry and the text instruction, trained with an ELBO plus trajectory reconstruction loss. (2) ManiVAE, a frame-level conditional VAE, reconstructs refined hand poses conditioned on the object, instruction, and a hand-type one-hot code, trained with ELBO, MANO mesh reconstruction, distance-map, and hand-object relative orientation losses. (3) A motion-aware latent diffusion model denoises a composite sequence of ManiVAE latents, hand translations, and object global motions, with JointVAE's joint trajectory injected as a structural prior. Conditioning (diffusion timestep, CLIP text, PointNet object features, hand type) is fused additively and broadcast over time, and frame-wise and agent-wise positional encodings preserve temporal order and component identity. The denoiser stacks 8 Mamba2 blocks, giving linear-complexity long-range modeling instead of Transformer quadratic attention. After denoising, the ManiVAE decoder reconstructs hand articulation and it is combined with the global motion to form the full interaction sequence.
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: bimanual manipulation and single-hand grasping datasets.
-- Supervision: long-sequence hand-object interaction motion, articulated object joint trajectories, task semantics.
-- Domain knowledge: bimanual coordination, articulated object structure, Mamba state-space model.
-- Assumption: long-term joint planning and short-term manipulation refinement can be effectively separated.
+## Contributions
+- An efficient generative framework addressing scalability and stability of long-sequence bimanual HOI generation.
+- A hierarchical, structurally disentangled modeling strategy that separates long-term joint motion planning (JointVAE) from single-frame fine-grained hand pose refinement (ManiVAE).
+- A Mamba-based selective state-space denoiser inside a latent diffusion framework achieving linear-complexity long-range dependency modeling, with gains in efficiency, motion realism, and bimanual coordination over state-of-the-art baselines.
+- Demonstrated generalization beyond bimanual settings to single-hand grasping benchmarks and unseen objects.
 
-## 4. Experiments and Findings
-- Datasets: bimanual manipulation benchmarks; single-hand grasping benchmarks for comparison.
-- Metrics: long-horizon stability, motion realism, computational efficiency, manipulation success.
-- Achieves superior long-horizon stability, motion realism, and computational efficiency compared to strong baselines.
-- The hierarchical disentanglement and Mamba-based diffusion are both critical for performance.
+## Experimental Setup
+Experiments use the ARCTIC benchmark, partitioned into four subsets by number of hands and object articulation: Bi-Art., Bi-Rigid, Single-Art., and Single-Rigid. The diffusion process uses T=1,000 timesteps with a cosine noise schedule, a maximum sequence length of 150 frames, CLIP text encoding, PointNet object features, and 8 Mamba2 blocks; training takes about four days on a single NVIDIA RTX PRO 6000 GPU. Metrics follow prior work: interpenetration volume (IV) and depth (ID), motion smoothness (mean Jerk), sample diversity (SD), and overall diversity (OD, compared against real data). Baselines are Text2HOI, LatentHOI, SemGrasp, and MDM.
 
-## 5. Strengths and Limitations
-### Strengths
-- Addresses long-horizon planning instability through structural disentanglement.
-- Mamba-based diffusion enables linear-complexity long-sequence modeling.
-- Handles fine-grained joint articulation.
-- State-of-the-art on bimanual manipulation benchmarks.
+## Results
+On Bi-Art., StructBiHOI reaches right-hand IV 0.382 (LatentHOI 0.395), left-hand ID 1.242 (1.319), Jerk 0.092 (0.097), and SD 0.228, with OD 0.128 close to real data. On Bi-Rigid., right-hand IV drops from 0.085 to 0.074 and right-hand ID from 0.012 to 0.008, with Jerk 0.125. In single-hand settings it stays competitive or better: lowest left-hand ID (0.020) on Single-Art. and best right-hand IV (0.025) and left-hand ID (0.021) on Single-Rigid. Ablations attribute clear gains to each component: removing ManiVAE raises IV and left-hand ID by 0.286 and 0.033, removing JointVAE raises them by 0.413 and 0.061, removing frame-wise latents raises Jerk by 0.012, and removing agent-wise latents lowers SD by 0.058. Denoiser comparisons rank GRU (IV 0.423, Jerk 0.108, SD 0.176) < temporal convolution < Transformer (0.396, 0.099, 0.193) < Mamba (0.382, 0.092, 0.228).
 
-### Limitations
-- Complex hierarchical architecture may be harder to train.
-- May not generalize to extremely novel object types.
-- Diffusion inference is slower than direct prediction.
-- Requires bimanual interaction training data.
-
-## 6. Takeaway
-StructBiHOI demonstrates that long-horizon bimanual HOI generation benefits from explicitly separating temporal planning from frame-level refinement, with Mamba-based diffusion providing efficient long-range dependency modeling. The work advances bimanual HOI generation from short sequences to coherent long-horizon manipulation, with broad implications for embodied AI and robot learning from demonstration.
+## Limitations
+The paper does not include a dedicated limitations section. Its self-described scope remarks are that quantitative evaluation is conducted on the ARCTIC benchmark (bimanual and single-hand subsets) with a maximum generated sequence length of 150 frames, and it frames long-horizon instability, entanglement, and cross-hand coordination as the open challenges its design targets; no further limitations of the method itself are explicitly reported in the paper.

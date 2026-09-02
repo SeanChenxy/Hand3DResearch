@@ -1,47 +1,37 @@
 # EasyHOI: Unleashing the Power of Large Models for Reconstructing Hand-Object Interactions in the Wild
 
+**Authors:** Yumeng Liu, Xiaoxiao Long, Zemin Yang, Yuan Liu, Marc Habermann, Christian Theobalt, Yuexin Ma, Wenping Wang  
+**Date:** 2024-11-21  
+**Identifier:** [arXiv:2411.14280](https://arxiv.org/abs/2411.14280)  
+**Zotero item:** `6Y89V4WR` ([Zotero](zotero://select/library/items/6Y89V4WR))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-EasyHOI aims to reconstruct hand-object interactions from a single-view image, a fundamental but ill-posed task, by composing multiple off-the-shelf large foundation models (segmentation, depth estimation, inpainting, multi-view diffusion) into a training-free pipeline that achieves state-of-the-art hand-object reconstruction from in-the-wild RGB images without any task-specific training.
 
-## 1. Problem and Setting
-- 3D reconstruction of hand and object from a single RGB image captured in unconstrained (in-the-wild) conditions.
-- Input: a single RGB image showing a hand interacting with an object in an arbitrary environment.
-- Output: 3D hand mesh (MANO parameters), 3D object shape (as a textured mesh or neural representation), and relative hand-object 6D pose.
-- Task: hand-object reconstruction from single images. Classified under shape completion priors because the core challenge is hallucinating unseen object geometry using foundation model priors.
+EasyHOI reconstructs hand-object interactions from a single in-the-wild RGB image by chaining off-the-shelf foundation models — LISA for reasoning-based segmentation, a diffusion model for hand removal and inpainting, SAM for object segmentation, InstantMesh for object mesh generation, and HaMeR for MANO hand estimation — followed by a three-stage prior-guided optimization (camera-system setup, ICP-based contact alignment, hand parameter refinement) that resolves coordinate-system conflicts and enforces physical plausibility. In zero-shot comparisons on ARCTIC, OakInk, and DexYCB it reports the lowest Chamfer Distance (e.g., 1.089 versus 1.247-12.878 for prior methods on ARCTIC) and the lowest simulation displacement and intersection volume across all three datasets.
 
-## 2. Core Method
-- A modular, zero-shot pipeline chaining together multiple frozen large models; no model is fine-tuned on HOI data. The pipeline comprises four stages leveraging distinct FM priors:
-  1. Hand-object segmentation via a vision-language model (e.g., SAM + text prompts).
-  2. Depth estimation via a monocular depth foundation model (e.g., Depth Anything, ZoeDepth) for geometric initialization.
-  3. Object inpainting via a diffusion-based inpainting model (e.g., Stable Diffusion Inpainting) to remove the hand and fill in the occluded object region, generating a "hand-free" object image.
-  4. Multi-view 3D generation via a view-synthesis diffusion model (e.g., Zero-1-to-3) to generate consistent multi-view images of the object from the inpainted view, followed by 3D lifting via neural surface reconstruction.
-- How FM priors are injected: each stage offloads a sub-problem to a specialized foundation model — VLM for semantic understanding, depth FM for geometry, diffusion for inpainting and novel view synthesis. The FMs collectively solve the HOI reconstruction task.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Foundation models used: SAM/GroundingDINO for segmentation; Depth Anything / ZoeDepth for monocular depth; Stable Diffusion Inpainting for inpainting; Zero-1-to-3 for multi-view novel view synthesis.
-- Domain knowledge: MANO hand parametric model; implicit assumptions about object convexity and surface smoothness from the view synthesis model.
-- Training data: zero training — entirely test-time inference leveraging pre-trained FMs.
-- Assumption: object is rigid; sufficient in-the-wild cues for segmentation and depth.
+The paper addresses reconstruction of 3D hand-object interactions (object shape, its relative pose, and a physically plausible grasping hand) from a single-view image — an ill-posed task due to monocular ambiguity and severe mutual occlusion, further complicated by the diversity of hand poses and object shapes. Existing approaches have limitations the authors enumerate: template-based methods assume a known 3D object model and fail on unknown objects; end-to-end trained networks are bottlenecked by scarce, low-quality HOI 3D annotations and generalize poorly; and a naive merge of independent large-model reconstructions of hand and object suffers from (1) inconsistent coordinate systems (canonical for objects versus camera-based for hands), (2) estimation inaccuracies producing spatial misalignment, and (3) inability to recover occluded regions, leading to physically implausible results. The key insight is that current foundation models for segmentation, inpainting, and 3D reconstruction generalize robustly to in-the-wild images and can serve as strong visual and geometric priors for HOI reconstruction. The paper appears in CVPR (the PDF is the CVPR Open Access version provided by the Computer Vision Foundation).
 
-## 4. Experiments and Findings
-- Datasets: HO3D, DexYCB, and in-the-wild images from the Internet.
-- Metrics: hand joint error (MPJPE, PA-MPJPE), object 3D IoU, Chamfer distance, and visual quality assessment.
-- EasyHOI achieves competitive or state-of-the-art performance on standard benchmarks without any task-specific training, outperforming several fully-supervised methods in object shape reconstruction quality on in-the-wild images.
-- Ablation studies demonstrate that each FM component (segmentation, depth, inpainting, multi-view diffusion) contributes additively to final reconstruction quality. The multi-view diffusion prior is particularly critical for recovering plausible object back-faces.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Completely training-free: no HOI-specific data collection or model training required.
-- Modular design allows swapping in improved FMs as they become available.
-- Strong zero-shot generalization to diverse objects and scenes.
-- Demonstrates that chaining FMs can solve a complex 3D vision task.
+The pipeline has two stages. Stage 1, initial reconstruction: LISA (a reasoning-segmentation large language model) produces hand and object masks, with a contour-guided filtering strategy discarding objects whose contours are not adjacent to the hand's; a diffusion inpainting model (GLIGEN-style, via Affordance Diffusion) removes the hand and completes the occluded object appearance, from which SAM segments the complete object; InstantMesh reconstructs the object's full geometry from the inpainted result (with post-processing to make the mesh watertight), while ViTPose estimates 2D hand keypoints to crop the hand region and HaMeR predicts MANO parameters (global 6D pose and 45-dimensional articulated pose). Stage 2, prior-guided HOI optimization, proceeds in three steps using the object's coordinate frame as the global reference. (1) Camera System Setup: differentiable rendering aligns the object mesh to the image by minimizing a soft IoU loss between the rendered object mask and the inpainted-object segmentation mask, augmented with a Sinkhorn optimal-transport distance (Sinkhorn-Knopp algorithm) so gradients exist even when the masks do not overlap; this recovers camera intrinsics and extrinsics. (2) HOI Contact Alignment: with articulated pose frozen, the hand's global 6D pose is optimized, alternating between mask-constrained hand pose optimization (soft IoU against the hand segmentation) and ICP-based hand-object registration, where 2D contact regions are detected from mutual occlusion cues, converted to 3D contact candidates by ray-casting (nearest/farthest intersections for the object; palmar-side only, using pre-marked MANO template regions, for the hand), and registered to coarsely align hand and object. (3) Hand Parameter Refinement: global pose and articulation are jointly optimized with a weighted combination of the hand-mask IoU loss, a penetration loss (mean signed-distance of hand vertices inside the object), a contact loss (distance from ObMan-defined contact zones to the object surface, encouraging grasp stability), and an L1 regularization loss keeping the articulated pose close to HaMeR's prediction; reported weights are 5, 10, 5, and 0.1 respectively.
 
-### Limitations
-- Multi-stage pipeline is prone to error accumulation; failures in segmentation or inpainting propagate.
-- Computationally expensive (multiple large model inferences per image).
-- Object shape quality is bounded by the view-synthesis FM's capabilities.
-- Limited to single-image reconstruction; temporal consistency not considered.
-- Struggles with thin structures and transparent objects.
+## Contributions
 
-## 6. Takeaway
-EasyHOI is a landmark paper in the "FM-prior for HOI" landscape, demonstrating that sophisticated HOI reconstruction can be achieved by intelligently composing off-the-shelf large models without any task-specific training. Its modular design philosophy — treating foundation models as interchangeable components — provides a compelling template for future research, where each FM contributes a distinct type of knowledge (semantic, geometric, generative) to the HOI pipeline.
+- A training-free, modular single-image HOI reconstruction pipeline that composes multiple off-the-shelf large models (LISA, diffusion inpainting, SAM, InstantMesh, HaMeR) and thereby generalizes to in-the-wild images and unseen objects without 3D HOI training data.
+- A prior-guided optimization framework with three coarse-to-fine stages that unifies the canonical object frame and camera-based hand frame, extracts contact cues from occlusion boundaries via ray-casting, and enforces physical plausibility (non-penetration, stable contact) under monocular ambiguity, including a Sinkhorn-based mask loss that remains effective for non-overlapping masks.
+- Zero-shot quantitative comparisons on ARCTIC, OakInk, and DexYCB against IHOI, AlignSDF, gSDF, and MOHO showing superior object reconstruction and grasp quality, plus ablations of each optimization stage and each refinement loss, and demonstrated extensibility by swapping InstantMesh for Tripo3D with improved results.
+
+## Experimental Setup
+
+Implementation runs on an Ubuntu server with an NVIDIA A40 GPU. Camera setup optimizes with learning rate 1e-2, terminating when the object-mask loss drops below 0.1 or after 1000 iterations; contact alignment uses learning rate 1e-2 for global hand parameters with ICP registration applied at iterations 100 and 200; hand refinement uses learning rates 1e-4 (global pose) and 1e-2 (articulation). Evaluation is zero-shot on three public datasets — ARCTIC (11 articulated objects), OakInk (100 diverse objects), and DexYCB (20 YCB-video objects) — with 500 randomly selected images per dataset, filtered by a force-closure tester so that only instances with valid hand-object contact are kept. Baselines are IHOI, AlignSDF, gSDF, and MOHO; for fairness all methods use HaMeR hand detections, and DexYCB is excluded for AlignSDF and gSDF because it was part of their training data. Metrics: Chamfer Distance and F-scores at 5 mm and 10 mm thresholds for object reconstruction; Intersection Volume (cm^3) between hand and object meshes; and Simulation Displacement (cm), the distance the object falls under gravity over 1000 simulation steps with a fixed hand pose, as a measure of grasp stability. Hand accuracy is reported as MPVPE and MPJPE in centimeters. Additional qualitative results are shown on self-collected in-the-wild images.
+
+## Results
+
+On object reconstruction, EasyHOI achieves the best Chamfer Distance on all three datasets: 1.089 on ARCTIC (versus 1.247 for gSDF, 1.289 AlignSDF, 1.375 IHOI, 12.878 MOHO), 1.035 on OakInk (versus 1.742-3.883 for baselines), and 1.628 on DexYCB (versus 1.695-1.897), with the highest F5/F10 scores everywhere (e.g., F5 0.155 and F10 0.272 on ARCTIC; F5 0.247 and F10 0.445 on OakInk; F5 0.134 and F10 0.253 on DexYCB). Interaction quality also favors EasyHOI: it attains the lowest simulation displacement (2.25 cm on ARCTIC, 3.08 cm on OakInk, 2.43 cm on DexYCB, versus 2.31-3.94 cm and 2.59-3.55 cm for baselines) and the smallest intersection volume (4.67, 4.11, and 4.52 cm^3 respectively, versus 4.16-4.94 and 4.52-4.93 cm^3). For hand accuracy, EasyHOI with predicted object geometry yields MPVPE 1.48 cm / MPJPE 1.36 cm on ARCTIC and 1.19 / 1.22 cm on OakInk, slightly worse than HaMeR alone (1.14 / 1.05 and 1.06 / 1.03 cm) because optimization against an imperfect generated object trades off hand accuracy; however, with ground-truth object geometry the same optimization improves over HaMeR (0.95 cm MPJPE on ARCTIC, 0.77 cm on OakInk), demonstrating the refinement's effectiveness given accurate geometry. Ablations of the three optimization stages show monotonically improving simulation displacement and intersection volume (e.g., on ARCTIC, S.D. drops from 5.79 to 2.87 after contact alignment and to 2.25 after hand refinement), and per-loss ablations on OakInk show that removing the penetration loss spikes intersection volume to 9.62 cm^3, removing the regularization loss distorts MPVPE to 4.57 cm with twisted fingers, and removing the contact or mask losses increases simulation displacement.
+
+## Limitations
+
+The authors state that the method relies heavily on the adopted large models, so it is susceptible to unsatisfactory results when those models fail; they propose improving large models for the specific requirements of hand-object interaction as future work, along with enhancing efficiency and robustness. The paper also notes that because the generated object geometry from the large reconstruction model is not entirely accurate, optimizing for physical plausibility against it inevitably compromises hand accuracy relative to HaMeR's direct estimates. No quantitative runtime analysis is reported in the paper.

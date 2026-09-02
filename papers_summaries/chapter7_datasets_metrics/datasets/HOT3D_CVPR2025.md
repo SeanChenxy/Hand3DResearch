@@ -1,51 +1,38 @@
-# HOT3D (CVPR 2025)
+# HOT3D: Hand and Object Tracking in 3D from Egocentric Multi-View Videos
 
-> Banerjee, Shkodrani, Moulon, Hampali, Han, Zhang, Zhang, Fountain, Miller, Basol, Newcombe, Wang, Engel, Hodan. *HOT3D: Hand and Object Tracking in 3D from Egocentric Multi-View Videos.* CVPR 2025. Zotero Key: `D3WKFRS5`.
+**Authors:** Prithviraj Banerjee, Sindi Shkodrani, Pierre Moulon, Shreyas Hampali, Shangchen Han, Fan Zhang, Linguang Zhang, Jade Fountain, Edward Miller, Selen Basol, Richard Newcombe, Robert Wang, Jakob Julian Engel, Tomas Hodan  
+**Date:** 2024-11-28  
+**Identifier:** [arXiv:2411.19167](https://arxiv.org/abs/2411.19167)  
+**Zotero item:** `D3WKFRS5` ([Zotero](zotero://select/library/items/D3WKFRS5))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-HOT3D is Meta's large-scale first-person 3D hand + object tracking benchmark: using both Project Aria and Quest 3 headsets, it records 833 minutes (3.7M+ images) of egocentric multi-view sequences from 19 subjects interacting with 33 rigid objects. Mocap-grade ground-truth hand / object 6D pose is provided, making it the core benchmark for "real-machine 3D HOI tracking" in the Meta Aria ecosystem.
 
-## 1. Dataset Purpose
-- Fills the gap in "first-person + multi-view + multi-headset + large-scale + real physical ground truth" 3D HOI tracking evaluation.
-- Tasks: (1) 3D hand tracking; (2) model-based 6DoF object pose tracking; (3) 3D lifting of unknown in-hand objects (model-free grasp object 3D reconstruction).
-- Anchors "hand-object tracking" under AR/VR headsets (Quest 3, Aria) as an independent sub-task; fills the gap that HO-3D v3 and DexYCB are all third-view.
-- Also provides motion-capture-based "hard GT" — more accurate than the GT obtained by multi-view RGB-D optimization.
+This CVPR 2025 paper releases HOT3D, the first large-scale public dataset of multi-view egocentric videos captured with real Meta headsets (Project Aria glasses and Quest 3) and annotated with motion-capture ground truth for 3D hand and object poses: over 833 minutes (1.5M+ multi-view frames, 3.7M+ images) showing 19 subjects interacting with 33 rigid objects in kitchen, office, living room, and inspection scenarios. Hands are annotated in both UmeTrack and MANO formats, objects come with high-resolution scanned meshes with PBR materials, and Aria adds SLAM point clouds and eye gaze. Baseline experiments on 3D hand tracking, model-based 6DoF object pose estimation, in-hand object segmentation, and 3D lifting of unknown in-hand objects show that multi-view methods significantly outperform their single-view counterparts.
 
-## 2. Data Composition
-- Source: real capture. 19 subjects perform pick-up, observe, and put-down tasks across multiple environments (kitchen, office, living room).
-- Viewpoint: dual headsets (Project Aria research prototype + Quest 3 VR headset), each headset carries multiple synchronized RGB / mono cameras + eye gaze + SLAM.
-- Scale: 833+ minutes of video, 3.7M+ images.
-- Object and action: 33 rigid objects (kitchen utensils, stationery, living-room items); each object can be grasped and manipulated in multiple ways.
-- Contains natural egocentric motion, in-hand manipulation, and multi-object handover.
-- No articulated objects (all 33 objects are rigid).
+## Background and Motivation
 
-## 3. Annotation and Supervision
-- Hand: 3D 21 joints (mocap optical markers, sub-mm accuracy); provided in both UmeTrack and MANO formats.
-- Object: 6D pose (mocap markers attached to the object); 3D mesh (in-house scanner, with PBR materials).
-- Interaction: no direct contact map or grasp type; can be inferred from mocap trajectories.
-- Scene: multi-view RGB + mono images, gaze signal, scene point cloud, camera / hand / object 6D pose, IMU.
-- No robot annotation, no language, no tactile.
+Understanding 3D hand-object interaction from wearable cameras would enable skill transfer between humans and to robots, context-aware AI assistants, and new AR/VR input capabilities, but existing methods are not accurate or fast enough, and progress is limited by data: prior datasets either lack egocentric multi-view capture from real headsets, use lower-accuracy RGB-D-based annotation (HO-Cap), cover only single-view or mock-up egocentric streams (ARCTIC), or contain few objects and near-static grasps (DexYCB, H2O). Multi-view egocentric data is naturally available on current AR/VR headsets yet remained largely unexplored, and unlike active depth sensors it is power-efficient, making it the practical sensing modality for always-on glasses. HOT3D is therefore designed as a benchmark for training and evaluating hand and object tracking in 3D from localized, hardware-synchronized, multi-view egocentric streams rather than monocular views or isolated images.
 
-## 4. Supported Evaluation
-- Benchmark tasks: (1) 3D hand tracking (MPJPE / PA-MPJPE / Mesh Error); (2) model-based 6DoF object pose (ADD-S / AUC); (3) model-free 3D lifting of in-hand objects (chamfer / F-score).
-- Key metrics: hand MPJPE, object ADD-S / AUC-ADDS, reconstruction chamfer.
-- The paper shows that multi-view egocentric data significantly outperforms single-view baselines, quantifying the multi-view gain.
-- Also an important basis for AR/VR-headset downstream tasks (hand interaction UI, UI grasping and placing).
+## Dataset Construction
 
-## 5. Why It Matters
-- The first egocentric 3D HOI tracking data released by a major AR/VR company (Meta), with large scale, hard GT (mocap), and dual headsets.
-- For the first time, "3D lifting of unknown in-hand objects" is defined as an independent sub-task ("model-free in-hand 3D").
-- Quest 3 has shipped millions of units, and HOT3D's GT comes from this "potential user base" of devices, which is highly significant for AR practicalization.
-- Cross-headset (Quest 3 + Aria) makes cross-device generalization evaluation possible.
-- The flagship dataset of the Aria ecosystem, expected to drive 1–2 years of egocentric 3D tracking work.
+Recordings are captured at 30 fps with hardware-trigger synchronization on two headsets: Project Aria (one 1408x1408 RGB plus two 640x480 monochrome cameras per frame, plus SLAM scene point clouds and eye gaze) and Quest 3 (two 1280x1024 monochrome cameras per frame), with intrinsics and camera-to-world transformations provided for every image. The 33 objects are household and office items of diverse appearance, size, and affordances, reconstructed by an in-house scanning pipeline into high-resolution meshes with PBR materials (metallic, roughness, and normal maps) that support photorealistic rendering of training images. The 19 subjects were recruited for hand appearance and shape diversity, with each participant's hands scanned by a custom 3D hand scanner and released in UmeTrack and MANO formats. Four scenarios (inspection with pick-up/observe/put-down, kitchen, office, living room) are staged in one lab with scenario-specific furniture and regularly randomized lighting, furniture placement, and decor; each recording interacts with up to 6 objects, producing 425 recordings (198 Aria, 226 Quest 3) of roughly 2 minutes each. Ground-truth per-frame poses of hands and objects come from a motion-capture lab with dozens of infrared exocentric OptiTrack cameras and light diffuser panels; object and wrist poses are 3D rigid transformations and hand poses are given in both UmeTrack (more accurate) and MANO (more standard) formats. Of the 1.5M frames, 1.16M are fully annotated and passed visual inspection, with a validity mask released alongside all 1.5M frames for unsupervised use. The training split covers 13 subjects (1M frames) with public ground truth, while the test split covers the remaining 6 subjects (0.5M frames) with annotations accessible only through evaluation servers. For convenient benchmarking, the authors additionally release HOT3D-Clips, 3,832 curated 150-frame (5-second) clips (2,804 train, 1,028 test; 1,983 Aria, 1,849 Quest 3) that pass quality-assurance tests on annotation completeness, visibility of at least one hand and one object, and absence of overexposure. Object onboarding sequences show every object upright and upside-down on a desk (ground truth for all frames, suited to NeRF-like reconstruction) and manipulated by hands (ground truth only on the first frame, defining the canonical object space for model-free 6DoF tracking evaluation).
 
-## 6. Limitations and Biases
-- Only 33 rigid objects: no articulated objects (such as scissor opening, laptop opening), so it does not directly support the evaluation of articulated priors in Ch3.
-- 19 subjects: subject diversity is moderate.
-- Under the headset viewpoint, "the subject cannot see his own hand": this is a fundamental difficulty of the model-free in-hand 3D task, and the dataset itself cannot work around it.
-- Annotation depends on mocap markers: markers may affect tactile perception and are not applicable to large / deformable objects.
-- No language instruction, no task progress / affordance annotation, which limits VLA / robotics transfer.
-- No contact-map ground truth.
+## Evaluation Protocol
 
-## 7. Takeaway
-HOT3D is best for demonstrating the accuracy of egocentric multi-view 3D hand + object tracking, especially the "user-vision"-side performance in AR/VR headset scenarios. **Not suitable** for evaluating bi-manual, articulated, dexterous manipulation, long-horizon tasks, or language-conditioned generation. In this survey, HOT3D plays the role of "egocentric 3D HOI tracking + AR/VR main benchmark" and serves as a hard anchor for evaluating "video-generative-prior cross-view to 3D improvement" in Ch5.
+Four tasks are evaluated on the test clips. 3D hand pose tracking provides the canonical hand skeleton and ground-truth 2D hand boxes and asks for 3D joint locations, measured by Mean Keypoint Position Error (MKPE) with the UmeTrack tracker trained on the UmeTrack dataset, HOT3D Quest 3 sequences, or both, in single-view and two-view modes. Model-based 6DoF object pose estimation evaluates refinement-free FoundPose and a new multi-view extension on every 30th test frame with ground-truth object masks, scoring recall of pose estimates whose symmetry-aware translational and rotational errors fall below 5 cm/5, 10 cm/10, and 20 cm/20 degree thresholds. In-hand object segmentation is measured by mIoU on roughly 19K frames, with ground truth defined as objects whose mesh vertices lie within 1 cm of the hand while moving faster than 1 cm/s, comparing EgoHOS against Mask R-CNN variants trained on 400K proprietary Aria images with 52K masks, including a variant operating on Depth Anything V2 predicted depth (MRCNN-DA). 3D lifting of unknown in-hand objects scores recall of the object bounding-box center location at 5-30 cm thresholds, comparing a hand-proxy baseline, monocular depth aligned to SLAM (Aria only), and a DINOv2-feature stereo-matching method (StereoMatch), each with ground-truth or predicted masks.
+
+## Findings and Analysis
+
+The unifying finding is that multi-view egocentric input substantially improves all four tasks. For hand tracking, a UmeTrack model trained on one dataset degrades severely on the other (13.6 versus 24.2 MKPE when trained on UmeTrack and tested on HOT3D), but training on both closes the domain gap, and switching from single-view to two-view inference cuts MKPE from 13.4/15.4 to 9.5/10.9 mm on UmeTrack/HOT3D, a 41% improvement. The multi-view FoundPose extension raises recall by 8-12 absolute points (13-34% relative) on both headsets (for example 25.2 to 33.8 at 5 cm/5 on Aria, 28.9 to 36.9 on Quest 3), partly because additional views observe heavily or fully occluded objects, and generalizes across RGB and monochrome sensors thanks to its DINOv2 backbone. For in-hand segmentation, off-the-shelf EgoHOS drops markedly on HOT3D (about 50% lower on Quest 3 monochrome images), while MRCNN-DA is the best method, beating EgoHOS by 30% on Aria (55.2 mIoU) and 65% on Quest 3 (54.7 mIoU), showing that predicted depth disambiguates in-hand objects from the background. For 3D lifting, StereoMatch with ground-truth masks reaches 76.4/96.8/99.1/99.2% recall at 5/10/20/30 cm thresholds on Quest 3 and 64.4/86.2/95.5/96.9% on Aria, clearly beating monocular depth lifting, whose errors concentrate along the optical axis; the hand-proxy baseline shows palm tracking suffices only at a coarse 30 cm radius, so dedicated multi-view lifting adds value at fine granularity.
+
+## Contributions
+
+- HOT3D, the first public dataset with multi-view, hardware time-synchronized egocentric videos from real headsets (Aria and Quest 3), 833+ minutes, 3.7M+ images, 19 subjects, 33 rigid objects, and the largest image count among 3D hand-and-object datasets, including eye gaze and SLAM point clouds on Aria.
+- High-quality motion-capture ground truth for both hands (in UmeTrack and MANO formats plus per-subject hand scans) and multiple objects per scene, with public training annotations, evaluation-server test annotations, quality-screened HOT3D-Clips, and object onboarding sequences enabling model-free tracking benchmarks.
+- Strong multi-view baselines: an extension of FoundPose to generalized multi-view PnP for 6DoF object pose estimation, Mask R-CNN in-hand segmentation baselines including a depth-channel variant, and a DINOv2 stereo-matching method for 3D lifting of unknown in-hand objects.
+- Empirical evidence across four tasks that multi-view egocentric methods significantly and consistently outperform single-view counterparts, informing power-efficient egocentric vision system design, with public challenges co-organized on the dataset.
+
+## Limitations
+
+Ground-truth pose annotations for the test split are not publicly released and are accessible only through dedicated evaluation servers, and even in the released data 1.16M of 1.5M frames are fully annotated, so some frames carry missing or lower-quality annotations. All 33 objects are rigid, so unlike ARCTIC the dataset does not cover articulated objects, and the capture takes place in a single instrumented motion-capture lab despite randomized furnishings, limiting environmental diversity. Quest 3 provides only monochrome streams, which the EgoHOS results show are harder for segmentation models, and the monocular-depth lifting baseline additionally requires SLAM point clouds that are unavailable on Quest 3, restricting some baselines to Aria recordings.

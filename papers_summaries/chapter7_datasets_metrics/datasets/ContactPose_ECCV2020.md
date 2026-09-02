@@ -1,50 +1,35 @@
-# ContactPose (ECCV 2020)
+# ContactPose: A Dataset of Grasps with Object Contact and Hand Pose
 
-> Brahmbhatt, Tang, Twigg, Kemp, Hays. *ContactPose: A Dataset of Grasps with Object Contact and Hand Pose.* ECCV 2020. DOI: 10.1007/978-3-030-58601-0_22. Zotero Key: `WT5JAMT8`.
+**Authors:** Samarth Brahmbhatt, Chengcheng Tang, Christopher D. Twigg, Charles C. Kemp, James Hays  
+**Date:** 2020 (ECCV 2020)  
+**Identifier:** [arXiv:2007.09545](https://arxiv.org/abs/2007.09545); DOI `10.1007/978-3-030-58601-0_22`  
+**Zotero item:** `WT5JAMT8` ([Zotero](zotero://select/library/items/WT5JAMT8))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-ContactPose provides contact map + hand pose + object pose + RGB-D data (2.9M images) for 2,306 unique grasps × 25 household objects × 50 subjects × 2 functional intents. It is the pioneering dataset for "grasp-level contact" research.
 
-## 1. Dataset Purpose
-- Solves the gap that "existing grasp datasets only provide hand pose, not dense contact". ContactPose takes "contact" as the core annotation of the dataset.
-- Tasks: (1) contact map prediction (hand surface / object surface contact region); (2) hand pose estimation (at grasp time); (3) 6D object pose estimation; (4) grasp type / functional intent classification.
-- Anchors "contact modeling" as an independent sub-task; provides ground truth for subsequent methods such as CPF, CP3, and ContactGen.
+ContactPose is the first dataset of hand-object contact paired with hand pose, object pose, and RGB-D images, addressing the lack of ground truth that has kept contact modeling under-explored. It contains 2306 unique grasps of 25 household objects with 2 functional intents by 50 participants, plus more than 2.9M RGB-D grasp images. The authors analyze hand pose-contact relationships and rigorously evaluate data representations, heuristics, and learning methods for contact prediction, showing that learning with rich hand geometry features outperforms heuristics from the literature.
 
-## 2. Data Composition
-- Source: real capture. 50 subjects grasp 25 household objects in a controlled studio.
-- Viewpoint: third-person multi-camera RGB-D (multi-view Kinect, etc.), providing depth fusion.
-- Scale: 2,306 unique grasps × 2 functional intents × 50 subjects × 25 objects; totaling 2.9M RGB-D grasp images.
-- Object and action: 25 household objects (box, mug, knife, bottle, bowl, etc.); 2 functional intent categories (use / use-other-hand).
-- Each grasp corresponds to a specific "functional" action intent.
+## Background and Motivation
 
-## 3. Annotation and Supervision
-- Hand: 3D 21 joints (multi-view + MANO fitting), MANO β / θ.
-- Object: 6D pose (multi-view), 3D object mesh.
-- Contact: vertex-level contact map (hand surface + object surface), contact area values.
-- Interaction: grasp type labels, functional intent labels, hand configuration labels.
-- Scene: multi-view RGB-D, camera intrinsics / extrinsics, point-cloud fusion.
-- No language, no robot, no tactile.
+Contact regions in a grasp are usually occluded from visible-light imaging. Tactile gloves influence natural grasping and miss contact on the object surface, while hand-object model intersection cannot account for soft tissue deformation since rigid hand models do not deform. Prior contact datasets (e.g., ContactDB, tactile gloves) lacked paired hand pose or grasp images, preventing association of contacted areas to hand parts. The paper adopts the thermal imaging approach of ContactDB, observing heat transferred from the warm hand to the object after the grasp, and adds a multi-view RGB-D capture protocol with a computational hand-pose reconstruction algorithm that avoids instrumenting hands.
 
-## 4. Supported Evaluation
-- Benchmark tasks: (1) contact map prediction (vertex-level F-score @ threshold); (2) hand pose (MPJPE / PA-MPJPE); (3) object pose (ADD / AUC); (4) grasp type classification.
-- Key metrics: contact F-score @ 1mm / 5mm / 10mm, MPJPE, AUC-ADDS, grasp Top-1.
-- Provides an "unseen object" split to evaluate cross-object generalization.
-- The de facto standard evaluation source for contact modeling.
+## Dataset Construction
 
-## 5. Why It Matters
-- The first dataset to publicly take "dense contact map" as the core ground truth for grasping.
-- 2,306 unique grasps + 50 subjects were among the largest "grasp-level" datasets at the time.
-- The 2 functional intents enable "intent-conditioned" contact modeling.
-- Inspired follow-up work such as ContactDB, AffordPose, and ContactGen.
-- The core reference dataset of the "spatial geometry prior" in Ch3 and the "affordance prior" in Ch4.
+Participants move each grasped object for 10-15 s in a capture area recorded by 7 OptiTrack Prime 13W cameras (object pose), 3 Kinect v2 RGB-D cameras, and a FLIR Boson 640 thermal camera; the object is then placed on a turntable for thermal scanning. Objects are 3D printed with recessed 3 mm hemispherical tracking markers. Because the hand is rigid relative to the object, noisy OpenPose 2D detections across all frames and cameras are aggregated by a robust (Huber + RANSAC) reprojection optimization into one set of 21 3D joints per hand in the object frame. Contact maps are thermal textures on object meshes normalized to [0, 1], thresholded at 0.4 for binary contact. The dataset also includes MANO fitting data (palm contact plates, 7 hand gestures), providing meshes fit to the 3D joints.
 
-## 6. Limitations and Biases
-- Only 25 household objects: object diversity is limited.
-- 2 functional intents: coarse granularity (other datasets can have 6+ categories).
-- Still controlled studio: a large distribution gap to in-the-wild egocentric video.
-- No bi-manual, articulated, tool use, or dynamic manipulation.
-- No language instruction, no robot teleoperation annotation.
-- Annotation depends on multi-view RGB-D optimization and may fail on reflective / transparent objects.
+## Evaluation Protocol
 
-## 7. Takeaway
-ContactPose is best for demonstrating the capability of "grasp-level dense contact prediction", especially functional-intent-conditioned contact modeling. **Not suitable** for evaluating bi-manual, articulated, RGB-based in-the-wild, language-conditioned, or robot-relevant manipulation. In this survey, ContactPose plays the role of "dense contact modeling main benchmark" and serves as the unified anchor for evaluating "spatial geometry prior" in Ch3 and "affordance prior" in Ch4 for contact modeling.
+The contact modeling task predicts a contact map on a known object given hand pose or RGB grasp images. Object shape is a sampled pointcloud or 64^3 voxel grid; hand pose features range from simple-joints (63-D) through relative-joints, skeleton (40-D), and mesh (23-D MANO-based) representations; image features come from a U-Net-style encoder-decoder in 1-view and 3-view settings. Learners are PointNet++, a VoxNet-style 3D CNN, and an MLP; a calibrated conic distance-field heuristic is the literature baseline. The metric is re-balanced area under the accuracy curve (AuC) over contact bins, on two splits: an object split holding out mug, pan, and wine glass, and a participant split holding out participants 5, 15, 25, 35, and 45.
+
+## Findings and Analysis
+
+Contact analysis shows thumb, index, and middle fingers are most contacted; all three index-finger phalanges have higher contact probability than the pinky tip, and proximal phalanges and palm contribute significant contact. 'Use' grasps average 35.87 cm^2 contact area versus 30.58 cm^2 for 'hand-off', but hand-off grasps are more pose-diverse (32.5% larger intra-cluster distance). Similar hand poses can produce different contact, showing pose alone inadequately represents grasping. In prediction, richer features win: mesh-PointNet++ reaches 81.29% AuC (participant split) and mesh-VoxNet 84.74% (object split), both beating the calibrated heuristic (78.31% / 81.11%), while 3-view image features (78.06%) clearly beat 1-view (72.89%) but trail pose-based methods. Ground-truth quality is validated: thermal contact agrees with Sensel Morph pressure data at 95.4%, and MANO-fit 3D joint error is 7.65 mm (10 pose parameters), lower than HO-3D's 7.7 mm and HANDS 2019's 11.39 mm.
+
+## Contributions
+
+The first dataset pairing ground-truth object contact maps with 3D hand pose, object pose, and multi-view RGB-D images of functional grasps; a markerless multi-view hand pose reconstruction pipeline; analyses of finger-level contact statistics and intent-dependent grasp diversity; and a systematic benchmark of representations, heuristics, and learners for contact prediction.
+
+## Limitations
+
+Objects have plain visual texture because they are 3D printed for consistent thermal properties, limiting RGB-based generalization; grasps are static since in-hand manipulation creates overlapping thermal imprints; the 25 objects are a subset chosen for both 'use' and 'hand-off' applicability; and image-based contact prediction suffers depth ambiguity, missing high-frequency detail compared to hand-pose-based prediction.

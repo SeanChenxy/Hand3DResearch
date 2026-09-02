@@ -1,41 +1,38 @@
 # MOHO: Learning Single-view Hand-held Object Reconstruction with Multi-view Occlusion-Aware Supervision
 
+**Authors:** Chenyangguang Zhang, Guanlong Jiao, Yan Di, Gu Wang, Ziqin Huang, Ruida Zhang, Fabian Manhardt, Bowen Fu, Federico Tombari, Xiangyang Ji  
+**Date:** 2023-10-18  
+**Identifier:** [arXiv:2310.11696](https://arxiv.org/abs/2310.11696)  
+**Zotero item:** `YHQLXWPS` ([Zotero](zotero://select/library/items/YHQLXWPS))  
+**Evidence status:** Identity verified against Zotero/arXiv metadata; the summary was written without full-text extraction, and unavailable details are marked as not reported.  
+
 ## Summary
-Leverages multi-view supervision from short video clips to train a single-view hand-held object reconstruction network, using occlusion-aware rendering to handle the hand-object overlap.
 
-## 1. Problem and Setting
-- Single-view 3D reconstruction of a hand-held object given one RGB image.
-- Input: single RGB image; output: 3D hand mesh (MANO) + 3D object shape (implicit SDF).
-- Template-free object reconstruction. Uses multi-view video data only during training to provide richer 3D supervision.
+MOHO is a synthetic-to-real framework for reconstructing a hand-held object from a single image, built around the observation that readily accessible hand-object videos can replace hard-to-collect 3D ground-truth models as a training signal — but such videos only provide heavily occluded object observations. The framework addresses the two predominant occlusion types, hand-induced occlusion and object self-occlusion, by pre-training on a large-scale rendered synthetic dataset (SOMVideo) that supplies multi-view occlusion-free supervision in both 2D and 3D spaces, then fine-tuning on real videos with amodal-mask-weighted geometric supervision that discounts unfaithful guidance from hand-occluded views, and augmenting the network with domain-consistent occlusion-aware features to infer complete object shapes under self-occlusion. According to the paper's abstract, a 2D-supervised variant of MOHO outperforms 3D-supervised prior methods by a large margin on the HO3D and DexYCB benchmarks.
 
-## 2. Core Method
-- Two-stage training strategy: (1) use multi-view frames from short video clips to reconstruct per-frame object SDFs via differentiable rendering and multi-view consistency; (2) train a single-view feed-forward network with these multi-view reconstructions as pseudo-ground-truth.
-- Occlusion-aware rendering: when computing photometric losses from novel views, the method explicitly models hand-object occlusion relationships, preventing the hand from "bleeding" into the object reconstruction and vice versa.
-- The reconstruction network takes an RGB image, predicts MANO parameters and object SDF values (in a hand-aligned coordinate frame), and is trained with both direct 3D losses and multi-view rendering losses.
-- Uses a conditional NeRF-like volumetric rendering for the object.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: short video clips from HO3D, HOI4D, DexYCB.
-- Supervision: multi-view photometric consistency, 2D/3D hand keypoints, depth maps, and object masks.
-- Uses MANO for hand.
-- Assumes at training time, short video sequences showing the object from multiple views are available; object is rigid.
+Single-view hand-held object reconstruction methods conventionally rely on supervision from 3D ground-truth object models, which are difficult and expensive to collect in the real world. Hand-object videos are a far more accessible data source, but the object observations they contain are heavily occluded, in two distinct ways: the grasping hand hides parts of the object (hand-induced occlusion), and the object hides itself from a given viewpoint (self-occlusion), so naive supervision from such views is unfaithful. The problem the paper addresses is how to exploit multi-view occlusion-aware supervision from hand-object videos to train a single-view reconstruction model that nonetheless predicts complete object geometry.
 
-## 4. Experiments and Findings
-- Datasets: HO3D, HOI4D, DexYCB.
-- Metrics: Chamfer Distance, F-score for object; MPJPE for hand.
-- Multi-view occlusion-aware training significantly improves single-view reconstruction, particularly for occluded object regions. Outperforms prior single-view methods (IHOI, AlignSDF) on real datasets.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Clever use of multi-view video during training to extract richer 3D supervision without manual 3D annotations.
-- Occlusion-aware rendering improves hand-object separation.
-- Single-view inference is fast (feed-forward).
+The framework proceeds in two stages. In the synthetic pre-training stage, the authors render a large-scale synthetic dataset, SOMVideo, consisting of hand-object images paired with multi-view occlusion-free supervisions; this data is used to address hand-induced occlusion in both 2D and 3D spaces. In the real-world fine-tuning stage, MOHO leverages amodal-mask-weighted geometric supervision, in which the amodal mask down-weights the unfaithful guidance caused by hand-occluded supervising views in real videos. In addition, domain-consistent occlusion-aware features are incorporated into the model to resist object self-occlusion when inferring the complete object shape. Further architectural details, loss formulations, and training hyperparameters are not reported in the abstract.
 
-### Limitations
-- Two-stage training pipeline is complex to implement.
-- Multi-view pseudo-ground-truth may contain errors that propagate to the single-view network.
-- Still struggles with objects that have thin structures or specular surfaces.
-- Requires video data during training.
+## Contributions
 
-## 6. Takeaway
-MOHO demonstrated that multi-view cues (from video) can be distilled into a single-view model through careful occlusion-aware training. This "train on video, test on single image" paradigm is highly practical since video data is easier to collect than 3D annotations, while deployment scenarios often require single-image inference.
+- A synthetic-to-real framework that learns single-view hand-held object reconstruction from multi-view occlusion-aware supervision in hand-object videos instead of 3D ground-truth model supervision.
+- The large-scale synthetic SOMVideo dataset of hand-object images with multi-view occlusion-free supervision, used to pre-train against hand-induced occlusion in 2D and 3D spaces.
+- An amodal-mask-weighted geometric supervision scheme for the real-data fine-tuning stage, plus domain-consistent occlusion-aware features that improve completeness under object self-occlusion.
+
+## Experimental Setup
+
+According to the abstract, evaluation is conducted on the HO3D and DexYCB hand-object benchmarks, comparing MOHO — including a variant supervised only in 2D — against methods trained with 3D ground-truth supervision. Specific protocol details such as splits, metrics, and baseline configurations are not reported in the abstract.
+
+## Results
+
+The abstract reports that extensive experiments on HO3D and DexYCB demonstrate that the 2D-supervised MOHO gains superior results against 3D-supervised methods by a large margin. No specific quantitative values (metric names or numbers) are available in the verified abstract.
+
+## Limitations
+
+Limitations are not discussed in the abstract. The design implies dependence on the quality of the synthetic-to-real transfer and on amodal mask predictions for weighting real-world supervision, but no limitations are explicitly reported in the verified abstract.
+

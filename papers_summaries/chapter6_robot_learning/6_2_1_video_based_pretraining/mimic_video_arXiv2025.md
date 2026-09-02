@@ -1,44 +1,32 @@
 # mimic-video: Video-Action Models for Generalizable Robot Control Beyond VLAs
 
+**Authors:** Jonas Pai, Liam Achenbach, Victoriano Montesinos, Benedek Forrai, Oier Mees, Elvis Nava  
+**Date:** 2025-12-19  
+**Identifier:** [arXiv:2512.15692](https://arxiv.org/abs/2512.15692); DOI `10.48550/arXiv.2512.15692`  
+**Zotero item:** `U87UUQYY` ([Zotero](zotero://select/library/items/U87UUQYY))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-mimic-video presents video-action models for generalizable robot control beyond Vision-Language-Action (VLA) approaches, directly learning from video to generate robot actions, demonstrating that video-based action generation can outperform traditional VLA approaches in generalization to novel tasks and embodiments.
+mimic-video introduces the Video-Action Model (VAM) paradigm: instead of VLAs that must infer physical dynamics from scratch using robot trajectories, it pairs a pre-trained Internet-scale video model with a flow-matching action decoder conditioned on the video model's latent representations. The decoder acts as an inverse dynamics model, generating low-level robot actions from latent video-space action plans. This isolates control as the only task to learn from robot data. mimic-video achieves state-of-the-art performance on simulated and real-world manipulation — including dexterous bimanual tasks — with 10× greater sample efficiency and 2× faster convergence than traditional VLA architectures.
 
-## 1. Problem and Setting
-- Traditional VLA approaches have limitations in generalization and capability.
-- Input: video demonstrations + task specification.
-- Output: robot action sequence.
-- Video-based pretraining prior: video-action models learn directly from video to action.
+## Background and Problem
+VLA backbones are pre-trained on static, disconnected web data, so physical causality must be learned implicitly from expensive expert robot data, creating an unsustainable collection burden. The paper argues video pre-training should capture semantics and visual dynamics jointly, leaving only low-level control for the robot-data stage; the task is generalizable manipulation across single-arm, bimanual, and dexterous embodiments.
 
-## 2. Core Method
-- Video-action models: directly generate robot actions from video inputs, going beyond the VLA paradigm.
-- Learns from large-scale video data to produce generalizable robot control.
-- Demonstrates that video-action models can outperform traditional VLA approaches in generalization.
-- How FM prior is injected: video foundation models provide the action generation capability.
+## Method
+The system conditions a flow-matching-based inverse dynamics decoder on latent representations of a pre-trained video model. The video model generates action plans in video space (semantic + dynamics); the decoder translates them into robot actions. Post-training on robot data is efficient because dynamics knowledge is already embedded in the video backbone. Predicted videos can serve as plans without decoding during autonomous execution.
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: large-scale video + robot trajectory data.
-- Supervision: video-action prediction loss; action prediction loss.
-- Foundation model: video foundation model.
-- Domain knowledge: video generation, robot action prediction, VLA alternatives.
-- Assumption: video-action models are a more generalizable alternative to VLA.
+## Contributions
+- The Video-Action Model (VAM) class: grounding robot policies in pre-trained video models so that control is the only learned component.
+- A flow-matching inverse dynamics decoder conditioned on video-model latents, converting video-space plans into low-level actions.
+- State-of-the-art results on dexterous manipulation with 10× sample efficiency and 2× convergence speed versus VLA baselines.
 
-## 4. Experiments and Findings
-- Datasets: video corpora; robot manipulation benchmarks.
-- Metrics: task success rate, generalization to novel tasks/embodiments.
-- Outperforms traditional VLA approaches in generalization.
-- Demonstrates the potential of video-action models.
+## Experimental Setup
+Evaluation spans the SIMPLER benchmark (BridgeDataV2 Widow-X embodiment with system identification and visual matching), LIBERO (Goal, Object, and Spatial suites; 50 expert demonstrations per task across 10 tasks each; simulated Panda), and real-world dexterous bimanual manipulation with two 16-DoF "mimic" hands on Panda arms, including package sorting, measuring-tape handling, and stowing tasks. Comparisons cover multiple state-of-the-art baselines; full trial counts are not reproduced from the available evidence.
 
-## 5. Strengths and Limitations
-### Strengths
-- Goes beyond traditional VLA paradigm.
-- Better generalization.
-- Direct video-to-action learning.
+## Results
+- State-of-the-art performance on simulated and real-world manipulation, including dexterous bimanual tasks, in the reported comparisons.
+- 10× greater sample efficiency and 2× faster convergence compared to traditional VLA architectures.
+- Ablations show near-perfect success rates when conditioning on oracle latents regardless of backbone fine-tuning, and improved performance when minimizing the domain gap via fine-tuning of predicted video.
 
-### Limitations
-- Requires large video data.
-- May not handle very fine-grained control.
-- Quality depends on the video foundation model.
-- May be computationally expensive.
-
-## 6. Takeaway
-mimic-video demonstrates that video-action models are a powerful alternative to VLA for generalizable robot control. The work exemplifies the "video-based pretraining" paradigm where direct video-to-action learning enables strong generalization.
+## Limitations
+Execution quality depends on the video model's generation fidelity; the domain gap between predicted and real observations remains a factor that fine-tuning mitigates but does not remove. The video backbone carries the dynamics prior, so behaviors outside its pre-training distribution may still require robot data. Full failure analyses are not reproduced from the available evidence.

@@ -1,46 +1,38 @@
 # ContactArt: Learning 3D Interaction Priors for Category-level Articulated Object and Hand Poses Estimation
 
+**Authors:** Zehao Zhu, Jiashun Wang, Yuzhe Qin, Deqing Sun, Varun Jampani, Xiaolong Wang  
+**Date:** 2023-05-02  
+**Identifier:** [arXiv:2305.01618](https://arxiv.org/abs/2305.01618); DOI `10.1109/3DV62453.2024.00028`  
+**Zotero item:** `Q4WCCNIU` ([Zotero](zotero://select/library/items/Q4WCCNIU))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-A method that learns 3D interaction priors for category-level articulated objects, jointly estimating hand pose and articulated object state (joint angles) from a single RGB image by leveraging contact-based interaction reasoning.
 
-## 1. Problem and Setting
-- Joint estimation of hand pose and articulated object state from a single RGB image, for category-level objects (e.g., different laptop models, different drawer types).
-- Input: single RGB image of a hand interacting with an articulated object. Output: hand pose (MANO) and the object's articulation parameters (joint angles, part poses) and the 3D object model.
-- Static image setting; both hand and articulated object.
-- Category-level generalization: the model should work on object instances not seen during training, within known categories.
+This 3DV 2024 paper tackles joint category-level pose estimation of hands and articulated objects (laptops, drawers, safes, microwaves, trashcans) from RGB-D input, where high pose degrees of freedom and mutual occlusion make supervision costly. The authors first collect ContactArt, a 552K-frame dataset created by visual teleoperation: a human plays with articulated objects inside the SAPIEN physical simulator while an iPhone streams hand motion, yielding free and accurate object poses, hand poses, bounding boxes, and hand-object contact labels — with the key insight that, although appearance differs sharply between simulation and reality, the geometric contacts between hands and objects are consistent across the domain gap. From this data the method learns two complementary 3D interaction priors: an articulation discriminator (a GAN discriminator over per-part 3D bounding boxes) capturing how object parts naturally arrange, and a contact diffusion model that generates plausible contact maps on partial object point clouds to guide hand pose optimization. Together these priors significantly improve state-of-the-art joint hand and articulated object pose estimation on HOI4D, BMVC, and RBO — for example, average 5 degrees/5 cm accuracy of 7.69 versus 6.05 for CAPTRA on HOI4D when trained on ContactArt, and 35.99 when fine-tuned on HOI4D — with the learned priors transferring to real-world data with barely any domain gap.
 
-## 2. Core Method
-- Interaction prior learning: a neural network trained to predict, from image features, both hand MANO parameters and object articulation parameters (e.g., revolute/prismatic joint angles).
-- The interaction prior is encoded as a joint distribution over hand pose and object articulation, learned from data containing diverse interaction examples across object categories.
-- Contact-based reasoning: the model explicitly reasons about where the hand contacts the object to infer articulation. For instance, hand position relative to a laptop lid suggests the opening angle.
-- A shared image encoder extracts features, followed by category-specific decoders that predict articulation parameters and hand pose.
-- During inference, the interaction prior constrains the joint prediction to be physically plausible (e.g., hand cannot be inside the articulated parts).
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: datasets with annotated articulated object states and hand poses (e.g., ContactPose with articulated objects, or custom datasets).
-- Supervision: 3D hand joint/vertex positions (MANO), object articulation angles, part 6D poses.
-- Uses MANO for hand; articulated object model (e.g., URDF-like parameterization) with known kinematic structure per category.
-- Key assumption: the object category and its kinematic structure are known; only the articulation parameters and specific instance geometry vary.
-- Contact serves as a strong cue for articulation state inference.
+Understanding how hands interact with articulated objects matters for robotics and augmented reality, but category-level articulated object pose estimation is limited by the high cost of real-world part-level annotations, while synthetic-data alternatives introduce a sim2real appearance gap. Joint estimation of hand and object poses compounds the difficulty because the two mutually occlude each other, and accurate contact labels are nearly impossible to obtain by observing real images. Prior datasets are limited in the paper's analysis: BMVC and RBO lack hand ground truth and contact labels; ReArtMix lacks hand-object interaction; and HOI4D, the only large-scale dataset with 3D hand-articulated object interaction, is captured only in the egocentric view and its annotations are not accurate enough to provide contact information. The paper defines the problem as category-level estimation of per-part 6D object poses together with MANO hand pose from a known category with interaction, and asks whether a cheaper, scalable route to accurate interaction supervision exists — answering via simulation teleoperation, from which structural (part arrangement) and contact (where humans touch) priors can be learned and transferred to real data.
 
-## 4. Experiments and Findings
-- Evaluated on datasets with articulated object interactions (laptops, drawers, scissors, etc.).
-- Metrics: hand MPJPE, articulation angle error, part pose error.
-- The interaction prior significantly improves articulation estimation compared to independent prediction baselines.
-- Category-level generalization is demonstrated: the model can estimate articulation for unseen object instances within known categories.
-- Ablation: contact-based reasoning contributes more to accuracy than purely visual features, confirming the importance of interaction modeling.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Extends hand-object reconstruction to articulated objects, a significantly more complex setting than rigid objects.
-- Category-level generalization reduces the need for per-instance object models.
-- Contact-based interaction prior provides a physically grounded cue for articulation estimation.
+The pipeline takes an RGB-D image, detects the hand and object with an off-the-shelf detector (Detectron), back-projects the crops into a point cloud, and extracts point-wise features with PointNet++. Three MLP heads predict part segmentation (cross-entropy loss), the part-level NOCS map in a category-aligned canonical unit cube (L2 loss), and each part's rotation in the 6D continuous representation (L2 loss); translation and scale are computed analytically per part via the Umeyama algorithm from the NOCS-to-point-cloud correspondences, making the whole pose and bounding-box prediction fully differentiable and thus amenable to gradient-based refinement — unlike prior NOCS-based estimators. The articulation discriminator is trained adversarially in a GAN framework: its input is the set of per-part 3D bounding boxes represented by 8 vertices each (a representation with small sim2real gap), ground-truth boxes from simulation serve as real data and estimated boxes as fake data, with squared-error adversarial losses; at test time the frozen discriminator's gradients are back-propagated into the pose estimator as a test-time adaptation that improves the naturalness of part layouts. The contact diffusion model defines a binary per-point contact map on the object point cloud (a point is in contact if its L2 distance to the nearest hand point is below a threshold) and denoises toward it conditioned on the PointNet++ feature; an MLP epsilon-predictor takes the concatenated feature, current contact map, and time-step embedding, trained end-to-end with the estimator, with multiple generations at inference to boost performance. For hand pose, FrankMocap provides the initial MANO estimate, which is then optimized by minimizing a symmetric Chamfer distance between hand vertices and the contact points sampled from the generated contact map. The total objective combines the pose losses, the adversarial loss, and the diffusion loss with balancing hyperparameters.
 
-### Limitations
-- Requires known object kinematic structure per category; cannot handle completely novel articulation mechanisms.
-- The number of supported articulation types is limited by training data diversity.
-- Articulation estimation accuracy degrades under heavy occlusion or when the articulation joint is not visible.
-- Single-image setting may be ambiguous for certain articulation states (e.g., a drawer could be partially open without visible cues).
+## Contributions
 
-## 6. Takeaway
-ContactArt extended hand-object reconstruction to the significantly more challenging domain of articulated objects, introducing the concept of learned 3D interaction priors for category-level generalization. This work laid groundwork for subsequent research on hand-articulated-object interaction, which is critical for robotics and embodied AI applications where objects are not just rigid blocks but have functional moving parts.
+- The ContactArt dataset: 552K frames of contact-rich hand-articulated object interaction across 80 instances of 5 categories (models from PartNet), collected with an iPhone-plus-laptop visual teleoperation setup in SAPIEN at 15 fps, providing free, accurate object pose, hand pose, bounding box, and contact annotations, multi-view rendering, and realistic simulated depth via active-stereovision sensor modeling.
+- A contact diffusion model that estimates the contact map of interaction from partial depth point clouds — harder than prior contact estimation from complete meshes — and anchors hand pose optimization to plausible touch regions.
+- An articulation discriminator that learns a category-level articulation prior over part arrangements, usable both in training and as a plug-and-play test-time adaptation that improves other estimators such as CAPTRA.
+- Substantial performance improvements in joint articulated object and hand pose estimation over ANCSH, ReArtNocs, and CAPTRA on three in-the-wild benchmarks, plus demonstrations that ContactArt pre-training transfers better than HOI4D training and halves the fine-tuning data requirement.
+
+## Experimental Setup
+
+Models are trained on ContactArt and evaluated on three in-the-wild datasets: HOI4D on 4 categories (safe, trashcan, laptop, drawer/cabinet) for both object and hand pose; RBO on 3 categories (laptop, microwave, drawer) for object pose only, since it lacks hand annotations; and BMVC on the laptop sequence following prior work. Object pose metrics are the percentage of results with rotation and translation errors below 5 degrees and 5 cm (5deg5cm), mean 3D intersection-over-union of predicted and ground-truth bounding boxes (mIoU), rotation error in degrees, and translation error in cm; hand pose is measured by mean per-vertex position error (MPVPE) and mean per-joint position error (MPJPE). All baselines (ANCSH, ReArtNocs, and the tracking-based CAPTRA) are retrained on ContactArt for fair comparison; additional comparisons use the public pretrained ANCSH and CAPTRA models, and an HOI4D* setting trains from scratch on HOI4D versus fine-tuning from ContactArt. Ablations cover the amount of fine-tuning data, and test-time adaptation with the articulation discriminator applied to CAPTRA, the proposed method, HOI4D*, and the fine-tuned variant.
+
+## Results
+
+On HOI4D, trained purely on ContactArt, the method averages 7.69% 5deg5cm, 48.19 mIoU, 18.31 degrees rotation error, and 21.98 cm translation error, beating ANCSH (3.17/45.55/22.14/25.23), ReArtNocs (3.97/46.44/21.35/24.71), and CAPTRA (6.05/47.41/19.20/22.81); fine-tuning on HOI4D raises this to 35.99/65.40/5.51/6.68, above the 34.72/63.90/6.37/7.08 of training from scratch on HOI4D. On BMVC laptop it reaches 4.70% 5deg5cm, 61.22 mIoU, 17.30 degrees, and 11.45 cm, best across all metrics, and on RBO it leads on laptop (33.83/52.95/10.76/6.65 versus CAPTRA's 33.12/51.77/10.89/7.12) and microwave (57.66/73.05/4.69/4.70 versus 55.31/71.45/10.89/4.91), with CAPTRA ahead only on the drawer 5deg5cm (33.79 versus 28.23) while the method wins the other three drawer metrics. For hand pose on HOI4D, the full pipeline achieves MPVPE 49.9 mm and MPJPE 41.9 mm, improving on FrankMocap alone (71.6/64.3), Mesh Graphormer (67.4/65.3), and the Closest-point optimization baseline (60.5/56.1), and beating the non-diffusion MLP regression (54.1/45.9) and ConcatSquash-diffusion (52.4/44.8) contact-map variants, showing the contact map is the effective ingredient and the MLP-based diffusion its best form. Generalization experiments show ContactArt training transfers far better than HOI4D training to unseen test sets (BMVC: 4.70 versus 0.00 5deg5cm and 61.22 versus 37.45 mIoU; RBO: 33.83 versus 5.12 5deg5cm), and against public pretrained ANCSH and CAPTRA on HOI4D laptop the method scores 18.65% 5deg5cm versus 6.21 and 8.57. The data ablation shows fine-tuning from ContactArt with 300, 1K, and 3K images outperforms training from scratch with 1K, 3K, and 10K images — one-third of the data suffices — and test-time adaptation with the discriminator improves all four methods it was attached to (e.g., the proposed method on HOI4D laptop from 18.00 to 18.65 5deg5cm).
+
+## Limitations
+
+The authors explicitly state three limitations: the learned articulation priors are object-specific, so the method cannot generalize to novel categories; the approach relies more on depth data than on visual textures; and the simulator presents difficulties for objects smaller than the hand, such as scissors. Additional constraints are evident from the setup: the priors are category-level and require known categories at test time, the contact supervision depends on simulated interaction whose realism for contact dynamics is only indirectly validated, and the dataset collection required manual review and re-collection of sequences exhibiting accidental touches, out-of-boundary hand movements, and failed hand initializations. Evaluation of hand pose on RBO and BMVC is impossible due to missing hand annotations, and fine-tuning comparisons are confined to HOI4D.

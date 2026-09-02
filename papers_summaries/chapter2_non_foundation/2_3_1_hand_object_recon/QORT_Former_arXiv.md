@@ -1,46 +1,44 @@
 # QORT-Former: Query-optimized Real-time Transformer for Understanding Two Hands Manipulating Objects
 
+**Authors:** Elkhan Ismayilzada, MD Khalequzzaman Chowdhury Sayem, Yihalem Yimolal Tiruneh, Mubarrat Tajoar Chowdhury, Muhammadjon Boboev, Seungryul Baek  
+**Date:** 2025-02-27  
+**Identifier:** [arXiv:2502.19769](https://arxiv.org/abs/2502.19769)  
+**Zotero item:** `4BC47NYE` ([Zotero](zotero://select/library/items/4BC47NYE))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-A real-time Transformer-based framework optimized through query design for jointly reconstructing two hands and a manipulated object, targeting AR/VR applications requiring low-latency bimanual HOI understanding.
 
-## 1. Problem and Setting
-- Real-time 3D reconstruction of two hands and an object during bimanual manipulation from a single RGB image.
-- Input: single RGB image of two hands manipulating an object. Output: 3D hand poses (likely MANO or joints) for both hands and 3D object pose/shape.
-- Static image setting with strong emphasis on real-time inference speed.
-- Both hands and object; focuses on practical AR/VR deployment scenarios.
+QORT-Former is, to the authors' knowledge, the first Transformer-based real-time framework for 3D pose estimation of two hands and an object from a single RGB image, motivated by AR/VR applications where the prior state of the art (H2OTR, a deformable-DETR-style unified estimator) spends over 97 percent of inference time in pose estimation and runs far below real time. The design makes queries and the decoder cheap yet accurate: queries are divided into left-hand, right-hand, and object types, proposed from semantically meaningful multi-scale feature locations by dedicated query proposal modules (100 hand-object queries plus 8 auxiliary background queries, versus 300 random queries in H2OTR), enriched with estimated hand-object contact map features, and co-optimized with image features through a single three-step decoder. With 108 queries and one decoder, the model reaches 53.5 FPS on an RTX 3090TI (versus 26 FPS for H2OTR) while improving mean end-point error over H2OTR on H2O by 17.6 percent (left hand), 22.8 percent (right hand), and 27.2 percent (object), and on FPHA by 5.3 percent (right hand) and 10.4 percent (object); plugged into an off-the-shelf action recognition module it also raises H2O interaction recognition top-1 accuracy from 90.9 to 91.3 percent.
 
-## 2. Core Method
-- Query-Optimized Real-time Transformer (QORT-Former): a Transformer decoder architecture where learnable queries represent hand joints and object keypoints.
-- The query design is optimized for efficiency: sparse queries (only essential hand joints and object control points) rather than dense per-vertex queries, reducing the attention computation cost.
-- Cross-attention layers allow these queries to extract relevant features from the image encoder's output, similar to DETR-style architectures.
-- The architecture is designed end-to-end for joint two-hand + object estimation with optimized attention patterns (e.g., windowed/local attention to reduce complexity).
-- Real-time performance is achieved through architectural optimizations: reduced number of queries, efficient attention mechanisms, and a lightweight image backbone.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Trained on bimanual hand-object datasets (e.g., H2O, InterHand2.6M with object annotations).
-- Supervision: 3D hand joint/vertex positions, 3D object keypoints/pose, optionally MANO parameters.
-- May use MANO for the hand prior; object representation is likely keypoints or a cuboid for efficiency.
-- The query-based design assumes that joint/keypoint-level queries are sufficient to capture the interaction.
-- Fully supervised training on labeled data.
+Egocentric understanding of two hands manipulating an object matters for AR, VR, and human-computer interaction, and recent work moved from separately estimating hand pose and object 6D pose toward unified frameworks that jointly output two-hand poses, object pose, object type, and hand interaction class. H2OTR (Cho et al., CVPR 2023) achieves strong accuracy in a single Transformer but builds on deformable DETR with many queries and decoder layers, making it unsuitable for real-time use, with the pose estimator dominating inference time. The efficiency motivation is sharpened by a measurement the authors cite: in deformable DETR the encoder consumes about 49 percent of overall GFLOPs while contributing only 11 percent of AP, due to multi-scale deformable attention and many decoder layers. The problem QORT-Former addresses is therefore to keep the accuracy benefits of query-based Transformer estimation for two hands and an object while cutting the number of queries, decoder layers, and encoder cost enough to run in real time, and to compensate for the resulting loss of feature richness with better-designed queries, explicit contact cues, and a stronger decoder.
 
-## 4. Experiments and Findings
-- Evaluated on H2O, InterHand2.6M, and other bimanual interaction benchmarks.
-- Metrics: MPJPE for hands, object pose error, inference time (FPS).
-- QORT-Former achieves competitive accuracy with significantly faster inference than prior Transformer-based HOI methods, reaching real-time speeds (>30 FPS).
-- The query optimization (sparse queries, efficient attention) is the primary driver of speed gains without proportional accuracy loss.
-- Ablation: reducing query count below a threshold degrades accuracy; the chosen query design balances speed and accuracy.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Real-time performance for bimanual hand-object understanding, a challenging practical requirement.
-- Query-based design elegantly handles variable numbers of entities (two hands + object) in a unified architecture.
-- Optimized Transformer design demonstrates that Transformers can be made fast enough for interactive applications.
+The backbone is an ImageNet pre-trained ResNet-50 producing feature maps at 1/8, 1/16, and 1/32 resolution, each projected to 256 channels. A feature decoder based on PPM-FPN (from real-time instance segmentation work) uses the pyramid pooling module to enlarge receptive fields and produce enhanced multi-scale features E3-E5, replacing the heavy deformable encoder. The Query Division Block replaces H2OTR's random query initialization with semantically selected queries: three query proposal modules (one each for left hand, right hand, and object) classify every pixel with an (Nc+1)-way probability simplex (including a "no object" class), and the top Nl, Nr, and No scoring pixel locations become left-hand, right-hand, and object queries, with query features sampled from the mid-scale E4 feature map; during training each module is supervised by a Hungarian-matching loss combining class and location costs (binary cross-entropy for the two hand modules, cross-entropy for objects). This division directly targets the left/right hand ambiguity that otherwise concentrates queries on one hand. A Contact Estimator predicts a contact map CM of shape 2x778x1 (contact probability per MANO vertex of each hand, constructed as in H2OTR) from the mid-sized feature map, and its features are added into the query features to make queries aware of hand-object contact dynamics. The 100 hand-object queries are concatenated with 8 auxiliary background queries and passed, with the flattened E3 enhanced features, into the QORT Transformer Decoder — a single decoder layer that co-optimizes image and query features in three steps: (1) an Enhanced Feature Update Block cross-attends enhanced features (as queries) to integrated query features (as keys and values), refining the spatial configuration of hands and object; (2) Location-based Enhancement predicts coarse 2D keypoints and class probabilities from the query features, extracts 3x3 patch features around the highest-confidence keypoints via a location-based feature extraction module, and concatenates them to the enhanced features; (3) a Query Feature Update Block refines the integrated queries with cross-attention to the updated E3 plus self-attention, capturing fine details such as finger joints and object contact points. Prediction heads (three 3-layer MLPs and a linear layer, with weight-shared linear layers reused for the coarse estimates inside the decoder) output fine-grained 2D hand keypoints, 3D object keypoints, and classes; 2D hand keypoints are lifted to 3D through keypoint attention and Chebyshev graph convolution (ChebGConv) layers following Graformer, exploiting hand skeleton connectivity. Training minimizes a weighted combination of Hungarian-matched classification cross-entropy, L1 keypoint losses on 3D hand keypoints (2x21x3), 2D hand keypoints (2x21x2), and 3D object keypoints (21x3), the query proposal losses, and an L1 contact map loss.
 
-### Limitations
-- Sparse query representation may miss fine-grained hand-object interaction details (e.g., contact regions, surface deformations).
-- Real-time optimization likely trades off some accuracy; may underperform on heavily occluded or complex interaction scenarios.
-- Object representation is simplified for speed; cannot capture rich object geometry.
-- Relies on fully supervised training data; may not generalize well to in-the-wild bimanual scenarios.
+## Contributions
 
-## 6. Takeaway
-QORT-Former demonstrated that real-time Transformer-based bimanual hand-object understanding is feasible through careful query design and architectural optimization. This work bridged the gap between powerful Transformer-based HOI models and the practical deployment requirements of AR/VR applications, showing that query sparsity and efficient attention patterns can dramatically reduce latency while preserving competitive accuracy.
+- The first Transformer-based real-time framework for 3D pose estimation of two hands and an object, achieving 53.5 FPS on an RTX 3090TI with state-of-the-art accuracy, versus 26 FPS for the previous best H2OTR.
+- A query division scheme that splits hand-object queries into left-hand, right-hand, and object groups, proposed by dedicated query proposal modules from multi-scale feature maps (eliminating non-maximum suppression), reducing queries from 300 to 108 while improving their quality and balancing performance across the two hands.
+- Integration of estimated contact map features into query inputs so that the decoder's queries carry explicit hand-object contact semantics.
+- A single-decoder design with a three-step co-optimization of enhanced image features and query features (enhanced feature update, location-based enhancement, query feature update) that compensates for the lightweight PPM-FPN feature decoder and removes reliance on heavy encoders and stacked decoder layers.
+- State-of-the-art pose estimation on H2O and FPHA with gains of 5.3-27.2 percent over prior methods, plus state-of-the-art hand-object interaction recognition when combined with an off-the-shelf action recognition module.
+
+## Experimental Setup
+
+Evaluations use the H2O (Kwon et al., CVPR 2021) and FPHA (Garcia-Hernando et al., CVPR 2018) datasets, both with annotations for 3D hand poses, object 6D poses, object types, and interaction classes, tested on their test sets. The pose metric is mean end-point error (MEPE, in mm) over 21 joints, reported separately for left hand, right hand, and object; interaction recognition uses top-1 accuracy with the action recognition module from H2OTR. Pose baselines on RGB images include Hasson et al. (2019, 2020) and Tekin et al. (2019), single-hand methods evaluated separately for left- and right-hand interactions; Kwon et al. (2021); Wen et al. (2023, HTT, which does not predict object pose); Aboukhadra et al. (2023, THOR-Net); and Cho et al. (2023, H2OTR). Action recognition baselines include C2D, I3D, SlowFast, Tekin et al., Kwon et al., HTT, and H2OTR. Speed is measured on an RTX 3090TI GPU. Ablations cover the decoder's three-step update (enhanced feature update and location-based feature extraction) and the query design (random queries versus hand-object queries, with and without contact map features). Further implementation details are deferred to supplemental material not included in the extracted PDF.
+
+## Results
+
+- Pose estimation on H2O (MEPE, mm): left hand 20.1, right hand 19.9, object 32.9, versus H2OTR's 24.4, 25.8, and 45.2 — the claimed relative improvements are 17.6 percent (left), 22.8 percent (right), and 27.2 percent (object). Other baselines: Hasson et al. 39.6/41.9/67.5-66.1; Tekin et al. 41.4/38.9/48.1-52.6; Kwon et al. 41.5/37.2/47.9; Wen et al. 35.0/36.1 (no object); THOR-Net 36.8/36.5/73.9.
+- Pose estimation on FPHA: right hand 14.2 mm and object 18.8 mm versus H2OTR's 15.0 and 21.0 (5.3 percent and 10.4 percent improvements), also ahead of Hasson et al. (18.0/22.3), Tekin et al. (15.8/24.9), and Wen et al. (15.8).
+- Speed: 53.5 FPS on an RTX 3090TI for the pose estimator, versus 26 FPS reported for H2OTR; in the recognition pipeline QORT-Former plus the action module reaches 53.3 FPS versus 24.97 FPS for H2OTR's full framework.
+- Interaction recognition on H2O: top-1 accuracy 91.3 percent with the QORT-Former pose estimator, versus 90.9 for H2OTR's estimator, and well above HTT (86.4), Kwon et al. (79.3), SlowFast (77.7), I3D (75.2), C2D (70.7), and Tekin et al. (68.9).
+- Decoder ablation (H2O): removing both the enhanced feature update and location-based feature extraction gives MEPE 26.4/25.8/36.1 at 58.2 FPS; removing only location-based feature extraction gives 22.3/21.8/33.9 at 56.5 FPS; the full three-step decoder gives 20.1/19.9/32.9 at 53.5 FPS, i.e., the three-step update buys accuracy at a modest speed cost.
+- Query ablation: with random queries (as in H2OTR) MEPE is 27.3/33.5/36.5 on H2O and 22.3/24.2 (right hand/object) on FPHA; hand-object queries improve this to 22.6/21.4/33.1 and 15.8/20.3; adding contact map features yields the final 20.1/19.9/32.9 and 14.2/18.8. Qualitatively, query visualization shows random queries scattered over the background and undivided queries clustering on the left hand, while divided queries concentrate on their assigned regions.
+
+## Limitations
+
+The paper has no dedicated limitations section. Several constraints are evident from the presented work: the model outputs 21-joint keypoints rather than full MANO mesh reconstruction, and evaluation relies solely on the MEPE metric on two benchmarks (H2O and FPHA) that involve known object categories, without in-the-wild or unseen-object evaluation. Estimation is single-frame, with no temporal modeling or consistency across video. Speed is demonstrated on a high-end RTX 3090TI GPU rather than on mobile or embedded hardware despite the AR/VR motivation. The authors also note that distinguishing the highly similar left and right hand features remains difficult and is only mitigated, not solved, by the query division and proposal losses, and the three-step decoder trades a small amount of speed (58.2 to 53.5 FPS in the ablation) for its accuracy gains.

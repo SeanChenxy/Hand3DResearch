@@ -1,48 +1,29 @@
 # Affordance Diffusion: Synthesizing Hand-Object Interactions
 
+**Authors:** Yufei Ye, Xueting Li, Abhinav Gupta, Shalini De Mello, Stan Birchfield, Jiaming Song, Shubham Tulsiani, Sifei Liu  
+**Date:** 2023-06 (CVPR)  
+**Identifier:** DOI `10.1109/CVPR52729.2023.02153`  
+**Zotero item:** `S646QDWT` ([Zotero](zotero://select/library/items/S646QDWT))  
+**Evidence status:** Identity verified against Zotero/arXiv metadata; the summary was written without full-text extraction, and unavailable details are marked as not reported.  
 ## Summary
-Affordance Diffusion is a two-step generative approach for synthesizing plausible images of a human hand interacting with a given object, where a LayoutNet samples an articulation-agnostic hand-object interaction layout and a ContentNet synthesizes images of a hand grasping the object, both built on a large-scale pretrained diffusion model, enabling generalization to novel objects and providing descriptive affordance information (hand articulation, approaching orientation).
+Affordance Diffusion addresses the difficulty of synthesizing plausible hand-object interactions for objects that may not appear in the training data. Given a single RGB image of an object, it separates generation into sampling an interaction layout and rendering image content with a pretrained diffusion prior. The layout stage represents hand articulation and contact without committing to final image appearance, while the content stage generates the interacting hand and object. The paper reports improved generalization to novel objects and out-of-distribution in-the-wild scenes, although the available evidence does not provide representative numerical results.
 
-## 1. Problem and Setting
-- Synthesize complex interactions (an articulated hand) with a given object from a single RGB image of the object.
-- Input: RGB image of a target object.
-- Output: plausible RGB image of a hand interacting with the object, with descriptive affordance information (articulation, approaching orientation).
-- Image-generative prior: a pretrained large-scale diffusion model serves as the latent representation foundation.
+## Background and Problem
+Hand-object image synthesis must coordinate articulated hand geometry, contact, occlusion, and object appearance. Text or image generation alone does not explicitly specify where the hand should approach an object or how the interaction should be articulated. The task takes a single RGB image of a target object as input and produces a plausible RGB image showing a hand interacting with that object, together with descriptive affordance information such as articulation and approaching orientation.
 
-## 2. Core Method
-- Two-step generative approach:
-  1. LayoutNet: samples an articulation-agnostic hand-object-interaction layout (hand pose and contact region).
-  2. ContentNet: synthesizes an image of a hand grasping the object given the predicted layout.
-- Both networks are built on top of a large-scale pretrained diffusion model, leveraging its learned latent representation.
-- The system can also predict descriptive affordance information: hand articulation, approaching orientation.
-- Generalizes better to novel objects and in-the-wild scenes compared to baselines.
+## Method
+The framework uses two generative stages. LayoutNet samples an articulation-agnostic hand-object interaction layout that describes the interaction arrangement and contact region. ContentNet then conditions image synthesis on this layout to generate the hand-object image. Both stages are built on a large pretrained diffusion model, using its learned image representation while adding interaction-specific control.
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: paired hand-object images with ground-truth hand poses and object images (likely Objaverse or similar 3D asset datasets).
-- Supervision: image-level loss, optional hand pose supervision.
-- Foundation model: large-scale pretrained diffusion model (Stable Diffusion or similar).
-- Domain knowledge: grasp affordance reasoning, hand-object interaction anatomy.
-- Assumption: the pretrained diffusion model's latent space captures sufficient structure to be conditioned on hand-object layouts.
+## Contributions
+- A two-stage decomposition that separates interaction-layout sampling from image-content synthesis.
+- An affordance representation that exposes hand articulation and approaching orientation in addition to the rendered image.
+- A diffusion-prior formulation intended to generalize hand-object synthesis beyond objects seen during training.
 
-## 4. Experiments and Findings
-- Datasets: novel object categories, out-of-distribution in-the-wild scenes of portable-sized objects.
-- Metrics: visual quality, hand plausibility, affordance prediction accuracy.
-- Generalizes better to novel objects than baselines.
-- Performs surprisingly well on out-of-distribution in-the-wild scenes.
-- Affordance predictions (articulation, approaching orientation) are useful for downstream robotic manipulation.
+## Experimental Setup
+The reported supervision uses paired hand-object imagery and hand-pose information. Exact dataset names, split sizes, training configuration, baselines, and metric definitions are not reported in the paper evidence available for this rewrite. The evaluation considers novel object categories and out-of-distribution in-the-wild scenes.
 
-## 5. Strengths and Limitations
-### Strengths
-- Two-step design cleanly separates layout (where) from content (what).
-- Leverages pretrained diffusion model's rich representation.
-- Generalizes to novel objects.
-- Provides descriptive affordance information.
+## Results
+The paper reports better generalization to novel objects than the compared baselines and strong behavior on out-of-distribution in-the-wild scenes. The available evidence does not report representative numerical values, confidence intervals, or an ablation table. It therefore does not support a more specific quantitative comparison.
 
-### Limitations
-- Two-step pipeline may accumulate errors.
-- Quality depends on the underlying pretrained diffusion model.
-- May not handle very complex articulated objects.
-- Training data with diverse objects is needed for generalization.
-
-## 6. Takeaway
-Affordance Diffusion demonstrates that complex hand-object interactions can be synthesized by decomposing the problem into layout generation and content synthesis, both leveraging a large-scale pretrained diffusion model. The work exemplifies the "image-generative prior" paradigm: using pretrained generative models as the foundation for controllable, realistic HOI image synthesis.
+## Limitations
+The two-stage design can propagate layout errors into image synthesis, and its output quality is tied to the pretrained diffusion backbone. The reported setting is centered on single-image object-conditioned hand interaction; performance for substantially more complex articulated objects or interaction configurations is not reported in the paper.

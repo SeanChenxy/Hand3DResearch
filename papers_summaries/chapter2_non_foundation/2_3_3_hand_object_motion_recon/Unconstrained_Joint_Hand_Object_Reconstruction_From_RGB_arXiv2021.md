@@ -1,45 +1,49 @@
-# Towards Unconstrained Joint Hand-Object Reconstruction From RGB Videos (HOMAN)
+# Towards Unconstrained Joint Hand-Object Reconstruction From RGB Videos
+
+**Authors:** Yana Hasson, Gul Varol, Cordelia Schmid, Ivan Laptev  
+**Date:** 2021-12-01  
+**Identifier:** [arXiv:2108.07044](https://arxiv.org/abs/2108.07044), DOI [10.1109/3DV53792.2021.00075](https://doi.org/10.1109/3DV53792.2021.00075) (3DV 2021, pp. 659-668)  
+**Zotero item:** `QPFHCCNA` ([Zotero](zotero://select/library/items/QPFHCCNA))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-HOMAN jointly reconstructs 3D hand and object meshes from monocular RGB video without requiring known object templates, using a combination of MANO for hands and a learnable neural implicit shape for objects, optimized per-video.
 
-## 1. Problem and Setting
-- Joint 3D reconstruction of hand pose and object shape from a monocular RGB video.
-- Input: RGB video; output: MANO hand mesh per frame + object 3D shape (implicit/NeRF) + object 6D pose per frame.
-- Template-free; video input; static camera. Both hand and object reconstructed jointly. The object is unknown and category-agnostic.
+This paper (commonly referred to via its project name HOMAN) proposes a learning-free, optimization-based method that fits a parametric MANO hand model and a known or approximate 3D object model to 2D evidence (detections, instance segmentations, FrankMocap hand poses) extracted from monocular RGB video clips. Because it requires no 3D supervision, it generalizes across datasets with varying difficulty and handles single-hand, two-hand, and in-the-wild interactions. On the HO-3D benchmark, joint fitting improves the procrustes-aligned hand vertex error from 26.2 cm (independent hand and object fits) to 8.6 cm and raises contact accuracy from 25.8% to 77.5%; on Core50, joint fitting raises contact accuracy from 7.3% to 89.5% while adding only 0.6 mm penetration depth. Although supervised learning methods achieve more accurate hand poses on HO-3D (e.g., 0.95 cm vs. 1.47 cm aligned mesh error for Liu et al. 2021), they fail to generalize to unseen objects, where the fitting approach degrades negligibly (8.0 cm seen vs. 8.1 cm unseen).
 
-## 2. Core Method
-- Per-video optimization framework with three components optimized jointly:
-  1. MANO hand: per-frame pose and shape parameters.
-  2. Object NeRF: a canonical volumetric representation (density + color) of the object.
-  3. Object poses: per-frame 6D rigid transformations mapping canonical object to world coordinates.
-- Photometric loss across all video frames drives the optimization, comparing rendered pixels (combining hand mesh rasterization and object NeRF volume rendering) against the input RGB.
-- Hand and object rendering are composited via depth ordering to handle occlusions correctly.
-- Additional losses: 2D hand keypoint reprojection, hand-object non-penetration (via collision detection), temporal smoothness on hand poses.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: per-video test-time optimization (no offline training of reconstruction model).
-- Supervision: RGB pixel values, 2D hand keypoints (from MediaPipe or similar), optional object masks.
-- Uses MANO for hand.
-- Assumes object is rigid; camera is static; hand moves the object sufficiently to expose multiple views; lighting is reasonably consistent.
+Joint 3D reconstruction of hands and manipulated objects matters for robotics and learning from human demonstration, but generic models do not exist: supervised approaches need 3D ground truth that is expensive to obtain (depth sensors, markers, or multi-view rigs), cover few objects, and do not generalize beyond their training domains, while synthetic renderings lack realism in appearance and grasp configurations. The authors argue for an optimization-based formulation because of its domain robustness: it relies only on mature 2D perception tools (object detection, hand pose estimation, instance segmentation) whose supervision is comparatively cheap. The task is defined as recovering, over short monocular RGB video clips, the 6DOF object pose, the articulated MANO hand pose, a shared hand scale, and (for approximate object meshes) an object scale, assuming an exact or approximate 3D model of the manipulated object is available and camera intrinsics are known or approximated. Naive composition of independent hand and object fits is inadequate because of depth ambiguity, occlusions, noisy 2D estimates, and physically implausible configurations, motivating joint fitting with interaction constraints — including, for the first time in this setting, seamless handling of two-hand object interactions.
 
-## 4. Experiments and Findings
-- Datasets: HO3D, EPIC-KITCHENS (in-the-wild egocentric), custom captures.
-- Metrics: Chamfer Distance (object), MPJPE (hand), PSNR (novel view synthesis).
-- First method to demonstrate plausible joint hand-object reconstruction from in-the-wild videos without object templates. Works on egocentric and third-person videos.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Fully template-free: no object CAD models or category priors needed.
-- Joint optimization ensures hand and object are spatially consistent.
-- Works on diverse real-world videos (HO3D, EPIC-KITCHENS).
-- Unified NeRF + mesh rendering framework.
+The pipeline proceeds in three stages per video clip.
 
-### Limitations
-- Per-video optimization is very slow (hours per sequence).
-- Object reconstruction quality is limited to viewpoints seen in the video — invisible regions are poorly reconstructed.
-- Struggles with small objects, fast motion, and heavy occlusion.
-- Static lighting assumption; color constancy may fail under changing illumination.
+**2D evidence extraction.** A hand-and-object detector (100 Days of Hands) produces per-frame bounding boxes with left/right hand labels; detections inconsistent with known dataset properties (object presence, hand count, hand sides) are discarded, and an off-the-shelf Kalman-filter tracker (motpy) recovers missed or discarded detections into full-clip hand and object tracks. Instance masks come from PointRend pretrained on COCO, used class-agnostically: for objects, the mask of the highest class activation; for hands, the person-class mask, which makes the object silhouette loss hand-occlusion aware.
 
-## 6. Takeaway
-HOMAN was a landmark paper that showed joint hand-object reconstruction is feasible from monocular video without any object priors, by combining MANO-based hand tracking with NeRF-based object modeling in a unified optimization framework. It established the per-video optimization paradigm that many later works built upon.
+**Independent pose initialization.** Hands are initialized with FrankMocap's articulated pose, pixel location, and scale, with depth recovered from the hand's world scale and camera intrinsics (focal length approximated from camera specifications when unknown). For the object, 50 random rotations are sampled in SO(3), and depth and in-plane translation are alternately updated so the projected mesh bounding box matches the detected box, then refined by differentiable rendering against the PointRend mask (occlusion-aware, following PHOSA); subsequent frames reuse the previous frame's pose as initialization, and the candidate trajectory with the highest average mask IoU is selected.
+
+**Joint fitting.** Over T frames, the method optimizes 3D translations and global rotations (6D continuous rotation representation) for hand and object, MANO pose parameters in a 16-dimensional latent subspace, a hand scale shared across frames, and an object scale for approximate meshes. Eight weighted error terms combine: occlusion-aware object silhouette matching via a differentiable renderer; projected hand vertices against FrankMocap estimates; PCA pose regularization toward plausible hands; scale penalties toward category-level average dimensions; temporal smoothness of 3D vertices across neighboring frames; a coarse interaction term attracting hand to object when their boxes overlap; an SDF-based collision penalty (negative truncated signed distance, following multi-person mesh estimation) that supports any number of hands and objects; and a local-contact heuristic repurposed from Hasson et al. 2019 that attracts hand vertices toward the object surface and repels them once in contact. Optimization is two-stage — coarse terms first, then the full objective with collision and contact — 200 Adam steps each, with fixed weights across all datasets (lambda_obj = 1, lambda_v2d = 50, lambda_pca = 0.004, lambda_scale = 0.001, lambda_smooth = 2000, lambda_centroid = 1, lambda_local = 1, lambda_col = 0.001). Object meshes from ShapeNet are made watertight (ManifoldPlus) and resampled to 1,000 vertices (ACVD) before fitting.
+
+## Contributions
+
+1. A learning-free, optimization-based framework for joint hand-object reconstruction from monocular RGB videos that requires only 2D perception models and an approximate object CAD model, and by construction generalizes to unseen objects, datasets, and in-the-wild footage.
+2. Interaction-aware fitting objectives — coarse attraction, SDF collision penalization, and local contact terms — combined with temporal smoothness and previous-frame initialization for video, which the ablations show are individually important.
+3. A detailed quantitative evaluation dissecting each optimization term on the HO-3D benchmark, a sensitivity analysis to 2D evidence quality, and a comparison with learning-based joint reconstruction models under a unified protocol.
+4. Demonstration of two-hand object interaction reconstruction (pairwise losses over all detected hands) and qualitative in-the-wild results on Epic-Kitchens and Core50, scenes that current learning methods cannot handle.
+
+## Experimental Setup
+
+Evaluation uses three datasets of increasing difficulty. HO-3D provides markerless RGB frames with 3D hand-object annotations obtained from RGB-D fits (10 YCB objects with CAD models); results are reported on the standard 13-video, 11,525-frame single-hand test set via an online submission server, with all compared methods trained only on the HO-3D real-image training split. Core50 contains short unannotated sequences of hands manipulating 50 object instances across 10 categories; the authors manually associate 26 objects with approximately matching ShapeNet models and annotate hand sides, yielding 286 video clips and 86k frames on which penetration depth and contact accuracy (contact defined as negative hand-vertex values in the object SDF) serve as ground-truth-free proxies. Epic-Kitchens provides unconstrained egocentric footage; a subset covering cups, plates, cans, phones, and bottles (3,456 action clips) is used qualitatively with one ShapeNet model per category and the longest-tracked object taken as target. Metrics comprise object vertex-mean distance and add-s (for symmetric objects), procrustes-aligned hand vertex error and F-scores at 5 mm and 15 mm, unaligned vertex distance for joint fitting, and interaction metrics (penetration depth, contact percentage, contact accuracy). Runtime on a Tesla V100 is under one second for 2D preprocessing of ten 640x480 frames, about 10 seconds per frame for the 50-candidate object initialization, and 2-3 minutes total for fitting a 10-frame clip.
+
+## Results
+
+- **Joint vs. independent fitting (HO-3D, Table 1):** joint fitting reaches hand vertex-mean (aligned) 8.6 cm, object vertex-mean 5.4 cm, add-s 8.0 cm, mepe 3.8 cm, penetration 2.8 mm, contact 77.5%, versus 26.2 / 5.2 / 12.1 / 7.7 cm, 3.2 mm, 25.8% for independent composition — the scale-depth ambiguity of independent hand fitting is the dominant error source for absolute hand pose.
+- **Ablations:** removing the coarse interaction prior roughly doubles the aligned hand error (to 17.1 cm); removing temporal smoothness raises hand error to 11.4 cm and object add-s to 12.8 cm (smoothness alone reduces hand and object errors by 25% and 38%); removing the collision term multiplies average penetration depth by roughly four (2.4 mm with vs. 10.2 mm without); the local-contact term reduces contact percentage from 77.5% to 72.3% when removed and produces local corrections near contact points.
+- **Core50 (Table 2):** joint fitting increases contact accuracy from 7.3% (independent) to 89.5% at the cost of a 0.6 mm increase in average penetration depth (0.6 to 1.2 mm).
+- **Sensitivity to 2D evidence (HO-3D):** substituting ground-truth hand/object boxes for tracked detections improves both hand and object errors by about 2 cm; ground-truth masks further reduce object vertex error to about 2 cm and add-s below 1 cm, showing the method converts better 2D perception directly into better 3D fits. Tracking itself lifts 100DOH detection AP from 0.61/0.59 to 0.85/0.71 (hand/object) on the HO-3D train split.
+- **Comparison with learning-based methods (HO-3D test):** supervised models obtain better hand poses — Liu et al. 2021 0.95 cm aligned mesh error (F@5mm 0.96, F@15mm 0.53), HOnnotate 1.06 cm, Hasson et al. 2020 1.14 cm — versus 1.47 cm (F@5mm 0.39, F@15mm 0.88) for the fitting approach; however, the learned models are instance-specific, and on unseen objects Hasson et al. 2020 degrades from 6.7 cm to 10.7 cm hand error while the fitting method stays flat (8.0 vs. 8.1 cm), with comparable or better object add-s on unseen objects (3.3 vs. 3.6 cm).
+- **In-the-wild:** qualitative results on Epic-Kitchens (including two-hand manipulations, the majority of examples) and Core50 show plausible reconstructions across object categories, in contrast to the ObMan-trained model of Hasson et al. 2019, whose sphere-deformed object representation cannot capture everyday topologies such as mugs and cups and whose grasps are not image-aligned.
+
+## Limitations
+
+The method assumes an exact or approximate 3D object model is available — the authors name reliance on known object models as the key limitation of current 6DOF-pose approaches and propose automatic object recovery as future work. Fitting to image segmentation suffers from depth ambiguities (pronounced for nearly planar objects such as plates), and object asymmetries that depend on color can remain unresolved. Hand accuracy trails fully supervised learning on HO-3D (1.47 vs. 0.95 cm aligned mesh error), and the optimization is slow: 2-3 minutes for a 10-frame clip, dropping to about 4 iterations per second when collision and contact terms are active. The 2D-evidence dependence also means results are bounded by detector, segmenter, and FrankMocap quality, as quantified by the sensitivity analysis.

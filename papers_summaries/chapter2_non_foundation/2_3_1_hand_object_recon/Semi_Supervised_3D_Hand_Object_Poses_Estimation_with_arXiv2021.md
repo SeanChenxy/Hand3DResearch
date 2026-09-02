@@ -1,45 +1,43 @@
 # Semi-Supervised 3D Hand-Object Poses Estimation with Interactions in Time
 
+**Authors:** Shaowei Liu, Hanwen Jiang, Jiarui Xu, Sifei Liu, Xiaolong Wang  
+**Date:** 2021-06-09  
+**Identifier:** [arXiv:2106.05266](https://arxiv.org/abs/2106.05266); DOI `10.1109/CVPR46437.2021.01445`  
+**Zotero item:** `8WTYCRMK` ([Zotero](zotero://select/library/items/8WTYCRMK))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-A unified framework for estimating 3D hand and object poses from a single image via semi-supervised learning, with explicit contextual reasoning between hand and object representations via a Transformer, leveraging spatial-temporal consistency in large-scale hand-object videos as a constraint for generating pseudo labels, improving both hand and object pose estimation while generalizing to out-of-domain datasets.
 
-## 1. Problem and Setting
-- 3D hand and object pose estimation from a single image is extremely challenging due to self-occlusion during interactions and scarce 3D annotations.
-- Input: single RGB image (training: paired with large-scale hand-object video).
-- Output: 3D hand joint positions and object 6D pose.
-- Static image inference; video used in training for semi-supervised learning.
+This CVPR 2021 paper presents a unified framework that jointly estimates 3D hand pose and 6-DoF object pose from a single RGB image, and a semi-supervised learning pipeline that mines pseudo-labels from large-scale unlabeled hand-object videos using spatial-temporal consistency. The joint model shares a ResNet-50-FPN backbone between hand and object branches and couples them with a contextual reasoning module in which object features query features of the hand-object intersection region, exploiting the strong correlation between grasp configuration and object orientation. After supervised training on HO-3D, the model is deployed on the Something-Something video dataset; predictions that pass camera-solved IoU, reprojection, and biomedical plausibility checks plus temporal smoothness and shape-invariance filters (84,063 frames retained) are used for self-training. This improves hand pose on HO-3D (joint error 9.8 mm, mesh error 9.4 mm, beating Hasson et al. and HOnnotate) and, although only hand pseudo-labels are collected, also lifts object pose ADD-0.1D by 5.7% on average, with clear cross-domain gains on FPHA and FreiHAND.
 
-## 2. Core Method
-- Unified framework for estimating 3D hand and object poses with semi-supervised learning.
-- Joint learning framework with explicit contextual reasoning between hand and object representations via a Transformer.
-- Leverages spatial-temporal consistency in large-scale hand-object videos as a constraint for generating pseudo labels in semi-supervised learning.
-- The Transformer enables cross-entity reasoning (hand vs. object) for joint estimation.
-- How the method differs from prior work: explicit cross-modal contextual reasoning + semi-supervised learning from video; no need for full 3D annotations on all data.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: 3D-annotated hand-object interaction images; large-scale hand-object videos (without 3D annotations).
-- Supervision: 3D pose loss on annotated images; spatial-temporal consistency loss on videos (pseudo-label generation).
-- Domain knowledge: hand-object interaction anatomy, Transformer-based reasoning.
-- Assumption: spatial-temporal consistency in hand-object videos provides a strong enough constraint for pseudo-labeling.
+Estimating 3D hand and object pose from monocular RGB is hard because mutual occlusion during interaction is pervasive and 3D ground truth is scarce — even human annotators cannot label 3D pose perfectly from a single image, so datasets are built with mocap or model alignment in controlled settings, limiting generalization to novel scenes. The authors observe that hand and object poses are highly correlated (a grasping hand pose indicates object orientation, and the object constrains how the hand can approach it) and that in videos the poses of both should evolve smoothly and continuously. This temporal structure provides a free supervision signal: estimations that change coherently over time are likely accurate, so consistent results on unlabeled in-the-wild videos can serve as pseudo-labels. The paper defines two coupled goals: a joint hand-object estimation framework with explicit interaction reasoning, and a semi-supervised pipeline that converts large-scale unlabeled interaction videos into training data without any 3D annotation.
 
-## 4. Experiments and Findings
-- Datasets: HO3D (real, with 3D annotations); FPHAB video (without 3D annotations) and others for semi-supervised training.
-- Metrics: MPJPE (hand), object 6D pose error, cross-dataset generalization.
-- Improves hand pose estimation in challenging real-world data.
-- Substantially improves object pose (which has fewer ground-truths).
-- Better generalization to out-of-domain datasets via the diverse video pretraining.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Semi-supervised learning reduces annotation cost.
-- Explicit contextual reasoning between hand and object.
-- Better generalization via video pretraining.
+The joint framework uses a ResNet-50 with FPN to extract features from the whole image, from which RoIAlign extracts hand and object region features. A contextual reasoning (CR) module, a non-local-style attention applied on top of RoIAlign, takes object features as query and features from the hand-object intersecting region as key and value: a synergy map of pairwise spatial similarities weights the fusion of intersection features into the object features, which are then passed with the hand features to the two decoders. The hand decoder first predicts 2D heatmaps for 21 joints with an hourglass module (32x32 heatmaps), then a ConvNet with four residual blocks combined with the heatmaps regresses MANO pose and shape parameters through three fully connected layers; training uses heatmap L2 loss plus L2 losses on MANO parameters, joints, and vertices. The object decoder follows a 2D-to-3D paradigm with two streams sharing four convolution layers: one predicts, for every grid cell of the object feature map, the 2D locations of 21 object control points (8 bounding-box corners, 12 edge midpoints, 1 center) to handle self-occlusion, and the other regresses per-proposal confidence scores; at test time the 10 most confident proposals are fed to PnP to solve the 6-DoF pose. For semi-supervised learning, the trained model is run on Something-Something video frames with 8-augmentation test-time ensembling. Pseudo-label filtering first solves a weak-perspective camera by aligning predicted 3D joints to predicted 2D joints (SMPLify-style optimization), then applies three spatial constraints (IoU above 0.6 between the provided 2D bounding box and the re-projected mesh box; normalized reprojection distance below 0.65; biomedical plausibility with minimum normalized bone length 0.1 and joint angles within 0-90 degrees) and two temporal constraints (frame-to-frame smoothness of 2D joints and MANO pose parameters below thresholds 0.5 and 0.01, and per-sequence hand-shape consistency within two standard deviations of the mean shape). Only hand pseudo-labels are generated, because object pseudo-labels would require 3D object models at inference and object pose generalizes poorly; self-training runs on the union of HO-3D and the 84,063 retained pseudo-labeled frames, with a binary mask restricting the object loss to annotated data.
 
-### Limitations
-- Depends on quality of pseudo-labels.
-- May not handle very heavy occlusion in single image.
-- Requires large-scale video data.
-- Transformer-based reasoning is computationally more intensive.
+## Contributions
 
-## 6. Takeaway
-This work demonstrates that semi-supervised learning with explicit contextual reasoning between hand and object representations effectively addresses the data scarcity and occlusion challenges in 3D hand-object pose estimation, with spatial-temporal video consistency as a strong pseudo-labeling constraint.
+- A unified single-image framework for joint 3D hand pose and 6-DoF object pose estimation with an explicit contextual reasoning module that models the spatial interaction between hand and object representations through their intersection region.
+- The first semi-supervised pipeline for 3D hand-object pose estimation that exploits large-scale unlabeled hand-object interaction videos, using spatial-temporal consistency (camera-solved IoU, reprojection, biomedical, smoothness, and shape-invariance constraints) to select high-quality pseudo hand labels.
+- Demonstration that hand-only pseudo-labels improve object pose estimation as well, through both richer interaction context in the CR module and a stronger shared backbone.
+- State-of-the-art hand pose results on HO-3D at the time of publication, and improved cross-domain generalization on FPHA and FreiHAND.
+
+## Experimental Setup
+
+Supervised training on HO-3D (over 65 sequences, 10 subjects, 10 objects; 66,034 training and 11,524 test third-person images, evaluated via the official server) with Adam, batch size 24, learning rate 1e-4 for 50 epochs scaled by 0.7 every 10 epochs, 512x512 inputs, and augmentation by scaling (plus/minus 20%), rotation (plus/minus 180 degrees), translation (plus/minus 10%), and color jitter. Semi-supervised learning uses the Something-Something video dataset, from which 84,063 frames receive pseudo hand labels; cross-domain evaluation uses FPHA (egocentric, magnetic-sensor annotations, subset following prior work) and FreiHAND (3,960 test samples, online server). Metrics: Procrustes-aligned joint and mesh error (mm) and F@5/F@15 from the HO-3D system, mesh PCV AUC, ADD-0.1D for object pose (cleanser, bottle, can, average), and joint/mesh AUC plus F-scores for cross-domain tests. Baselines are Hasson et al.'s joint hand-object model and HOnnotate on HO-3D. Ablations cover the CR query design, semi-supervised learning with and without the CR module, the filtering constraints, and the fraction of pseudo-labels used.
+
+## Results
+
+- HO-3D hand pose: joint error 9.8 mm and mesh error 9.4 mm with F@5 53.0 and F@15 95.7, versus 11.1/11.0 mm for Hasson et al. and 10.7/10.6 mm for HOnnotate; the model also achieves the highest mesh AUC at 81.2%, 2.2% and 3.9% above the two baselines.
+- Object pose on HO-3D: ADD-0.1D of 89.7 (cleanser), 72.7 (bottle), 57.0 (can), averaging 73.2 with the CR module and semi-supervision, versus 67.5 for supervised training with the CR module — a 5.7% average gain (2.1%, 12.6%, and 2.2% per object) despite no object pseudo-labels.
+- CR module ablation (supervised): using object features as the query raises average object ADD-0.1D from 62.2 to 67.5 (+5.3%), while using hand features as query (h+ or both as queries h+o+) does not help hand pose and slightly degrades it.
+- Filtering ablation: using all 84,063 pseudo-labels without spatial or without temporal filtering degrades hand joint error to 10.0 and 10.1 mm respectively (versus 9.8 mm with both), even worse than the supervised baseline of 10.1 mm in mesh terms, showing both constraint families are necessary.
+- Scaling pseudo-labels from 20% to 80%+ of the pool monotonically improves object ADD-0.1D.
+- Cross-domain generalization: semi-supervision lifts FPHA joint AUC from 73.9 to 74.8, mesh AUC from 75.0 to 75.9, F@5 from 43.8 to 45.3; and FreiHAND joint AUC from 68.5 to 69.7, mesh AUC from 68.0 to 69.1, F@5 from 34.2 to 35.4.
+
+## Limitations
+
+The pipeline generates pseudo-labels for hands only; object pseudo-labeling is explicitly ruled out because it requires 3D object models at inference and object pose generalizes poorly from limited annotated instances, so object accuracy depends indirectly on hand quality. The filtering thresholds (IoU 0.6, reprojection 0.65, smoothness 0.5 and 0.01, two-sigma shape consistency) are hand-set constants, and the ablation shows that removing either spatial or temporal filtering not only nullifies but reverses the benefit of self-training, indicating sensitivity to pseudo-label noise. The method requires video data with 2D bounding-box annotations (Something-Something) and assumes roughly continuous frame rates for the temporal constraints. Camera pose is solved with a weak-perspective model, which is an approximation for the varied viewpoints in the wild. The object branch assumes known 3D object models and control points, and the evaluation covers only the 10 HO-3D objects for pose estimation; two-hand interactions are not considered.

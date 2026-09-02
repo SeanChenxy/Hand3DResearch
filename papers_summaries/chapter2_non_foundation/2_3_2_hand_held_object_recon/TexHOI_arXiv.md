@@ -1,44 +1,38 @@
 # TexHOI: Reconstructing Textures of 3D Unknown Objects in Monocular Hand-Object Interaction Scenes
 
+**Authors:** Alakh Aggarwal, Ningna Wang, Xiaohu Guo  
+**Date:** 2025-01-07  
+**Identifier:** [arXiv:2501.03525](https://arxiv.org/abs/2501.03525)  
+**Zotero item:** `SL6P4TSZ` ([Zotero](zotero://select/library/items/SL6P4TSZ))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-Extends hand-held object reconstruction to include high-fidelity texture recovery by separately modeling albedo, lighting, and hand-object shadows within a physically-based rendering framework.
 
-## 1. Problem and Setting
-- Reconstruct both 3D geometry AND texture of an unknown hand-held object from a monocular RGB video.
-- Input: monocular video; output: 3D object mesh with albedo texture + hand pose per frame + environment lighting.
-- Template-free. Unlike prior works that only reconstruct geometry, this method recovers object appearance by explicitly modeling the image formation process (albedo, lighting, shadows).
+TexHOI reconstructs the geometry and, crucially, the high-fidelity albedo texture of an unknown rigid object manipulated by a hand in a monocular video, and is (to the authors' knowledge) the first method to explicitly account for hand-object interaction in object texture reconstruction. A two-stage pipeline first refines hand and object poses with compositional volumetric rendering of hand, object, and background radiance fields, then runs a physics-based surface-rendering stage in which environmental illumination is approximated with 128 Spherical Gaussians and the hand is represented as 108 parameterizable spheres so that hand occlusion, shadows, and skin-color reflections are computed analytically instead of being baked into the texture. On six textured HO3D sequences it improves average texture quality over the geometry-focused HOLD baseline and an adapted InvRender, reaching PSNR 20.96 / SSIM 0.9387 / LPIPS 0.095 against 20.61 / 0.9354 / 0.101 for HOLD and 19.23 / 0.9301 / 0.154 for InvRender, while yielding albedo that supports relighting.
 
-## 2. Core Method
-- Builds on existing hand-object tracking (MANO + object pose estimation) to obtain per-frame geometry.
-- For texture reconstruction, models the scene with a physically-based decomposition:
-  - Object albedo: a canonical texture map learned via an MLP.
-  - Environment lighting: estimated as spherical harmonics.
-  - Hand shadow modeling: explicitly computes shadows cast by the hand onto the object using ray tracing against the MANO mesh.
-- The rendering equation combines these components to produce the final color for each pixel, which is compared against the observed RGB.
-- Texture is optimized across all video frames where the object surface point is visible (occlusion-aware).
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: per-video test-time optimization.
-- Supervision: RGB pixel values across video frames; 2D hand keypoints for pose initialization.
-- Uses MANO for both hand geometry and shadow computation.
-- Assumes object is rigid with Lambertian reflectance; lighting can be approximated by low-order spherical harmonics; hand pose tracking is reasonably accurate.
+Reconstructing textured 3D models of real objects from monocular sequences is hard when a hand manipulates them: shadows and indirect illumination from the hand, plus inaccurate object poses under occlusion, corrupt the recovered appearance. Recent hand-object reconstruction systems such as BundleSDF, DiffHOI, and HOLD focus on geometry and bake hand shadows and environmental reflections into their predicted textures, which prevents reuse under different lighting. Conversely, physics-based inverse-rendering methods (PhySG, InvRender, RefNeRF) model illumination and BRDF via Spherical Harmonics or Spherical Gaussians but assume a single static rigid object with accurate camera poses: they cannot handle a dynamic, non-rigid interacting hand, and expensive solutions to visibility such as Monte-Carlo ray tracing (up to 30 minutes per frame in NeRFactor) or learned visibility MLPs are impractical. The paper's research question is how to achieve accurate texture and geometry prediction in dynamic hand-object interaction scenarios using monocular camera data — specifically, how to predict the hand's impact on environmental visibility and indirect illumination so that the object's intrinsic albedo is not conflated with transient effects.
 
-## 4. Experiments and Findings
-- Datasets: HO3D (real), custom captures.
-- Metrics: PSNR, SSIM, LPIPS for texture quality; qualitative evaluation of recovered albedo maps.
-- Produces convincingly textured 3D object models from monocular video. Shadow modeling significantly improves texture quality by preventing hand shadows from being "baked into" the albedo.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- First method to recover high-quality textures (not just geometry) for unknown hand-held objects.
-- Physically-based shading decomposition disentangles albedo from lighting and shadows.
-- Produces relightable 3D object models.
+TexHOI is trained per scene in two stages. Stage 1, compositional volumetric rendering for pose refinement, follows HOLD: an Object NeRF samples points inverse-transformed by the object pose into canonical object space; a Hand NeRF inverse-transforms points via linear blend skinning into the canonical MANO pose; a Background NeRF models the environment; the three are depth-sorted and composed into a foreground color with a foreground mask, from which predicted segmentation is the argmax of hand, object, and background masks. Hand and object poses are optimized jointly with the fields through RGB, segmentation (against SAM-Track masks, weight 1.1 decaying to 0.1 over 30,000 iterations), eikonal (1.0), hand-SDF (5.0), and fingertip-object contact losses (0 ramped to 1.0), yielding refined poses plus object and hand-object visibility masks for Stage 2. Stage 2, physics-based surface rendering in the PhySG style, models direct environmental illumination as a sum of 128 Spherical Gaussians whose lobe directions rotate counter to the object pose, and a BRDF combining an MLP-predicted diffuse albedo with specular roughness and reflectance. The central novelty is hand-occlusion handling: the canonical MANO hand volume is packed with 108 parameterizable spheres arranged as a power diagram (centers placed on the skeleton between joints, radii from the partitioned surface vertices), updated under pose and shape deformation by averaging deformed vertex positions and projected distances. Each object point's SG lobe is divided into 64x64 patches; projecting the spheres onto the lobe and summing the normalized integral Spherical Gaussian over occluded patches gives the occlusion fraction analytically, avoiding ray tracing or learned visibility. Regions occluded by the hand receive a learned constant indirect illumination initialized from a generic skin color (#E0AC69). Losses are RGB on pixels in the intersection of predicted object and hand-object masks, an SDF-based mask loss (weight 100) on rays outside the mask intersection, and an eikonal term (0.1). Each stage trains about 14 hours per scene on a 12 GB NVIDIA RTX 2080 Ti; Stage 1 is object-agnostic while Stage 2 depends on Stage 1 outputs.
 
-### Limitations
-- Lambertian reflectance assumption limits applicability to specular objects.
-- Shadow ray tracing against MANO mesh adds computational cost.
-- Texture quality bounded by hand tracking accuracy and viewpoint coverage.
-- Only single-hand, rigid-object scenarios.
+## Contributions
 
-## 6. Takeaway
-TexHOI addressed the under-explored problem of appearance recovery in hand-object reconstruction, showing that explicit physical modeling of shadows and lighting is crucial for clean texture extraction. This work points toward the goal of creating complete, appearance-ready 3D assets from casual hand-held object videos.
+- The first method, to the authors' knowledge, to account for dynamic hand-object interaction in texture prediction for 3D object reconstruction from monocular videos, producing albedo free of baked-in hand occlusions and environmental illumination.
+- A novel hand representation — the canonical MANO hand simplified as 108 parameterizable spheres with distance-based skinning and dynamically recalculated radii — enabling efficient Spherical Gaussian occlusion computation without time-consuming ray tracing or MLP-learned pseudo-ground-truth visibility.
+- A two-stage framework separating compositional volumetric rendering (joint hand/object pose optimization and coarse geometry/texture) from Spherical-Gaussian-based physics surface rendering (albedo, roughness, specular, hand visibility, indirect illumination), with quantitative and ablative evidence that both hand occlusion and indirect illumination modeling are necessary.
+
+## Experimental Setup
+
+Evaluation uses monocular sequences from the HO3D training data — six YCB objects selected for having sufficient texture detail (sugar box, cracker box, bleach cleanser, meat can, mustard bottle, drilling machine; the remaining three training objects lack detailed texture), subsampling one frame in ten for roughly 200-400 frames per sequence — plus three in-the-wild objects (bottle, kettle, Rubik's cube) captured by HOLD. Since HO3D objects have ground-truth YCB models and textures, the authors render ground-truth images with the Mitsuba renderer at the poses of the sampled frames and compare predicted albedo against them using PSNR, SSIM, and LPIPS. Baselines are HOLD (the strongest prior dynamic hand-object system, which outperforms DiffHOI and BundleSDF) and InvRender, which the authors adapt to this setting by incorporating object segmentation masks for pixel-wise losses and adding SG lobe rotations to handle the dynamically rotating object. Ablations remove indirect illumination and hand-occlusion handling respectively.
+
+## Results
+
+On the six HO3D sequences, TexHOI averages PSNR 20.96, SSIM 0.9387, and LPIPS 0.095, versus 20.61 / 0.9354 / 0.101 for HOLD and 19.23 / 0.9301 / 0.154 for the adapted InvRender. TexHOI is best on sugar box (PSNR 23.55 vs HOLD 22.20 and InvRender 22.36), bleach cleanser (20.78), and cracker box (19.88), while HOLD scores slightly higher on drilling machine (18.12 vs 17.64), mustard bottle (22.08 vs 21.93), and meat can (22.16 vs 22.02) — the paper attributes HOLD's pixel-similarity advantage to its baking of hand shadows and reflections into the texture, which makes renders closer to the input image but unusable for relighting, whereas TexHOI's albedo disentangles intrinsic appearance and supports re-rendering under new environments. Ablations (averages): removing indirect illumination drops performance to 20.87 / 0.9380 / 0.112 and makes the hand cast a darker texture; removing occlusion handling gives 20.85 / 0.9351 / 0.113 with artifacts concentrated in hand-grasp regions; the few cases where ablated variants beat the full model are explained by those variants baking hand-environment interactions into the prediction.
+
+## Limitations
+
+The method struggles when the hand remains static relative to the object: without perspective change, the hand's impression becomes baked into the reconstructed geometry and texture. Sphere centers can interpenetrate the object near the fingertips, introducing small errors in occlusion computation. The two-stage design is per-scene and not end-to-end (about 14 hours of training per stage), and the authors name as future work a more sophisticated skin-material model for indirect illumination, temporal-consistency modeling to remove minor artifacts, 3D Gaussian splatting-based inverse rendering for hand-object scenes, single-stage joint optimization of pose and texture, and extension to multiple hands and to hand-object interpenetration handling via collision detection or physical simulation.
+

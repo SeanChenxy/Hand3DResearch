@@ -1,45 +1,38 @@
 # MagicHOI: Leveraging 3D Priors for Accurate Hand-object Reconstruction from Short Monocular Video Clips
 
+**Authors:** Shibo Wang, Haonan He, Maria Parelli, Christoph Gebhardt, Zicong Fan, Jie Song  
+**Date:** 2025-08-07  
+**Identifier:** [arXiv:2508.05506](https://arxiv.org/abs/2508.05506); DOI: [10.1109/ICCV51701.2025.00563](https://doi.org/10.1109/ICCV51701.2025.00563)  
+**Zotero item:** `SIPMBIXF` ([Zotero](zotero://select/library/items/SIPMBIXF))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-MagicHOI reconstructs hands and objects from short monocular interaction videos even under limited viewpoint variation by integrating a large-scale novel view synthesis diffusion model as a prior to regularize unseen object regions, plus visible contact constraints to align the hand to the object — significantly outperforming state-of-the-art hand-object reconstruction methods.
 
-## 1. Problem and Setting
-- Template-free reconstruction of hand-held object 3D shape from short monocular RGB video clips (typically a few seconds).
-- Input: a short video clip of a hand interacting with an object; known hand poses (e.g., from an off-the-shelf hand tracker) and camera parameters.
-- Output: complete 3D object shape (neural implicit or mesh), refined object 6D pose trajectory, and hand-object interaction states.
-- Task: hand-held object reconstruction with shape completion. A core instance of the "shape completion prior" family.
+MagicHOI addresses partially visible hand-object reconstruction: recovering complete 3D hand and object surfaces from short monocular videos in which fixed camera viewpoints and static grips leave object regions unobserved. Its key insight is that large-scale novel view synthesis (NVS) diffusion models — specifically a frozen, pre-trained Zero-1-to-3 — supply category-agnostic object supervision that regularizes unseen regions during optimization of an implicit SDF object field, applied through a score distillation sampling (SDS) loss with a visibility-aware weighting scheme that concentrates the prior on unobserved areas. Visible-contact constraints then align the hand to the completed object by optimizing only hand translation and scale. On HO3D 30-frame clips it outperforms iHOI, DiffHOI, EasyHOI, and HOLD (object Chamfer distance 0.87 cm, F-score@10mm 92.15%, hand-relative CD 2.39 cm, MPJPE 4.62 mm) and transfers to in-the-wild and internet videos.
 
-## 2. Core Method
-- Key insight: despite the scarcity of paired 3D hand-object data, large-scale novel view synthesis diffusion models offer rich object supervision.
-- A novel view synthesis model is integrated into the hand-object reconstruction framework to provide a prior that regularizes unseen object regions during hand interactions.
-- Hand-to-object alignment is enforced by incorporating visible contact constraints.
-- How FM prior is injected: novel view synthesis diffusion model provides 3D-consistent supervision for unseen object regions, regularizing the reconstructed object to be plausible from novel viewpoints.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Foundation model: large-scale novel view synthesis diffusion model (e.g., Zero-1-to-3, SyncDreamer) trained on large 3D object datasets.
-- Domain knowledge: hand-object physical constraints (contact, interpenetration avoidance).
-- Training data: the FM prior is pre-trained; the per-video optimization is test-time only.
-- Assumption: object is rigid; novel view synthesis FM generalizes to the in-video object category.
+Internet short-form videos (TikTok, Instagram Reels, YouTube Shorts) are an abundant source of hand-object interactions useful for scaling human demonstrations in robotic grasping, but they rarely provide complete dense views of objects: hand-induced occlusion, object self-occlusion, and non-rotating grips leave parts of the object permanently unseen. Existing reconstruction approaches fail under this regime. Template-based methods estimate only poses for pre-scanned objects and do not scale to novel items. Learning-based template-free methods depend on scarce paired 3D hand-object annotations and generalize poorly. Volumetric-rendering methods (e.g., HOLD) generalize to unseen objects via RGB supervision alone but produce implausible geometry wherever the object is occluded or only partially observed. The paper defines the task of Partially-visible Hand-object Reconstruction: jointly reconstructing 3D hand and object geometry from short clips with incomplete object observation, where the central challenge is regularizing geometry that no input frame ever shows.
 
-## 4. Experiments and Findings
-- Datasets: HO3D, DexYCB, and similar hand-object video benchmarks.
-- Metrics: 3D object shape accuracy (Chamfer, F-score), normal consistency, object pose error, hand pose error.
-- MagicHOI significantly outperforms existing state-of-the-art hand-object reconstruction methods.
-- Novel view synthesis diffusion priors effectively regularize unseen object regions, enhancing 3D hand-object reconstruction.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Effective in real-world settings where fixed camera viewpoints and static grips limit object visibility.
-- Combines novel view synthesis prior with hand-object contact constraints.
-- Template-free, works on arbitrary objects.
-- Significant improvements over prior state-of-the-art.
+MagicHOI is a per-video optimization framework with four stages. (1) Initialization: an off-the-shelf hand estimator predicts MANO parameters (45-dim pose, 10-dim shape, global rotation, translation); HLoc structure-from-motion over Cutie-segmented object images yields camera intrinsics and per-frame poses, with multi-view stereo providing depth maps (the authors note MASt3R as a more robust alternative that avoids relying on SfM convergence). (2) NVS prior integration: an object-only reference image is produced by inpainting the hand region (InpaintAnything) in the frame with the highest object-to-hand pixel ratio, then fed to a frozen pre-trained Zero-1-to-3 model, which generates novel views conditioned on spherical-coordinate camera poses; the SfM object frame is registered to the Zero-1-to-3 canonical frame by aligning inverse-projected 3D correspondences from the NVS reference depth and MVS depth, combining a 3D-correspondence term and a PnP term (L = L3D + λ2D·L2D, λ2D = 1.0). (3) Occlusion-robust object reconstruction: an implicit signed distance and texture field is volumetrically rendered and supervised by photometric and segmentation losses on observed views (weights λsegm = 10.0, λsmooth = 50.0 for rendered-normal smoothness) plus an SDS loss on randomly sampled novel views against the Zero-1-to-3 denoiser. To keep the prior from corrupting well-observed geometry, a visibility-aware weighting strategy builds a coarse voxel visibility grid from rays cast through observed pixels, rasterizes it into a per-novel-view visibility image (observed/unobserved/background), computes the observed-to-unobserved pixel ratio beta, and weights the NVS loss by mu = e^(-beta^2/0.6), emphasizing the prior exactly where input views are blind. (4) Hand-object alignment: contact constraints are enforced only on visible fingertip contacts — candidates from fingertip vertex sets are filtered by hand-mask containment and by fingertip mask area to discard occluded ones, and ray tracing locates the corresponding object surface points; the hand pose is deliberately kept fixed (relaxing it degrades MPJPE from 4.62 to 7.83 mm) while only hand translation and scale are optimized with contact (200.0), 2D keypoint (20.0), vertex temporal smoothness (20.0), and penetration (0.003) terms, which also resolves the NVS space's lack of metric scale.
 
-### Limitations
-- Per-video optimization is slow (minutes per clip), unsuitable for real-time applications.
-- Quality depends on the accuracy of input hand poses and camera parameters.
-- Diffusion prior may hallucinate details inconsistent with actual unseen object geometry.
-- Primarily demonstrated on rigid objects.
-- Requires novel view synthesis model capable of generating the in-video object category.
+## Contributions
 
-## 6. Takeaway
-MagicHOI demonstrates that the rich supervision in large-scale novel view synthesis diffusion models can serve as an effective 3D prior for hand-object reconstruction, especially in challenging cases with limited viewpoint variation. By integrating this prior with visible contact constraints, the method achieves state-of-the-art results on short monocular video clips, where template-based and template-free methods typically fail. This work is a strong representative of the "shape completion prior" paradigm.
+1. A holistic template-free framework that leverages a large-scale NVS diffusion prior for joint 3D hand-object reconstruction from short monocular clips with partially visible objects.
+2. Demonstration that a general-purpose NVS model (Zero-1-to-3) can serve as a category-agnostic regularizer for template-free hand-object reconstruction, in contrast to category-specific priors used by prior-driven baselines.
+3. A visibility-aware weighted sampling strategy that balances regularization between observed and unobserved object regions, preventing the diffusion prior from distorting accurately reconstructed areas.
+4. A visible-contact-based hand-object alignment scheme with quantitative evidence that state-of-the-art reconstruction accuracy and the best object scale estimates (RS metric) among compared methods, plus qualitative generalization to in-the-wild and internet short-form videos.
+
+## Experimental Setup
+
+Quantitative evaluation uses HO3D-v3 (RGB videos of hands manipulating YCB objects with hand and object pose annotations), following HOLD's 14 sequences, each divided into 30-frame clips to enforce the short-video, limited-observation setting; the NVS reference frame additionally serves as input to the single-image methods iHOI and EasyHOI. Metrics are root-relative hand MPJPE (mm), object Chamfer distance (cm), F-scores at 5 mm and 10 mm, hand-relative object Chamfer distance (CDh, object mesh shifted by predicted hand root), and the proposed Relative Scale (RS) error, which measures deviation of the reconstructed object's physical size from ground truth after ICP alignment (RS = 0 means perfect scale). Baselines, all template-free, are iHOI, DiffHOI, EasyHOI (prior-driven) and HOLD (geometry-driven, prior-free). Qualitative evaluation covers self-recorded indoor and outdoor clips of household objects that never reveal the complete object, internet short-form videos, and bimanual rigid-object sequences from ARCTIC.
+
+## Results
+
+On HO3D clips, MagicHOI achieves CD 0.87 cm, F5 69.72%, F10 92.15%, MPJPE 4.62 mm, CDh 2.39 cm, and RS 0.11, beating every baseline on object geometry: HOLD 1.31/57.20/80.23/30.79/21.28/0.62, EasyHOI 1.86/46.10/70.92/16.69/19.55/0.28, DiffHOI 2.30/39.59/64.49/16.02/33.33/0.13, and iHOI 2.37/35.78/62.11/27.75/25.45/0.17. HOLD struggles most in the short-clip setting because its lack of a prior leaves unobserved regions degenerate, inflating hand-object alignment error (CDh 21.28); the category-specific priors of iHOI and DiffHOI produce distorted unseen regions, and EasyHOI often hallucinates shapes inconsistent with the input and causes hand-object penetration. The ablation isolates each component: RGB-only reconstruction reaches CD 1.37/F5 55.02/F10 78.24 (CDh 3.21, RS 0.20) but fails on occluded regions; NVS-only SDS guidance yields 1.54/55.59/78.97 with poor alignment (CDh 11.97); combining both without weighting improves to 0.91/68.62/90.81; adding the visibility-aware weighting gives the full result 0.89/69.72/92.15/CDh 2.39/RS 0.11, showing that the weighting suppresses surface distortions on observed regions (e.g., an inpainted bottle and a red box exhibit artifacts in the unweighted variant). Qualitatively, MagicHOI faithfully reconstructs in-the-wild and internet clips and generalizes to bimanual ARCTIC sequences with heavier occlusion and more diverse hand poses.
+
+## Limitations
+
+The paper does not include an explicit limitations section, but several constraints are evident from the text. The NVS prior comes from Zero-1-to-3 with frozen weights trained on synthetic 3D object renders, and the reconstructed object inherits the Zero-1-to-3 canonical space, which lacks metric scale — scale must be recovered through the hand contact alignment stage. The pipeline is per-video optimization built from multiple off-the-shelf components (hand estimator, Cutie segmentation, HLoc SfM with MVS, InpaintAnything), and the authors themselves note that SfM-based initialization can fail to converge, suggesting learning-based pose estimation such as MASt3R as a more robust alternative. Hand articulation is not refined during alignment (only translation and scale), since optimizing hand pose was found to increase MPJPE from 4.62 to 7.83 mm, meaning hand pose quality is bounded by the initial estimator. Quantitative evaluation is limited to HO3D's YCB objects restructured into 30-frame clips; in-the-wild, internet, and ARCTIC results are qualitative only, with no reported numbers.

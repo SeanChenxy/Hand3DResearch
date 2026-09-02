@@ -1,46 +1,44 @@
 # THOR-Net: End-to-end Graformer-based Realistic Two Hands and Object Reconstruction with Self-supervision
 
+**Authors:** Ahmed Tawfik Aboukhadra, Jameel Malik, Ahmed Elhayek, Nadia Robertini, Didier Stricker  
+**Date:** 2022-10-25  
+**Identifier:** [arXiv:2210.13853](https://arxiv.org/abs/2210.13853); DOI 10.1109/WACV56688.2023.00106 (WACV 2023)  
+**Zotero item:** `QDK5E6IX` ([Zotero](zotero://select/library/items/QDK5E6IX))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-An end-to-end framework combining Graph and Transformer (Graformer) architectures to reconstruct two interacting hands and a manipulated object with physically plausible alignment, using self-supervised physical constraints to reduce 3D annotation requirements.
 
-## 1. Problem and Setting
-- Joint 3D reconstruction of two hands and an object during bimanual interaction from a single RGB image.
-- Input: single RGB image of two hands manipulating an object. Output: MANO meshes for both hands and an object mesh/point cloud.
-- Static image setting; both hands and the object reconstructed jointly.
-- Explicitly targets realistic, physically plausible spatial alignment between the three entities.
+THOR-Net reconstructs the 3D pose, 3D shape, and per-vertex texture of two hands interacting with an object from a single monocular RGB image, combining graph convolutional networks, Transformers, and self-supervision in what the authors describe as the first approach to join these three ingredients for two-hands-and-object reconstruction. A Keypoint RCNN extracts 2D poses, heatmaps, bounding boxes, and region features, which are packaged as two graphs and processed by two GraFormer-based branches: a coarse-to-fine shape network that grows the graph from 29 pose nodes to full hand meshes (MANO-derived, downsampled to 194 and 49 vertices at intermediate levels) plus a 1000-vertex deformed-sphere object mesh, and a pose network that lifts 2D evidence to 3D joints. A self-supervised photometric loss regresses an RGB value for every hand-mesh vertex by orthographic projection onto the input image, sidestepping the limited training data (51 subjects) behind the HTML statistical hand texture model. The method reports state-of-the-art hand shape estimation on HO-3D v3 (Procrustes-aligned vertex error 10.0 mm versus ArtiBoost's 10.4 mm) and improves two-hand pose estimation on H2O (36.8/36.5 mm left/right versus 39.6/41.9 for Hasson et al.), while its object pose on H2O (73.9 mm) remains worse than prior work.
 
-## 2. Core Method
-- Graformer architecture: combines Graph Convolutional Networks (GCNs, which preserve mesh topology) with Transformer layers (which model long-range dependencies between hands and object).
-- The GCN component processes each entity (left hand, right hand, object) independently while preserving their surface topology, producing per-entity features.
-- The Transformer component enables cross-entity attention, allowing hand vertices to attend to object vertices and the other hand, modeling the spatial and functional relationships between them.
-- Self-supervised physical constraints: penetration loss (penalizing hand-object and hand-hand interpenetration) and contact loss (encouraging proximity at contact regions) act as training signals without requiring ground-truth contact annotations.
-- The model is trained end-to-end with a mix of supervised losses (when 3D annotations are available) and the self-supervised physical losses.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: datasets with 3D hand and object annotations where available (e.g., H2O, InterHand2.6M), supplemented by self-supervised signals.
-- Supervision signals: 3D hand and object mesh vertices (supervised where available), penetration loss, contact loss (self-supervised).
-- Uses MANO for both hands.
-- Object representation is flexible (mesh or point cloud), but training benefits from known object meshes.
-- The self-supervised losses assume that hands and objects should not interpenetrate and should be in proximity during interaction — physically reasonable priors.
+Realistic hand-object shape reconstruction is needed for immersive, personalized AR/VR experiences, and hand pose feeds human-computer interaction, action recognition, behavior analysis, and gesture recognition. Most prior work addresses a single interacting hand, while two hands manipulating an object is more challenging due to varying hand shapes and textures, many degrees of freedom, self-similarity of hand parts, two-hand self-occlusion, and hand-object mutual occlusion — all from a monocular RGB image that contains only 2D information. GCNs preserve the kinematic and graphical structure of hand pose and shape and can correlate visible with non-visible parts to fight depth ambiguity; Transformers add global context; and GraFormer (CVPR 2022) had shown that combining graph convolutions with attention outperforms pure-GCN lifting such as HOPE-Net. THOR-Net targets the joint estimation of two-hand and object 3D pose, hand and object meshes, and per-vertex hand texture from one RGB frame, unifying these threads in an end-to-end trainable pipeline.
 
-## 4. Experiments and Findings
-- Evaluated on H2O and InterHand2.6M datasets.
-- Metrics: MPJPE (hand joint error), mesh vertex error, penetration depth, contact distance.
-- THOR-Net achieves competitive accuracy with fully supervised methods while using less 3D annotation.
-- The self-supervised physical losses significantly reduce penetration artifacts and improve hand-object alignment compared to purely supervised baselines.
-- Ablation: both the GCN topology preservation and the Transformer cross-entity attention contribute substantially to accuracy.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Graformer design elegantly combines topology-aware GCN processing with cross-entity Transformer attention.
-- Self-supervised physical constraints reduce reliance on expensive 3D annotations.
-- Explicitly addresses the bimanual + object setting, which is more challenging and realistic than single-hand scenarios.
+Stage one is a Keypoint RCNN (ResNet50 backbone with a Feature Pyramid Network and multi-scale RoI align) trained from 2D projections of the 3D poses; it produces per-keypoint heatmaps, bounding boxes (derived from the minimum and maximum of the projected 2D keypoints, and on HO-3D covering hand and object jointly, while H2O uses separate boxes per hand and object), and RoI-specific features compressed by a 2-layer MLP into a 2048-dimensional vector per region. Localizing hands and objects inside the raw image removes any need for preprocessing crops. The 2D information is then modeled as two graphs fed to two branches. The Pose GraFormer converts the Keypoint RCNN heatmaps (2D keypoints on H2O, where that proved more accurate) into 3D coordinates of hand joints and object corners; each GraFormer repeats five times a block of GraAttention — a 4-head multi-head self-attention whose final layer is an LAMGConv graph convolution with a trainable adjacency matrix — followed by two ChebGConv (Chebyshev graph convolution) layers, capturing local structure via graph connectivity and global context via attention. The Coarse-to-fine Shape GraFormer generates the meshes in three stages, each a GraFormer followed by an unpooling layer that increases the node count while features shrink toward 3 spatial values (plus 3 texture values when textured output is enabled). The input graph has 29 nodes (one per pose keypoint), each carrying its flattened 56x56 heatmap concatenated with the 2048-d feature vector (5184 values). Hand-mesh graph adjacency comes from MANO faces, with intermediate topologies obtained by simplifying the 778-vertex MANO mesh to 194 and then 49 vertices using the Quadric Edge Collapse Decimation algorithm. Because benchmark objects have inconsistent topology and varying vertex counts, every object is represented by an icosphere (level-4 subdivision, 2556 vertices) simplified to 1000 vertices and deformed to each target YCB object mesh in PyTorch3D by minimizing Chamfer distance plus edge-length, normal-consistency (weight 0.01), and Laplacian smoothing (weight 0.1) regularizers with SGD. Self-supervised texture regression adds a photometric loss: predicted per-vertex RGB values are compared by MSE against the pixel colors sampled at the vertices projected into the image with camera intrinsics, which also improves shape-to-image alignment. The full training objective sums cross-entropy losses for heatmaps, classification and MSE losses for bounding boxes, and MSE losses for 3D pose and shape (plus the photometric term for textured shapes). The network has 192M parameters and is trained with Adam (learning rate 1e-4, batch size 8) on an NVIDIA A100 GPU.
 
-### Limitations
-- Architecture complexity is higher than single-hand methods; may be harder to train.
-- Self-supervised losses provide useful regularization but cannot fully replace 3D supervision for fine-grained accuracy.
-- Object reconstruction quality depends on the object representation capability and training data diversity.
-- Does not handle category-agnostic objects (assumes some known object priors).
+## Contributions
 
-## 6. Takeaway
-THOR-Net advanced bimanual hand-object reconstruction by integrating GCNs and Transformers into a unified Graformer architecture, showing that topology-aware processing plus cross-entity attention is a powerful combination for multi-entity interaction modeling. The self-supervised physical constraints demonstrated that simple geometric priors (no penetration, proximity at contact) can serve as effective training signals, a theme that influenced subsequent self-supervised and physics-aware approaches.
+- A novel end-to-end pipeline for realistic two-hands-and-object reconstruction from monocular RGB that, to the authors' knowledge, is the first to combine GCNs, Transformers, and self-supervision for this task, jointly estimating 3D pose, 3D shape, and per-vertex hand texture.
+- Building graph inputs for GraFormer-based estimation from Keypoint RCNN outputs, using heatmaps and RoI features (rather than raw 2D coordinates) as node representations, which an ablation shows is the most accurate modality.
+- A coarse-to-fine GraFormer shape network that progressively grows the graph from pose keypoints to full meshes, with hand topology handled via QECD-downsampled MANO adjacency and object topology standardized by deforming a 1000-vertex icosphere onto each object.
+- Self-supervised photometric regression of per-vertex hand texture directly from RGB images of any hand dataset, in contrast to HTML's statistical texture model built from only 51 subjects.
+- State-of-the-art hand shape estimation on HO-3D v3 and improved two-hand pose estimation on the H2O dataset, with the first shape evaluation reported on H2O.
+
+## Experimental Setup
+
+Evaluation uses two public benchmarks. HO-3D (v2 and v3) contains one hand interacting with one of ten YCB objects under severe occlusion, with MANO annotations; the pose has 29 keypoints (21 hand joints plus 8 object corners) and the shape 1778 vertices (778 hand plus 1000 object), with 3D points translated so the palm is the origin and hand and object sharing one bounding box. H2O (ICCV 2021) provides two hands and an object (8 objects) from five camera views, of which only the egocentric view is used; the pose has 50 keypoints (21 per hand plus 8 object corners), the shape 2556 vertices (two 778-vertex hands plus the 1000-vertex object), and separate bounding boxes per hand and object. Metrics are Procrustes-aligned and non-aligned MPJPE (mm) for pose, Procrustes-aligned and non-aligned vertex error (mm) for shape, and percentage of correct vertices (PCV) over distance; H2O pose numbers come from the H2O challenge website, HO-3D numbers from the HO-3D challenge website. Pose baselines include Hasson et al. (2019, 2020), Hampali et al. (Honnotate, CVPR 2020), METRO, Liu et al. (CVPR 2021), HandOccNet, Keypoint Transformer, and ArtiBoost; shape baselines add HandVoxNet++. Ablations on HO-3D v3 vary the depth of the coarse-to-fine shape network (1, 2, or 3 GraFormers) and the graph input modality (heatmap, 2D pose, or 3D pose concatenated with 1024-, 2048-, or 4096-d features). Code is promised at github.com/ATAboukhadra/THOR-Net.
+
+## Results
+
+- HO-3D v3 shape estimation: Procrustes-aligned vertex error 10.0 mm with non-aligned error 23.7 mm, ahead of ArtiBoost (10.4 mm aligned) and Keypoint Transformer (10.9 mm); on v2 THOR-Net reaches 10.7/26.3 mm, behind HandOccNet's 8.8 mm aligned error but far ahead of Hasson et al.'s 55.2 mm non-aligned error and comparable to HandVoxNet++'s 27.0 mm. (The abstract quotes ArtiBoost at 10.8 mm, while the results table lists 10.4 mm on v3.)
+- HO-3D pose estimation: 11.3/26.3 mm (aligned/non-aligned MPJPE) on v2 and 11.2/25.6 mm on v3, which the authors acknowledge does not exceed the best prior methods (HandOccNet 9.1 mm aligned on v2; ArtiBoost 10.8 mm on v3), though the non-aligned error improves markedly over Hasson et al. (55.2 mm) and Hampali et al. (84.2 mm).
+- H2O pose estimation (non-aligned MPJPE): 36.8 mm left hand and 36.5 mm right hand, improving over Hasson et al. (39.6/41.9), the H+O method (41.4/38.9), and the H2O baseline (41.5/37.2) — the abstract frames this as a 5 mm gain on the left hand and 1 mm on the right. Object pose error is 73.9 mm, worse than H+O's 48.1 mm and the H2O baseline's 47.9 mm, which the authors acknowledge.
+- H2O shape estimation (first reported on this dataset): left-hand vertex error 54.1 mm, right-hand 59.4 mm, object 66.6 mm.
+- Ablation (HO-3D v3, aligned/non-aligned vertex error): 3 GraFormers with heatmap + 2048-d features give 10.0/23.7 mm; reducing to 2 or 1 GraFormers degrades to 11.1/26.4 and 11.4/26.8; replacing the heatmap input with the 2D pose collapses accuracy to 14.6/46.8, the 3D pose gives 10.9/27.0, and 1024- or 4096-d features give 13.5/29.5 and 11.8/28.4, confirming both the depth and the input-modality choices.
+- Qualitatively, the photometric texture captures skin color, some text details, and object colors despite occlusion, but exhibits smoothing on object colors, lighting-dependent skin tones, and artifacts at object edges.
+
+## Limitations
+
+The paper is explicit about several shortcomings. Pose estimation on HO-3D does not surpass the strongest prior methods, and object pose estimation on H2O is inaccurate (73.9 mm versus about 48 mm for earlier methods). The model lacks the ability to generalize to unseen objects, since each object is represented by a sphere deformed to a known mesh. The self-supervised texture estimation shows a smoothing effect that hides fine details, hand colors vary with lighting conditions, and object edges show artifacts. As future work, the authors propose exploiting temporal constraints from videos through a spatiotemporal graph, which the current single-frame pipeline does not use.

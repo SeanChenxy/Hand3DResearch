@@ -1,47 +1,37 @@
 # Grasp in Gaussians: Fast Monocular Reconstruction of Dynamic Hand-Object Interactions
 
+**Authors:** Ayce Idil Aytekin, Xu Chen, Zhengyang Shen, Thabo Beeler, Helge Rhodin, Rishabh Dabral, Christian Theobalt  
+**Date:** 2026-04-14  
+**Identifier:** [arXiv:2604.12929](https://arxiv.org/abs/2604.12929)  
+**Zotero item:** `UPVX8SPF` ([Zotero](zotero://select/library/items/UPVX8SPF))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-GraG is a fast and robust method for reconstructing dynamic 3D hand-object interactions from a single monocular video, replacing heavy neural representations with a compact Sum-of-Gaussians (SoG) representation initialized from a SAM3D pipeline, achieving 6.4x faster reconstruction with 13.4% better object reconstruction and 65%+ reduction in hand per-joint error compared to prior work.
 
-## 1. Problem and Setting
-- Fast 3D reconstruction of dynamic hand-object interaction from a monocular video.
-- Input: a monocular RGB video of hand-object interaction.
-- Output: 3D hand mesh (MANO parameters per frame), 3D object shape represented as a collection of 3D Gaussians, and per-frame hand-object 6D poses.
-- Task: dynamic hand-object reconstruction. Classified under shape completion priors because SAM3D (a foundation model for open-vocabulary 3D segmentation) provides the prior for separating and tracking the object from the scene.
+Grasp in Gaussians (GraG) reconstructs dynamic 3D hand-object interactions from a single monocular video by decoupling canonical object reconstruction from lightweight per-frame tracking: a multi-view keyframe selection feeds MV-SAM3D to build a canonical dense Gaussian object asset, a video-adapted SAM3D freezes the shape and tracks per-frame object pose with temporal guidance, and a compact Sum-of-Gaussians (SoG) representation — 2000 Gaussians sparsified by farthest-point sampling, matched against a quad-tree image SoG with hand-occlusion gating — refines hand and object motion in sliding windows. On HO3Dv3 it reports Chamfer Distance 0.58 cm, F10 96.7%, and 0.56 hours of runtime per 100 frames, versus 0.67 cm, 94.1%, and 3.6 hours for BIGS, and the paper claims 6.4x faster reconstruction than prior work with 13.4% better object reconstruction and over 65% lower hand MPJPE than HOLD/BIGS.
 
-## 2. Core Method
-- A lightweight Sum-of-Gaussians (SoG) object representation that can be updated efficiently frame-by-frame, replacing slow neural implicit optimization.
-- Initialization via SAM3D: SAM3D segments the hand-held object from the first frame in 3D, providing an initial Gaussian set; this is converted into a compact SoG via subsampling.
-- For subsequent frames, the Gaussians are transformed according to estimated object motion, and new Gaussians are added for newly visible object surfaces.
-- Hand pose is tracked from off-the-shelf monocular hand pose initialization, refined using 2D joint and depth alignment losses.
-- How FM prior is injected: SAM3D provides a semantic/geometric prior for what constitutes "the object" vs. the hand and background, enabling robust initialization. Unlike prior methods that use diffusion models for shape hallucination, GraG uses the FM prior for segmentation and initialization, relying on actual multi-view observations for shape completion.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Foundation model: SAM3D (a 3D-aware segmentation foundation model) for object extraction; monocular depth foundation model for geometric initialization.
-- Domain knowledge: hand model (MANO); rigid object motion (with potential extensions); physical contact constraints.
-- Training data: SAM3D and depth models are pre-trained on large-scale datasets; GraG does not require HOI-specific training.
-- Assumption: object is rigid; video provides sufficient motion for multi-view observation.
+The paper targets recovery of temporally coherent 3D geometry and motion of a hand and a rigid object from monocular RGB video, motivated by robotics and augmented reality, and is inherently ill-posed due to heavy occlusion and depth ambiguity, which the authors note is exacerbated when runtime matters. Existing approaches impose limiting assumptions: template-based methods require a pre-scanned 3D object model; template-free learned methods are trained on limited object instances or predefined categories and generalize poorly; in-hand object scanning assumes a rigid hand pose; and video-based optimization approaches such as HOLD (neural implicit fields) and BIGS (3D Gaussians with triplane MLP and SDS) are extremely slow — roughly 10 hours for HOLD and 4 hours for BIGS on a 100-frame video — while depending on brittle SfM/COLMAP initialization that fails under textureless objects, rapid motion, and egocentric viewpoints. Single-image foundation-model pipelines (EasyHOI, FollowMyHold) generalize well but cannot exploit temporal cues. GraG's insight is to combine generative 3D priors (for a canonical object from selected keyframes) with classical Sum-of-Gaussians tracking (revived from Stoll et al.'s body-tracking literature), which is fast and temporally stable because matching image and template Gaussians has a closed-form overlap and needs no back-to-front sorting.
 
-## 4. Experiments and Findings
-- Datasets: HO3D, DexYCB, and in-the-wild videos.
-- Metrics: reconstruction speed (FPS), object shape accuracy (Chamfer distance), hand pose error (MPJPE), and rendering quality.
-- Reconstructs temporally coherent hand-object interactions on long sequences 6.4x faster than prior work while improving object reconstruction by 13.4% and reducing hand's per-joint position error by over 65%.
-- SAM3D-based initialization is significantly more robust than hand-crafted segmentation methods, especially for diverse object categories and challenging backgrounds.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Dramatically faster than optimization-based methods; suitable for real-time applications.
-- SoG representation is lightweight, editable, and supports real-time rendering.
-- SAM3D prior enables robust, open-vocabulary object segmentation.
-- Progressive reconstruction naturally handles newly visible surfaces.
-- Strong quantitative improvements (6.4x speedup, 13.4% better object, 65% lower hand error).
+Preprocessing extracts hand/object masks with SAM 3 plus a large VLM (GLM-4.5V), camera intrinsics/extrinsics and pointmaps with Depth Anything 3, a MANO-based initial hand trajectory with Dyn-HaMR, and per-frame binary hand-object contact flags from Gemini 3 (Gemini-3-Flash), all in a shared Depth-Anything-3 coordinate system. Stage 1 selects K diverse and balanced keyframes by greedily minimizing a balance-and-diversity objective over Depth-Anything-3 class-token descriptors (mean similarity, feature magnitude, variance, plus a diversity term) and feeds them to MV-SAM3D, a multi-view extension of SAM3D, whose canonical shape tokens are decoded once into a dense 3D Gaussian asset. Stage 2 adapts SAM3D to video for per-frame object pose (rotation, translation, scale): the canonical shape tokens are shared across frames and the shape velocity field is zeroed (frozen shape) while layout tokens evolve under conditional flow matching; a temporal guidance term subtracts lambda_temp times the difference of consecutive pose latents from the predicted layout velocity, suppressing jitter and orientation flips (with a quaternion consistency check), and object scale is initialized from MV-SAM3D, refined on the first keyframe's pointmap, then fixed. Stage 3 jointly refines hand and object motion in sliding windows of 8 frames (100 AdamW iterations each): the object is sparsified to 2000 isotropic 3D Gaussians via farthest-point sampling; the object-masked image is approximated by a 2D SoG built through quad-tree color clustering; and an alignment energy E maximizes color-weighted closed-form Gaussian overlap between projected object Gaussians and image Gaussians, with object Gaussians occluded by the hand mask gated out (visibility gate). Hand tracking reuses the Dyn-HaMR trajectory, regularized by a 2D joint reprojection loss, a robust mean/median depth-alignment loss against pointmap depths inside hand and object masks, a silhouette loss preventing degenerate SoG inflation, a contact loss on MANO contact-zone vertices active only on contact-flagged frames, and a temporal smoothness loss. Reported loss weights are lambda_j2d = 0.5, lambda_depth = 1000, lambda_contact = 5000, lambda_sil = 100, lambda_smooth = 100, with the alignment term weighted -0.05; Stage 3 learning rates range from 1e-4 to 2e-3 across rotation, translation, and scale parameters.
 
-### Limitations
-- Does not hallucinate unseen object back-faces (only reconstructs what is observed), unlike diffusion-based methods.
-- Object shape completeness depends on the diversity of observed views.
-- Gaussian representation may not capture fine geometric details as well as neural implicit methods.
-- Relies on accurate camera pose/motion estimation.
-- Less suitable for objects that remain in a fixed pose throughout the video.
+## Contributions
 
-## 6. Takeaway
-GraG demonstrates an important alternative in the FM-prior design space: rather than using diffusion models to "hallucinate" unseen geometry, it uses FMs (SAM3D) for robust initialization and tracking, then relies on actual multi-view observations for reconstruction. This "observe-don't-hallucinate" philosophy trades completeness for geometric fidelity on visible surfaces and enables dramatically faster inference. The use of SAM3D as a 3D segmentation prior rather than a shape prior represents a distinct and pragmatic way to inject FM knowledge into HOI reconstruction.
+- A fast monocular HOI reconstruction framework designed to scale to long, unconstrained videos, shifting computation to a one-time canonical object reconstruction and replacing heavy per-scene optimization with efficient tracking (reducing runtime from roughly 3-10 hours to about 30 minutes for long sequences).
+- A video extension of SAM3D that freezes the canonical shape (zeroing the shape velocity field) and estimates per-frame layout with temporal guidance on pose latents, improving stability under occlusion and weak visual cues.
+- Compact occlusion-aware SoG tracking for Gaussian object assets: dense decoded Gaussians are sparsified and aligned to a quad-tree image SoG with closed-form overlap and hand-mask-based visibility gating, which avoids alpha-blending-style sorting and is faster and more stable than dense Gaussian Splatting tracking in their ablation.
+
+## Experimental Setup
+
+Evaluation uses HO3Dv3 — the 18 sequences of the HOLD evaluation set — and HOT3D, an egocentric dataset with accurate 3D hand and object poses, for which 18 segments containing single hand-object interactions are extracted from training videos (fisheye distortion removed). Baselines are HOLD (NeRF/SDF-based, SfM-initialized), BIGS (3D Gaussians with triplane MLP and SDS), and MagicHOI (HOLD extended with novel-view-synthesis priors); Meshes for BIGS are extracted via Poisson reconstruction after outlier removal. Following the HOLD protocol, metrics are root-relative hand MPJPE (mm), object Chamfer Distance (cm) and F-score at 10 mm computed after ICP-aligning the predicted object mesh to ground truth, hand-relative object Chamfer Distance (CDh) after subtracting the hand root, Success Rate (failure on initialization breakdown or when hand-relative CD reaches 1000 cm), and runtime normalized to hours per 100 frames on a single NVIDIA RTX 4090, including preprocessing and optimization; all methods are averaged over successful results only. Stage 1-2 take about 6 minutes on average for a 100-frame sequence and Stage 3 about 30 minutes. The supplementary adds ARCTIC-style interaction metrics: Contact Deviation, Motion Deviation, hand/object acceleration errors, and hand-to-object mean relative root position error (MRRPE), with a topology-agnostic object acceleration variant.
+
+## Results
+
+On HO3Dv3, GraG achieves CD 0.58 cm, F10 96.7%, MPJPE 8.18 mm, CDh 5.24 cm, SR 100%, and 0.56 h runtime, versus HOLD (0.78 cm, 92.0%, 23.4 mm, 4.27 cm, 10.5 h), BIGS (0.67 cm, 94.1%, 23.9 mm, 7.61 cm, 3.6 h), and MagicHOI (1.58 cm, 73.7%, 4.35 mm, 129 cm, SR 67%, 1.2 h) — improving CD by 13.4% over BIGS and 25.6% over HOLD, and lowering MPJPE by 65.0% and 65.8% respectively, while MagicHOI attains the best MPJPE (4.35 mm) in this setting but with high CDh and a 67% success rate. On the more challenging egocentric HOT3D, GraG reports CD 0.76 cm, F10 93.5%, MPJPE 21.7 mm, CDh 9.71 cm, SR 100%, and 0.56 h, versus HOLD (CD 3.14, MPJPE 21.9, SR 50%), BIGS (CD 2.92, MPJPE 36.9, SR 50%), and MagicHOI (CD 22.6, MPJPE 18.4, SR 55.6%) — reducing CD by 74.0-75.8% and succeeding on all sequences where SfM-dependent baselines fail about half the time. Supplementary interaction metrics show large gains on HOT3D: CDev drops from 451-570 mm (HOLD/BIGS) to 26.0 mm and MRRPE h->o from 606-762 mm to 154 mm, while on HO3Dv3 GraG attains the best MDev (7.22 mm) and ACC-h (7.81 m/s^2) with CDev 16.9 mm close to HOLD's 15.8 mm. Ablations on four HO3Dv3 sequences (full model: CD 0.41 cm, F10 99.1%, MPJPE 8.92 mm, CDh 4.08 cm) show that random keyframe selection degrades CD to 0.79 and single-view initialization to 0.68; skipping Stage 3 or SoG refinement raises CDh to 10.9 and 10.1; replacing SoG with dense Gaussian Splatting tracking raises CDh to 13.4 and doubles runtime to 1.20 h; and among the losses, depth and contact matter most for hand-object relative pose (CDh 7.12 and 6.30 when removed).
+
+## Limitations
+
+The method cannot recover when the underlying foundation models fail completely: the Depth-Anything-3 pointmap depth is identified as a critical component whose severe errors lead to tracking drift and incorrect depth alignment, and in some sequences a too-far depth estimate causes the optimizer to compensate by inflating the object scale, yielding over-scaled objects with higher CDh despite accurate trajectories. The method also depends on good hand and object masks, which are difficult under extreme occlusion. The current design targets a single manipulated rigid object with a single dominant interacting hand; handling multiple objects, strong hand-to-hand occlusion, or deformable objects is left as future work, as is integrating physical plausibility to improve robustness.

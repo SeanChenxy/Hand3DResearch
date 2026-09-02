@@ -1,50 +1,38 @@
-# OakInk (CVPR 2022)
+# OakInk: A Large-scale Knowledge Repository for Understanding Hand-Object Interaction
 
-> Yang, Li, Zhan, Wu, Xu, Liu, Lu. *OakInk: A Large-scale Knowledge Repository for Understanding Hand-Object Interaction.* CVPR 2022. DOI: 10.1109/CVPR52688.2022.02028. Zotero Key: `6TLSFNKW`.
+**Authors:** Lixin Yang, Kailin Li, Xinyu Zhan, Fei Wu, Anran Xu, Liu Liu, Cewu Lu  
+**Date:** 2022-03-29  
+**Identifier:** [arXiv:2203.15709](https://arxiv.org/abs/2203.15709); DOI `10.1109/CVPR52688.2022.02028`  
+**Zotero item:** `6TLSFNKW` ([Zotero](zotero://select/library/items/6TLSFNKW))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-OakInk is a "knowledge-repository-style" 3D HOI dataset: 1,800 CAD objects, 100 carefully recorded objects, 50K affordance-aware + intent-oriented grasping interactions; provides the Oak knowledge base (object affordance) + Ink knowledge base (hand-object interaction) + Tink transfer (interaction reconstruction on virtual objects), and is a composite benchmark for affordance / grasping / handover tasks.
 
-## 1. Dataset Purpose
-- Solves the problem that "existing HOI datasets are small in scale and lack affordance and intent dimensions". OakInk explicitly encodes affordance and intent as benchmark dimensions.
-- Tasks: (1) 3D hand pose estimation (based on affordance labels); (2) grasp generation (affordance-conditioned); (3) intent-based interaction generation; (4) handover generation.
-- Supports both real grasping (Ink, 100 objects) and transferred grasping (Tink, the remaining 1,700 objects).
-- Anchors "affordance-aware + intent-oriented HOI" as an independent sub-task.
+This CVPR 2022 paper presents OakInk, a knowledge repository for hand-object interaction built from two interrelated bases: Oak, an object-centric affordance knowledge base of 1,800 household objects organized in a knowledge graph with taxonomy and part-level functional attribute phrases, and Ink, an interaction knowledge base containing 50,000 distinct affordance-aware, intent-oriented hand-object interactions. Real interactions are recorded for 100 source objects (12 subjects, 230,064 RGB-D frames, 5 intents including human-to-human handover) with multi-view crowd-sourced 2D keypoints fitted to MANO and MoCap-tracked object poses, then transferred to about 1,700 virtual counterpart objects via Tink, a learning-fitting pipeline of DeepSDF shape interpolation, contact mapping, and iterative pose refinement. The paper benchmarks hand mesh recovery, hand-object pose estimation, and grasp generation, and proposes intent-based interaction generation and handover generation as new tasks.
 
-## 2. Data Composition
-- Source: real mocap grasping + Tink virtual-object transfer. 100 real objects are precisely recorded, and 1,800 objects constitute the knowledge base.
-- Viewpoint: mocap studio + object scanning; no RGB-D video sequence.
-- Scale: 50K distinct affordance-aware, intent-oriented hand-object interactions.
-- Object and action: 1,800 objects (household, tools, tableware, toys, etc.), each object is assigned 4–10 affordance labels.
-- Action coverage: use, hold, handover, pass, press, lift, etc.
+## Background and Motivation
 
-## 3. Annotation and Supervision
-- Hand: 3D hand pose (mocap), MANO β / θ.
-- Object: 3D mesh (1,800), 6D pose, affordance-region labels.
-- Interaction: affordance labels, intent labels (use / hold / handover), contact map.
-- Scene: mocap coordinates + object CAD; no RGB images.
-- No language, no robot, no tactile.
+Learning human manipulation requires two knowledge bases: object affordances and the human interactions that realize them, but the roughly nine hand-object datasets released since 2019 (ObMan, YCBAfford, HO3D, ContactPose, GRAB, DexYCB, H2O, DexMV) lack comprehensive awareness of both. Real-world datasets capture few objects and few distinct interactions (DexYCB: 20 objects; ContactPose: only 2.3K distinct interactions among 2.9M images, 0.08%), while synthetic datasets built on GraspIt produce grasps that neither reflect the distribution of human interactions nor consider affordance. The authors therefore design the repository so that affordance knowledge (object-centric) and interaction knowledge (human-centric) reinforce each other: affordances drive which interactions are recorded, and recorded interactions are propagated across affordance-similar objects to reach a scale that pure recording cannot.
 
-## 4. Supported Evaluation
-- Benchmark tasks: (1) pose estimation (MPJPE / Mesh Error); (2) grasp generation (physical plausibility / diversity / intent accuracy); (3) handover generation (haptic comfort metrics); (4) affordance prediction.
-- Key metrics: MPJPE, physics-simulation success rate of generated grasps, affordance accuracy, handover stability.
-- Provides Ink (real) / Tink (transferred) split to test cross-object transfer capability.
-- The core evaluation source for affordance-aware grasp generation.
+## Dataset Construction
 
-## 5. Why It Matters
-- The first HOI dataset that takes "affordance" as an explicit benchmark dimension.
-- The 50K interactions + 1,800-object knowledge base were among the largest-scale HOI grasping datasets in 2022.
-- Tink (transferred grasping) makes it possible to generate HOI on a large number of virtual objects, a "data amplifier" for 3D grasping synthesis.
-- Inspires the research direction of "object affordance injection" in Ch4 "semantic prior".
-- The training data source for SOTA grasp generation methods such as iHOI, UniDexGrasp, and ContactGen.
+The Oak base collects 1,800 household objects designed for single-hand manipulation from four sources (online vendors, ShapeNet, YCB, ContactDB), organized in a knowledge graph with a two-level taxonomy (top-level maniptool versus functool classes, WordNet-based sub-level categories totaling 32) and attributes that denote affordance as functionality: each functional part receives a part segmentation plus descriptive phrases of the form verb (+preparation), something, proposed and voted on by 10 volunteers, yielding 30 final attribute phrases. The Ink base records interactions for 100 representative source objects with 12 subjects on a platform combining 4 RealSense D435 RGB-D cameras and 8 OptiTrack Prime 13W infrared cameras, synchronized and cross-calibrated, mounted around a 1.5 x 1.2 x 1 m cuboidal volume. Up to 5 intents are captured per object (use, hold, lift-up, hand-out, receive, where paired hand-out/receive sequences form human-to-human handover), each action lasting 5 seconds with idle frames discarded and random object placement between actions, producing 230,064 RGB-D frames at 848 x 480 (OakInk-Image). Object 6DoF pose comes from surface-attached reflective markers tracked in the MoCap system and transformed by calibration; hand pose and geometry are obtained by crowd-sourcing 21 2D keypoints in all 4 views and optimizing MANO pose and shape parameters against multi-view re-projection plus auxiliary geometric, temporal, and silhouette costs. Contact is derived automatically with a GRAB-style proximity heuristic using 17 hand parts (threshold 25 mm) and a ring-shaped "contactness" value imitating stress spreading. Tink then transfers selected source interactions to virtual counterparts: DeepSDF latent shape interpolation through 10 landmark meshes, ICP-based contact-label mapping along the path, and 1,000-iteration pose refinement with contact-consistency, anatomical (twist/splay axis constraints), and SDF interpenetration costs; transferred interactions are kept only when 5 volunteers reach consensus on intent consistency and visual plausibility. The selected and transferred poses form the geometry-based OakInk-Shape (about 1,700 target objects, 49K interactions), with the representative recorded poses denoted OakInk-Core; together the repository contains 50,000 distinct interactions.
 
-## 6. Limitations and Biases
-- Only 100 real objects, with the remaining 1,700 objects being transferred; the ground-truth accuracy of the Tink part is weaker than that of Ink.
-- No RGB / video: cannot be directly used for vision (RGB / video) tasks.
-- No articulated object, tool use, or dynamic manipulation annotation.
-- No language instruction, which limits its application to VLA / text-to-grasp tasks.
-- Affordance labels are predefined discrete categories, and cannot cover the continuous affordance spectrum.
-- The contact map is obtained based on the mesh distance threshold, and there is systematic bias.
+## Evaluation Protocol
 
-## 7. Takeaway
-OakInk is best for demonstrating the capability of "affordance-aware / intent-oriented grasp generation", especially cross-object transfer and handover tasks. **Not suitable** for evaluating RGB-based vision tasks, articulated, language-conditioned, or in-the-wild egocentric tasks. In this survey, OakInk plays the role of "affordance-aware HOI grasping + intent-conditioned generation main benchmark" and serves as the hard anchor for evaluating "affordance semantic prior" in Ch4 and "motion generative prior" in Ch5 for grasp synthesis.
+The image data uses a default split SP0 in which one randomly chosen view per sequence is held out for testing (train/val/test: 70%/5%/25%). Three existing tasks are benchmarked: hand mesh recovery (I2L-MeshNet and HandTailor, evaluated with MPJPE, AUC within 0-50 mm, and wrist-relative MPVPE), hand-object pose estimation (Hasson et al. and Tekin et al., with MPJPE and mean per-corner position error of the object bounding box in the wrist-relative frame), and grasp generation on OakInk-Shape with an 80%/10%/10% object split (GrabNet, evaluated by penetration depth, solid intersection volume, simulation displacement, and a 1-5 Amazon Mechanical Turk perceptual score). Two novel tasks extend GrabNet: intent-based interaction generation conditions the cVAE on object shape plus an intent word embedding, and handover generation conditions it on object shape plus the giver's hand to decode a receiver's hand. Dataset quality is additionally assessed through cross-dataset validation on DexYCB and physical plausibility metrics compared against FPHAB, GRAB, and HO3D.
+
+## Findings and Analysis
+
+Cross-dataset validation shows OakInk-Image complements existing data: a pose model trained on HO3D reaches 55.38 mm MPJPE on DexYCB, on OakInk-Image alone 44.81 mm, and on the mixture 39.70 mm. Physical quality metrics place OakInk among the best annotation methods: penetration depth of 0.18 cm (Core) and 0.11 cm (Shape) and solid intersection volume of 1.03/0.62 cubic centimeters, versus 1.95/22.87 for the magnetic-sensor FPHAB, 2.53/7.61 for the marker-based GRAB, and 1.16/2.08 for the markerless HO3D. On the SP0 benchmark, HandTailor reaches 11.20 mm MPJPE (0.884 AUC) and 11.75 mm MPVPE, while I2L-MeshNet reaches 12.10 mm (0.784); on hand-object pose estimation, Tekin et al. attain 23.52 mm MPJPE and 52.16 mm MPCPE against 27.26/56.09 for Hasson et al. On grasp generation, GrabNet trained on OakInk-Shape achieves a 3.66 perceptual score, while the intent-conditioned variant improves plausibility (for example 3.86 on mug, 3.93 on sprayer) with lower penetration depth, and the handover model scores up to 4.03 while producing receiver hands that avoid the giver's retraction path, demonstrating that intent and interaction context can be controlled in generation.
+
+## Contributions
+
+- OakInk, a large-scale knowledge repository coupling an object affordance knowledge base (Oak: 1,800 objects, 32 categories, taxonomy plus 30 part-level attribute phrases) with an interaction knowledge base (Ink: 50,000 affordance-aware, intent-oriented interactions), including the first handover sequences with paired giver/receiver annotations.
+- A recording and annotation pipeline combining RGB-D multi-view capture, MoCap object tracking, crowd-sourced 2D keypoint optimization into MANO parameters, and automatic 17-part contact maps with contactness stress imitation.
+- Tink, a learning-fitting interaction transfer method (DeepSDF shape interpolation, contact mapping, anatomically constrained pose refinement with volunteer-consensus filtering) that scales 100 recorded objects to about 1,700 virtual counterparts while preserving intent and physical plausibility.
+- Benchmarks for hand mesh recovery, hand-object pose estimation, and grasp generation, plus two new generation tasks (intent-based interaction generation and human-to-human handover generation) with quantitative and perceptual evaluation.
+
+## Limitations
+
+The authors state that OakInk does not record dynamic hand interactions with the movable parts of articulated objects such as scissors, and does not consider transferring interaction knowledge from human hands to multi-finger robot arms, leaving both to future work. Structural constraints follow from the design: source capture is limited to 100 objects and 12 subjects with static representative poses selected for transfer (OakInk-Core), transfers are static grasps rather than dynamic sequences, and the shape-transfer pipeline depends on per-category DeepSDF models and volunteer perceptual filtering, which restricts transferred content to visually plausible, intent-consistent grasps within categories represented in the Oak base.

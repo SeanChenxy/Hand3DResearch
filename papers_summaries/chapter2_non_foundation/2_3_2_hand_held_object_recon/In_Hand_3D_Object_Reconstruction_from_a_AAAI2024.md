@@ -1,42 +1,37 @@
 # In-Hand 3D Object Reconstruction from a Monocular RGB Video
 
+**Authors:** Shijian Jiang, Qi Ye, Rengan Xie, Yuchi Huo, Xiang Li, Yang Zhou, Jiming Chen  
+**Date:** 2023-12-27  
+**Identifier:** [arXiv:2312.16425](https://arxiv.org/abs/2312.16425)  
+**Zotero item:** `J7G3SA4W` ([Zotero](zotero://select/library/items/J7G3SA4W))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-Reconstructs a hand-held object from monocular video by decomposing the problem into explicit hand-object pose tracking and object surface reconstruction with a hybrid SDF-volume rendering approach that handles severe occlusions.
 
-## 1. Problem and Setting
-- Reconstruct the 3D geometry of an unknown hand-held object from a monocular RGB video where the hand rotates the object.
-- Input: monocular RGB video; output: 3D object mesh + time-varying hand-object relative poses.
-- Template-free; camera is static; the hand rotates a rigid object to reveal different viewpoints.
+IHoR reconstructs a generic object that a hand holds and rotates in front of a static RGB camera, using a per-sequence NeuS-style signed-distance-field optimization and attacking its main failure mode — the hand-occluded contact region — with two complementary priors: 2D amodal mask completion refined through a semantic head inside the neural field, and physical contact constraints (penetration and attraction losses) on the occluded local geometry. Without any object category prior or depth input, it cuts the Chamfer distance to 0.282 on five firmly-grasped HO3D sequences, a 52% improvement over the prior HHOR method with post-processing (0.591), and reaches 0.277 on HOD (20% better than HHOR with post-processing at 0.347).
 
-## 2. Core Method
-- Two-stage approach:
-  - Hand-object pose tracking: estimates MANO hand parameters and object 6D pose per frame using a combination of 2D keypoint detection, hand-object contact constraints, and temporal smoothness.
-  - Hybrid SDF-volume reconstruction: the object surface is represented as an SDF in a canonical frame. Given the tracked poses, rays from all frames are used to train the SDF via volumetric rendering, but with a surface-aware sampling strategy that concentrates samples near the SDF zero-level-set.
-- Key innovation: unlike pure NeRF approaches, the hybrid SDF-volume representation enables sharper surface reconstruction by concentrating capacity near the surface rather than modeling full volumetric density.
-- Explicit pose tracking before reconstruction avoids the challenging joint optimization problem of simultaneous tracking + reconstruction.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: per-video test-time optimization (no offline training for reconstruction).
-- Supervision: RGB pixel values; 2D hand keypoints from off-the-shelf detectors; optional object mask.
-- Uses MANO for hand.
-- Assumes object is rigid; hand sufficiently rotates the object; camera is static; reasonably good 2D hand keypoint detection is available.
+Rotating an object in hand in front of a camera is a low-cost way to acquire 3D models, but in-hand reconstruction must simultaneously handle unknown object shape, unknown camera-object relative pose, and — most damaging — occlusion of the object by the grasping hand. Implicit neural representations (NeRF, NeuS, VolSDF) reconstruct geometry from multi-view images without shape priors and work well on visible surfaces, yet optimization purely against observed images leaves the contact region unconstrained, yielding incomplete, hole-ridden surfaces. Nearest prior works share this weakness: HHOR (Huang et al.) treats hand and object as a whole and separates them by estimated per-vertex semantics; Hampali et al.'s in-hand scanning focuses on the object only; learning-based single-image methods (iHOI and related) depend heavily on training data and lose surface detail. The authors argue, by analogy with human haptics (robot hands can rotate objects using only touch), that reconstructing occluded surfaces requires priors beyond direct observation: the human ability to elucidate occluded content (2D amodal masks) and the physical facts that grasped objects neither interpenetrate the hand nor float away, so contact must occur.
 
-## 4. Experiments and Findings
-- Datasets: HO3D, DexYCB, self-captured in-hand rotation videos.
-- Metrics: Chamfer Distance, F-score, PSNR.
-- The two-stage decomposition (pose tracking then reconstruction) is more robust than joint optimization. SDF-based surface representation captures finer geometric details than pure NeRF approaches.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Two-stage pipeline is more robust than end-to-end joint optimization.
-- SDF-based representation yields sharper surfaces.
-- Explicit pose tracking enables handling of larger motions and faster movement.
+The framework assumes a firm grasp, so MANO shape and pose parameters (beta in R10, theta in R16x3) are shared across frames and only the camera-relative rotation and translation change over the sequence. Hand reconstruction first initializes MANO parameters per frame with HandOccNet, averages them into a robust initialization, then optimizes the hand by fitting reprojections of 3D joints to Mediapipe 2D keypoint detections with regularization and temporal smoothness, staged so that relative camera motion (R, T) is optimized before MANO parameters; this converts the video into multi-view images in a hand-centric frame. The object is represented by a geometry MLP Fg mapping points to SDF values and a color MLP Fc, optimized by NeuS volume rendering against the input images. On top of this, two priors constrain the invisible region. First, an amodal completion network — a simple hourglass taking concatenated hand and object segmentation maps (category-agnostic, from an off-the-shelf segmenter) and trained on ObMan with rendered amodal ground truth — predicts the complete object mask per frame; because independently predicted masks are noisy and multi-view inconsistent, a semantic head MLP rendered through the same volume-rendering weights distills these masks into a 3D-consistent field whose thresholded probabilities yield refined masks that re-supervise the geometry. Second, contact constraints regularize the local geometry: a penetration loss penalizes hand mesh vertices receiving negative SDF values, and an attraction loss casts rays from amodal-mask pixels to obtain object surface points and normals, finds the nearest hand-surface intersection along each normal, and drives the SDF toward zero at contact points while — via a tanh-based soft fall-off beyond a threshold tau (0.001, with beta 0.5) — pushing points near but not in contact toward SDF values proportional to their distance to the hand, avoiding abrupt constraint changes at the contact boundary; a surface smoothness regularizer acts in contact regions. Camera poses are additionally refined jointly with the field in a BARF-like manner. Meshes are extracted with Marching Cubes.
 
-### Limitations
-- Errors in pose tracking propagate to reconstruction (no feedback loop).
-- Requires the object to be substantially rotated for complete reconstruction.
-- Textureless or specular objects cause tracking failures.
-- Static camera assumption.
+## Contributions
 
-## 6. Takeaway
-Jiang et al. showed that decomposing the hand-object reconstruction problem into sequential tracking-then-reconstruction stages, rather than joint optimization, can improve robustness. This "track first, reconstruct later" strategy is a practical design pattern adopted by many follow-up works.
+- The first implicit hand-held object reconstruction method to explicitly incorporate priors of 2D occlusion elucidation and physical contact constraints for surface completion under hand occlusion.
+- A joint optimization in which an amodal mask head and a semantic neural field refine each other: initially noisy, multi-view-inconsistent amodal masks supervise the semantic field, whose rendered, 3D-consistent masks then re-supervise geometry, measurably improving mask IoU and final reconstruction.
+- Differentiable penetration and attraction losses with a soft distance-based attraction formulation that regularizes object surface points in and near the contact region, plus state-of-the-art reconstruction results on HO3D and HOD.
+
+## Experimental Setup
+
+Evaluation uses five HO3D sequences in which YCB objects are firmly grasped (500 frames per sequence) and the HOD dataset of hand-held object videos (35 objects, 14 with ground-truth scanned meshes, all provided frames used). Reconstructed meshes (normalized to unit size and ICP-registered to ground truth) are scored by Chamfer distance, and hand-object physical plausibility by intersection volume in cm3. Baselines are iHOI (learning-based, pre-trained on HO3D and other data), NeuS with estimated camera poses and with ground-truth poses (NeuS*), HHOR, and HHOR with MeshLab/Poisson post-processing (HHOR**). The network follows the NeuS architecture, trains with Adam (learning rate 5e-4, 1,024 rays per batch, 100K iterations, about 14 hours on one NVIDIA RTX 3090), with loss weights lambda_mask 10, lambda_eik 0.1, lambda_seg 0.1, lambda_contact 5.
+
+## Results
+
+On HO3D, IHoR achieves CD 0.282 and intersection volume 0.327 cm3, versus IHOI (2.206/2.192), NeuS (3.310), NeuS with ground-truth poses (0.872), HHOR (1.256), and HHOR** (0.591/7.771) — a 52% Chamfer improvement over the post-processed HHOR, while HHOR's hand artifacts inflate its intersection volume nearly 24-fold above IHoR's. On HOD, with more complex shapes but less occlusion, IHoR reaches CD 0.277 and volume 0.757 cm3 against HHOR** (0.347/1.738) and NeuS (3.093), a 20% Chamfer improvement. The component ablation on HO3D shows NeuS alone at CD 1.094, amodal masks reducing it to 0.448, contact constraints to 0.333, and mask refinement to 0.282; the amodal refinement also raises mask mIoU on the five HO3D objects (e.g., cracker box 98.15% to 99.02%, bottle 92.51% to 95.17%). The contact-loss design ablation shows both terms needed: removing attraction degrades CD to 0.376, removing penetration lets intersection volume rise to 0.614 cm3, and a contact-only attraction variant (LA-) gives 0.341/0.439, worse than the soft distance-aware formulation (0.282/0.327). Supplementary results report amodal-refined hand pose quality (PA-MPJPE about 3.0-5.0 mm per sequence), camera-motion accuracy improving with pose refinement, and comparable reconstruction whether predicted or ground-truth hand poses are used, indicating robustness to hand prediction quality.
+
+## Limitations
+
+The framework assumes the object is firmly grasped and the hand pose is constant over the sequence, with only global hand-object motion changing — a restriction the authors themselves plan to relax by inferring object pose. Optimization is per-sequence (no pre-training or cross-sequence amortization) and slow, about 14 hours of training on a single RTX 3090, which the authors intend to speed up with hybrid neural representations such as Instant-NGP-style hash encodings. The attraction loss depends on the quality of the reconstructed hand surface and the amodal masks, and evaluation covers only 19 objects across HO3D and HOD with Chamfer distance after unit-size normalization and ICP registration.

@@ -1,55 +1,35 @@
-# TACO (CVPR 2024)
+# TACO: Benchmarking Generalizable Bimanual Tool-ACtion-Object Understanding
 
-> Liu, Yang, Si, Liu, Li, Zhang, Liu, Yi (Tsinghua, Shanghai AI Lab, Shanghai Qi Zhi, BUPT, BIT). *TACO: Benchmarking Generalizable Bimanual Tool-ACtion-Object Understanding.* CVPR 2024. Zotero Key: `QQWDGZIS`. Project: https://taco2024.github.io.
+**Authors:** Yun Liu, Haolin Yang, Xu Si, Ling Liu, Zipeng Li, Yuxiang Zhang, Yebin Liu, Li Yi  
+**Date:** 2024-01-16  
+**Identifier:** [arXiv:2401.08399](https://arxiv.org/abs/2401.08399)  
+**Zotero item:** No record found in the Zotero library; identity verified against arXiv metadata.  
+**Evidence status:** Verified against arXiv metadata and full-text PDF extraction; no Zotero record exists for this dataset paper.  
 
 ## Summary
-TACO is a large-scale 4D HOI dataset and benchmark focused on "generalizable bi-manual + multi-object + tool use": 2.5K motion sequences, 5.2M video frames, 12 third-person cameras + 1 egocentric, 131 tool-action-object triplets, 20 object categories, 196 object instances, 15 daily actions. It is the flagship benchmark for cross-object / cross-triplet generalization evaluation of bi-manual tool use.
 
-## 1. Dataset Purpose
-- Solves the problem that "existing HOI datasets are dominated by unimanual or single-object bi-manual, lacking 'tool-action-object' triplets + cross-object generalization". TACO explicitly takes "generalization to unseen object geometries and novel behavior triplets" as the core evaluation target.
-- Tasks: (1) compositional action recognition (identifying tool-action-object triplets); (2) generalizable hand-object motion forecasting (predicting future hand-object motion); (3) cooperative grasp synthesis (synthesizing cooperative grasping under new objects).
-- Anchors "bi-manual + tool use + cross-object generalization" as an independent sub-task; forms a "small-scale vs large-scale + cross-generalization" contrast with KIT (only 12 objects, <20 triplets).
-- Forms a unique "bi-manual + multi-object" dimension with ARCTIC (rigid + articulated), DexYCB (single-hand + single-object), and H2O (bi-manual + single-object).
+TACO is a bimanual tool-use dataset of 2.5K motion sequences and 5.2M video frames covering 131 tool-action-object triplets, 20 tool categories, 196 tool instances, and 15 actions performed by 14 participants, captured with 12 allocentric cameras, one egocentric camera, and motion capture, and annotated with MANO hand poses, 6D object poses, and object meshes. Around this data the authors build four generalization benchmarks: compositional action recognition, hand-object motion forecasting, cooperative grasp synthesis, and interaction field estimation, each with train/test splits that isolate novel tool geometry, novel triplets, and compound generalization.
 
-## 2. Data Composition
-- Source: real capture, multi-view + optical mocap joint pipeline.
-- Viewpoint: 12 synchronized FLIR industrial cameras (4096×3000, 30 Hz) + 1 egocentric RealSense L515 (1920×1080) + 6 NOKOV infrared mocap cameras (for marker tracking).
-- Scale: 2.5K motion sequences, 5.2M video frames.
-- Object and action: 20 object categories, 196 object instances, 15 actions, 131 <tool, action, target> triplets.
-- Key design: different levels of overlap between triplets, defining semantic distance, supporting "different generalization degrees" research.
-- Each object mesh is obtained by an EinScan industrial 3D scanner (≤100K triangular faces).
+## Background and Motivation
 
-## 3. Annotation and Supervision
-- Object: 6D pose (4 mocap markers attached to the object surface, tracked by the mocap system); high-precision 3D mesh (≤100K faces).
-- Hand: precise hand mesh reconstruction (markerless pipeline: hand keypoint localization + hand pose optimization with multiple losses: L2D / L3D / Langle / Ltc / La / Lp).
-- Contact: dense hand-object contact mesh (automatic pipeline inference + optimization).
-- Interaction: tool-action-object triplet label (131 categories).
-- Scene: 12-view RGB, egocentric RGBD, mocap marker positions, camera extrinsics, object mesh.
-- No language instruction; no robot teleoperation annotation.
+Tool-use manipulation is inherently compositional: an action is defined jointly by the tool, the action, and the target object, and bimanual tool use additionally requires hand-hand and hand-tool cooperation. Existing datasets either lack tool affordance structure, cover few triplets, or are single-hand, so models cannot be evaluated on whether they generalize to unseen tools or recombinations of familiar triplets. TACO is designed to expose this compositional structure explicitly, with dense multi-view capture and marker-based ground truth enabling precise 3D annotation of two hands, tools, and target objects.
 
-## 4. Supported Evaluation
-- Benchmark tasks: (1) compositional action recognition (triplet classification Top-1); (2) generalizable hand-object motion forecasting (next-N-frame hand pose / motion tendency); (3) cooperative grasp synthesis (physical simulation success rate of generated grasps on new objects).
-- Key metrics: action triplet Top-1, motion forecast MPJPE / Mesh Error, grasp synthesis success rate.
-- Provides different unseen splits by "object geometry" / "object category" / "triplet" to test different generalization degrees.
-- Provides a markerless automatic pipeline, which is theoretically extensible to more objects / triplets.
+## Dataset Construction
 
-## 5. Why It Matters
-- The first real bi-manual dataset to take "tool-action-object triplet + cross-object generalization" as a unified evaluation dimension.
-- 2.5K sequences + 5.2M frames + 131 triplets were the largest scale in "bi-manual tool use" at the time.
-- The automatic markerless annotation pipeline solves the difficult problem of accurately annotating "bi-manual + tools".
-- Promotes "cross-triplet generalization" as a standard dimension of HOI evaluation.
-- A core anchor shared by "semantic prior" in Ch4, "motion generative prior" in Ch5, and "robot learning" in Ch6.
-- Inspires subsequent "cross-object / cross-task generalization" HOI paper designs.
+Each capture rig combines 12 FLIR allocentric cameras (4096 x 3000), one egocentric RealSense L515 mounted on a helmet (1920 x 1080), and a NOKOV motion capture system with 6 infrared cameras, all at 30 Hz; objects are scanned with an EinScan scanner into meshes of up to 100K faces. 14 participants perform 15 actions on 196 tool instances across 20 categories, yielding 131 distinct tool-action-object triplets and 2.5K sequences with 5.2M frames. Annotation is marker-based: object pose is recovered by a marker-to-surface optimization inspired by Mosh++; hand poses come from YOLOv3 hand detection, MMPose keypoint estimation, and RANSAC-based triangulation, followed by contact-aware MANO optimization combining 2D/3D keypoint, angle, temporal, and contact losses. Hands and objects are automatically segmented with SAM plus a track-anything model, and markers are removed from images by a U-Net trained for marker segmentation with LAMA inpainting; the removal network reduces marker mIoU from 63.8% to 11.1% on inpainted images. Cross-dataset evaluation with DexYCB shows that combining TACO with DexYCB for training CMR and MobRecon improves hand pose accuracy on both datasets.
 
-## 6. Limitations and Biases
-- The scale of 2.5K sequences is still small for cross-triplet generalization.
-- Only 20 categories and 196 instances: cross-object diversity is limited by the collection cost.
-- No language instruction (only triplet labels), limiting direct VLA application.
-- No explicit tracking of bi-manual 6D pose joint (relies on markerless mesh estimation).
-- No articulated-object joint tracking (compared with ARCTIC, TACO's tools are mostly rigid).
-- No tactile, no force, no dynamic contact (sliding / rolling) annotation.
-- The marker attachment of the mocap system has limitations for small / transparent objects.
-- The systematic bias of the automated annotation pipeline propagates to all sequences.
+## Evaluation Protocol
 
-## 7. Takeaway
-TACO is best for demonstrating the capability of "bi-manual tool-action-object triplet HOI understanding + cross-object generalization". **Not suitable** for evaluating articulated 4D, language-conditioned VLA, in-the-wild tasks, or tactile-rich tasks. In this survey, TACO plays the role of "bi-manual tool use + cross-triplet generalization main benchmark" and serves as the core anchor shared by "semantic prior" in Ch4, "motion generative prior" in Ch5, and "structured HOI supervision" in Ch6.
+Sequences are divided into a training set and four test sets that factor out generalization axes: S1 (no generalization; tool geometries and triplets seen in training), S2 (geometry-level; novel tool geometry within seen triplets), S3 (triplet-level; novel tool-action-object triplets), and S4 (compound; novel geometry and novel triplet), with a train-to-test ratio of 4:1:1:1.5:2.5. Compositional action recognition is benchmarked with AIM and CACNF reporting Top-1/Top-5 accuracy per test set. Hand-object motion forecasting conditions on 10 observed frames and predicts 10 future frames for both hands, the tool, and the target object, with baselines InterVAE, MDM, InterRNN, and CAHMP scored by hand joint error (Je), object translation error (Te), and rotation error (Re). Cooperative grasp synthesis is evaluated with ContactGen, HALO-VAE, and an environment-ablated HALO-VAE-variant, using penetration volume, contact ratio, collision ratio, and FID on familiar (S1, S3) and unseen (S2, S4) geometries. Interaction field estimation predicts six distance fields between the left hand, right hand, tool, and target object from an RGB image with InterField-SF-based baselines, scored by mean distance error and acceleration error.
+
+## Findings and Analysis
+
+Action recognition is strong on S1 (CACNF 86.15% Top-1) and nearly unchanged on S2, showing that models already generalize across tool geometries within a category, but drops sharply on S3 (63.02%) and collapses on S4 (44.00%), demonstrating that novel compositions of tools, actions, and objects, especially their combination, are the real bottleneck. In motion forecasting, the tool and the hand holding it are the hardest elements to predict, and the two generative baselines (MDM, InterVAE) yield significantly larger errors than the predictive ones, which the authors attribute to the fast, complex motion distribution of tool manipulation; CAHMP performs best among the four. In grasp synthesis, conditioning on the environment (the full HALO-VAE) materially improves contact and collision ratios over the ablated variant, and performance declines on unseen geometries. The interaction field benchmark quantifies how bimanual, multi-object contact structure differs from prior single hand-object settings.
+
+## Contributions
+
+A large-scale bimanual tool-action-object dataset with 131 triplets, 196 scanned tool instances, and dense multi-modal capture; a marker-based annotation pipeline delivering MANO hand poses, 6D object poses, cleaned meshes, and marker-free images; a compositional generalization protocol with four test sets that separate geometry-level from triplet-level and compound generalization; and four benchmark tasks with baselines spanning recognition, forecasting, grasp synthesis, and interaction field estimation.
+
+## Limitations
+
+The paper acknowledges that articulated objects are not covered, so tool parts with moving joints remain outside the annotation; scene diversity is limited compared to in-the-wild recordings because data are captured in a controlled studio; and marker removal, although effective (mIoU reduced from 63.8% to 11.1%), is imperfect, leaving residual artifacts in the released images.

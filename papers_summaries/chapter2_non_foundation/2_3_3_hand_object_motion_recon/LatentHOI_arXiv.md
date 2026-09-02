@@ -1,42 +1,42 @@
 # LatentHOI: On the Generalizable Hand Object Motion Generation with Latent Hand Diffusion
 
+**Authors:** Muchen Li, Sammy Christen, Chengde Wan, Yujun Cai, Renjie Liao, Leonid Sigal, Shugao Ma  
+**Date:** 2025-06-11  
+**Identifier:** No DOI or arXiv identifier verified  
+**Zotero item:** `XF83XG6N` ([Zotero](zotero://select/library/items/XF83XG6N))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-Generates hand-object interaction motions that generalize to unseen objects by learning a latent diffusion model over hand motion in a contact-aware latent space, decoupling hand pose generation from object-specific geometry.
 
-## 1. Problem and Setting
-- Generate 3D hand-object interaction motions for novel, unseen objects.
-- Input: 3D object model (possibly unseen during training); output: MANO hand motion trajectory interacting with the object.
-- Motion generation with generalization to unseen objects. Critical challenge: most methods overfit to training objects.
+LatentHOI is a text- and object-conditioned diffusion framework for 3D hand-object interaction motion generation that targets generalization to unseen objects. It decouples high-level temporal motion from fine-grained spatial grasping by factoring the joint distribution into a latent diffusion model over grasping codes, object poses, and hand trajectories, coupled with a conditional GraspVAE that decodes per-frame articulated hand poses. On unseen-object splits of GRAB, OakInk, and DexYCB, it substantially reduces hand-object penetration and raises physical plausibility relative to MDM, MLD, IMoS, and Text2HOI (e.g., about 38% less penetration volume on the right hand and 58% on the left hand on unseen GRAB objects), and a user study consistently prefers its outputs over MDM.
 
-## 2. Core Method
-- Learns a latent hand representation that abstracts away object-specific geometry:
-  1. A VAE encodes hand pose sequences into a compact latent space that captures interaction semantics (grasping, lifting, rotating) rather than object-specific details.
-  2. A latent diffusion model generates hand motion sequences in this space, conditioned on a general object feature (e.g., PointNet embedding of object point cloud).
-  3. At inference time, a contact-guided refinement step adjusts the generated latent code to ensure the hand properly contacts the specific object geometry.
-- The key insight: by operating in a latent space that abstracts away object-specific geometry, the diffusion model learns transferable interaction patterns.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: GRAB, ARCTIC with diverse objects.
-- Supervision: MANO parameters, object-contact maps.
-- Uses MANO for hand.
-- Assumes objects share basic interaction semantics (grasp, lift); novel objects can be represented as point clouds.
+Hand-object interaction (HOI) motion synthesis is harder than body-level motion generation because hands are highly dexterous, contact states change rapidly, and small artifacts such as penetration, temporal jitter, or lost contact are immediately noticeable; the grasp also depends on subtle object shape and semantics. Practical applications require generalization to unseen object geometry, yet HOI data is scarce: the largest real-world HOI dataset, GRAB, contains 1.3K sequences over 51 objects, versus AMASS's 11.2K sequences over 344 subjects. Most prior diffusion-based HOI generators assume seen objects and unseen subjects, and a direct adaptation of joint hand-object sequence diffusion overfits the small datasets, producing penetrations, loss of tracking, and implausible grasps on new shapes. The task is formalized as modeling P(H_1:N, O_1:N | C), where C combines the canonical object point cloud and a textual motion description, H_1:N is a sequence of MANO-based hand poses (global plus 15 joint rotations in 6D form, with the hand root translation represented as an object-centric offset), and O_1:N is a sequence of object 6D poses; text is encoded with CLIP and object point clouds with Basis Point Sets.
 
-## 4. Experiments and Findings
-- Datasets: GRAB, ARCTIC (split by object category for generalization testing).
-- Metrics: FID, diversity, contact accuracy, penetration metrics on unseen object categories.
-- Significantly better generalization to unseen objects than prior methods. Latent space disentangles interaction type from object geometry.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Explicit focus on generalization to unseen objects.
-- Latent representation disentangles interaction semantics from object specifics.
-- Contact refinement ensures physical plausibility.
+The joint distribution is factorized into a diffusion part P(Z_1:N, O_1:N, H^gamma_1:N | C) over grasping latent codes, object poses, and hand root trajectories, and a per-frame conditional P(H^phi_i | Z_i, O_i, H^gamma_i, C) realized by the GraspVAE decoder. Training is two-staged. First, GraspVAE — a conditional VAE with a PointNet-based shared backbone — is trained on single frames: its encoder maps hand pose, hand translation, and the (rotated) object point cloud augmented with per-vertex hand-root offsets into a 16-dimensional latent (versus the 96-dimensional pose input), and its decoder reconstructs the articulated pose; the objective is the ELBO with a KL penalty to the standard normal plus a weighted MANO mesh-vertex reconstruction loss. Random rotation augmentation stabilizes training (otherwise the VAE can mode-collapse on small datasets), and left-hand data is mirrored into the right-hand space so both hands share one backbone and latent space, mitigating left/right data imbalance. Second, the frozen encoder encodes the training sequences; the latent code is obtained via the reparameterization trick with a single noise vector eta shared across all frames of a sequence (empirically best, promoting smooth latent transitions), and a denoising diffusion model with classifier-free guidance learns the joint distribution of the triplet (Z_1:N, O_1:N, H^gamma_1:N) conditioned on CLIP text and BPS object encodings. At sampling, the triplet is drawn from Gaussian noise and denoised over T reverse steps, after which the GraspVAE decoder independently generates the articulated hand pose for each frame from its latent and the object transformation.
 
-### Limitations
-- Latent space may lose fine-grained contact details.
-- Two-stage pipeline (VAE + diffusion) adds complexity.
-- Still requires a 3D object model.
-- Limited evaluation on highly unusual object shapes.
+## Contributions
 
-## 6. Takeaway
-LatentHOI tackled the critical generalization problem in HOI generation, showing that learning in an abstracted latent space helps transfer interaction patterns to unseen objects. The decoupling of interaction semantics from object-specific geometry is a design principle applicable to many HOI tasks.
+- A decomposition of HOI generation into high-level temporal motion (hand wrist and object trajectories) and low-level spatial grasping, enforcing a conditional dependency from grasping latents and object state to pose decoding, which acts as structural regularization for unseen-object generalization.
+- GraspVAE, a shared, mirrored conditional VAE with a compact 16-D latent space; performing diffusion in this regularized latent space instead of directly on pose sequences reduces overfitting on small HOI datasets.
+- An unseen-object evaluation protocol spanning bi-manual manipulation (GRAB with a held-out object split, and OakInk objects paired with GRAB intents) and single-hand grasping (DexYCB with 4 of 20 objects held out), with physics-based metrics (interpenetration volume and depth, contact ratio, penetration per contact unit, and a gravity-stability heuristic) plus diversity and a controlled user study.
+- Demonstrated state-of-the-art generalization: reduced penetration, higher contact quality, and user preference over MDM, MLD, IMoS, and Text2HOI on unseen objects.
+
+## Experimental Setup
+
+GRAB is split by object (47 train, 4 test), sequences start at the first contact frame, are downsampled to 20 fps, and padded or truncated to 160 frames; the unseen GRAB test comprises 17 (text prompt, object) pairs. The OakInk split manually selects 100 unseen objects across 20 categories paired with GRAB intents, giving 212 (text, object) test pairs, evaluated with the GRAB-trained checkpoint (leading-frame methods like IMoS are not applicable there). DexYCB reserves 4 of 20 objects, sequences padded to 96 frames, with the same training data split into frames for GraspVAE. Baselines: MDM (using the paper's own diffusion backbone architecture for fairness), MLD (MLD-1 variant with author code and hyperparameters), IMoS (configuration from DiffH2O), and Text2HOI (official checkpoint, GRAB-trained). Metrics: interpenetration volume (IV) and depth (ID) per contact frame, contact ratio (CR, hand vertices within 0.45 mm signed distance of the object), interpenetration volume per contact unit (IVU), physical plausibility (Phy, the fraction of contact frames with the object above the ground, where a contact frame has at least 1% of hand vertices in contact), sample diversity and overall diversity, and a user study against MDM with Cohen's kappa agreement reported. All experiments run on a single A100 GPU with 40 GB memory.
+
+## Results
+
+- Unseen GRAB objects: IV of 6.38 cm3 (right) and 1.66 cm3 (left) versus MDM 9.12/2.61, MLD 9.62/3.14, and IMoS 10.38 — the stated approximately 38% (right) and 58% (left) penetration reductions; ID 0.77/0.29 cm versus MDM 1.24/0.51; contact ratio 11.94/1.11% versus MDM 8.21/1.29; IVU 0.10 versus MDM 0.19; physical plausibility 96.16 versus MDM 89.81 and MLD 85.68 (real mocap reference: 98.68).
+- Unseen OakInk objects: IVU 0.14 versus Text2HOI 0.26, MDM 0.20, MLD 0.29; Phy 71.24 versus Text2HOI 82.58, MDM 60.89, MLD 46.41; IV 7.22/3.11 cm3 versus MDM 8.46/2.47 and Text2HOI 15.19/11.54 — strong penetration-per-contact behavior on thin (glasses) and complex (flashlight) geometries.
+- DexYCB single-hand grasping: IV 7.70 versus MDM 7.78 (ground truth 5.89), ID 2.01 versus 2.10, CR 11.98 versus 8.87 (ground truth 9.91), Phy 88.52 versus 86.22 — gains are smaller, attributed to only 16 training objects.
+- User study: generated motions are steadily preferred over MDM, with Cohen's kappa agreement of 0.491 on GRAB, 0.4663 on OakInk, and 0.127 on DexYCB.
+- Ablations (unseen-object protocol): removing rotation augmentation raises IV from 3.78 to 4.17 cm3 (and can cause VAE mode collapse); replacing latent diffusion by direct Gaussian sampling of latents raises IV to 4.99; per-frame reparameterized latents give 4.51; using the latent mode (Z = mu) gives 5.43 — confirming that the shared-eta latent diffusion in the regularized space is the best configuration. Learned latents are temporally smooth, sparse (about 8 active dimensions), with specific dimensions driving interaction-phase transitions.
+
+## Limitations
+
+The authors state the method remains constrained by its training data: it struggles to generalize to objects whose sizes and geometries differ significantly from the training set (failure cases in the supplementary material), and it cannot generalize to unseen motion intents at prompting time because such semantics are absent from the data. They propose leveraging 3D motions reconstructed from 2D videos as additional training signal. Quantitative comparisons with physics-based simulation methods are out of scope, and no inference-time or training-cost figures beyond the hardware used are reported in the paper.

@@ -1,43 +1,34 @@
 # How Do I Do That? Synthesizing 3D Hand Motion and Contacts for Everyday Interactions
+**Authors:** Aditya Prakash, Benjamin Lundell, Dmitry Andreychuk, David Forsyth, Saurabh Gupta, Harpreet Sawhney  
+**Date:** 2025-04-16  
+**Identifier:** [arXiv:2504.12284](https://arxiv.org/abs/2504.12284)  
+**Zotero item:** `ARBTU88R` ([Zotero](zotero://select/library/items/ARBTU88R))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-Generates 3D hand motion and detailed contact maps for everyday object interactions from natural language descriptions of tasks, using a retrieval-augmented diffusion framework.
 
-## 1. Problem and Setting
-- Generate 3D hand motion sequences and detailed hand-object contact maps for daily activities, given a textual task description.
-- Input: natural language task description (e.g., "open a drawer", "pour tea"); output: time-varying MANO hand poses + contact maps on the object surface.
-- Text-to-motion generation. Focuses on everyday manipulation tasks with known object categories.
+The paper (method: LatentAct) introduces the task of predicting Interaction Trajectories -- sequences of future 3D MANO hand poses and hand contact maps -- from a single RGB view, action text, and a 3D contact point on the object, targeting everyday interactions with small, thin, occluded, or deformable objects for which 3D object models are unavailable. LatentAct tokenizes interaction trajectories with a VQVAE Interaction Codebook (512 entries, 6 residual quantizers), retrieves latent affordances with a learned Indexer, and decodes trajectories with an Interaction Predictor, in forecasting and goal-image interpolation settings. It also contributes a semi-automatic data engine extracting 3D hand poses and contact maps from HoloAssist egocentric videos covering 800 tasks, 120 object categories, and 24 action categories (2.5-10x more diverse than HOT3D, ARCTIC, GRAB, HOI4D), and outperforms adapted transformer and diffusion baselines across four generalization settings.
 
-## 2. Core Method
-- Retrieval-augmented generation pipeline:
-  1. A retrieval module finds similar interactions from a motion database given the text query.
-  2. A diffusion model generates the hand motion sequence, conditioned on the retrieved examples, the text embedding, and the object point cloud.
-  3. A contact predictor produces per-frame contact maps (which hand vertices contact which object surface points).
-- The retrieval augmentation helps the model produce realistic motions for rare tasks by finding structurally similar examples.
-- Contact maps are generated as an auxiliary output and can be used to refine or evaluate the interaction quality.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: large-scale HOI motion datasets (GRAB, ARCTIC, plus custom captured daily activities).
-- Supervision: MANO parameters, object contact labels.
-- Uses MANO for hand.
-- Assumes task description is specific enough to identify the interaction type; object 3D model available.
+Existing HOI generation works focus on pick-and-place with rigid or articulated objects represented by 3D models, in object-centric or hand-centric frames, and rely on datasets captured in constrained MoCap or multi-camera setups with limited object diversity; egocentric datasets with natural interactions provide only 2D annotations. Everyday manipulation instead involves objects whose 3D models are hard to obtain, hands that may not be visible at the start of an interaction, and a small set of prototypical hand motions reusable across objects. The paper defines a new task: given one image of the object, text describing the action, and a 3D contact point that grounds the interaction (no object model required), synthesize future 3D hand poses and contact maps. Two settings are studied -- Forecasting (no goal) and Interpolation (goal image showing the final state) -- each with a hand-visible and a hand-absent variant, evaluating generalization to novel object categories, action categories, tasks (object-action combinations), and scenes.
 
-## 4. Experiments and Findings
-- Datasets: GRAB, custom daily activity captures.
-- Metrics: FID, diversity, contact accuracy, text-motion alignment.
-- Retrieval augmentation improves motion quality for rare tasks. Generated contacts align well with human annotations.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Retrieval augmentation addresses data scarcity for rare tasks.
-- Generates both motion and contact maps, providing richer output.
-- Text interface is intuitive and flexible.
+LatentAct is trained in two stages. Stage 1, the Interaction Codebook (InterCode): a residual VQVAE with transformer encoder-decoder (1 layer, 1 head, feature dimension 512) that encodes a fixed-horizon trajectory of MANO pose parameters and contact maps (binary masks over the 778 MANO vertices, with the contact centroid tracked over time) and quantizes it into a 512-entry, 512-dimensional codebook using 6 quantizers with exponential-moving-average updates and Gumbel-Softmax sampling (temperature 0.5); its decoder reconstructs trajectories from codebook embeddings plus CLIP text embeddings, DeiT video embeddings, and voxelized 3D contact points (a 16x16x16 metric voxel grid over the span of training hand trajectories, encoded by 3D convolutions into a 32-dimensional feature, concatenated to a 1824-dimensional joint feature). Stage 2: a Learned Indexer maps test-time inputs (CLIP text, DeiT image, voxelized contact point, and the raw 3D contact point) through a 2-layer MLP and a transformer decoder with learnable queries to a probability distribution over codebook indices, trained with cross-entropy against the closest codebook entries of the InterCode encoder features; an Interaction Predictor (InterPred), architecturally identical to the InterCode decoder, then generates the trajectory from the retrieved embeddings and the same test-time inputs, supervised with Smooth-L1 losses on MANO parameters, L1 on contact centroid, L1 on future-versus-first-frame translation and 6D rotation, and binary cross-entropy on contact maps. Two InterPred variants are trained: LatentAct (single-step transformer prediction) and LatentAct-Diff (MDM-style denoising in the codebook's latent space). The data engine converts HoloAssist egocentric videos into supervision: object masks from SAMv2 point-prompted tracking, 3D hand meshes from HaMeR (with hand crops from the Hands23 model) transformed to the reference frame using HoloAssist's known intrinsics/extrinsics, and 3D contact points obtained by intersecting hand and object masks in 2D (with boundary Gaussian noise) and back-projecting the 2D contact region onto the 3D hand mesh. Only right-hand motion is considered.
 
-### Limitations
-- Requires a motion database for retrieval.
-- Object 3D model must be provided.
-- Generated contact maps may be physically imprecise.
-- Limited to tasks in the training/retrieval distribution.
+## Contributions
 
-## 6. Takeaway
-This paper demonstrated that retrieval augmentation is a practical way to improve HOI motion generation, especially for long-tail tasks. The simultaneous generation of motion and contact maps is a useful capability for downstream applications like robot learning from demonstration.
+1. Formulation of a new prediction task, Interaction Trajectories (3D hand poses plus contact maps) from single image, action text, and 3D contact point, deliberately avoiding object-centric and hand-centric representations so that no 3D object model is needed and the hand need not be visible in the input. 2. LatentAct: a two-stage codebook-based generator (VQVAE Interaction Codebook, learned Indexer, Interaction Predictor) that exploits the observation that hands interact in a few prototypical, transferable ways across objects. 3. A semi-automatic data engine over HoloAssist producing 3D hand pose and contact trajectories for 800 tasks across 120 object and 24 action categories -- 2.5-10x larger in object and interaction diversity than HOT3D, ARCTIC, GRAB, and HOI4D -- with modular components replaceable by better hand or segmentation models. 4. Comprehensive generalization experiments across novel objects, actions, tasks, and scenes against transformer and diffusion baselines, plus transfer experiments to ARCTIC showing that the HoloAssist-trained codebook and indexer benefit models trained on ARCTIC and enable competitive zero-shot transfer.
+
+## Experimental Setup
+
+Trajectories span T = 30 future timesteps (T = 16 in the supplementary with similar trends). Data from HoloAssist is split into train/validation/test at 80:10:10 for four generalization settings: object categories, action categories, novel tasks, and novel scenes (holding out one of two capture locations). Metrics: MPJPE (cm) between predicted and ground-truth hand joints averaged over future timesteps, Procrustes-aligned MPJPE-PA (cm) aligning the whole trajectory, and F1 score for contact map accuracy. Because no prior method predicts interaction trajectories from image input, two baselines are adapted from human pose literature: HCTFormer (ViT-encoded image features fed to a T2P-style transformer pose decoder with image, contact, and text features replacing pose embeddings) and HCTDiff (MDM modified to condition on image, text, and contact features for hand trajectory and contact map prediction); both are trained on the same data. Object-centric methods (e.g., Text2HOI, DiffH2O) cannot run without 3D object models, and hand-centric methods (e.g., GRIP, G-HOP) require the hand to be visible. On ARCTIC, comparisons include models trained only on ARCTIC, zero-shot transfer from HoloAssist, and ARCTIC training initialized with the HoloAssist codebook and indexer.
+
+## Results
+
+On HoloAssist generalization (Table 1), LatentAct consistently achieves the best absolute hand poses and contact maps. For task-level generalization with the hand visible, Forecasting gives LatentAct 7.61 cm MPJPE and F1 0.75 versus HCTFormer 8.32 cm / 0.72 and HCTDiff 8.42 cm / 0.72, and Interpolation gives 6.72 cm / 0.80 versus 7.52 cm / 0.76 and 8.30 cm / 0.77; with the hand absent, LatentAct still leads (Forecasting 7.93 cm / 0.76; Interpolation 7.13 cm / 0.79). Trends hold across object-, action-, and scene-level splits (e.g., scene-level Forecasting: 7.87 cm vs 8.52/9.49 cm). Two-stage training with the codebook is the main driver: adding InterCode improves HCTFormer from 7.52 to 6.72 cm MPJPE and HCTDiff from 8.30 to 6.53 cm on task-level interpolation (Table 4), and removing the contact-map loss degrades hand prediction for all models (LatentAct: 6.72 to 7.76 cm; Table 5). LatentAct-Diff yields better hand poses but worse contact maps in interpolation (6.53 cm, F1 0.78 versus 6.72 cm, 0.80) and is generally inferior in Forecasting. On ARCTIC (Table 2), LatentAct trained on ARCTIC beats HCTFormer (14.77 vs 15.76 cm MPJPE; F1 0.41 vs 0.36); initializing with the HoloAssist codebook and indexer improves further to 15.36 cm with the best F1 of 0.45, and zero-shot transfer from HoloAssist is competitive on hand poses (15.72 cm) though weaker on contacts (F1 0.19), reflecting HoloAssist's 10x larger contact-sequence scale. Scaling curves (Fig. 5) show both LatentAct and HCTFormer improve with more training data. Qualitatively, LatentAct produces better hand orientation and sharper contact maps than the best baseline on unseen tasks.
+
+## Limitations
+
+The authors explicitly state: the model does not predict object state change (predicting 2D object masks is suggested as an alternative while 3D object models remain unavailable); a 3D contact point is assumed available at test time (estimable via off-the-shelf depth models from a user-clicked 2D point, but still an external input); the evaluation measures trajectory accuracy against a single ground truth and does not account for the inherently multimodal nature of future prediction; and the programmatic annotations from the data engine may be inaccurate in some cases despite filtering, with better contact annotation tools (e.g., DECO) suggested as a future improvement. Only right-hand motion is modeled, and the evaluation on ARCTIC shows zero-shot contact transfer remains substantially weaker (F1 0.19) than in-domain performance.

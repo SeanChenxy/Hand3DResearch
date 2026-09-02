@@ -1,36 +1,38 @@
-# Reconstructing Hand-Held Objects in 3D from Images and Videos (Cross-reference)
+# Reconstructing Hand-Held Objects in 3D from Images and Videos
+
+**Authors:** Jane Wu, Georgios Pavlakos, Georgia Gkioxari, Jitendra Malik  
+**Date:** 2025-12-31  
+**Identifier:** [arXiv:2404.06507](https://arxiv.org/abs/2404.06507)  
+**Zotero item:** `2VLIIH9N` ([Zotero](zotero://select/library/items/2VLIIH9N))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-This entry is a cross-reference to the detailed summary in Chapter 3 (3D Geometry Priors, section 3.2 Shape Completion). The work presents a scalable paradigm for hand-held object reconstruction from monocular RGB video that combines a single-frame joint reconstruction model (MCC-Hand-Object) with retrieval-augmented reconstruction (RAR) using a text-to-3D generative model prompted by GPT-4(V).
 
-## 1. Problem and Setting
-- Reconstruction of hand-held object geometry (manipulanda) from monocular Internet RGB videos.
-- Input: monocular RGB video of hand manipulating an object; 3D hand estimates per frame.
-- Output: 3D object geometry aligned with hands and images across the video.
-- Visual grounding prior: the retrieval component uses vision foundation models to match observed object appearance to 3D database models, providing a visual-grounded prior for the object shape.
+This paper (MCC-HO, accepted at 3DV 2026) presents a scalable paradigm for reconstructing hand-held object geometry from monocular RGB images and videos, built on two anchors: estimated 3D hands disambiguate object location and scale, and the set of manipulanda is small relative to all possible objects. First, MCC-Hand-Object (MCC-HO) is a transformer model adapted from MCC and fine-tuned from CO3Dv2 pretraining that jointly infers hand and object geometry as a neural implicit function of occupancy, color, and hand-object segmentation, given a single RGB image and an inferred 3D MANO hand. Second, Retrieval-Augmented Reconstruction (RAR) prompts GPT-4(V) to describe the held object, uses the caption with the Genie text-to-3D model to obtain a 3D object model, and rigidly aligns it to images and MCC-HO predictions via Chamfer distance plus DINOv2 PCA feature similarity, with a Viterbi algorithm enforcing temporal consistency across video frames. MCC-HO achieves state-of-the-art object reconstruction on DexYCB, MOW, and HOI4D (for example, Chamfer distance of 1.36 cm2 on HOI4D versus 2.7 for IHOI), and MCC-HO + RAR outperforms G-HOP on HOI4D videos (CD 0.64 versus 0.8) while enabling automated "data engine" annotation of unlabeled 100DOH Internet videos for robot imitation learning.
 
-## 2. Core Method
-- MCC-Hand-Object (MCC-HO): a single-frame joint reconstruction model.
-- Retrieval-Augmented Reconstruction (RAR): uses GPT-4(V) to prompt a text-to-3D generative model to retrieve a 3D object model; rigidly aligned with input images and 3D MCC-HO observations in a temporally consistent manner.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Foundation models: GPT-4(V) for retrieval prompting; text-to-3D generative model for shape synthesis; FM-based 3D hand pose estimators.
-- Domain knowledge: hand-object spatial constraints; manipulanda set is small relative to all possible objects.
+The task is model-free reconstruction of the geometry of objects being manipulated by hands (manipulanda) from monocular RGB input, with the ultimate goal of scalable 3D hand-object dataset creation from Internet video. This setting is harder than general object reconstruction for two reasons: the hand occludes much of the object, and the object often occupies few image pixels. General image-to-3D models are trained on mostly unoccluded objects and cannot infer geometry from hand/scene context, and SfM cannot gather enough feature points on a mostly occluded moving object. Conversely, existing hand-object approaches rely on human assistance — lab-captured datasets or manually retrieved object models — which is accurate but not scalable; the combined object instances of HO-3D and DexYCB are only 31, limiting generalization. The paper's key insight is to exploit foundation models instead: hand geometry constrains where and how large the object is, and object recognition plus large 3D generative model collections can supply a complete object shape that per-frame network predictions alone cannot.
 
-## 4. Experiments and Findings
-- Datasets: lab HOI datasets and Internet image/video datasets.
-- State-of-the-art performance on both lab and Internet data.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Scalable paradigm leveraging FMs and 3D object datasets.
-- Unified object geometry via RAR provides strong temporal consistency.
-- Works on in-the-wild Internet videos.
+The framework has three components. (1) MCC-HO: an encoder-decoder transformer adapted from MCC, fine-tuned from an MCC model pretrained on CO3Dv2. Inputs are a single RGB image and a posed MANO hand mesh (ground truth during training; HaMeR at test time); hand and object segmentation masks come from annotations or SAM/SAM2 and define the crop. The hand mesh is rasterized, per-pixel ray-mesh intersection points define a hand-normalized coordinate system in which object scale is expressed, and a ViT image encoder plus a self-attention point encoder (with a learned embedding for pixels without hand intersection) produce a joint feature map. An MAE-style decoder takes query 3D points (1024 during training, voxel-grid vertices at test time) and predicts, per point, occupancy (binary cross-entropy loss), color (256-way classification), and a three-way hand/object/background segmentation label, all as one implicit function ρ(x) = (σ(x), c(x), m(x)). (2) Retrieval-Augmented Reconstruction: a VLM (GPT-4(V)) is prompted with a representative frame to produce a detailed text description of the held object; the caption is passed to Genie (Luma text-to-3D) to synthesize a textured 3D model, whose scale is set relative to the input 3D hand. (3) Rigid alignment: object scale is estimated from the largest-eigenvalue ratio between the MCC-HO object point cloud and the retrieved model; rotation is discretized over SO(3) via recursive tesseract subdivision and translation over a small voxel grid around the MCC-HO point-cloud mean, and the state minimizing Chamfer distance to the MCC-HO point cloud plus a DINOv2 PCA similarity term (cosine similarity between the first three PCA components of DINOv2 features computed on the rendered model and the input image, masked by the object silhouette) is selected. For video, per-frame rotations and then translations are solved globally with the Viterbi algorithm, whose transition probabilities are Rodrigues' rotation error (for rotations) or Euclidean distance (for translations) and whose emission costs are the same CD and DINOv2 terms — giving a temporally consistent, fixed-compute, globally optimal alternative to gradient-based temporal alignment.
 
-### Limitations
-- Depends on text-to-3D models covering manipulanda.
-- Retrieval quality depends on LLM/VLM.
-- Per-frame MCC-HO may struggle with severe occlusion.
+## Contributions
 
-## 6. Takeaway
-This work capitalizes on the small size of the manipulanda category by using foundation models to retrieve a 3D shape, then aligning it with per-frame hand estimates. In the context of visual grounding (chapter 4), the FM-based retrieval provides a visual-grounded shape prior. See chapter 3 section 3.2 for the full technical details.
+- MCC-HO, a transformer-based model that jointly reconstructs 3D hand and object geometry from a single RGB image and an inferred 3D hand, using a hand-normalized implicit representation with occupancy, color, and hand-object segmentation heads, and inheriting a learned object prior by fine-tuning MCC pretrained on CO3Dv2.
+- Retrieval-Augmented Reconstruction (RAR), a fully automatic pipeline that pairs VLM object recognition with text-to-3D generative models to retrieve a unified 3D object model for the held object, in analogy to retrieval-augmented generation.
+- A discrete state-space rigid alignment method combining Chamfer distance and DINOv2 PCA feature similarity, extended to video with a Viterbi algorithm that guarantees a globally optimal, temporally consistent alignment in fixed compute time.
+- State-of-the-art hand-held object reconstruction on DexYCB, MOW, and HOI4D, and a demonstrated scalable "data engine" application: automated reconstruction and human thumbs-up/thumbs-down screening of unlabeled 100DOH Internet videos to produce hand-object interaction trajectories for robot imitation learning.
+
+## Experimental Setup
+
+Training and evaluation use HOI4D (sequences with 6 hand-held object categories; 1142 training, 6 validation, and 12 test sequences, consistent with DiffHOI), DexYCB ("s0" split with 800 training, 40 validation, and 160 test sequences of 21 YCB objects), and MOW (512 images from 100DOH labeled with 3D hands and objects; 350 training and 92 test images following the IHOI split), plus 110 RHOV 2-second video clips centered at MOW frames (19 clips overlapping the MOW test set are excluded from training). Unlabeled 100DOH Internet videos are used for qualitative scaling experiments, with HaMeR supplying estimated 3D hands. Metrics are Chamfer distance in cm2 and F-score at 5 mm and 10 mm computed on 10k sampled surface points, with ICP-with-scaling alignment to handle unknown camera parameters; median metrics are reported (means for the G-HOP comparison), and intersection volume with 0.5 cm voxels is added where prior work (HO, IHOI) used it. Baselines are HO (Hasson et al.), IHOI, and HORSE for image-based reconstruction, and G-HOP, a generalist trained on seven hand-object datasets, for video-based reconstruction. Ablations compare MCC-HO against the original MCC with a monocular depth estimator, against MCC-HO without the input hand, and against MCC-HO without RAR.
+
+## Results
+
+MCC-HO achieves state-of-the-art object reconstruction on all three labeled datasets. On DexYCB it reaches F5 0.36, F10 0.60, CD 3.74 cm2, versus HO (0.24/0.48/4.76), HORSE (0.23/0.42/6.97), and IHOI (not evaluated); on MOW, F5 0.15, F10 0.31, CD 15.2, versus IHOI (0.13/0.24/23.1), HORSE (0.11/0.23/24.5), and HO (0.03/0.06/49.8); on HOI4D, F5 0.52, F10 0.78, CD 1.36, versus IHOI (0.42/0.70/2.7), HO (0.28/0.51/3.86), and HORSE (0.26/0.45/6.69). For video, MCC-HO + RAR outperforms G-HOP on HOI4D with mean F5 0.74, F10 0.91, CD 0.64 versus G-HOP's 0.61/0.89/0.8. Ablations on MOW show that task-specific fine-tuning matters (MCC with depth: CD 31.6 versus MCC-HO 15.2), that conditioning on the 3D hand is essential (removing the hand input collapses CD from 15.2 to 71.6 cm2), and that RAR improves reconstruction (CD from 15.2 to 9.41 cm2, F10 from 0.31 to 0.44). Qualitatively, MCC-HO + RAR yields more complete and realistic object geometry than MCC-HO alone, plausible hand-object contact, and correct identification of the manipulated object without input segmentation maps; on unlabeled 100DOH images the full pipeline runs with HaMeR-estimated hands and no ground-truth masks.
+
+## Limitations
+
+RAR fails when the generative model cannot retrieve a sufficiently close 3D match for the observed object — it works well on average but not on every video, which the authors argue is acceptable for a human-screened "data engine" use case but not for guaranteed per-video quality. The approach depends on accurate hand and object masks tracked across frames, so segmentation and tracking quality bound performance. Because MCC-HO is trained on monocular images, its predicted RGB colors are valid only from the input viewpoint, and predicted point clouds require Poisson surface reconstruction (which introduces artifacts) to be shown as meshes. The retrieved object is a single rigid model per video, so the framework targets rigid manipulanda and assumes retrieved geometry can be brought into correspondence with per-frame predictions by rigid alignment only.

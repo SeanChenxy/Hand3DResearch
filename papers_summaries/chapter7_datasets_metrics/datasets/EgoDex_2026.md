@@ -1,51 +1,35 @@
-# EgoDex (2026)
+# EgoDex: Learning Dexterous Manipulation from Large-Scale Egocentric Video
 
-> Hoque, Huang, Yoon, Sivapurapu, Zhang. *EgoDex: Learning Dexterous Manipulation from Large-Scale Egocentric Video.* arXiv 2505.11709, 2026. Zotero Key: `6LDCN9MU`.
+**Authors:** Ryan Hoque, Peide Huang, David J. Yoon, Mouli Sivapurapu, Jian Zhang  
+**Date:** 2026 (ICLR 2026)  
+**Identifier:** [arXiv:2505.11709](https://arxiv.org/abs/2505.11709)  
+**Zotero item:** `6LDCN9MU` ([Zotero](zotero://select/library/items/6LDCN9MU))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
 ## Summary
-EgoDex is a "largest scale + high-precision 3D finger tracking" real human-hand operation dataset collected by Apple with Vision Pro: 829 hours of egocentric video, 3D finger joint poses per frame, 194 desktop tasks. It is the flagship dataset for imitation learning of dexterous manipulation.
 
-## 1. Dataset Purpose
-- Solves the fundamental problem that "existing egocentric data lacks 3D hand / finger ground truth". Apple Vision Pro's built-in SLAM + multi-camera + infrared finger tracking enables large-scale high-precision finger-tracking annotation.
-- Tasks: imitation learning for hand trajectory prediction; dexterous manipulation policy learning; hand pose estimation; 3D hand mesh reconstruction.
-- Directly oriented to the downstream application of "training robot / virtual hand manipulation policies with egocentric video".
-- Anchors "Apple Vision Pro + egocentric + dexterous" as a new-generation HOI data-collection paradigm.
+EgoDex is the largest dataset of dexterous human manipulation to date: 829 hours of 1080p, 30 FPS egocentric video with paired 3D skeletal annotations captured natively at recording time using Apple Vision Pro, totaling 90 million frames and 338,000 episodes across 194 tabletop tasks ranging from tying shoelaces to folding laundry. Unlike Ego4D or EPIC-KITCHENS, every frame carries precise 3D poses for the head, arms, wrists, and all 25 joints of each hand. The authors train and systematically evaluate 14 imitation-learning policies for hand trajectory prediction, introducing reproducible benchmarks with a best-of-K distance metric.
 
-## 2. Data Composition
-- Source: real capture. Multiple subjects use Apple Vision Pro headsets to perform desktop operation tasks.
-- Viewpoint: first-person multi-camera (multiple SLAM cameras + infrared finger sensors built into the Vision Pro headset).
-- Scale: 829 hours of egocentric video, 3D finger joint poses (26+ DOF × 2 hands) synchronized per frame.
-- Object and action: 194 desktop tasks (tying shoelaces, folding laundry, stacking cups, writing, etc.); objects include daily household items.
-- Contains natural 26-DOF hand motion, bi-manual cooperation, and in-hand manipulation.
+## Background and Motivation
 
-## 3. Annotation and Supervision
-- Hand: 3D finger joint poses (26+ DOF × 2 hands per frame), from the Vision Pro built-in sensor (sub-cm accuracy).
-- Object: object category labels; no 6D pose annotation.
-- Interaction: task label (194 categories), sub-step label (partial).
-- Scene: first-person RGB-D (from Vision Pro sensors); scene mesh (partial).
-- Some sequences provide language instruction (sub-task description).
+Imitation learning for manipulation lacks an Internet-scale data corpus; teleoperation datasets are bottlenecked by robot hardware, and unstructured Internet video lacks precise annotations. Egocentric human video with paired 3D hand pose is a passively scalable middle path. Existing egocentric datasets do not focus on manipulation and have no native dexterous annotations, while existing HOI datasets with 3D hands are orders of magnitude smaller and emphasize grasping rather than long-horizon manipulation. The closest effort, EgoMimic, collects about 4 hours with wrist-only tracking, versus EgoDex's 829 hours with full upper-body and per-joint finger annotations.
 
-## 4. Supported Evaluation
-- Benchmark tasks: (1) hand trajectory prediction (next-frame 3D finger joints); (2) imitation learning policy (successfully executing 194 desktop tasks); (3) hand pose estimation (MPJPE / PA-MPJPE).
-- Key metrics: trajectory MSE, policy success rate, hand MPJPE.
-- Provides standard train / val / test split (by subject + task).
-- Introduces metrics and benchmark protocols, making the evaluation of "egocentric → manipulation policy" reproducible.
+## Dataset Construction
 
-## 5. Why It Matters
-- 829 hours + 3D finger tracking = the largest-scale egocentric + high-precision hand-tracking dataset at the time.
-- For the first time, "commercial headset (Vision Pro) → large-scale 3D HOI data" is established as a reproducible paradigm, expected to drive the release of similar datasets from Meta Quest 3, Pico, and other headsets.
-- Directly provides a "high-quality human demonstration" source for imitation learning / VLA training, connecting the HOI community and the robot learning community.
-- The diversity of 194 tasks makes "generalist manipulation policy" evaluation possible.
-- The flagship anchor of "structured HOI supervision" in Ch6 "robot learning".
+All data is collected with Apple Vision Pro running visionOS 2, using ARKit pose tracking and calibrated cameras so collectors record bare-handed with no external apparatus; sessions run 10-15 minutes with episode boundaries marked by pause/resume. Modalities per frame are egocentric RGB (1920 x 1080 at 30 Hz), camera intrinsics and extrinsics, 3D position and orientation of all upper-body joints including 25 joints per hand, per-joint confidence values, and language annotations (collector metadata fused by GPT-4 into a single detailed description). Tasks are organized as reversible pairs, reset-free, and reset types to maximize collection yield. Behavioral diversity goes far beyond pick-and-place (unscrewing bottle caps, flipping pages, slotting batteries, plus FurnitureBench assembly tasks); most verbs have more than 1,000 demonstrations, versus DROID where many verbs have fewer than 10.
 
-## 6. Limitations and Biases
-- Desktop tasks dominate: no mobile manipulation, whole-body, or navigation.
-- Although 194 tasks are many, the average sample per task is still limited relative to the 829-hour magnitude.
-- Under the Vision Pro headset view, "the subject cannot see his own hand", causing partial hand occlusion; however, the Vision Pro's built-in infrared can improve this from the finger side.
-- The object category label is coarse, with no 6D pose / mesh / contact annotation.
-- Language instruction is only provided in a subset and does not run through the whole dataset.
-- No tactile, no force, no specialized articulated-object design.
-- Headset-specific (Vision Pro), and the transferability to other headsets (Quest, Aria) needs evaluation.
+## Evaluation Protocol
 
-## 7. Takeaway
-EgoDex is best for demonstrating the capability of "egocentric video → dexterous manipulation policy", especially the imitation-learning performance under large-scale + high-precision 3D hand tracking. **Not suitable** for evaluating 6D object pose estimation, joint hand-object mesh reconstruction, articulated HOI, in-the-wild complex tasks, or language-conditioned VLA (only partial coverage). In this survey, EgoDex plays the role of "egocentric dexterous manipulation flagship dataset" and serves as the hard anchor for evaluating "embodied learning data sources" in Ch6 and "motion generative prior" in Ch5.
+The action at each timestep is a 48-dimensional vector: per hand, 3D wrist position, 6D wrist orientation, and 3D positions of five fingertips, predicted as relative chunks in the current camera frame. Two benchmarks are defined: dexterous trajectory prediction (from images, skeletal history, and language, predict the next chunk) and inverse dynamics (additionally conditioned on a goal image). A fixed 1% held-out test set is sampled per task; evaluation uses a best-of-K metric — sample K trajectories and take the minimum Euclidean distance to ground truth, averaged over timesteps and the 12 wrist/fingertip keypoints. Policies from the X-IL framework combine encoder-decoder and decoder-only Transformers with behavior cloning, denoising diffusion, and flow matching, trained for 50,000 steps at batch size 2048 on 8 A100 GPUs.
+
+## Findings and Analysis
+
+With a 2-second horizon, encoder-decoder models consistently beat decoder-only ones; encoder-decoder flow matching is best at K=5 and K=10 (average distance down to 0.038 m, final 0.041 m, up to 34% better), while behavior cloning is about 15% better at K=1 (0.044 m), showing BC's average prediction is better but diffusion/flow capture modes better. Accuracy degrades with horizon (1 s: 0.031 m versus 3 s: 0.053 m average distance), and visual goal-conditioning cuts average distance 22% and final distance 53%. A 500M-parameter model matches the 200M default, and performance scales with dataset size on a log axis.
+
+## Contributions
+
+The largest and most diverse dexterous manipulation dataset (338K episodes, 194 tasks, 90M frames) with native 3D hand, finger, and upper-body tracking; structured task taxonomy with language and camera-pose annotations; and two reproducible trajectory-prediction benchmarks with best-of-K metrics and a 14-model baseline study covering architecture, policy representation, horizon, goal-conditioning, and data scaling.
+
+## Limitations
+
+Scene and background diversity is limited to tabletop environments, though behavior diversity is broad. The skeletal annotations are themselves model predictions and can be imperfect during heavy occlusion (e.g., towel folding) or very fast motions. The benchmarks evaluate hand trajectory prediction only, without object pose or contact supervision, and out-of-distribution tasks are treated separately in the appendix rather than in the main test set.

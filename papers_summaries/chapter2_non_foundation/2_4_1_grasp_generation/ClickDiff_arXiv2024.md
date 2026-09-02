@@ -1,39 +1,38 @@
 # ClickDiff: Click to Induce Semantic Contact Map for Controllable Grasp Generation with Diffusion Models
 
+**Authors:** Peiming Li, Ziyi Wang, Mengyuan Liu, Hong Liu, Chen Chen  
+**Date:** 2024-10-28  
+**Identifier:** [arXiv:2407.19370](https://arxiv.org/abs/2407.19370), [DOI: 10.1145/3664647.3680597](https://doi.org/10.1145/3664647.3680597)  
+**Zotero item:** `SD624N5Z` ([Zotero](zotero://select/library/items/SD624N5Z))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-Enables user-controllable grasp generation by allowing users to "click" on desired object regions to specify semantic contact points, which a diffusion model then expands into a full contact map and optimizes into a MANO grasp.
 
-## 1. Problem and Setting
-- Task: controllable grasp generation where a user specifies desired contact regions on an object via 2D/3D clicks, and the system generates a plausible hand grasp respecting those user constraints.
-- Input: 3D object mesh + user-specified contact points (clicks) on the object surface + optional semantic hand-part labels for each click; Output: MANO hand grasp.
-- Key challenge: pure generative methods produce diverse but uncontrollable grasps; explicit user control (e.g., "grasp the handle" or "pinch the rim") requires a mechanism to convert sparse user input into a complete, physically plausible contact configuration.
+ClickDiff formulates controllable grasp generation: instead of passively sampling a grasp for an object, the user (or an algorithm) specifies a Semantic Contact Map (SCM) that marks which object points are touched and by which of the five fingers, and a dual-stage conditional diffusion model synthesizes grasps that honor this specification. On GRAB's six unseen test objects it reaches 40.57 mm MPJPE, 46.95 mm CDev, and 72.85% Success Rate, versus 61.36 mm / 81.90 mm / 55.90% for the strongest prior baseline (GraspTTA); on ARCTIC bimanual generation it roughly halves joint and hand-object relative position errors of GraspTTA. Ablations attribute the gains to the SCM representation (an 18.87 mm CDev reduction over no contact condition), the two-stage framework, and the Tactile-Guided Constraint.
 
-## 2. Core Method
-- Diffusion-based contact completion: a 3D diffusion model (on object surface points) is trained to generate full object-surface contact maps (contact probability + hand-part per point). User clicks act as conditioning — they are encoded as sparse "anchor" tokens that the diffusion model must satisfy while generating the rest of the contact map.
-- Semantic click encoding: each user click can optionally specify which hand part should contact that point (e.g., "thumb," "index finger"), encoded as a one-hot part label.
-- Grasp fitting: same as ContactGen-style optimization — the completed contact map guides MANO parameter fitting via energy minimization.
-- Key innovation: enabling intuitive user-in-the-loop control over grasp generation via sparse clicks, bridging unconditional generative modeling and user-guided synthesis.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: GRAB, ObMan, plus synthetic data.
-- Supervision: per-object-point contact maps and hand-part labels derived from MANO fits.
-- Domain knowledge: MANO model with part segmentation.
-- Assumption: object geometry is known and static; single-hand grasp only.
+Generative models of hand-object interaction traditionally emphasize visibility and diversity under scene constraints, producing grasps from coarse inputs such as a text prompt ("a hand holding a cup") or a plain object-conditioned distribution. The authors argue this overlooks fine-grained contact structure: an accurate generative model should decide which object areas are touched and which hand parts make contact, and its absence causes "contact ambiguity" — a single input object can induce many undesired grasps (e.g., a bowl expected to be grabbed from the rim may instead be grasped from the bottom). Prior contact-map-based methods constrain where the object is touched but leave open which fingers touch it, and specifying contact maps for both object and hand simultaneously is impractical. The paper therefore defines the controllable grasp generation task: given an object point cloud plus a user-specified or algorithmically predicted fine-grained contact specification, generate a physically plausible, accurate grasp that realizes the specified contacts. Related work includes CVAE-based grasp generators (ContactGen, GraspTTA, GrabNet, GOAL) and controllable human-object synthesis (COUCH), but none supports finger-level user control of hand-object contact.
 
-## 4. Experiments and Findings
-- Datasets: GRAB, ObMan; user study with non-expert participants asked to click desired grasp points on novel object meshes.
-- Metrics: contact completion accuracy (given partial clicks, does the model fill in a valid full contact map?), user preference, contact IoU, penetration.
-- Main findings: ClickDiff generates grasps that consistently satisfy user-specified contact points while maintaining overall physical plausibility; users prefer ClickDiff grasps over unconditional methods for task-specific grasping scenarios.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Intuitive user interface for grasp control — clicking is much easier than specifying MANO parameters.
-- Diffusion model naturally handles sparse-to-dense contact completion.
+ClickDiff has three components. (1) Semantic Contact Map (SCM): an N x 5 matrix over N = 2048 sampled object points and 5 fingers, obtained by a FingertouchAnalysis procedure that marks object points within a distance threshold of each finger's points (many-to-many finger-object pairs are allowed, unlike ContactGen's one-hot part map). Crucially, the SCM can be customized by clicking on the object and traversing the precomputed contact weights of the surrounding area, making it a user-facing control interface. (2) Dual Generation Framework built on conditional diffusion models: a Semantic Conditional Module denoises a contact map C (2048-dim) conditioned on the SCM and object point cloud, and a Contact Conditional Module denoises MANO parameters M (61-dim) conditioned on the predicted contact map and the same point cloud; the two modules train independently, and at inference the denoising chains are interleaved so the predicted contact map guides grasp generation. Object features come from PointNet. (3) Tactile-Guided Constraint (TGC): using the touching point-finger pairs in the SCM, an L2 loss pulls each touched object point toward the weighted centroid of the corresponding finger's predefined contact point set, resolving which finger should reach where. Training losses combine reconstruction on contact map and MANO parameters, a contact-map loss on hand-object point pairs, a vertex loss between predicted and ground-truth hand vertices, and TGC (weights lambda_alpha = 2, lambda_beta = 0.5, lambda_theta = 1).
 
-### Limitations
-- Click placement requires some understanding of object functionality; naive clicks may lead to implausible completed contact maps.
-- Still inherits the speed limitations of iterative grasp optimization.
-- Limited to static grasping; no temporal or dynamic control.
+## Contributions
 
-## 6. Takeaway
-ClickDiff brings user controllability to diffusion-based grasp generation, showing that sparse semantic clicks can effectively steer a generative contact model toward task- or user-specific outcomes. This work bridges the gap between fully automatic grasp generation and the practical need for user-guided, intent-driven synthesis in interactive applications.
+- First formulation of the controllable grasp generation task, in which grasps are steered by manually specified hand-object contact point pairs, with the SCM as a simple, clickable fine-grained contact representation that records both touched object points and the touching finger indices.
+- A Dual Generation Framework (Semantic Conditional Module + Contact Conditional Module) over conditional diffusion, where the SCM first induces a plausible contact map and the contact map then conditions grasp synthesis; the diffusion denoising itself constrains hand parameters.
+- A Tactile-Guided Constraint that converts SCM contact pairs into explicit finger-to-object-point distance supervision, addressing the ambiguity of which hand part touches the object.
+- An evaluation protocol for controllable grasp generation (MPJPE, MRRPE, CDev, Success Rate) and state-of-the-art results on GRAB and ARCTIC, including bimanual generation and generalization to unseen objects.
+
+## Experimental Setup
+
+Training uses GRAB (whole-body grasps of 51 objects by 10 subjects; 2048 object points sampled per object) for unimanual grips and ARCTIC (dexterous bimanual manipulation of articulated objects; 600 object points) for bimanual generation. GRAB's test set contains six objects unseen during training, used to measure out-of-domain generalization. The model is trained with the Adam optimizer (learning rate 1e-5, betas 0.9/0.999), batch size 256, for 600k steps on a single NVIDIA RTX 3090. Metrics: MPJPE (21-joint position error after root subtraction), MRRPE (root translation between hands and object, ARCTIC only), CDev (mean deviation of predicted in-contact hand vertices, contacts defined within 3 mm of the object), and a custom Success Rate (ratio of generated in-contact hand point set to the real in-contact point set).
+
+## Results
+
+On GRAB's six unseen objects (averages), ClickDiff attains 40.57 mm MPJPE, 46.95 mm CDev, and 72.85% Success Rate, versus GrabNet (80.35 mm, 93.95 mm, 52.05%), GraspTTA (61.36 mm, 81.90 mm, 55.90%), GOAL (75.96 mm, 86.28 mm, 66.78%), and ContactGen (78.32 mm, 84.59 mm, 57.46%); per-object the gap is largest on binoculars and toothpaste (e.g., 40.19 mm CDev vs. GraspTTA's 77.22 mm on camera). On ARCTIC, for in-domain bimanual generation ClickDiff with SCM reaches 38.53 mm MPJPE, 65.91 mm MRRPE, 67.75 mm CDev, and 82.11% Success Rate against GraspTTA's 57.85 mm, 930.75 mm, 915.69 mm, and 52.03%, and the advantage persists out-of-domain (47.69 mm MPJPE, 93.57 mm MRRPE, 92.08 mm CDev, 78.44% SR vs. 54.57 mm, 749.15 mm, 789.42 mm, 54.81%). Ablations on GRAB: replacing no contact condition with the SCM cuts CDev by 18.87 mm (70.92 to 52.05 mm) and raises SR by 6.50 points; moving from single-stage to the Dual Generation Framework improves SR by 4.62 points and CDev by 7.86 mm; adding TGC alone reduces CDev by 6.11 mm, and the full loss combination reaches the best 40.57 mm MPJPE / 52.05 mm CDev / 72.85% SR; contact-condition control costs about 30% extra training time (13.5 to 17.5 hours at batch size 128).
+
+## Limitations
+
+The paper reports that controllable conditioning increases training time by roughly 30% relative to a model without contact conditions, and effective control presupposes either user interaction (clicking to build the SCM) or a separately reliable algorithmic prediction of the SCM, so generation quality inherits any errors in that specification. Contact deviation on out-of-domain ARCTIC objects remains high in absolute terms (about 92 mm bimanually), indicating that generalization to unfamiliar articulated objects is still imperfect. No dedicated limitations section is provided, and other constraints (e.g., reliance on MANO parameterization and on datasets with fingertip-annotated contact such as GRAB/ARCTIC) are not discussed explicitly in the paper.

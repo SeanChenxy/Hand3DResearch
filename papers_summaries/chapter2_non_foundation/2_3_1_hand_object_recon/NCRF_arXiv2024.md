@@ -1,46 +1,43 @@
 # NCRF: Neural Contact Radiance Fields for Free-Viewpoint Rendering of Hand-Object Interaction
 
+**Authors:** Zhongqun Zhang, Jifei Song, Eduardo Pérez-Pellitero, Yiren Zhou, Hyung Jin Chang, Aleš Leonardis  
+**Date:** 2024-02-09  
+**Identifier:** [arXiv:2402.05532](https://arxiv.org/abs/2402.05532); DOI 10.1109/3DV62453.2024.00091 (3DV 2024)  
+**Zotero item:** `85325DQ6` ([Zotero](zotero://select/library/items/85325DQ6))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-A neural radiance field (NeRF) framework augmented with explicit contact modeling for photorealistic free-viewpoint rendering of hand-object interaction scenes from sparse input views, improving rendering quality at the physically critical hand-object interface.
 
-## 1. Problem and Setting
-- Free-viewpoint photorealistic rendering of hand-object interaction scenes from sparse multi-view images (or monocular video).
-- Input: sparse set of RGB images (or monocular video frames) of a hand-object interaction, with known or estimated camera poses. Output: novel-view RGB renderings of the interaction scene from arbitrary viewpoints.
-- Video/multi-view static scene setting; the hand and object are assumed stationary during capture.
-- Both hand and object rendered together; emphasis on the contact region where hands touch objects.
+NCRF is, to the authors' knowledge, the first NeRF-based free-viewpoint rendering system for dynamic hand-object interactions, reconstructing the interacting hand and object from a sparse set of videos (three synchronized views, or even a single monocular video from a phone). It jointly learns two components: a contact optimization field that refines coarse per-frame hand and object poses from an off-the-shelf estimator using an attention-based contact field, and a hand-object neural radiance field that learns a canonical implicit representation warped to observations by a motion field combining skeletal linear blend skinning plus non-rigid offsets for the hand with a rigid transform for the object, with a mesh-guided ray sampling scheme that prevents hand and object point sets from penetrating each other. On HO3D and DexYCB the method outperforms an adapted HumanNeRF by a large margin in rendering (PSNR 29.74 versus 26.06 on HO3D; 32.16 versus 27.32 on DexYCB) while also improving hand pose (MPJPE 8.9 mm on HO3D, 10.2 mm on DexYCB) and object pose (ADD-0.1D 89.8 percent on HO3D versus 81.4 for the previous best S2Contact).
 
-## 2. Core Method
-- Neural Contact Radiance Field (NCRF): extends standard NeRF with a contact-aware component that models the radiance field differently near the hand-object contact interface.
-- Standard NeRF: an MLP predicts density and color from 3D position and viewing direction, trained via photometric loss on input images.
-- Contact-aware extension: at 3D points near the hand-object contact region (identified by proximity to both hand and object surfaces), additional network capacity or auxiliary losses are applied to improve rendering quality. The contact region is challenging for standard NeRF because of the sharp depth discontinuities and interreflections.
-- The hand and object geometries may be provided as priors (MANO mesh for hand, object template) to define the contact region and to provide geometric guidance during rendering.
-- The model can be trained from sparse views (as few as 3-5) by leveraging the geometric priors as additional supervision.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: sparse multi-view images (or monocular video) of a static hand-object interaction.
-- Supervision: photometric loss (RGB reconstruction) on input views.
-- Geometric priors: known hand mesh (MANO) and object mesh, used to define the contact region and optionally as depth/geometry supervision.
-- The hand and object are assumed to be static during the capture; no motion handling.
-- Camera poses must be known or estimated (e.g., via COLMAP).
+Modeling hand-object interactions from RGB is central to human-computer interaction, AR/VR, and imitation learning, but prior work formulates it mostly as joint hand-object pose estimation with parametric models (MANO for the hand, known YCB object models plus 6D pose for the object). These outputs carry strong priors yet lack photorealistic appearance and fine detail: MANO is low-resolution, and the more detailed NIMBLE model requires expensive scan data and annotation. Meanwhile, neural rendering has produced high-quality free-viewpoint reconstructions of clothed humans (HumanNeRF, NeuralBody) and of hands alone (LISA, Hand Avatar), but no neural rendering treatment of hand-object interaction existed: generic dynamic NeRF methods fail on grasping because of complex hand motion and heavy mutual occlusion between hand and object, and the visual-geometric prior of contact, which is known to constrain poses, is ignored by previous neural hand methods. NCRF therefore targets free-viewpoint rendering of hand-object interaction from sparse videos, jointly with hand-object pose optimization, under contact and photometric constraints, working both with hardware-synchronized lab cameras (DexYCB) and casual monocular phone video.
 
-## 4. Experiments and Findings
-- Evaluated on hand-object interaction scenes captured from multiple viewpoints.
-- Metrics: PSNR, SSIM, LPIPS for novel-view synthesis, with specific evaluation on contact-region rendering quality.
-- NCRF significantly outperforms standard NeRF at the hand-object contact interface, where standard NeRF produces blurry or incorrect geometry.
-- The contact-aware modeling reduces floaters (spurious density) and ghosting artifacts near the hand-object boundary.
-- Using geometric priors enables good quality rendering from fewer views than standard NeRF would require.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Addresses the specific challenge of rendering the hand-object contact interface, which is critical for realistic HOI visualization.
-- Leverages geometric priors (MANO + object mesh) to improve rendering quality and reduce view requirements.
-- Contact-aware design principle could be applied to other neural rendering frameworks beyond NeRF.
+For each frame, a foreground hand-object mask filters background pixels, and an off-the-shelf estimator (Hasson et al., CVPR 2020) provides coarse initial hand and object poses and meshes. The hand-object neural radiance field defines a canonical volume Fc taking a 3D point, viewing direction, and a per-frame latent appearance code (following NeRFies) to color and density via an MLP. A deformation field T maps observation-space points to this canonical space by motion type: hand points receive a skeletal component Tskel computed with linear blend skinning over K bones driven by the refined MANO pose (blend weights in canonical space are learned by a CNN, following HumanNeRF) plus a non-rigid component TNR, an MLP that predicts a free-form offset conditioned on joint rotation to model contact-induced deformation such as fingertip pressure; object points receive a rigid inverse-pose transform TR = [Robj | tobj]^-1 x. Because hand and object follow different motion fields, points must be separated: the mesh-guided ray sampling strategy assigns points inside the object mesh (via an inside/outside shape function on the object surface) to the object set and the remaining foreground points, constrained by the learned blend weights, to the hand set, avoiding the ambiguity and intersection that arise with 3D bounding box or 2D mask separation. The contact optimization field refines the initial poses. A rigid object pose correction module (an MLP predicting a quaternion rotation residual and translation residual, in the spirit of DeepIM) iteratively refines the object pose by minimizing the photometric error between rendered and observed images, since prior contact optimizers (ContactOpt, TOCH) assume a ground-truth or accurate object pose that is rarely available. ContactNet then estimates a contact field over 3D query points sampled from both meshes: PointNet++ extracts 1024-dimensional features for hand and object, a cross-feature augment module with multi-head attention fuses the two into an interaction representation, and a 1D convolutional network regresses per-point contact values in [0,1]. ContactNet is pre-trained on ContactPose (contact labels from a thermal camera), and its predictions serve as pseudo-label targets. Hand pose is refined in a differentiable optimization (DiffOpt) module, following ContactOpt, by iteratively minimizing the discrepancy between the current and target contact fields; a joint rotation correction module then learns a residual on hand joint rotations from visual constraints, yielding the final pose over joint locations, local rotations, and global hand rotation and translation. Training combines a rendering loss (VGG-based LPIPS plus MSE with weight 0.2, patch-based ray sampling), a contact loss weighted 0.5, and a collision loss (penalizing object vertices with negative hand SDF) weighted 0.5, all optimized jointly so contact optimization and neural rendering regularize each other.
 
-### Limitations
-- Requires known hand and object meshes as priors; cannot reconstruct geometry from scratch.
-- Assumes static scene (hand and object don't move during capture); not applicable to dynamic interactions.
-- NeRF-based rendering is slow for inference; not real-time.
-- Contact region detection depends on the accuracy of the provided geometric priors.
+## Contributions
 
-## 6. Takeaway
-NCRF identified and addressed the key challenge of rendering the hand-object contact interface in neural radiance fields, where standard methods fail due to complex occlusions and sharp depth discontinuities. By incorporating geometric priors and contact-aware modeling, it demonstrated significantly improved rendering quality at the most critical region of interaction scenes. This work bridges neural rendering and hand-object reconstruction, a theme that has grown with the rise of 3D Gaussian Splatting for HOI.
+- The first free-viewpoint rendering system based on NeRF for hand-object interactions, modeling complex grasping motion and mutual occlusion to achieve high-quality hand-object reconstruction and photorealistic novel view synthesis from sparse videos.
+- A hand-object neural radiance field with a decomposed motion field (skeletal and non-rigid motion for the hand, rigid motion for the object) and a mesh-guided ray sampling strategy that cleanly separates hand and object sample points and mitigates blurriness from hand-object intersection.
+- An attention-based contact optimization field that estimates the hand-object contact field and refines both hand pose and, unlike prior contact optimizers (ContactOpt, TOCH), the 6D object pose; the refined poses and the radiance field are learned jointly, each improving the other.
+- State-of-the-art results on HO3D and DexYCB in both rendering quality and hand-object pose estimation accuracy, including a functional monocular-video setting.
+
+## Experimental Setup
+
+Evaluations use HO3D v3 (five cameras, camera poses provided) and DexYCB (eight cameras), both capturing dynamic hand-object interactions with annotations. For rendering, multi-view videos with complex interaction and sufficient appearance are selected; following the ZJU-MoCap protocol, three views are used for training and the remaining views for testing. Rendering metrics are PSNR, SSIM, and LPIPS* (LPIPS times 10^3). For pose and contact, metrics are MPJPE for the hand, Intersection Volume (IV, in cm^3) following ContactOpt, and ADD-0.1D (percentage of object vertices within 10 percent of object diameter) for the object. Rendering baselines use HumanNeRF adapted to the task: its human modeling is retrained on MANO for hands, combined with NCRF's object branch, and the two NeRF coordinate systems are registered. Pose baselines are ContactOpt, S2Contact, and TOCH, all run with officially released models and code retrained under the same experimental setting, with every method (including NCRF) initialized from the same off-the-shelf estimator of Hasson et al. Ablations on HO3D cover the cross-feature augment, rigid pose correction, and joint rotation correction modules of the contact field; the mesh-guided sampling and non-rigid motion of the radiance field; the effect of joint learning; and the number of training views (three, two, or one).
+
+## Results
+
+- Rendering on HO3D: PSNR 29.74, SSIM 0.9758, LPIPS* 32.47 versus HumanNeRF's 26.06, 0.9665, and 40.23. On DexYCB: PSNR 32.16, SSIM 0.9813, LPIPS* 20.37 versus 27.32, 0.9719, and 27.43.
+- Hand pose on HO3D: MPJPE 8.9 mm with IV 3.7 cm^3, competitive with S2Contact (8.7 mm, 3.5 cm^3) and better than TOCH (9.3 mm, 4.7 cm^3), ContactOpt (9.5 mm, 8.1 cm^3), and the initial estimator of Hasson et al. (11.4 mm, 9.3 cm^3).
+- Object pose on HO3D: ADD-0.1D 89.8 percent, improving 15.3 percent over the initial pose (74.5) and 8.4 percent over S2Contact (81.4); ContactOpt and TOCH do not report this metric because they assume the object pose.
+- On DexYCB: MPJPE 10.2 mm versus S2Contact's 11.8 mm, ADD-0.1D 83.2 percent versus 70.5 percent, and IV 9.3 cm^3 versus 10.5 cm^3.
+- Contact-field ablations (HO3D): removing cross-feature augment raises MPJPE to 9.4 mm and IV to 5.2 cm^3; removing rigid pose correction raises MPJPE to 10.9 mm and drops ADD-0.1D to 74.5 percent; removing joint rotation correction gives 9.0 mm and 3.9 cm^3; training without neural rendering gives 9.3 mm, 74.5 percent, and 4.9 cm^3, so the two components benefit each other (rendering without contact optimization drops rendering PSNR to 25.71 and LPIPS* worsens to 46.34).
+- Radiance-field ablations (HO3D): replacing mesh-guided sampling with 3D bounding box sampling lowers PSNR to 28.10 and LPIPS* to 35.33; removing the non-rigid motion field gives 28.81 and 34.62. Fewer training views degrade gracefully: two views yield PSNR 29.57 and LPIPS* 33.01, and a single monocular view still reaches 27.93 and 35.85, versus 29.74 and 32.47 for the full three-view model.
+
+## Limitations
+
+The paper explicitly states three limitations. First, in the monocular video setting the method requires the hand and object to be largely covered (visible) by the camera. Second, poses are estimated per frame, so temporal consistency is not exploited and is left as future work. Third, lighting conditions are not modeled, so environmental illumination and novel lighting synthesis remain unaddressed. Additionally, as a per-scene optimized NeRF framework, the learned radiance field is tied to the captured sequence and cannot transfer to new scenes or subjects without re-optimization, and initialization still depends on an off-the-shelf hand-object pose estimator whose errors must be corrected by the contact field.

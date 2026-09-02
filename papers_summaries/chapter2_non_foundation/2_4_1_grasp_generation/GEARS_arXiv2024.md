@@ -1,39 +1,38 @@
 # GEARS: Local Geometry-Aware Hand-Object Interaction Synthesis
 
+**Authors:** Keyang Zhou, Bharat Lal Bhatnagar, Jan Eric Lenssen, Gerard Pons-Moll  
+**Date:** 2024-06-16  
+**Identifier:** [arXiv:2404.01758](https://arxiv.org/abs/2404.01758), [DOI: 10.1109/CVPR52733.2024.01950](https://doi.org/10.1109/CVPR52733.2024.01950)  
+**Zotero item:** `A7HTZ6RS` ([Zotero](zotero://select/library/items/A7HTZ6RS))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-Introduces a local geometry-aware framework that explicitly reasons about fine-grained surface geometry (normals, curvatures) at contact regions to synthesize hand grasps that adapt to local object shape variations, achieving state-of-the-art contact precision.
 
-## 1. Problem and Setting
-- Task: synthesize a 3D hand grasp on a given object mesh, with emphasis on precise finger-to-surface alignment even for objects with complex local geometry (ridges, concavities, thin parts).
-- Input: 3D object mesh/point cloud; Output: MANO hand mesh placed in contact with the object.
-- Key challenge: prior methods often treat object geometry globally and fail to capture local geometric cues (sharp edges, varying curvature) that dictate where and how fingers should be placed.
+GEARS (CVPR 2024) synthesizes dynamic hand pose sequences for hand-object interaction from hand and object trajectories plus the object mesh. Its central novelty is a joint-centered local geometry sensor: for each hand joint, object surface points within a 2.5 cm radius are transformed into the joint's canonical MANO template frame and encoded by a shared PointNet, producing joint-agnostic local features that a spatio-temporal transformer converts into joint displacements refining a coarse initial pose. Combined with a heuristic that turns static grasp datasets (ObMan) into synthetic motion sequences, GEARS beats occupancy/distance-sensor baselines on GRAB (7.24 mm MPJPE, 4.36 mm penetration depth, 2.24 cm3 intersection volume, 22.7% contact IoU versus GRIP's 7.71/4.80/2.51/19.9) and generalizes to the larger objects of InterCap with the least penetration (7.44 mm PD versus 7.92 for GRIP and 8.22 for ManipNet).
 
-## 2. Core Method
-- Multi-scale local geometry encoder: computes local geometric features (point coordinates, normals, curvature, SDF values) at multiple scales around each object surface point using a graph neural network or local PointNet-style encoder.
-- Contact heatmap prediction: the local geometry features feed into a transformer-based contact predictor that outputs per-point contact probability and per-contact-point hand-part association.
-- Grasp optimization: MANO parameters are optimized via an energy function that aligns predicted hand-part vertices to the corresponding object contact points, with additional terms for local normal alignment and curvature-aware penetration avoidance.
-- Key innovation: explicit local geometry conditioning — the model "sees" edges, corners, and curvature variations and learns that certain local features (e.g., concave regions for fingertips, flat regions for palm) are strongly predictive of contact.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: GRAB and ObMan datasets; possibly augmented with self-generated synthetic grasps on diverse object shapes.
-- Supervision: contact labels, hand-part labels, and local geometry descriptors computed from ground-truth hand-object pairs.
-- Domain knowledge: differential geometry of surfaces (normals, principal curvatures); MANO model.
-- Assumption: rigid object, static single-hand grasp, full 3D object geometry available.
+The paper addresses generating realistic finger articulation during object manipulation, needed for digital humans in AR/VR and grasp reasoning in robotics. Prior sensor-based methods — ManipNet with occupancy grids and GRIP/TOCH with distance-based sensors — extract hand-object interaction features, but generalize poorly across object categories, shapes, and sizes. The authors attribute this to two causes: limited expressiveness of the sensors (low-resolution occupancy grids detect only coarse geometry, and raising resolution explodes feature size; fixed sets of hand-to-object distances cannot describe normals or curvature), and the global-to-the-hand nature of these features, which obscures the correlation between individual finger movements. A further constraint is data scarcity: dynamic hand-object interaction sequences require expensive marker-based MoCap, while static grasps are easy to collect. The task is defined as: given hand trajectory (wrist translation and MANO global orientation), object trajectory, and object template mesh, produce per-frame MANO hand poses aligned with the object surface — unlike grasp refinement methods (ContactOpt, TOCH), no noisy input hand pose is assumed.
 
-## 4. Experiments and Findings
-- Datasets: GRAB, ObMan, and an in-the-wild test set with real object scans (e.g., from OakInk or DexYCB).
-- Metrics: contact IoU, chamfer distance between predicted and GT hand vertices, penetration depth, simulation success rate.
-- Main findings: GEARS consistently outperforms global-geometry methods, especially on objects with complex local structure (tools, non-convex shapes); ablation shows that both multi-scale encoding and curvature awareness independently improve results; generalization to unseen object categories is strong.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Local geometry awareness is a significant and intuitive improvement — fingers go where the geometry "invites" them.
-- Multi-scale encoding captures both fine details and broader surface context.
+GEARS runs in three learned stages plus fitting. (1) Joint Initialization Network: a cube-shaped virtual sensor (18 cm side) rigidly attached to the wrist crops the object mesh; 2,000 sampled points on the crop are encoded by PointNet, concatenated with the canonicalized wrist-relative hand trajectory (10 past and 10 future frames within a 1 s window), and decoded by a three-layer fully connected network into coarse per-frame joint coordinates. (2) Local geometry sensor: joint rotations are analytically recovered from the predicted joints via inverse kinematics, defining each joint's template-frame transformation; object surface points within radius r = 2.5 cm of each joint (up to 300 points with normals) are pulled back into that joint's canonical MANO template frame, and a shared three-layer PointNet encodes them into joint-local features — sharing makes the module joint-agnostic and data-efficient. (3) Joint Displacement Network: joint embeddings and local features feed a transformer with interleaved spatial self-attention (correlations among joints within a frame, learning how fingers compose a grasp) and temporal self-attention (per-joint trajectories across the sequence, enforcing smooth motion); a linear head outputs per-joint displacements in the template frame, mapped back to the global frame through the IK rotations. (4) Hand fitting recovers meshes by optimizing MANO shape and pose to the predicted joints with regularizers on parameter norms and on first and second temporal derivatives. To exploit static grasp data, the authors synthesize sequences from ObMan grasps: fit MANO to the static grasp, start from a perturbed mean pose offset along the negative palm normal by the average per-frame hand displacement measured on GRAB, interpolate translations linearly and rotations with SLERP, and discard synthesized sequences whose intersection volume exceeds a threshold.
 
-### Limitations
-- Computationally heavier than single-scale methods due to per-point local geometry computation.
-- Still requires iterative grasp optimization, limiting real-time capability.
-- Does not handle dynamic grasps or task-specific functional intent.
+## Contributions
 
-## 6. Takeaway
-GEARS demonstrates that local geometric detail matters critically for grasp synthesis: conditioning on per-point normals, curvatures, and multi-scale geometry produces noticeably better finger placement than global object encodings. This insight — that grasp models should be locally geometry-aware — has influenced subsequent work in contact prediction and dexterous manipulation.
+- A joint-centered point-based local geometry sensor that queries object surface geometry in the neighborhood of each hand joint within its canonical template frame, capturing normals and curvature that occupancy and distance sensors miss while keeping features joint-agnostic through a shared encoder.
+- A spatio-temporal transformer (Joint Displacement Network) over the joint-local features that models both inter-joint correlation within frames and per-joint temporal consistency, refining an initial pose estimate produced from wrist-local object context.
+- A simple data synthesis heuristic that converts abundant static grasping datasets into physically filtered training sequences, broadening the observed spectrum of grasp types despite scarce dynamic data.
+- Evidence that the design generalizes beyond the training distribution: trained only on small-to-medium GRAB household objects, GEARS transfers to larger InterCap objects better than ManipNet and GRIP in penetration metrics.
+
+## Experimental Setup
+
+Training uses GRAB (51 objects; 10 reserved for validation and testing following the official protocol; left hands flipped to double data; grasps additionally transferred to resized object variants) augmented with 200 synthetic 60-frame sequences generated from ObMan (ShapeNet objects with GraspIt! grasps). Evaluation covers GRAB and a subset of InterCap (multi-view RGB-D pseudo-ground-truth whole-body interactions) restricted to hand-involved objects. Baselines are adapted for fairness: TOCH is fed ground-truth hand trajectories with flat hands replacing noisy ones, ManipNet is re-implemented for MANO, and GRIP receives the same input hand trajectories. Metrics: MPJPE (3D joint error), penetration depth (maximum penetrating vertex-to-object distance), intersection volume (voxelized), and contact IoU between ground-truth and predicted binary object-surface contact maps (contact if a hand vertex lies within +/-2 mm of the object).
+
+## Results
+
+On GRAB, GEARS attains 7.24 mm MPJPE, 4.36 mm penetration depth, 2.24 cm3 intersection volume, and 22.7% contact IoU, outperforming GRIP (7.71 mm, 4.80 mm, 2.51 cm3, 19.9%), TOCH (8.18 mm, 5.37 mm, 2.72 cm3, 20.1%), and ManipNet (9.32 mm, 5.66 mm, 3.21 cm3, 18.3%); the paper notes GRIP's two-stage design explains its edge over ManipNet, and that TOCH's higher contact IoU despite worse MPJPE shows joint error alone does not capture grasp quality. On InterCap, where ground-truth hand poses are not accurate enough to report MPJPE and TOCH is excluded because its object-centric contact map is size-sensitive, GEARS again has the least penetration (7.44 mm depth, 5.21 cm3 volume versus GRIP 7.92/5.68 and ManipNet 8.22/6.15), with all methods degrading relative to GRAB partly due to noisy input trajectories. Ablations on GRAB show the sensor is critical — removing local features (radius 0) or removing the Joint Displacement Network raises MPJPE to 9.34 and 9.63 mm and drops contact IoU to 14.8% and 13.2% — while replacing spatio-temporal attention with fully connected layers costs 0.61 mm MPJPE and 4.3 points IoU, dropping the synthetic ObMan sequences costs 20.6% versus 22.7% IoU, the sensor radius is robust within a reasonable range (r = 0.02 gives 7.28 mm, r = 0.03 gives 7.24 mm), and, surprisingly, iterative re-application of the Joint Displacement Network at inference hurts (7.37 mm, 19.2%), which the authors attribute to the train-test distribution shift since the network only ever saw initialization outputs during training.
+
+## Limitations
+
+The paper reports that iterative refinement at inference degrades performance because the displacement network has only been trained on initialization outputs, and that on InterCap all methods penetrate more, in part because the provided input hand trajectories contain noise; ground-truth-based MPJPE cannot even be reported there due to insufficient annotation accuracy. Performance depends on MANO parameterization, known object template meshes, and per-frame optimization-based hand fitting; the synthetic data procedure produces linear interpolation dynamics rather than rich manipulation styles, and the generalization claims are limited to the tested GRAB-to-InterCap shift. No dedicated limitations section discusses compute cost or failure modes beyond these observations.

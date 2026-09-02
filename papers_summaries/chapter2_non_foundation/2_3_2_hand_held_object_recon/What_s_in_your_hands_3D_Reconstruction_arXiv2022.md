@@ -1,40 +1,38 @@
 # What's in your hands? 3D Reconstruction of Generic Objects in Hands
 
+**Authors:** Yufei Ye, Abhinav Gupta, Shubham Tulsiani  
+**Date:** 2022-04-14  
+**Identifier:** [arXiv:2204.07153](https://arxiv.org/abs/2204.07153)  
+**Zotero item:** `DTJNCQT4` ([Zotero](zotero://select/library/items/DTJNCQT4))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
+
 ## Summary
-The first method to reconstruct 3D shape of a generic (unknown) hand-held object alongside the hand pose from a single RGB image, using implicit neural representation with hand shape as 3D context.
 
-## 1. Problem and Setting
-- Reconstruct the 3D shape of a generic, unknown object held by a hand, as well as the hand pose, from a single RGB image.
-- Input: single RGB image; output: 3D hand mesh (MANO) + 3D object shape (occupancy/implicit field).
-- Template-free object reconstruction — the object category is unknown at inference time. The hand is modeled via MANO.
+This paper reconstructs the 3D shape of a generic (template-free) hand-held object from a single RGB image by exploiting the insight that hand articulation is highly predictive of the object shape it grasps. An off-the-shelf hand-pose estimator first predicts the articulated hand; an implicit signed-distance network then infers the object in a normalized hand-wrist coordinate frame, conditioning each query point on both pixel-aligned visual features and an articulation-aware positional encoding of the point's coordinates relative to every hand joint. Across the synthetic ObMan dataset and the real-world HO-3D and MOW benchmarks, this articulation-conditioned formulation outperforms the template-free baselines HO and Grasping Field (for example, F-score at 5 mm of 0.28 versus 0.11-0.12 on HO-3D), remains robust to inaccurate hand predictions, and the predicted object can in turn refine the hand pose at test time by encouraging physical contact without intersection.
 
-## 2. Core Method
-- Two-branch architecture: (1) hand branch predicts MANO parameters from the image; (2) object branch uses the predicted hand shape as a 3D coordinate-conditioned prior to infer object occupancy.
-- The key insight: hand pose and shape provide a strong 3D spatial anchor for object reconstruction. The object occupancy network takes a 3D query point and conditions on both image features and the predicted hand mesh (coordinate frame relative to hand joints).
-- The object is represented as an implicit occupancy field, enabling reconstruction of arbitrary topologies without category templates.
+## Background and Problem
 
-## 3. Knowledge, Supervision, and Assumptions
-- Training data: synthetic data from ObMan (grasping poses from GRAB + ShapeNet objects rendered in context), plus real images from HO3D and FreiHAND.
-- Supervision: 3D object voxel occupancy (from synthetic data), 2D/3D hand keypoints, MANO parameters.
-- Uses a pretrained hand pose estimator (FrankMocap-style) for initialization.
-- Uses MANO for hand representation.
-- Assumes the object is rigid and held by a single hand in a grasping configuration.
+Reconstructing manipulable objects in hand from a single image is ill-posed because of scarce annotated data and mutual hand-object occlusion. Most prior systems sidestep this by assuming known instance-specific 3D templates (typically around ten objects), reducing the task to 6D pose estimation under controlled conditions — a strong assumption that prevents reconstruction of unknown objects. The few template-free alternatives treat the problem differently: Hasson et al. (HO) deform a sphere with Atlas-Net in the camera frame, and Grasping Field (GF) predicts a joint implicit field for hand and object; both infer object shape independently of the predicted hand pose in a feed-forward manner and encode visual information only through global image features. The paper's key observation is that hand articulation is driven by local object geometry — curled fingers indicate thin handles, an open palm implies flat surfaces — so rather than treating hand occlusion as noise to marginalize over, articulation should be an explicit conditioning signal for object inference, complementing the visual cues needed to complete occluded regions.
 
-## 4. Experiments and Findings
-- Datasets: HO3D (real, with ground-truth object poses), ObMan (synthetic), FreiHAND (real hand-only).
-- Metrics: Chamfer Distance, F-score for object reconstruction; MPJPE for hand.
-- First work to demonstrate plausible reconstruction of unseen objects from single images. The hand-as-context approach significantly outperforms image-only baselines.
+## Method
 
-## 5. Strengths and Limitations
-### Strengths
-- Pioneering template-free object reconstruction from a single image by leveraging hand context.
-- Implicit representation allows reconstructing objects of any shape category.
+The pipeline first estimates hand articulation (a 45-dimensional MANO pose parameter) and a global transformation with a weak-perspective camera using the off-the-shelf FrankMocap system, converting the weak-perspective camera to a full perspective one to handle large perspective effects. Object shape is represented by a signed distance function whose zero level set is mesh-extracted, predicted point-wise in a normalized frame around the hand wrist so that learned articulation-shape relations are invariant to global transforms. For a query point x in the wrist frame, three ingredients feed a DeepSDF-style 8-layer MLP decoder with a skip connection: (1) visual features from a ResNet encoder — a global feature (averaged conv5 activations) providing object-level context, plus local features bilinearly sampled from a five-level feature pyramid at the point's projection; (2) an articulation-aware positional encoding, computed by running forward kinematics to map the point into each of the 15 joint coordinate frames and concatenating the positionally encoded relative coordinates, chosen over directly concatenating pose parameters for robustness to prediction error; (3) the query point itself. Training minimizes L1 SDF error on samples (95% near object surfaces, 5% uniform) plus an eikonal regularizer, requiring ground-truth hand pose and object shape. At inference, an optional test-time refinement re-optimizes the articulation parameters with two interaction terms computed from the (frozen) predicted object SDF: a non-intersection penalty on hand surface points with negative SDF, and a contact term that pulls defined hand regions closer to the object surface; the SDF itself is re-evaluated once after pose optimization.
 
-### Limitations
-- Object reconstruction quality degrades under heavy occlusion.
-- Only models rigid objects; cannot handle deformable or articulated objects.
-- Requires a reasonably accurate hand pose estimate first.
-- Limited to single-hand grasps.
+## Contributions
 
-## 6. Takeaway
-This paper established the paradigm of using the hand as a spatial prior for object reconstruction from a single image, showing that the hand mesh provides a powerful coordinate frame for reasoning about object occupancy. It laid the groundwork for multi-view and video-based hand-held object reconstruction methods that followed.
+- A reformulation of template-free hand-held object reconstruction as conditional inference of object shape given hand articulation, with object prediction made in a normalized wrist frame rather than the camera frame.
+- An articulation-aware positional encoding — coordinates of each query point relative to all hand joints obtained through forward kinematics — shown empirically to generalize better than raw pose-parameter conditioning, especially with predicted (noisy) hands.
+- A combined pixel-aligned global-plus-local visual encoding for SDF prediction, and a test-time interaction refinement that uses the predicted object to improve the initial hand pose estimate and the physical plausibility of the interaction.
+
+## Experimental Setup
+
+Evaluation covers three datasets: ObMan (synthetic; 2,772 objects in 8 categories from 3D Warehouse with 21K GraspIt-generated grasps rendered over random backgrounds in Blender; standard object-disjoint splits), HO-3D (real; 103K annotated images of 10 subjects manipulating 10 YCB objects, with a custom split holding out one sequence per object for testing), and MOW (442 in-the-wild images spanning 121 object templates with approximate ground truth from a single-frame optimization method; 350 train / 92 test). Hand poses come from Hasson et al.'s estimator on ObMan and FrankMocap on HO-3D and MOW; since real-world 3D-supervised HOI data is scarce, the method and baselines are pre-trained on ObMan and fine-tuned on HO-3D and MOW. Metrics are F-score at 5 mm and 10 mm thresholds, Chamfer distance (mm), and hand-object intersection volume (cm3), evaluated in the image frame for fairness. Baselines are the template-free HO and GF; ablations cover articulation conditioning, the encoding choice, robustness to hand-pose noise (Gaussian and interpolated prediction error), and test-time refinement.
+
+## Results
+
+Against the baselines, the method achieves on ObMan F5 0.42 / F10 0.63 / CD 1.02 / Vol 1.74 versus HO 0.23 / 0.56 / 0.64 / 8.64 and GF 0.30 / 0.51 / 1.39 / 1.84; on HO-3D 0.28 / 0.50 / 1.53 / 4.77 versus HO 0.11 / 0.22 / 4.19 / 9.44 and GF 0.12 / 0.24 / 4.96 / 6.31; and on MOW 0.13 / 0.24 / 23.1 / 19.4 versus HO 0.03 / 0.06 / 49.8 / 25.6 and GF 0.06 / 0.13 / 40.1 / 8.82. HO attains lower Chamfer distance on ObMan because it explicitly trains with a CD loss plus an edge-length regularizer limiting outliers, but the proposed method dominates the F-scores, especially at the tighter 5 mm threshold, indicating better local detail. In zero-shot transfer, models trained only on ObMan (F5 0.14 / CD 4.36) or MOW (0.15 / 4.09) still outperform baselines trained on HO-3D, showing that shape diversity — even from just 350 MOW images — matters for generalization. Removing articulation conditioning degrades ObMan results to 0.37 / 0.56 / 1.89 / 3.93 (intersection volume doubles) and MOW CD from 23.1 to 29.0; replacing the articulation-aware encoding with raw pose-parameter concatenation collapses performance under predicted poses (F5 0.23 / CD 1.82, worse than no articulation at all) while remaining comparable under ground-truth poses, exposing overfitting to per-example-constant pose parameters. Robustness tests show the method beats both baselines even when hand-pose prediction error is doubled, and test-time refinement improves ObMan intersection volume from 1.74 to 1.28 cm3, simulation displacement from 3.32 to 3.00, and hand end-point error from 8.9 to 8.7 mm.
+
+## Limitations
+
+The authors note two main limitations: the formulation cannot be directly adapted to reconstructing dynamic grasps from video, where object consistency must be maintained under varying articulation, and training requires 3D ground-truth shape supervision, which they suggest could be relaxed with differentiable-rendering techniques. The method also inherits dependence on an off-the-shelf hand-pose estimator, and its quantitative evaluation relies on ICP-aligned Chamfer and F-score metrics on three datasets with approximate ground truth in the MOW case.
+

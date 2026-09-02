@@ -1,108 +1,37 @@
-# Grounding DINO: Marrying DINO with Grounded Pre-training for Open-Set Object Detection
+# Grounding DINO: Marrying DINO with Grounded Pre-Training for Open-Set Object Detection
 
-# Summary
+**Authors:** Shilong Liu, Zhaoyang Zeng, Tianhe Ren, Feng Li, Hao Zhang, Jie Yang, Qing Jiang, Chunyuan Li, Jianwei Yang, Hang Su, Jun Zhu, Lei Zhang  
+**Date:** 2023-03-09  
+**Identifier:** [arXiv:2303.05499](https://arxiv.org/abs/2303.05499); [DOI 10.1007/978-3-031-72970-6_3](https://doi.org/10.1007/978-3-031-72970-6_3) (ECCV 2024, LNCS 15105, pp. 38-55)  
+**Zotero item:** `DVICZS5A` ([Zotero](zotero://select/library/items/DVICZS5A))  
+**Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
-Grounding DINO enables open-set object detection by tightly fusing vision and language modalities throughout a Transformer-based detector, using grounded pre-training on diverse detection and grounding datasets to achieve zero-shot transfer to novel object categories and referring expressions.
+## Summary
 
-## 1. Problem and Setting
+Grounding DINO is an open-set object detector that detects arbitrary objects specified by human language inputs—category names or referring expressions—by marrying the DETR-style detector DINO with large-scale grounded pre-training. Its central design principle is tight vision-language fusion in all three phases of a closed-set detector (feature enhancement, query initialization, and head), realized through a feature enhancer with bidirectional cross-attention, a language-guided query selection module, and a cross-modality decoder, plus a sub-sentence-level text prompt that masks attention between unrelated category names. Pre-trained on detection, grounding, and caption data without seeing the evaluation sets, it achieves 52.5 AP on COCO zero-shot transfer, sets a 26.1 mean AP record on the ODinW zero-shot benchmark, and reaches 89.19/81.09/84.15 top-1 accuracy on RefCOCO/RefCOCO+/RefCOCOg val after fine-tuning. Its checkpoints and code are released, and the detector has since been widely adopted as the localization backbone of open-vocabulary HOI reconstruction pipelines.
 
-**Task:** Open-set object detection—detecting arbitrary objects specified by human language inputs (category names or referring expressions) rather than being limited to a fixed set of pre-defined categories.
+## Background and Problem
 
-**Inputs:** 
-- Images
-- Text prompts (category names, phrases, or referring expressions with attributes)
+Open-set (also called open-world or open-vocabulary) object detection asks a detector to localize and label objects beyond its training categories, guided by language—either category names or free-form referring expressions (the Referring Expression Comprehension task, REC). The key to generalization is introducing language into a closed-set detector, since text provides the semantic space in which novel categories can be classified. Prior open-set detectors inject language at only one or two of the three phases that structure a closed-set detector—backbone/neck feature enhancement (phase A, e.g., GLIP), query initialization (phase B, e.g., OV-DETR), or head refinement (phase C, e.g., MDETR)—which the authors argue leads to suboptimal cross-modality alignment. Moreover, many works evaluate under a "partial label" regime (training on base categories of the test dataset), which overstates practical open-set ability, and the REC setting is typically overlooked. Grounding DINO targets fully zero-shot transfer on COCO, LVIS, and ODinW, plus referring detection on RefCOCO/+/g, using the Transformer detector DINO whose layer-by-layer structure makes deep language interaction feasible.
 
-**Outputs:**
-- Bounding boxes and confidence scores for objects matching the text descriptions
+## Method
 
-**Difficulty:**
-- Closed-set detectors cannot generalize to novel categories unseen during training
-- Requires effective cross-modal alignment between visual regions and language semantics
-- Zero-shot transfer demands robust concept generalization without task-specific training data
+Grounding DINO is a dual-encoder-single-decoder architecture taking an (Image, Text) pair and outputting object boxes paired with noun phrases extracted from the text. An image backbone (Swin-T or Swin-L) produces multi-scale features and a BERT-base text backbone produces word features. The feature enhancer (6 layers) performs tight fusion: deformable self-attention on image features, vanilla self-attention on text features, and GLIP-inspired image-to-text and text-to-image cross-attention. Language-guided query selection then initializes the decoder by ranking encoder image features against text features (the max over the image-text dot-product matrix) and taking the top N_q = 900 features as queries, using DINO's mixed query selection: positional parts are dynamic anchor boxes from encoder outputs and content parts are learnable. The cross-modality decoder (6 layers) extends the DINO decoder with an additional text cross-attention layer per layer (self-attention, image cross-attention with deformable attention, text cross-attention, FFN), injecting language into query refinement. A sub-sentence-level text representation addresses prompt construction for grounded training: unlike sentence-level encoding (one feature per sentence, losing fine-grained information) or word-level encoding (spurious attention among concatenated category names), it inserts attention masks that block interaction between unrelated category names while keeping per-word features. Training follows GLIP's grounded formulation—category names are concatenated into the input text—and uses Hungarian matching with classification (contrastive logits dot-producted against text tokens, trained with focal loss), box L1, and GIoU losses (matching costs 2.0/5.0/2.0; final loss weights 1.0/5.0/2.0), with auxiliary losses after each decoder layer and the encoder. For REC, the highest-scoring output box is returned for the text input.
 
-## 2. Core Method
+## Contributions
 
-**Pipeline:** Image → Backbone → Feature Enhancer → Language-Guided Query Selection → Cross-Modality Decoder → Detection Outputs
+1. A tight-fusion open-set detector design that unifies language fusion across all three detector phases (feature enhancer, language-guided query selection, cross-modality decoder) on top of DINO, rather than fusing modalities at a single stage.
+2. A sub-sentence-level text feature scheme with attention masks between unrelated category names, removing word-level cross-category interference while retaining per-word fine-grained understanding, improving grounded pre-training over sentence- and word-level prompts.
+3. State-of-the-art zero-shot transfer results—52.5 AP on COCO without any COCO training data, a 26.1 mean AP record on ODinW zero-shot, and strong REC accuracy after fine-tuning—released with checkpoints and code, which established the model as a general-purpose open-vocabulary detector foundation.
 
-**Key Innovation:** Tight modality fusion across ALL three phases of the detector pipeline (neck, query initialization, and head), unlike prior methods that fused at only one or two stages.
+## Experimental Setup
 
-**Core Modules:**
+Two variants are trained: Grounding DINO T (Swin-T backbone, 172M parameters, three image scales from 8x to 32x, 16 V100 GPUs with batch size 32) and Grounding DINO L (Swin-L, 341M parameters, four scales from 4x to 32x, 64 A100 GPUs with batch size 64); both use BERT-base as the text backbone, 900 queries, and a maximum of 256 text tokens. Pre-training data combinations include Objects365 (O365), GoldG grounding data, Cap4M caption data, OpenImages (OI), and for fine-tuned settings COCO and RefCOCO/+/g (RefC). Evaluation spans three settings: closed-set COCO detection, fully zero-shot transfer to COCO 2017val/test-dev, LVIS MiniVal (over 1,000 categories), and ODinW (more than 35 real-world datasets, with zero-shot, few-shot, and full-shot protocols), and referring detection on RefCOCO/+/g. Baselines include GLIP/GLIPv2, DINO, DyHead, OWL-ViT, DetCLIP/DetCLIPv2, MDETR, ViLD, RegionCLIP, OV-DETR, OmDet, and Florence. Ablations pre-train all variants on O365 with Swin-T and measure COCO zero-shot, COCO fine-tune, and LVIS zero-shot AP; an additional study varies RefC and COCO in the pre-training mix.
 
-1. **Feature Enhancer (Neck - Phase A):** 
-   - Stacks self-attention, text-to-image cross-attention, and image-to-text cross-attention
-   - Enhances visual features with language context before detection head
+## Results
 
-2. **Language-Guided Query Selection (Phase B):**
-   - Initializes detection queries using language-aware features
-   - Selects relevant queries based on text input to guide the decoder
+On COCO zero-shot transfer, Grounding DINO T trained on O365 reaches 46.7 AP versus 46.2 for an O365-pretrained DINO and 44.9 for GLIP-T (B); adding GoldG gives 48.1 and Cap4M 48.4 (caption data yields +1.8 AP for Grounding DINO versus +1.1 for GLIP). Grounding DINO L pre-trained on O365, OI, and GoldG sets a 52.5 AP record on COCO 2017val without COCO training data; with COCO fine-tuning it reaches 62.6 AP (63.0 on test-dev at 1.5x image size). On LVIS MiniVal zero-shot, Grounding DINO T with Cap4M reaches 27.4 AP versus GLIP-T's 26.0, and Grounding DINO L reaches 33.9—though DetCLIPv2 (trained on the larger CC15M) is higher at 40.4, and DETR-like models show characteristically low rare-category AP; after LVIS fine-tuning, Grounding DINO T (O365+GoldG only) surpasses DetCLIPv2-T by 1.5 AP (52.1 versus 50.7). On ODinW, Grounding DINO T (O365+GoldG+Cap4M) matches GLIPv2-T's 22.3 AP average but with a much better 11.9 versus 8.9 AP median, using fewer parameters (172M versus 232M); Grounding DINO L sets a new zero-shot record of 26.1 mean AP (18.4 median), exceeding the much larger Florence model (25.8/14.3). In few-shot and full-shot ODinW, Grounding DINO T reaches 46.4/51.1 and 70.7/76.2 AP (average/median), the latter surpassing even DINO with a Swin-L backbone (68.8/70.7). On RefCOCO/+/g, models without REC training data perform poorly (around 50% top-1 accuracy), but with RefC fine-tuning Grounding DINO T reaches 89.19/91.86/85.99 on RefCOCO val/testA/testB, 81.09/87.40/74.71 on RefCOCO+, and 84.15/84.94 on RefCOCOg val/test, with the Swin-L variant reaching 90.56/93.19/88.24 on RefCOCO. Ablations (O365, Swin-T) quantify each design choice on LVIS zero-shot: removing encoder fusion drops AP from 16.1 to 13.1, static (non-language-guided) query selection to 13.6 (-3.0), removing text cross-attention to 14.3 (-1.8), and word-level prompting to 15.6 (-0.5), while COCO zero-shot drops from 46.7 to 45.8-46.4 across variants. Data-mix analysis shows RefC helps COCO zero-shot (48.1 to 48.5) but hurts LVIS (25.6 to 21.9) and ODinW (20.0 to 17.7), and adding COCO to training boosts COCO to 56.1 at the cost of LVIS/ODinW transfer.
 
-3. **Cross-Modality Decoder (Head - Phase C):**
-   - Image and text cross-attention layers within decoder
-   - Continuously refines query representations using both modalities
+## Limitations
 
-**Essential Difference from Existing Methods:**
-- Most prior works (GLIP, OV-DETR, etc.) perform fusion at only one phase
-- Grounding DINO fuses at all three phases enabled by DINO's consistent Transformer structure
-- Uses sub-sentence level text features during grounded pre-training (unlike GLIP's sentence-level concatenation)
-
-## 3. Knowledge, Supervision, and Assumptions
-
-**Training Data:**
-- Object detection datasets (COCO, etc.)
-- Grounding data (image-phrase-region pairs)
-- Caption data (image-text descriptions)
-
-**Supervision Signals:**
-- Bounding box annotations
-- Phrase grounding supervision
-- Contrastive loss between region outputs and language features
-
-**Pretrained Models Used:**
-- Built upon DINO (DETR-based Transformer detector)
-- Does NOT rely on CLIP pretraining (unlike ViLD, RegionCLIP, OWL-ViT)
-- Uses grounded pre-training approach similar to GLIP but with improvements
-
-**Learned vs Provided:**
-- Model learns cross-modal alignment through large-scale grounded pre-training
-- Text prompts are provided at inference time to specify detection targets
-- No fine-tuning required for novel categories (zero-shot capability)
-
-## 4. Experiments and Findings
-
-**Datasets and Scenarios:**
-- COCO (zero-shot minival, standard detection)
-- LVIS (zero-shot transfer)
-- ODinW (zero-shot benchmark across multiple datasets)
-- RefCOCO/+/g (referring expression comprehension)
-
-**Key Metrics:**
-- AP (Average Precision) for detection
-- Mean AP across datasets for ODinW
-- REC-specific metrics for referring detection
-
-**Important Quantitative Results:**
-- **52.5 AP** on COCO zero-shot detection (minival) without any COCO training data
-- **26.1 mean AP** on ODinW zero-shot benchmark (new state-of-the-art at time of publication)
-- Strong performance on RefCOCO/+/g benchmarks for zero-shot referring detection
-- Outperforms competitors by large margins across all three settings (closed-set, open-set, referring detection)
-
-## 5. Strengths and Limitations
-
-### Strengths
-- True zero-shot generalization to arbitrary object categories without fine-tuning
-- Unified framework handles three detection scenarios: closed-set, open-set, and referring detection
-- Tight multi-phase fusion enables better cross-modal alignment
-- Sub-sentence text features improve grounded training efficiency
-- Practical applicability for downstream tasks like image editing (demonstrated with Stable Diffusion)
-
-### Limitations
-- Performance still dependent on quality and specificity of text prompts
-- May struggle with very fine-grained object distinctions not well-represented in pre-training data
-- Computational cost of Transformer-based architecture with cross-modal attention
-- Zero-shot performance, while strong, still lags behind fully supervised methods on same categories
-
-## 6. Takeaway
-
-**Most Worth Remembering:** Grounding DINO demonstrates that tight cross-modal fusion throughout ALL phases of a Transformer-based detector—combined with grounded pre-training on diverse datasets—enables powerful zero-shot object detection that can generalize to arbitrary categories and referring expressions without task-specific fine-tuning, achieving 52.5 AP on COCO zero-shot and setting new state-of-the-art on ODinW benchmark.
-
-**Key Technical Insight:** The consistent Transformer structure of DINO enables language interaction at multiple pipeline stages (neck, query selection, decoder), which is more effective for open-set detection than single-point fusion approaches used in prior work.
+The authors explicitly state that Grounding DINO cannot perform segmentation tasks, unlike GLIPv2; that its training data volume is smaller than the largest GLIP model, which may cap final performance; and that the model produces false positives in some cases, meaning hallucination reduction may require additional techniques or data. The LVIS analysis further reveals an architectural weakness of DETR-like detectors on rare categories, which the paper notes no existing DETR-like model addresses without extra training data. The social-impact statement adds that open-set detection capability could be exploited for unlawful purposes and that output correctness cannot be guaranteed.
