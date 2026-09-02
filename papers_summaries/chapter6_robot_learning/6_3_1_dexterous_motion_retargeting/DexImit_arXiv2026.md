@@ -2,7 +2,7 @@
 
 **Authors:** Juncheng Mu, Sizhe Yang, Yiming Bao, Hojin Bae, Tianming Wei, Linning Xu, Boyi Li, Huazhe Xu, Jiangmiao Pang  
 **Date:** 2026-02-10  
-**Identifier:** [arXiv:2602.10105](https://arxiv.org/abs/2602.10105); DOI `10.48550/arXiv.2602.10105`  
+**Identifier:** [arXiv:2602.10105](https://arxiv.org/abs/2602.10105)  
 **Zotero item:** `VYKZ9HIF` ([Zotero](zotero://select/library/items/VYKZ9HIF))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

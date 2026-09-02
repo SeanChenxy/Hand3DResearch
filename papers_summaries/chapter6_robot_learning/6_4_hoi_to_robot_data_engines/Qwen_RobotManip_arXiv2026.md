@@ -2,7 +2,7 @@
 
 **Authors:** Haoqi Yuan, Zhixuan Liang, Anzhe Chen, Ye Wang, Haoyang Li, Pei Lin, Yiyang Huang, Zixing Lei, Tong Zhang, Jiazhao Zhang, Jie Zhang, Jingyang Fan, Gengze Zhou, Qihang Peng, Chenxu Lv, Xiaoyue Chen, An Yang, Fei Huang, Junyang Lin, Dayiheng Liu, Jingren Zhou, Chenfei Wu, Xiong-Hui Chen  
 **Date:** 2026-06-16  
-**Identifier:** [arXiv:2606.17846](https://arxiv.org/abs/2606.17846); DOI `10.48550/arXiv.2606.17846`  
+**Identifier:** [arXiv:2606.17846](https://arxiv.org/abs/2606.17846)  
 **Zotero item:** `B4CVZPQE` ([Zotero](zotero://select/library/items/B4CVZPQE))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

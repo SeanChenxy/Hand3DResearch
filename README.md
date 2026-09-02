@@ -27,13 +27,12 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
   - [3.1 Prior Sources](#31-prior-sources)
   - [3.2 Visual Grounding Priors](#32-visual-grounding-priors)
   - [3.3 Language Reasoning Priors](#33-language-reasoning-priors)
-- [4. Visual and Motion Generative Priors for HOI (Chapter 5)](#4-visual-and-motion-generative-priors-for-hoi-chapter-5)
+- [4. Visual Generative Priors for HOI (Chapter 5)](#4-visual-and-motion-generative-priors-for-hoi-chapter-5)
   - [4.1 Prior Sources](#41-prior-sources)
   - [4.2 Image Generative Priors](#42-image-generative-priors)
   - [4.3 Video Generative Priors](#43-video-generative-priors)
     - [4.3.1 From HOI Video Generation to HOI World Models](#431-from-hoi-video-generation-to-hoi-world-models)
-  - [4.4 Motion Generative Priors](#44-motion-generative-priors)
-  - [4.5 Visual Representation Priors](#45-visual-representation-priors)
+  - [4.4 Visual Representation Priors](#44-visual-representation-priors)
 - [5. HOI for Robot Learning (Chapter 6)](#5-hoi-for-robot-learning-chapter-6)
   - [5.1 Generalist Policy Learning: Video-Based Pretraining](#51-generalist-policy-learning-video-based-pretraining)
   - [5.2 Generalist Policy Learning: Structured HOI Supervision](#52-generalist-policy-learning-structured-hoi-supervision)
@@ -85,7 +84,7 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
   [![Paper](https://img.shields.io/badge/Paper-DOI-4B5D67.svg)](https://ieeexplore.ieee.org/document/10550790/) [![DOI](https://img.shields.io/badge/DOI-10.1109/3DV62453.202-4B5D67.svg)](https://doi.org/10.1109/3DV62453.2024.00091) [📝 Paper Summary](papers_summaries/chapter2_non_foundation/2_3_1_hand_object_recon/NCRF_arXiv2024.md)
 - **DeepSimHO** — *DeepSimHO: Stable Pose Estimation for Hand-Object Interaction via Physics Simulation*
   [![arXiv](https://img.shields.io/badge/arXiv-2310.07206-b31b1b.svg)](http://arxiv.org/abs/2310.07206) [![Paper](https://img.shields.io/badge/Paper-NeurIPS-4B5D67.svg)](https://proceedings.neurips.cc/paper_files/paper/2023/hash/fbdaea4878318e214c0577dae4b8bc43-Abstract-Conference.html) [📝 Paper Summary](papers_summaries/chapter2_non_foundation/2_3_1_hand_object_recon/DeepSimHO_arXiv2023.md)
-- **S$$^2$$Contact** — *S$$^2$$Contact: Graph-Based Network for 3D Hand-Object Contact Estimation with Semi-supervised Learning*
+- **S²Contact** — *S²Contact: Graph-Based Network for 3D Hand-Object Contact Estimation with Semi-supervised Learning*
   [![Paper](https://img.shields.io/badge/Paper-DOI-4B5D67.svg)](https://link.springer.com/10.1007/978-3-031-19769-7_33) [![DOI](https://img.shields.io/badge/DOI-10.1007/978-3-031-19-4B5D67.svg)](https://doi.org/10.1007/978-3-031-19769-7_33) [📝 Paper Summary](papers_summaries/chapter2_non_foundation/2_3_1_hand_object_recon/S_2_Contact_arXiv2022.md)
 - **CPF** — *CPF: Learning a Contact Potential Field to Model the Hand-Object Interaction*
   [![Paper](https://img.shields.io/badge/Paper-DOI-4B5D67.svg)](https://ieeexplore.ieee.org/document/9710247/) [![DOI](https://img.shields.io/badge/DOI-10.1109/ICCV48922.20-4B5D67.svg)](https://doi.org/10.1109/ICCV48922.2021.01091) [📝 Paper Summary](papers_summaries/chapter2_non_foundation/2_3_1_hand_object_recon/CPF_arXiv2021.md)
@@ -336,7 +335,7 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 - **CroCo** — *CroCo: Self-Supervised Pre-training for 3D Vision Tasks by Cross-View Completion*
   [![arXiv](https://img.shields.io/badge/arXiv-2210.10716-b31b1b.svg)](https://arxiv.org/abs/2210.10716) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_4_spatial_geometry/croco_self_supervised_pre_training_for_3d_vision_tasks_by_cross_view_completion_arXiv2023.md)
 - **CroCo v2** — *CroCo v2: Improved Cross-view Completion Pre-training for Stereo Matching and Optical Flow*
-  [![arXiv](https://img.shields.io/badge/arXiv-2402.05761-b31b1b.svg)](https://arxiv.org/abs/2402.05761) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_4_spatial_geometry/croco_v2_improved_cross_view_completion_pre_training_for_stereo_matching_and_optical_flow_arXiv2023.md)
+  [![arXiv](https://img.shields.io/badge/arXiv-2211.10408-b31b1b.svg)](https://arxiv.org/abs/2211.10408) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_4_spatial_geometry/croco_v2_improved_cross_view_completion_pre_training_for_stereo_matching_and_optical_flow_arXiv2023.md)
 
 ---
 
@@ -384,7 +383,7 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 - **Florence-2** — *Florence-2: Advancing a Unified Representation for a Variety of Vision Tasks*
   [![arXiv](https://img.shields.io/badge/arXiv-2312.06148-b31b1b.svg)](https://arxiv.org/abs/2312.06148) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_2_visual_grounding/florence_2_advancing_a_unified_representation_for_a_variety_of_vision_tasks_arXiv2024.md)
 - **Qwen-VL** — *Qwen-VL: A Versatile Vision-Language Model for Understanding, Localization, Text Reading, and Beyond*
-  [![arXiv](https://img.shields.io/badge/arXiv-2308.12948-b31b1b.svg)](https://arxiv.org/abs/2308.12948) [![GitHub](https://img.shields.io/badge/GitHub-code-181717.svg?logo=github)](https://github.com/QwenLM/Qwen-VL) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_2_visual_grounding/qwen_vl_a_versatile_vision_language_model_for_understanding_localization_text_re_arXiv2023.md)
+  [![arXiv](https://img.shields.io/badge/arXiv-2308.12966-b31b1b.svg)](https://arxiv.org/abs/2308.12966) [![GitHub](https://img.shields.io/badge/GitHub-code-181717.svg?logo=github)](https://github.com/QwenLM/Qwen-VL) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_2_visual_grounding/qwen_vl_a_versatile_vision_language_model_for_understanding_localization_text_re_arXiv2023.md)
 - **BLIP-2** — *BLIP-2: Bootstrapping Language-Image Pre-training with Frozen Image Encoders and Large Language Models*
   [![arXiv](https://img.shields.io/badge/arXiv-2301.12597-b31b1b.svg)](https://arxiv.org/abs/2301.12597) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_2_visual_grounding/blip_2_bootstrapping_language_image_pre_training_with_frozen_image_encoders_and__arXiv2023.md)
 - **SAM 2** — *SAM 2: Segment Anything in Images and Videos*
@@ -425,11 +424,25 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
   [![arXiv](https://img.shields.io/badge/arXiv-2503.19457-b31b1b.svg)](https://arxiv.org/abs/2503.19457) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_3_language_reasoning/GDexGrasp.md)
 - **HOIGPT** — *HOIGPT: Learning Long-Sequence Hand-Object Interaction with Language Models*
   [![arXiv](https://img.shields.io/badge/arXiv-2503.19157-b31b1b.svg)](https://arxiv.org/abs/2503.19157) [![GitHub](https://img.shields.io/badge/GitHub-code-181717.svg?logo=github)](https://github.com/Mingzhen-Huang/HOIGPT) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_3_language_reasoning/HOIGPT.md)
+- **MEgoHand** — *MEgoHand: Multimodal Egocentric Hand-Object Interaction Motion Generation*
+  [![arXiv](https://img.shields.io/badge/arXiv-2505.16602-b31b1b.svg)](https://arxiv.org/abs/2505.16602) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_3_language_reasoning/MEgoHand.md)
+
+**Prior Source Papers:**
+- **GPT-4** — *GPT-4 Technical Report*
+  [![arXiv](https://img.shields.io/badge/arXiv-2303.08774-b31b1b.svg)](https://arxiv.org/abs/2303.08774) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_3_language_reasoning/gpt_4_technical_report_arXiv2023.md)
+- **LLaMA** — *LLaMA: Open and Efficient Foundation Language Models*
+  [![arXiv](https://img.shields.io/badge/arXiv-2302.13971-b31b1b.svg)](https://arxiv.org/abs/2302.13971) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_3_language_reasoning/llama_open_and_efficient_foundation_language_models_arXiv2023.md)
+- **Qwen** — *Qwen Technical Report*
+  [![arXiv](https://img.shields.io/badge/arXiv-2309.16609-b31b1b.svg)](https://arxiv.org/abs/2309.16609) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_3_language_reasoning/qwen_technical_report_arXiv2023.md)
+- **CLIP** — *Learning Transferable Visual Models From Natural Language Supervision*
+  [![arXiv](https://img.shields.io/badge/arXiv-2103.00020-b31b1b.svg)](https://arxiv.org/abs/2103.00020) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_3_language_reasoning/learning_transferable_visual_models_from_natural_language_supervision_arXiv2021.md)
+- **Qwen-VL** — *Qwen-VL: A Versatile Vision-Language Model for Understanding, Localization, Text Reading, and Beyond*
+  [![arXiv](https://img.shields.io/badge/arXiv-2308.12966-b31b1b.svg)](https://arxiv.org/abs/2308.12966) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_3_language_reasoning/qwen_vl_a_versatile_vision_language_model_for_understanding_localization_text_re_arXiv2023.md)
 
 ---
 
 <a id="4-visual-and-motion-generative-priors-for-hoi-chapter-5"></a>
-## 4. Visual and Motion Generative Priors for HOI (Chapter 5)
+## 4. Visual Generative Priors for HOI (Chapter 5)
 
 > Foundation generative models provide image, video, and motion distribution priors to mitigate visual realism, temporal consistency, and motion diversity challenges.
 
@@ -538,32 +551,8 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 - **HandsOnWorld** — *HandsOnWorld: Unconstrained Egocentric Video Generation with Camera-Disentangled Hand Control*
   [![arXiv](https://img.shields.io/badge/arXiv-2607.02075-b31b1b.svg)](https://arxiv.org/abs/2607.02075) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/HandsOnWorld_arXiv2026.md)
 
-<a id="44-motion-generative-priors"></a>
-### 4.4 Motion Generative Priors
-
-> Motion diffusion models (MDM, MotionGPT) and large-scale egocentric video provide explicit hand-object trajectory and motion sequence distribution priors.
-
-- **EggHand** — *EggHand: A Multimodal Foundation Model for Egocentric Hand Pose Forecasting*
-  [![arXiv](https://img.shields.io/badge/arXiv-2605.07642-b31b1b.svg)](http://arxiv.org/abs/2605.07642) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_4_motion_generative/EggHand.md)
-- **Dynamic Full-body Motion Agent** — *Dynamic Full-body Motion Agent with Object Interaction via Blending Pre-trained Modular Controllers*
-  [![arXiv](https://img.shields.io/badge/arXiv-2605.11369-b31b1b.svg)](https://arxiv.org/abs/2605.11369) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_4_motion_generative/DynamicFullBodyHOI.md)
-- **MEgoHand** — *MEgoHand: Multimodal Egocentric Hand-Object Interaction Motion Generation*
-  [![arXiv](https://img.shields.io/badge/arXiv-2505.16602-b31b1b.svg)](http://arxiv.org/abs/2505.16602) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_4_motion_generative/MEgoHand.md)
-- **DAViD** — *DAViD: Modeling Dynamic Affordance of 3D Objects Using Pre-trained Video Diffusion Models*
-  [![arXiv](https://img.shields.io/badge/arXiv-2501.08333-b31b1b.svg)](https://arxiv.org/abs/2501.08333) [![GitHub](https://img.shields.io/badge/GitHub-code-181717.svg?logo=github)](https://github.com/snuvclab/david) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_4_motion_generative/DAViD.md)
-
-**Prior Source Papers:**
-- **MotionLCM** — *MotionLCM: Real-Time Controllable Motion Generation via Latent Consistency Model*
-  [![DOI](https://img.shields.io/badge/DOI-10.1007%2F978--3--4B5D67.svg)](https://doi.org/10.1007/978-3-031-72640-8_22) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_4_motion_generative/motionlcm_real_time_controllable_motion_generation_via_latent_consistency_model_arXiv2025.md)
-- **MotionGPT** — *MotionGPT: Human Motion as a Foreign Language*
-  [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_4_motion_generative/motiongpt_human_motion_as_a_foreign_language_arXivunknown.md)
-- **Human Motion Diffusion as a Generative Prior** — *Human Motion Diffusion as a Generative Prior*
-  [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_4_motion_generative/human_motion_diffusion_as_a_generative_prior_arXivunknown.md)
-- **MDM** — *Human Motion Diffusion Model*
-  [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_4_motion_generative/human_motion_diffusion_model_arXivunknown.md)
-
-<a id="45-visual-representation-priors"></a>
-### 4.5 Visual Representation Priors
+<a id="44-visual-representation-priors"></a>
+### 4.4 Visual Representation Priors
 
 > Pre-trained visual representations used to improve HOI reconstruction, grasping, or interaction understanding. Papers are listed here when representation transfer is central to their HOI use.
 
@@ -709,7 +698,7 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 - **TraceGen** — *TraceGen: World Modeling in 3D Trace Space Enables Learning from Cross-Embodiment Videos*
   [![arXiv](https://img.shields.io/badge/arXiv-2511.21690-b31b1b.svg)](https://arxiv.org/abs/2511.21690) [📝 Paper Summary](papers_summaries/chapter6_robot_learning/6_4_hoi_to_robot_data_engines/TraceGen_arXiv2025.md)
 - **RoboWheel** — *RoboWheel: A Data Engine from Real-World Human Demonstrations for Cross-Embodiment Robotic Learning*
-  [![arXiv](https://img.shields.io/badge/arXiv-2512.02729-b31b1b.svg)](https://arxiv.org/abs/2512.02729) [📝 Paper Summary](papers_summaries/chapter6_robot_learning/6_4_hoi_to_robot_data_engines/../6_3_1_dexterous_motion_retargeting/RoboWheel_arXiv2025.md)
+  [![arXiv](https://img.shields.io/badge/arXiv-2512.02729-b31b1b.svg)](https://arxiv.org/abs/2512.02729) [📝 Paper Summary](papers_summaries/chapter6_robot_learning/6_3_1_dexterous_motion_retargeting/RoboWheel_arXiv2025.md)
 - **H2R-Grounder** — *H2R-Grounder: A Paired-Data-Free Paradigm for Translating Human Interaction Videos into Physically Grounded Robot Videos*
   [![arXiv](https://img.shields.io/badge/arXiv-2512.09406-b31b1b.svg)](https://arxiv.org/abs/2512.09406) [📝 Paper Summary](papers_summaries/chapter6_robot_learning/6_4_hoi_to_robot_data_engines/H2R_Grounder_arXiv2025.md)
 - **EgoEngine** — *EgoEngine: From Egocentric Human Videos to High-Fidelity Dexterous Robot Demonstrations*

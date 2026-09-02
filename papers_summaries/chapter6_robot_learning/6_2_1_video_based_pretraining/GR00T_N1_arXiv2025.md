@@ -2,7 +2,7 @@
 
 **Authors:** NVIDIA GR00T N1 team (Johan Bjorck, Fernando Castañeda, Nikita Cherniadev, Xingye Da, Runyu Ding, Linxi "Jim" Fan, Yu Fang, Dieter Fox, et al.; authors listed alphabetically; project leads Linxi "Jim" Fan and Yuke Zhu)  
 **Date:** 2025-03-27  
-**Identifier:** [arXiv:2503.14734](https://arxiv.org/abs/2503.14734); DOI `10.48550/arXiv.2503.14734`  
+**Identifier:** [arXiv:2503.14734](https://arxiv.org/abs/2503.14734)  
 **Zotero item:** `YYA6XZNK` ([Zotero](zotero://select/library/items/YYA6XZNK))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

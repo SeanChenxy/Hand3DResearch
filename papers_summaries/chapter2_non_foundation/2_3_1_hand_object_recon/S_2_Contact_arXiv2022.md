@@ -1,4 +1,4 @@
-# S$$^2$$Contact: Graph-Based Network for 3D Hand-Object Contact Estimation with Semi-supervised Learning
+# S²Contact: Graph-Based Network for 3D Hand-Object Contact Estimation with Semi-supervised Learning
 
 **Authors:** Tze Ho Elden Tse, Zhongqun Zhang, Kwang In Kim, Ales Leonardis, Feng Zheng, Hyung Jin Chang  
 **Date:** 2022-08-01  

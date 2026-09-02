@@ -2,7 +2,7 @@
 
 **Authors:** Kailin Li, Puhao Li, Tengyu Liu, Yuyang Li, Siyuan Huang  
 **Date:** 2025-03-27 (CVPR 2025)  
-**Identifier:** [arXiv:2503.21860](https://arxiv.org/abs/2503.21860); DOI `10.48550/arXiv.2503.21860`  
+**Identifier:** [arXiv:2503.21860](https://arxiv.org/abs/2503.21860)  
 **Zotero item:** `P43M38E2` ([Zotero](zotero://select/library/items/P43M38E2))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

@@ -2,7 +2,7 @@
 
 **Authors:** Marion Lepert, Jiaying Fang, Jeannette Bohg  
 **Date:** 2025-08-13  
-**Identifier:** [arXiv:2508.09976](https://arxiv.org/abs/2508.09976); DOI `10.48550/arXiv.2508.09976`  
+**Identifier:** [arXiv:2508.09976](https://arxiv.org/abs/2508.09976)  
 **Zotero item:** `WU4Z3SKC` ([Zotero](zotero://select/library/items/WU4Z3SKC))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

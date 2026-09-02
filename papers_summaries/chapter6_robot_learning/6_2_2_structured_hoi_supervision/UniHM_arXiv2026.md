@@ -2,7 +2,7 @@
 
 **Authors:** Zhenhao Zhang, Jiaxin Liu, Ye Shi, Jingya Wang  
 **Date:** 2026-02-28 (ICLR 2026)  
-**Identifier:** [arXiv:2603.00732](https://arxiv.org/abs/2603.00732); DOI `10.48550/arXiv.2603.00732`  
+**Identifier:** [arXiv:2603.00732](https://arxiv.org/abs/2603.00732)  
 **Zotero item:** `TGSXM6CB` ([Zotero](zotero://select/library/items/TGSXM6CB))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

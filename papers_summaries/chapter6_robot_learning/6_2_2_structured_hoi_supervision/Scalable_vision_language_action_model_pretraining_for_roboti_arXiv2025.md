@@ -2,7 +2,7 @@
 
 **Authors:** Qixiu Li, Yu Deng, Yaobo Liang, Lin Luo, Lei Zhou, Chengtang Yao, Lingqi Zeng, Zhiyuan Feng, Huizhi Liang, Sicheng Xu, Yizhong Zhang, Xi Chen, Hao Chen, Lily Sun, Dong Chen, Jiaolong Yang, Baining Guo  
 **Date:** 2025-10-24  
-**Identifier:** [arXiv:2510.21571](https://arxiv.org/abs/2510.21571); DOI `10.48550/arXiv.2510.21571`  
+**Identifier:** [arXiv:2510.21571](https://arxiv.org/abs/2510.21571)  
 **Zotero item:** `9GNQRWJ2` ([Zotero](zotero://select/library/items/9GNQRWJ2))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

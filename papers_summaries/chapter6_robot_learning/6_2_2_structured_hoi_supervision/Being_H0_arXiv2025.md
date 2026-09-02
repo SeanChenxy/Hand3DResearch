@@ -2,7 +2,7 @@
 
 **Authors:** Hao Luo, Yicheng Feng, Wanpeng Zhang, Sipeng Zheng, Ye Wang, Haoqi Yuan, Jiazheng Liu, Chaoyi Xu, Qin Jin, Zongqing Lu  
 **Date:** 2025-07-21  
-**Identifier:** [arXiv:2507.15597](https://arxiv.org/abs/2507.15597); DOI `10.48550/arXiv.2507.15597`  
+**Identifier:** [arXiv:2507.15597](https://arxiv.org/abs/2507.15597)  
 **Zotero item:** `7PWYMKYP` ([Zotero](zotero://select/library/items/7PWYMKYP))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

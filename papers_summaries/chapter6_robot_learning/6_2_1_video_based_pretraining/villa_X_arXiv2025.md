@@ -2,7 +2,7 @@
 
 **Authors:** Xiaoyu Chen, Hangxing Wei, Pushi Zhang, Chuheng Zhang, Kaixin Wang, Yanjiang Guo, Rushuai Yang, Yucen Wang, Xinquan Xiao, Li Zhao, Jianyu Chen, Jiang Bian  
 **Date:** 2025-09-25  
-**Identifier:** [arXiv:2507.23682](https://arxiv.org/abs/2507.23682); DOI `10.48550/arXiv.2507.23682`  
+**Identifier:** [arXiv:2507.23682](https://arxiv.org/abs/2507.23682)  
 **Zotero item:** `CCFUCZJR` ([Zotero](zotero://select/library/items/CCFUCZJR))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

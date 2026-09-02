@@ -2,7 +2,7 @@
 
 **Authors:** Sandeep Routray, Hengkai Pan, Unnat Jain, Shikhar Bahl, Deepak Pathak  
 **Date:** 2025 (ICLR 2026)  
-**Identifier:** [arXiv:2511.07732](https://arxiv.org/abs/2511.07732); DOI `10.48550/ARXIV.2511.07732`  
+**Identifier:** [arXiv:2511.07732](https://arxiv.org/abs/2511.07732)  
 **Zotero item:** `BKE8GLDP` ([Zotero](zotero://select/library/items/BKE8GLDP))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

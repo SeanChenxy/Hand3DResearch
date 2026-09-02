@@ -2,7 +2,7 @@
 
 **Authors:** Xiaoyu Chen, Junliang Guo, Tianyu He, Chuheng Zhang, Pushi Zhang, Derek Cathera Yang, Li Zhao, Jiang Bian  
 **Date:** 2024-10-17  
-**Identifier:** [arXiv:2411.00785](https://arxiv.org/abs/2411.00785); DOI `10.48550/arXiv.2411.00785`  
+**Identifier:** [arXiv:2411.00785](https://arxiv.org/abs/2411.00785)  
 **Zotero item:** `XCLMJPCN` ([Zotero](zotero://select/library/items/XCLMJPCN))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

@@ -2,7 +2,7 @@
 
 **Authors:** Qingwen Bu, Yanting Yang, Jisong Cai, Shenyuan Gao, Guanghui Ren, Maoqing Yao, Ping Luo, Hongyang Li  
 **Date:** 2025-11-03 (RSS 2025)  
-**Identifier:** [arXiv:2505.06111](https://arxiv.org/abs/2505.06111); DOI `10.48550/arXiv.2505.06111`  
+**Identifier:** [arXiv:2505.06111](https://arxiv.org/abs/2505.06111)  
 **Zotero item:** `RVMFCT44` ([Zotero](zotero://select/library/items/RVMFCT44))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

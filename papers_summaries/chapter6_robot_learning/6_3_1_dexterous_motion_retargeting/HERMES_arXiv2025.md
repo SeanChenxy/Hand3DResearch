@@ -2,7 +2,7 @@
 
 **Authors:** Zhecheng Yuan, Tianming Wei, Langzhe Gu, Pu Hua, Tianhai Liang, Yuanpei Chen, Huazhe Xu  
 **Date:** 2025-08-31  
-**Identifier:** [arXiv:2508.20085](https://arxiv.org/abs/2508.20085); DOI `10.48550/arXiv.2508.20085`  
+**Identifier:** [arXiv:2508.20085](https://arxiv.org/abs/2508.20085)  
 **Zotero item:** `WYIU4ECE` ([Zotero](zotero://select/library/items/WYIU4ECE))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

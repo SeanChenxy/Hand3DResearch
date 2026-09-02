@@ -2,7 +2,7 @@
 
 **Authors:** Hongyi Chen, Yunchao Yao, Yufei Ye, Zhixuan Xu, Homanga Bharadhwaj, Jiashun Wang, Shubham Tulsiani, Zackory Erickson, Jeffrey Ichnowski  
 **Date:** 2025-05-13  
-**Identifier:** [arXiv:2505.05517](https://arxiv.org/abs/2505.05517); DOI `10.48550/arXiv.2505.05517`  
+**Identifier:** [arXiv:2505.05517](https://arxiv.org/abs/2505.05517)  
 **Zotero item:** `D86WB9EK` ([Zotero](zotero://select/library/items/D86WB9EK))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

@@ -2,7 +2,7 @@
 
 **Authors:** Seungjae Lee, Yoonkyo Jung, Inkook Chun, Yao-Chih Lee, Zikui Cai, Hongjia Huang, Aayush Talreja, Tan Dat Dao, Yongyuan Liang, Jia-Bin Huang, Furong Huang  
 **Date:** 2025-11-26  
-**Identifier:** [arXiv:2511.21690](https://arxiv.org/abs/2511.21690); DOI `10.48550/arXiv.2511.21690`  
+**Identifier:** [arXiv:2511.21690](https://arxiv.org/abs/2511.21690)  
 **Zotero item:** `T7AILLNL` ([Zotero](zotero://select/library/items/T7AILLNL))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

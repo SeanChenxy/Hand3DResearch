@@ -2,7 +2,7 @@
 
 **Authors:** Sicheng Xie, Haidong Cao, Zejia Weng, Zhen Xing, Haoran Chen, Shiwei Shen, Jiaqi Leng, Zuxuan Wu, Yu-Gang Jiang  
 **Date:** 2025-02-23  
-**Identifier:** [arXiv:2502.16587](https://arxiv.org/abs/2502.16587); DOI `10.48550/arXiv.2502.16587`  
+**Identifier:** [arXiv:2502.16587](https://arxiv.org/abs/2502.16587)  
 **Zotero item:** `N3BM47W7` ([Zotero](zotero://select/library/items/N3BM47W7))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 

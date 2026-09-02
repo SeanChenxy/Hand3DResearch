@@ -2,7 +2,7 @@
 
 **Authors:** Yuzhe Qin, Yueh-Hua Wu, Shaowei Liu, Hanwen Jiang, Ruihan Yang, Yang Fu, Xiaolong Wang  
 **Date:** 2022-07-06  
-**Identifier:** [arXiv:2108.05877](https://arxiv.org/abs/2108.05877); DOI `10.48550/arXiv.2108.05877`  
+**Identifier:** [arXiv:2108.05877](https://arxiv.org/abs/2108.05877)  
 **Zotero item:** `ZUJVZIFH` ([Zotero](zotero://select/library/items/ZUJVZIFH))  
 **Evidence status:** Zotero metadata, abstract, and PDF extraction were verified.  
 
