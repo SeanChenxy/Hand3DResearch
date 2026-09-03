@@ -29,7 +29,6 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
   - [4.1 Visual Representation Priors](#41-visual-representation-priors)
   - [4.2 Image Generation Priors](#42-image-generation-priors)
   - [4.3 Video Generation Priors](#43-video-generation-priors)
-    - [4.3.1 From HOI Video Generation to HOI World Models](#431-from-hoi-video-generation-to-hoi-world-models)
 - [5. HOI-Derived Embodied Transfer (Chapter 6)](#5-hoi-derived-embodied-transfer-chapter-6)
   - [5.1 Human-Data Pretraining: Video-Based Pretraining](#51-human-data-pretraining-video-based-pretraining)
   - [5.2 Human-Data Pretraining: Structured HOI Supervision](#52-human-data-pretraining-structured-hoi-supervision)
@@ -484,7 +483,7 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 <a id="43-video-generation-priors"></a>
 ### 4.3 Video Generation Priors
 
-> Video diffusion models (DynamiCrafter, CogVideoX, Wan) provide temporal appearance and identity persistence priors for HOI video generation, inpainting, and reenactment.
+> Video diffusion models (DynamiCrafter, CogVideoX, Wan) provide temporal appearance and identity persistence priors for HOI video generation, inpainting, and reenactment. Generative world-model methods further leverage video prediction and interaction dynamics to model future hand-object states.
 
 - **PAM** — *PAM: A Pose-Appearance-Motion Engine for Sim-to-Real HOI Video Generation*
   [![arXiv](https://img.shields.io/badge/arXiv-2603.22193-b31b1b.svg)](http://arxiv.org/abs/2603.22193) [![GitHub](https://img.shields.io/badge/GitHub-code-181717.svg?logo=github)](https://github.com/GasaiYU/PAM) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/PAM.md)
@@ -506,22 +505,6 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
   [![arXiv](https://img.shields.io/badge/arXiv-2406.07754-b31b1b.svg)](http://arxiv.org/abs/2406.07754) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/HOISwap.md)
 - **Re-HOLD** — *Re-HOLD: Video Hand Object Interaction Reenactment via adaptive Layout-instructed Diffusion Model*
   [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/ReHOLD.md)
-
-**Prior Source Papers:**
-- **DynamiCrafter** — *DynamiCrafter: Animating Open-domain Images with Video Diffusion Priors*
-  [![arXiv](https://img.shields.io/badge/arXiv-2310.12190-b31b1b.svg)](https://arxiv.org/abs/2310.12190) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/dynamicrafter_animating_open_domain_images_with_video_diffusion_priors_arXiv2024.md)
-- **CogVideoX** — *CogVideoX: Text-to-Video Diffusion Model*
-  [![arXiv](https://img.shields.io/badge/arXiv-2408.06072-b31b1b.svg)](https://arxiv.org/abs/2408.06072) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/cogvideox_text_to_video_diffusion_model_arXiv2025.md)
-- **Wan** — *Wan: Open and Advanced Large-Scale Video Generative Models*
-  [![arXiv](https://img.shields.io/badge/arXiv-2503.20314-b31b1b.svg)](https://arxiv.org/abs/2503.20314) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/wan_open_and_advanced_large_scale_video_generative_models_arXiv2025.md)
-
-<a id="431-from-hoi-video-generation-to-hoi-world-models"></a>
-#### 4.3.1 From HOI Video Generation to HOI World Models
-
-> World-model methods that use video prediction or interaction dynamics to model future hand-object states. Include only papers with an explicit HOI world-model role.
-
-<!-- PAPER_LIST_HOI_WORLD_MODELS -->
-
 - **Dexterous World Models** — *Dexterous World Models*
   [![arXiv](https://img.shields.io/badge/arXiv-2512.17907-b31b1b.svg)](https://arxiv.org/abs/2512.17907) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/Dexterous_World_Models_arXiv2025.md)
 - **Hand2World** — *Hand2World: Autoregressive Egocentric Interaction Generation via Free-Space Hand Gestures*
@@ -534,6 +517,14 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
   [![arXiv](https://img.shields.io/badge/arXiv-2606.22136-b31b1b.svg)](https://arxiv.org/abs/2606.22136) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/Wh0_arXiv2026.md)
 - **HandsOnWorld** — *HandsOnWorld: Unconstrained Egocentric Video Generation with Camera-Disentangled Hand Control*
   [![arXiv](https://img.shields.io/badge/arXiv-2607.02075-b31b1b.svg)](https://arxiv.org/abs/2607.02075) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/HandsOnWorld_arXiv2026.md)
+
+**Prior Source Papers:**
+- **DynamiCrafter** — *DynamiCrafter: Animating Open-domain Images with Video Diffusion Priors*
+  [![arXiv](https://img.shields.io/badge/arXiv-2310.12190-b31b1b.svg)](https://arxiv.org/abs/2310.12190) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/dynamicrafter_animating_open_domain_images_with_video_diffusion_priors_arXiv2024.md)
+- **CogVideoX** — *CogVideoX: Text-to-Video Diffusion Model*
+  [![arXiv](https://img.shields.io/badge/arXiv-2408.06072-b31b1b.svg)](https://arxiv.org/abs/2408.06072) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/cogvideox_text_to_video_diffusion_model_arXiv2025.md)
+- **Wan** — *Wan: Open and Advanced Large-Scale Video Generative Models*
+  [![arXiv](https://img.shields.io/badge/arXiv-2503.20314-b31b1b.svg)](https://arxiv.org/abs/2503.20314) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/wan_open_and_advanced_large_scale_video_generative_models_arXiv2025.md)
 
 ---
 
