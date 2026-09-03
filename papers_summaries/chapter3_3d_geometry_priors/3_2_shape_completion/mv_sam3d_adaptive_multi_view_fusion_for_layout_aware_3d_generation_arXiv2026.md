@@ -1,0 +1,47 @@
+# MV-SAM3D: Adaptive Multi-View Fusion for Layout-Aware 3D Generation
+
+**Authors:** Baicheng Li*, Dong Wu*, Jun Li, Shunkai Zhou, Lusong Li*, Zecui Zeng*, Hongbin Zha* (Peking University; JD Explore Academy)  
+**Date:** 2026-03 (arXiv v1); 2026-04-09 (arXiv v2)  
+**Identifier:** [arXiv:2603.11633](https://arxiv.org/abs/2603.11633)  
+**Zotero item:** `7GBCVAZW` ([Zotero](zotero://select/library/items/7GBCVAZW))  
+**Evidence status:** Zotero metadata and the full paper PDF (all 14 pages, including tables and ablations) were verified.
+
+## Summary
+
+MV-SAM3D is a training-free framework that extends layout-aware 3D generation from single-view input to multi-view observations while adding physically plausible multi-object composition. Built on SAM3D, it reformulates multi-view fusion as Multi-Diffusion in the 3D latent space: at every flow-matching step, the velocity field is queried with each view's conditioning independently and the predictions are fused through a weighted combination. The paper shows that naive uniform averaging lets hallucinations from unobserved viewpoints overwhelm reliable observations, and introduces two complementary adaptive weighting strategies — attention-entropy weighting, which treats the entropy of the model's cross-attention as an implicit per-point observation confidence, and geometric visibility weighting, which uses DDA sparse ray tracing against the reconstructed coarse structure as an explicit, appearance-independent confidence. For multi-object composition, physics-aware optimization injects collision and contact gradients into the flow-matching trajectory during generation (layout injection) and refines object poses on the output meshes afterward (post-generation refinement). On standard benchmarks and a self-captured real-world multi-object dataset, the full pipeline substantially improves reconstruction fidelity and layout plausibility over SAM3D and TRELLIS without any additional training.
+
+## Background and Problem
+
+Layout-aware generation models such as SAM3D reconstruct multiple objects from a scene image while preserving their spatial arrangement, opening scene-level 3D generation for robotics and virtual reality. Two gaps remain. First, current methods are limited to single-view input and cannot exploit complementary multi-view observations: real scenarios often provide several views, and single-view generation inevitably hallucinates unobserved regions, so the model cannot distinguish observed content from imagined content — naive fusion lets unreliable hallucinations swamp the reliable observations. Second, in multi-object scenes each object's pose is estimated independently without inter-object physical constraints, producing interpenetration, floating objects, and incorrect orientations that undermine scene realism and downstream use. The goal is to resolve both within the generation process itself, without architectural changes or retraining.
+
+## Method
+
+Front-end: given multi-view images with segmentation masks, Depth Anything 3 (DA3) recovers metric-scale pointmaps and camera poses, replacing SAM3D's monocular MoGe pointmap and supplying the geometric input and the camera geometry used for visibility and pose reasoning. Per-object generation then runs the SAM3D two-stage pipeline (sparse structure generation via a Multi-Modal Diffusion Transformer with flow matching, followed by structured latent generation).
+
+Adaptive multi-view fusion: multiple viewpoints provide distinct conditioning signals {c_i} for the same 3D latent x. At each flow-matching step, the fused velocity is the weighted sum of per-view velocity predictions, with weights summing to one. Naive averaging (uniform weights) is the baseline. Attention-entropy weighting computes, for each viewpoint i and latent point l, the normalized Shannon entropy H_i(l) of the cross-attention distribution over image patch tokens; a concentrated distribution indicates the point is directly captured by that view, giving fusion weight proportional to exp(-α·H_i). This implicit signal fails on symmetric or repetitive structures — a medicine box with distinct but similar front/back textures receives mixed features from both faces. Visibility weighting therefore adds an explicit signal: once the coarse 3D structure is available (latent points transformable into every camera frame via the recovered relative poses), sparse ray tracing (DDA) yields a binary visibility matrix, and weights follow exp(β·V_ij), suppressing occluded viewpoints to zero. The final weight blends both signals as w_i = (1-γ)·w_ent + γ·w_vis with γ = 0.5.
+
+Physics-aware pose optimization: layout injection applies classifier-guidance-style physics gradients during the latter part of the flow trajectory (from step 15 of 25, every 3 steps): the current latent is decoded to approximate voxel occupancy, and a loss combining volumetric collision and surface contact against other objects steers the trajectory via x ← x + v·Δt − η·∇L_phys. Post-generation pose refinement then optimizes each object's similarity transform (scale, rotation, translation) directly on the output meshes with Adam, minimizing Chamfer alignment to the metric-depth point cloud plus inter-object collision, contact, and regularization terms.
+
+## Contributions
+
+1. MV-SAM3D, a training-free framework extending layout-aware 3D generation from single-view to multi-view input and enhancing multi-object scene composition with physical plausibility, without any architectural changes or retraining.
+2. Two adaptive weighting strategies — attention-entropy weighting and visibility weighting — for confidence-aware multi-view fusion in 3D latent space, ensuring the generated representation faithfully reflects observations from all viewpoints.
+3. A physics-aware pose optimization pipeline combining generation-time layout injection with post-generation refinement, producing multi-object scenes that respect non-penetration and surface-contact constraints.
+4. A self-captured real-world multi-object benchmark (MV-SAM3D-Scenes, 2-8 objects per scene, 15 viewpoints each) alongside systematic evaluation on GSO.
+
+## Experimental Setup
+
+All experiments run on a single NVIDIA A100 (80GB) GPU with SAM3D's default configuration; hyperparameters include entropy temperature α=30, visibility parameter β=30, mixing γ=0.5, layout injection starting at step 15 with strength η=0.1 and λ_contact=0.5, and 100 Adam iterations (lr 0.01) for pose refinement with λ_col=200, λ_con=50, proximity threshold 0.05. Evaluation uses the GSO benchmark (30 Google Scanned Objects with ground-truth 3D models rendered multi-view at known poses) adopting the EscherNet protocol — Chamfer Distance and novel-view synthesis (PSNR/SSIM/LPIPS) with 2 and 5 input views against DreamGaussian, SyncDreamer, TRELLIS, SAM3D, and EscherNet — plus MV-SAM3D-Scenes for multi-object evaluation using PSNR, Depth MAE/RMSE, Acc@5cm, RelAcc@5%, coverage, and collision rate across SAM3D (single-view), MV-SAM3D without pose optimization, and the full pipeline.
+
+## Results
+
+- GSO Chamfer Distance (×10⁻³): with 2 views, MV-SAM3D reaches 20.2 versus EscherNet 21.3 and TRELLIS+Multi-Diffusion 21.8; with 5 views, 17.3 versus EscherNet 17.5 — both far below single-view SAM3D (49.0) and TRELLIS (44.5).
+- GSO novel-view synthesis: 2-view PSNR 23.45 / SSIM 0.912 / LPIPS 0.059 (EscherNet 22.91/0.908/0.064); 5-view PSNR 25.22 / SSIM 0.925 / LPIPS 0.042, with EscherNet marginally better on SSIM/LPIPS (0.927/0.033).
+- Multi-object scenes (MV-SAM3D-Scenes): the full pipeline attains PSNR 21.83, Depth MAE 0.025, Depth RMSE 0.055, Acc@5cm 91.66, RelAcc@5% 91.13, Coverage 97.22, versus SAM3D single-view (19.52/0.079/0.107/55.66/44.07/61.20) and multi-view fusion without pose optimization (19.95/0.088/0.095/60.23/49.52/66.48).
+- Ablations on weighting: uniform averaging gives PSNR 20.35 / Acc@5cm 88.42; entropy weighting in Stage 1 20.52/91.48; in both stages 21.35/91.60; adding visibility weighting 21.83/91.66, confirming both signals are needed (entropy fixes structure, visibility fixes symmetric-texture ambiguity).
+- View count: quality rises from 1 view (19.52/85.20) to 2 (21.08/90.45) and 3 (21.52/91.18) with diminishing returns at 5 views, the second viewpoint revealing the most previously unobserved surface.
+- Pose optimization ablation: layout injection alone cuts collision rate from 15.32% to 1.67%; post-refinement alone 0.00% but weaker alignment (87.82 Acc@5cm); combining both yields 0.00% collision with Acc@5cm 91.66 and Coverage 97.22.
+
+## Limitations
+
+The framework is training-free and therefore bounded by the SAM3D backbone: it cannot correct systematic biases of the underlying generator, and its per-object pipeline treats each object independently except through the physics loss. Inputs must come with segmentation masks, and the front-end inherits DA3's pointmap and pose quality — erroneous metric geometry or camera poses propagate directly into visibility weighting and pose optimization. The guidance introduces several manually tuned hyperparameters (temperatures, injection timing and strength, loss weights), and the discrete nature of latent-space guidance leaves residual violations that only the post-refinement stage fully resolves. Benefits saturate beyond a few views, and on 5-view novel-view synthesis EscherNet retains a slight edge in SSIM/LPIPS, indicating that confidence-weighted fusion trades some appearance sharpness for geometric fidelity.

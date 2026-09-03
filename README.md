@@ -19,30 +19,27 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
   - [1.5 Hand-Object Motion Generation](#15-hand-object-motion-generation)
   - [1.6 Hand-Object Image/Video Generation](#16-hand-object-imagevideo-generation)
 - [2. Geometric Priors for HOI (Chapter 3)](#2-geometric-priors-for-hoi-chapter-3)
-  - [2.1 Prior Sources](#21-prior-sources)
-  - [2.2 Shape Retrieval Priors](#22-shape-retrieval-priors)
-  - [2.3 Shape Reconstruction Priors](#23-shape-reconstruction-priors)
-  - [2.4 Spatial Reconstruction Priors](#24-spatial-reconstruction-priors)
+  - [2.1 Shape Retrieval Priors](#21-shape-retrieval-priors)
+  - [2.2 Shape Reconstruction Priors](#22-shape-reconstruction-priors)
+  - [2.3 Spatial Reconstruction Priors](#23-spatial-reconstruction-priors)
 - [3. Semantic Priors for HOI (Chapter 4)](#3-semantic-priors-for-hoi-chapter-4)
-  - [3.1 Prior Sources](#31-prior-sources)
-  - [3.2 Semantic Grounding Priors](#32-semantic-grounding-priors)
-  - [3.3 Language Reasoning Priors](#33-language-reasoning-priors)
+  - [3.1 Semantic Grounding Priors](#31-semantic-grounding-priors)
+  - [3.2 Language Reasoning Priors](#32-language-reasoning-priors)
 - [4. Visual Priors for HOI (Chapter 5)](#4-visual-priors-for-hoi-chapter-5)
-  - [4.1 Prior Sources](#41-prior-sources)
-  - [4.2 Visual Representation Priors](#42-visual-representation-priors)
-  - [4.3 Image Generation Priors](#43-image-generation-priors)
-  - [4.4 Video Generation Priors](#44-video-generation-priors)
-    - [4.4.1 From HOI Video Generation to HOI World Models](#441-from-hoi-video-generation-to-hoi-world-models)
+  - [4.1 Visual Representation Priors](#41-visual-representation-priors)
+  - [4.2 Image Generation Priors](#42-image-generation-priors)
+  - [4.3 Video Generation Priors](#43-video-generation-priors)
+    - [4.3.1 From HOI Video Generation to HOI World Models](#431-from-hoi-video-generation-to-hoi-world-models)
 - [5. HOI-Derived Embodied Transfer (Chapter 6)](#5-hoi-derived-embodied-transfer-chapter-6)
   - [5.1 Human-Data Pretraining: Video-Based Pretraining](#51-human-data-pretraining-video-based-pretraining)
   - [5.2 Human-Data Pretraining: Structured HOI Supervision](#52-human-data-pretraining-structured-hoi-supervision)
   - [5.3 Human-to-Robot Skill Transfer: Demonstration Alignment and Retargeting](#53-human-to-robot-skill-transfer-demonstration-alignment-and-retargeting)
   - [5.4 Human-to-Robot Skill Transfer: Interaction-Guided Robot Manipulation](#54-human-to-robot-skill-transfer-interaction-guided-robot-manipulation)
   - [5.5 HOI-to-Robot Data Engines](#55-hoi-to-robot-data-engines)
-- [7. Datasets and Pretraining Sources (Chapter 7)](#7-datasets-and-pretraining-sources-chapter-7)
-  - [7.1 Reconstruction Benchmarks](#71-reconstruction-benchmarks)
-  - [7.2 Generation Benchmarks](#72-generation-benchmarks)
-  - [7.3 Embodied Learning Data Sources](#73-embodied-learning-data-sources)
+- [6. Datasets and Pretraining Sources (Chapter 7)](#6-datasets-and-pretraining-sources-chapter-7)
+  - [6.1 Reconstruction Benchmarks](#61-reconstruction-benchmarks)
+  - [6.2 Generation Benchmarks](#62-generation-benchmarks)
+  - [6.3 Embodied Learning Data Sources](#63-embodied-learning-data-sources)
 
 ---
 
@@ -224,17 +221,10 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 
 > Foundation models provide open-world 3D shape and spatial geometry knowledge to mitigate occlusion, unseen regions, and dynamic-camera geometry uncertainty.
 
-<a id="21-prior-sources"></a>
-### 2.1 Prior Sources
+<a id="21-shape-retrieval-priors"></a>
+### 2.1 Shape Retrieval Priors
 
-> `[Prior Source]` These are the upstream foundation models that provide 3D geometry knowledge, not HOI methods per se.
-
-<!-- PAPER_LIST_PRIOR_SOURCES_CH3 -->
-
-<a id="22-shape-retrieval-priors"></a>
-### 2.2 Shape Retrieval Priors
-
-> External 3D asset databases (Objaverse, ShapeNet, ABO) and vision-language embeddings (CLIP, DINOv2, OpenShape) provide topologically stable shape candidates for hand-held object reconstruction.
+> Foundation-model embeddings (InternVL, OpenShape) match visual observations against external 3D asset libraries (Objaverse) to select topologically stable shape candidates for hand-held object reconstruction.
 
 - **GHOST** — *GHOST: Fast Category-agnostic Hand-Object Interaction Reconstruction from RGB Videos using Gaussian Splatting*
   [![arXiv](https://img.shields.io/badge/arXiv-2603.18912-b31b1b.svg)](http://arxiv.org/abs/2603.18912) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/GHOST_arXiv2026.md)
@@ -246,21 +236,17 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
   [![arXiv](https://img.shields.io/badge/arXiv-2504.17695-b31b1b.svg)](https://arxiv.org/abs/2504.17695) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/PICO_arXiv.md)
 
 **Prior Source Papers:**
-- **DINOv2** — *DINOv2: Learning Robust Visual Features without Supervision*
-  [![arXiv](https://img.shields.io/badge/arXiv-2304.07193-b31b1b.svg)](https://arxiv.org/abs/2304.07193) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/dinov2_learning_robust_visual_features_without_supervision_arXiv2024.md)
+- **InternVL** — *InternVL: Scaling up Vision Foundation Models and Aligning for Generic Visual-Linguistic Tasks*
+  [![arXiv](https://img.shields.io/badge/arXiv-2312.14238-b31b1b.svg)](https://arxiv.org/abs/2312.14238) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/internvl_scaling_up_vision_foundation_models_and_aligning_arXiv2024.md)
 - **Objaverse** — *Objaverse: A Universe of Annotated 3D Objects*
   [![arXiv](https://img.shields.io/badge/arXiv-2212.08051-b31b1b.svg)](https://arxiv.org/abs/2212.08051) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_2_shape_completion/objaverse_a_universe_of_annotated_3d_objects_arXiv2023.md)
-- **ABO** — *Amazon Berkeley Objects (ABO): Dataset and Benchmarks for Real-World 3D Object Understanding*
-  [![arXiv](https://img.shields.io/badge/arXiv-2111.01078-b31b1b.svg)](https://arxiv.org/abs/2111.01078) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/abo_dataset_and_benchmarks_for_real_world_3d_object_understanding_arXiv2022.md)
-- **Google Scanned Objects** — *Google Scanned Objects: A High-Quality Dataset of 3D Scanned Household Items*
-  [![Paper](https://img.shields.io/badge/Paper-DOI-4B5D67.svg)](https://ieeexplore.ieee.org/document/9811809) [![DOI](https://img.shields.io/badge/DOI-10.1109/ICRA46639.2022.9811809-4B5D67.svg)](https://doi.org/10.1109/ICRA46639.2022.9811809) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/google_scanned_objects_a_high_quality_dataset_of_3d_scanned_household_items_arXiv2022.md)
-- **CLIP** — *Learning Transferable Visual Models From Natural Language Supervision*
-  [![arXiv](https://img.shields.io/badge/arXiv-2103.00020-b31b1b.svg)](https://arxiv.org/abs/2103.00020) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/learning_transferable_visual_models_from_natural_language_supervision_arXiv2021.md)
+- **OpenShape** — *OpenShape: Scaling Up 3D Shape Representation Towards Open-World Understanding*
+  [![arXiv](https://img.shields.io/badge/arXiv-2305.10764-b31b1b.svg)](https://arxiv.org/abs/2305.10764) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/openshape_scaling_up_3d_shape_representation_arXiv2023.md)
 
-<a id="23-shape-reconstruction-priors"></a>
-### 2.3 Shape Reconstruction Priors
+<a id="22-shape-reconstruction-priors"></a>
+### 2.2 Shape Reconstruction Priors
 
-> Foundation models (Zero-1-to-3, Wonder3D, TripoSR, InstantMesh, etc.) provide open-world shape completion knowledge for occluded objects. These priors initialize complete object geometry before HOI-specific optimization with hand pose, silhouette, temporal, and contact constraints.
+> Foundation models (InstantMesh, Hunyuan3D, SAM 3D, MV-SAM3D) provide open-world shape completion and generation knowledge for occluded or unseen objects. These priors initialize complete object geometry before HOI-specific optimization with hand pose, silhouette, temporal, and contact constraints.
 
 - **AGILE** — *AGILE: Hand-Object Interaction Reconstruction from Video via Agentic Generation*
   [![arXiv](https://img.shields.io/badge/arXiv-2602.04672-b31b1b.svg)](http://arxiv.org/abs/2602.04672) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_2_shape_completion/AGILE_arXiv2026.md)
@@ -280,25 +266,20 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
   [![arXiv](https://img.shields.io/badge/arXiv-2411.14280-b31b1b.svg)](https://arxiv.org/abs/2411.14280) [![Paper](https://img.shields.io/badge/Paper-CVF-4B5D67.svg)](https://openaccess.thecvf.com/content/CVPR2025/html/Liu_EasyHOI_Unleashing_the_Power_of_Large_Models_for_Reconstructing_Hand-Object_CVPR_2025_paper.html) [![GitHub](https://img.shields.io/badge/GitHub-code-181717.svg?logo=github)](https://github.com/lym29/EasyHOI) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_2_shape_completion/EasyHOI_arXiv.md)
 
 **Prior Source Papers:**
-- **Hunyuan3D 2.0** — *Hunyuan3D 2.0: Scaling Diffusion Models for High Resolution Textured 3D Assets Generation*
-  [![arXiv](https://img.shields.io/badge/arXiv-2501.12202-b31b1b.svg)](https://arxiv.org/abs/2501.12202) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_2_shape_completion/hunyuan3d_20_scaling_diffusion_models_for_high_resolution_textured_3d_assets_gen_arXiv2026.md)
-- **TripoSR** — *TripoSR: Fast 3D Object Reconstruction from a Single Image*
-  [![arXiv](https://img.shields.io/badge/arXiv-2403.02151-b31b1b.svg)](https://arxiv.org/abs/2403.02151) [![GitHub](https://img.shields.io/badge/GitHub-code-181717.svg?logo=github)](https://github.com/VAST-AI-Research/TripoSR) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_2_shape_completion/triposr_fast_3d_object_reconstruction_from_a_single_image_arXiv2024.md)
 - **InstantMesh** — *InstantMesh: Efficient 3D Mesh Generation from a Single Image with Sparse-view Large Reconstruction Models* [![GitHub](https://img.shields.io/badge/GitHub-code-181717.svg?logo=github)](https://github.com/TencentARC/InstantMesh) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_2_shape_completion/instantmesh_efficient_3d_mesh_generation_from_a_single_image_with_sparse_view_la_arXiv2024.md)
-- **DreamGaussian** — *DreamGaussian: Generative Gaussian Splatting for Efficient 3D Content Creation*
-  [![arXiv](https://img.shields.io/badge/arXiv-2309.16653-b31b1b.svg)](https://arxiv.org/abs/2309.16653) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_2_shape_completion/dreamgaussian_generative_gaussian_splatting_for_efficient_3d_content_creation_arXiv2024.md)
-- **Wonder3D** — *Wonder3D: Single Image to 3D Using Cross-Domain Diffusion* [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_2_shape_completion/wonder3d_single_image_to_3d_using_cross_domain_diffusion_arXiv2024.md)
-- **Zero-1-to-3** — *Zero-1-to-3: Zero-shot One Image to 3D Object*
-  [![Paper](https://img.shields.io/badge/Paper-DOI-4B5D67.svg)](https://ieeexplore.ieee.org/document/10378322/) [![DOI](https://img.shields.io/badge/DOI-10.1109/ICCV51070.2023.00853-4B5D67.svg)](https://doi.org/10.1109/ICCV51070.2023.00853) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_2_shape_completion/zero_1_to_3_zero_shot_one_image_to_3d_object_arXiv2023.md)
-- **Objaverse** — *Objaverse: A Universe of Annotated 3D Objects*
-  [![Paper](https://img.shields.io/badge/Paper-DOI-4B5D67.svg)](https://ieeexplore.ieee.org/document/10205395/) [![DOI](https://img.shields.io/badge/DOI-10.1109/CVPR52729.2023.01263-4B5D67.svg)](https://doi.org/10.1109/CVPR52729.2023.01263) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_2_shape_completion/objaverse_a_universe_of_annotated_3d_objects_arXiv2023.md)
-- **ShapeNet** — *ShapeNet: An Information-Rich 3D Model Repository*
-  [![arXiv](https://img.shields.io/badge/arXiv-1512.03012-b31b1b.svg)](https://arxiv.org/abs/1512.03012) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_2_shape_completion/shapenet_an_information_rich_3d_model_repository_arXiv2015.md)
+- **Luma AI Genie** — *Luma AI Genie: Text-to-3D and Image-to-3D Generation* (no paper; website only)
+  [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://lumalabs.ai/genie)
+- **Hunyuan3D 2.5** — *Hunyuan3D 2.5: Towards High-Fidelity 3D Assets Generation with Ultimate Details*
+  [![arXiv](https://img.shields.io/badge/arXiv-2506.16504-b31b1b.svg)](https://arxiv.org/abs/2506.16504) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_2_shape_completion/hunyuan3d_25_towards_high_fidelity_3d_assets_generation_arXiv2025.md)
+- **SAM 3D** — *SAM 3D: 3Dfy Anything in Images*
+  [![arXiv](https://img.shields.io/badge/arXiv-2511.16624-b31b1b.svg)](https://arxiv.org/abs/2511.16624) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_2_shape_completion/sam_3d_3dfy_anything_in_images_arXiv2025.md)
+- **MV-SAM3D** — *MV-SAM3D: Adaptive Multi-View Fusion for Layout-Aware 3D Generation*
+  [![arXiv](https://img.shields.io/badge/arXiv-2603.11633-b31b1b.svg)](https://arxiv.org/abs/2603.11633) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_2_shape_completion/mv_sam3d_adaptive_multi_view_fusion_for_layout_aware_3d_generation_arXiv2026.md)
 
-<a id="24-spatial-reconstruction-priors"></a>
-### 2.4 Spatial Reconstruction Priors
+<a id="23-spatial-reconstruction-priors"></a>
+### 2.3 Spatial Reconstruction Priors
 
-> Pre-trained visual geometry models (DUSt3R, MASt3R, VGGT, MoGe2, Depth Anything 3) inject depth, camera, point maps, cross-view correspondence, and world-space alignment into HOI pipelines.
+> Pre-trained visual geometry models (DUSt3R, VGGT, CUT3R, Metric3D, MoGe-2, Depth Anything 3, Video Depth Anything, UniDepth V2) inject depth, camera, point maps, cross-view correspondence, and world-space alignment into HOI pipelines.
 
 - **GeoHand** — *GeoHand: Unlocking Prior Geometry Knowledge for Monocular 3D Hand Reconstruction*
   [![arXiv](https://img.shields.io/badge/arXiv-2605.17354-b31b1b.svg)](http://arxiv.org/abs/2605.17354) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_4_spatial_geometry/GeoHand_arXiv2026.md)
@@ -322,20 +303,22 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
   [![arXiv](https://img.shields.io/badge/arXiv-2412.12861-b31b1b.svg)](https://arxiv.org/abs/2412.12861) [![Paper](https://img.shields.io/badge/Paper-CVF-4B5D67.svg)](https://openaccess.thecvf.com/content/CVPR2025/html/Yu_Dyn-HaMR_Recovering_4D_Interacting_Hand_Motion_from_a_Dynamic_Camera_CVPR_2025_paper.html) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_4_spatial_geometry/Dyn_HaMR_arXiv.md)
 
 **Prior Source Papers:**
-- **Depth Anything 3** — *Depth Anything 3: Recovering the Visual Space from Any Views*
-  [![arXiv](https://img.shields.io/badge/arXiv-2511.10647-b31b1b.svg)](https://arxiv.org/abs/2511.10647) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_4_spatial_geometry/depth_anything_3_recovering_the_visual_space_from_any_views_arXiv2025.md)
-- **MoGe-2** — *MoGe-2: Accurate Monocular Geometry with Metric Scale and Sharp Details*
-  [![arXiv](https://img.shields.io/badge/arXiv-2412.12067-b31b1b.svg)](https://arxiv.org/abs/2412.12067) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_4_spatial_geometry/moge_2_accurate_monocular_geometry_with_metric_scale_and_sharp_details_arXiv2025.md)
-- **VGGT** — *VGGT: Visual Geometry Grounded Transformer*
-  [![arXiv](https://img.shields.io/badge/arXiv-2503.11651-b31b1b.svg)](https://arxiv.org/abs/2503.11651) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_4_spatial_geometry/vggt_visual_geometry_grounded_transformer_arXiv2025.md)
-- **MASt3R** — *Grounding Image Matching in 3D with MASt3R*
-  [![arXiv](https://img.shields.io/badge/arXiv-2406.09756-b31b1b.svg)](https://arxiv.org/abs/2406.09756) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_4_spatial_geometry/grounding_image_matching_in_3d_with_mast3r_arXiv2024.md)
 - **DUSt3R** — *DUSt3R: Geometric 3D Vision Made Easy*
   [![arXiv](https://img.shields.io/badge/arXiv-2312.14132-b31b1b.svg)](https://arxiv.org/abs/2312.14132) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_4_spatial_geometry/dust3r_geometric_3d_vision_made_easy_arXiv2024.md)
-- **CroCo** — *CroCo: Self-Supervised Pre-training for 3D Vision Tasks by Cross-View Completion*
-  [![arXiv](https://img.shields.io/badge/arXiv-2210.10716-b31b1b.svg)](https://arxiv.org/abs/2210.10716) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_4_spatial_geometry/croco_self_supervised_pre_training_for_3d_vision_tasks_by_cross_view_completion_arXiv2023.md)
-- **CroCo v2** — *CroCo v2: Improved Cross-view Completion Pre-training for Stereo Matching and Optical Flow*
-  [![arXiv](https://img.shields.io/badge/arXiv-2211.10408-b31b1b.svg)](https://arxiv.org/abs/2211.10408) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_4_spatial_geometry/croco_v2_improved_cross_view_completion_pre_training_for_stereo_matching_and_optical_flow_arXiv2023.md)
+- **VGGT** — *VGGT: Visual Geometry Grounded Transformer*
+  [![arXiv](https://img.shields.io/badge/arXiv-2503.11651-b31b1b.svg)](https://arxiv.org/abs/2503.11651) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_4_spatial_geometry/vggt_visual_geometry_grounded_transformer_arXiv2025.md)
+- **CUT3R** — *Continuous 3D Perception Model with Persistent State*
+  [![arXiv](https://img.shields.io/badge/arXiv-2501.12387-b31b1b.svg)](https://arxiv.org/abs/2501.12387) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_4_spatial_geometry/cut3r_continuous_3d_perception_model_with_persistent_state_arXiv2025.md)
+- **Metric3D** — *Metric3D: Towards Zero-shot Metric 3D Prediction from A Single Image*
+  [![arXiv](https://img.shields.io/badge/arXiv-2307.10984-b31b1b.svg)](https://arxiv.org/abs/2307.10984) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_4_spatial_geometry/metric3d_towards_zero_shot_metric_3d_prediction_from_a_single_image_arXiv2023.md)
+- **MoGe-2** — *MoGe-2: Accurate Monocular Geometry with Metric Scale and Sharp Details*
+  [![arXiv](https://img.shields.io/badge/arXiv-2412.12067-b31b1b.svg)](https://arxiv.org/abs/2412.12067) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_4_spatial_geometry/moge_2_accurate_monocular_geometry_with_metric_scale_and_sharp_details_arXiv2025.md)
+- **Depth Anything 3** — *Depth Anything 3: Recovering the Visual Space from Any Views*
+  [![arXiv](https://img.shields.io/badge/arXiv-2511.10647-b31b1b.svg)](https://arxiv.org/abs/2511.10647) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_4_spatial_geometry/depth_anything_3_recovering_the_visual_space_from_any_views_arXiv2025.md)
+- **Video Depth Anything** — *Video Depth Anything: Consistent Depth Estimation for Super-Long Videos*
+  [![arXiv](https://img.shields.io/badge/arXiv-2501.12375-b31b1b.svg)](https://arxiv.org/abs/2501.12375) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_4_spatial_geometry/video_depth_anything_consistent_depth_estimation_for_super_long_videos_arXiv2025.md)
+- **UniDepth V2** — *UniDepthV2: Universal Monocular Metric Depth Estimation Made Simpler*
+  [![arXiv](https://img.shields.io/badge/arXiv-2502.20110-b31b1b.svg)](https://arxiv.org/abs/2502.20110) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_4_spatial_geometry/unidepthv2_universal_monocular_metric_depth_estimation_made_simpler_arXiv2025.md)
 
 ---
 
@@ -344,17 +327,10 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 
 > Foundation models provide semantic knowledge for visual evidence localization and interaction intent reasoning.
 
-<a id="31-prior-sources"></a>
-### 3.1 Prior Sources
+<a id="31-semantic-grounding-priors"></a>
+### 3.1 Semantic Grounding Priors
 
-> `[Prior Source]` Upstream models providing visual grounding and language reasoning capabilities.
-
-<!-- PAPER_LIST_PRIOR_SOURCES_CH4 -->
-
-<a id="32-semantic-grounding-priors"></a>
-### 3.2 Semantic Grounding Priors
-
-> Open-vocabulary detection, promptable segmentation, and region association models (Grounding DINO, SAM/SAM2, CLIP, Florence-2) convert semantic prompts into visual evidence (boxes, masks, region tracks) for HOI reconstruction.
+> Open-vocabulary detection, promptable segmentation, and region association models (Grounding DINO, SAM/SAM 2/SAM 3, LISA) convert semantic prompts into visual evidence (boxes, masks, region tracks) for HOI reconstruction.
 
 - **CHOIR** — *CHOIR: Contact-aware 4D Hand-Object Interaction Reconstruction*
   [![arXiv](https://img.shields.io/badge/arXiv-2605.20992-b31b1b.svg)](http://arxiv.org/abs/2605.20992) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_2_visual_grounding/CHOIR.md)
@@ -376,23 +352,21 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
   [![arXiv](https://img.shields.io/badge/arXiv-2412.01537-b31b1b.svg)](https://arxiv.org/abs/2412.01537) [![Paper](https://img.shields.io/badge/Paper-CVF-4B5D67.svg)](https://openaccess.thecvf.com/content/CVPR2025/html/Chen_HandOS_3D_Hand_Reconstruction_in_One_Stage_CVPR_2025_paper.html) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_2_visual_grounding/HandOS.md)
 
 **Prior Source Papers:**
-- **Segment Anything** — *Segment Anything*
-  [![arXiv](https://img.shields.io/badge/arXiv-2304.02643-b31b1b.svg)](https://arxiv.org/abs/2304.02643) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_2_visual_grounding/segment_anything_arXiv2023.md)
 - **Grounding DINO** — *Grounding DINO: Marrying DINO with Grounded Pre-training for Open-Set Object Detection*
   [![Paper](https://img.shields.io/badge/Paper-DOI-4B5D67.svg)](https://link.springer.com/10.1007/978-3-031-72970-6_3) [![DOI](https://img.shields.io/badge/DOI-10.1007/978--3--031--72970--6__3-4B5D67.svg)](https://doi.org/10.1007/978-3-031-72970-6_3) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_2_visual_grounding/grounding_dino_marrying_dino_with_grounded_pre_training_for_open_set_object_dete_arXiv2025.md)
-- **Florence-2** — *Florence-2: Advancing a Unified Representation for a Variety of Vision Tasks*
-  [![arXiv](https://img.shields.io/badge/arXiv-2312.06148-b31b1b.svg)](https://arxiv.org/abs/2312.06148) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_2_visual_grounding/florence_2_advancing_a_unified_representation_for_a_variety_of_vision_tasks_arXiv2024.md)
-- **Qwen-VL** — *Qwen-VL: A Versatile Vision-Language Model for Understanding, Localization, Text Reading, and Beyond*
-  [![arXiv](https://img.shields.io/badge/arXiv-2308.12966-b31b1b.svg)](https://arxiv.org/abs/2308.12966) [![GitHub](https://img.shields.io/badge/GitHub-code-181717.svg?logo=github)](https://github.com/QwenLM/Qwen-VL) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_2_visual_grounding/qwen_vl_a_versatile_vision_language_model_for_understanding_localization_text_re_arXiv2023.md)
-- **BLIP-2** — *BLIP-2: Bootstrapping Language-Image Pre-training with Frozen Image Encoders and Large Language Models*
-  [![arXiv](https://img.shields.io/badge/arXiv-2301.12597-b31b1b.svg)](https://arxiv.org/abs/2301.12597) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_2_visual_grounding/blip_2_bootstrapping_language_image_pre_training_with_frozen_image_encoders_and__arXiv2023.md)
+- **Segment Anything** — *Segment Anything*
+  [![arXiv](https://img.shields.io/badge/arXiv-2304.02643-b31b1b.svg)](https://arxiv.org/abs/2304.02643) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_2_visual_grounding/segment_anything_arXiv2023.md)
 - **SAM 2** — *SAM 2: Segment Anything in Images and Videos*
   [![arXiv](https://img.shields.io/badge/arXiv-2408.00714-b31b1b.svg)](https://arxiv.org/abs/2408.00714) [![GitHub](https://img.shields.io/badge/GitHub-code-181717.svg?logo=github)](https://github.com/facebookresearch/segment-anything-2) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_2_visual_grounding/sam_2_segment_anything_in_images_and_videos_arXivunknown.md)
-- **Visual Instruction Tuning** — *Visual Instruction Tuning*
-  [![arXiv](https://img.shields.io/badge/arXiv-2303.14189-b31b1b.svg)](https://arxiv.org/abs/2303.14189) [![GitHub](https://img.shields.io/badge/GitHub-code-181717.svg?logo=github)](https://github.com/haotian-liu/LLaVA) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_2_visual_grounding/visual_instruction_tuning_arXivunknown.md)
+- **SAM 3** — *SAM 3: Segment Anything with Concepts*
+  [![arXiv](https://img.shields.io/badge/arXiv-2511.16719-b31b1b.svg)](https://arxiv.org/abs/2511.16719) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_2_visual_grounding/sam_3_segment_anything_with_concepts_arXiv2025.md)
+- **LISA** — *LISA: Reasoning Segmentation via Large Language Model*
+  [![arXiv](https://img.shields.io/badge/arXiv-2308.00692-b31b1b.svg)](https://arxiv.org/abs/2308.00692) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_2_visual_grounding/lisa_reasoning_segmentation_via_large_language_model_arXiv2023.md)
+- **Amodal Video Segmenter** — *Using Diffusion Priors for Video Amodal Segmentation*
+  [![arXiv](https://img.shields.io/badge/arXiv-2412.04623-b31b1b.svg)](https://arxiv.org/abs/2412.04623) [📝 Paper Summary](papers_summaries/chapter4_semantic_priors/4_2_visual_grounding/using_diffusion_priors_for_video_amodal_segmentation_arXiv2024.md)
 
-<a id="33-language-reasoning-priors"></a>
-### 3.3 Language Reasoning Priors
+<a id="32-language-reasoning-priors"></a>
+### 3.2 Language Reasoning Priors
 
 > LLMs/MLLMs/VLMs (GPT-4, LLaMA, Qwen) provide functional part identification, grasp/contact intent, task decomposition, and motion description knowledge. This knowledge is converted into interaction constraints for grasp and motion generation.
 
@@ -447,15 +421,8 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 
 > Foundation generative models provide image, video, and motion distribution priors to mitigate visual realism, temporal consistency, and motion diversity challenges.
 
-<a id="41-prior-sources"></a>
-### 4.1 Prior Sources
-
-> `[Prior Source]` Upstream generative foundation models.
-
-<!-- PAPER_LIST_PRIOR_SOURCES_CH5 -->
-
-<a id="42-visual-representation-priors"></a>
-### 4.2 Visual Representation Priors
+<a id="41-visual-representation-priors"></a>
+### 4.1 Visual Representation Priors
 
 > Pre-trained visual representations used to improve HOI reconstruction, grasping, or interaction understanding. Papers are listed here when representation transfer is central to their HOI use.
 
@@ -478,10 +445,10 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 - **DINOv2** — *DINOv2: Learning Robust Visual Features without Supervision*
   [![arXiv](https://img.shields.io/badge/arXiv-2304.07193-b31b1b.svg)](https://arxiv.org/abs/2304.07193) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_5_visual_representation_priors/DINOv2_arXiv2024.md)
 
-<a id="43-image-generation-priors"></a>
-### 4.3 Image Generation Priors
+<a id="42-image-generation-priors"></a>
+### 4.2 Image Generation Priors
 
-> Text/image-conditioned diffusion models (Stable Diffusion, SDXL, FLUX, ControlNet) provide single-frame visual distribution knowledge for HOI image synthesis, editing, and data augmentation.
+> Text/image-conditioned diffusion models (GLIDE, Stable Diffusion, SDXL, FLUX.1, Zero-1-to-3; ControlNet for spatial conditioning) provide single-frame visual distribution knowledge for HOI image synthesis, editing, and data augmentation.
 
 - **Affordance Diffusion** — *Affordance Diffusion: Synthesizing Hand-Object Interactions*
   [![Paper](https://img.shields.io/badge/Paper-DOI-4B5D67.svg)](https://ieeexplore.ieee.org/document/10204191/) [![DOI](https://img.shields.io/badge/DOI-10.1109/CVPR52729.2023.02153-4B5D67.svg)](https://doi.org/10.1109/CVPR52729.2023.02153) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_2_image_generative/AffordanceDiffusion.md)
@@ -501,25 +468,23 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
   [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_2_image_generative/HO123.md)
 
 **Prior Source Papers:**
-- **FLUX.1 Kontext** — *FLUX.1 Kontext: Flow Matching for In-Context Image Generation and Editing in Latent Space*
-  [![arXiv](https://img.shields.io/badge/arXiv-2506.15742-b31b1b.svg)](https://arxiv.org/abs/2506.15742) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_2_image_generative/flux1_kontext_flow_matching_for_in_context_image_generation_and_editing_in_laten_arXiv2025.md)
-- **SDXL** — *SDXL: Improving Latent Diffusion Models for High-Resolution Image Synthesis*
-  [![arXiv](https://img.shields.io/badge/arXiv-2307.01952-b31b1b.svg)](https://arxiv.org/abs/2307.01952) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_2_image_generative/sdxl_improving_latent_diffusion_models_for_high_resolution_image_synthesis_arXiv2024.md)
-- **PixArt-α** — *PixArt-α: Fast Training of Diffusion Transformer for Photorealistic Text-to-Image Synthesis*
-  [![arXiv](https://img.shields.io/badge/arXiv-2310.00426-b31b1b.svg)](https://arxiv.org/abs/2310.00426) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_2_image_generative/pixart_fast_training_of_diffusion_transformer_for_photorealistic_text_to_image_s_arXiv2023.md)
-- **LAION-5B** — *LAION-5B: An open large-scale dataset for training next generation image-text models*
-  [![arXiv](https://img.shields.io/badge/arXiv-2210.08272-b31b1b.svg)](https://arxiv.org/abs/2210.08272) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_2_image_generative/laion_5b_an_open_large_scale_dataset_for_training_next_generation_image_text_mod_arXiv2022.md)
-- **Imagen** — *Photorealistic Text-to-Image Diffusion Models with Deep Language Understanding*
-  [![arXiv](https://img.shields.io/badge/arXiv-2205.11487-b31b1b.svg)](https://arxiv.org/abs/2205.11487) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_2_image_generative/photorealistic_text_to_image_diffusion_models_with_deep_language_understanding_arXivunknown.md)
-- **ControlNet** — *Adding Conditional Control to Text-to-Image Diffusion Models*
-  [![arXiv](https://img.shields.io/badge/arXiv-2302.05543-b31b1b.svg)](https://arxiv.org/abs/2302.05543) [![GitHub](https://img.shields.io/badge/GitHub-code-181717.svg?logo=github)](https://github.com/lllyasviel/ControlNet) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_2_image_generative/adding_conditional_control_to_text_to_image_diffusion_models_arXiv2023.md)
+- **GLIDE** — *GLIDE: Towards Photorealistic Image Generation and Editing with Text-Guided Diffusion Models*
+  [![arXiv](https://img.shields.io/badge/arXiv-2112.10741-b31b1b.svg)](https://arxiv.org/abs/2112.10741) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_2_image_generative/glide_towards_photorealistic_image_generation_and_editing_arXiv2022.md)
 - **LDM / Stable Diffusion** — *High-Resolution Image Synthesis with Latent Diffusion Models*
   [![arXiv](https://img.shields.io/badge/arXiv-2112.10752-b31b1b.svg)](https://arxiv.org/abs/2112.10752) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_2_image_generative/high_resolution_image_synthesis_with_latent_diffusion_models_arXiv2022.md)
+- **SDXL** — *SDXL: Improving Latent Diffusion Models for High-Resolution Image Synthesis*
+  [![arXiv](https://img.shields.io/badge/arXiv-2307.01952-b31b1b.svg)](https://arxiv.org/abs/2307.01952) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_2_image_generative/sdxl_improving_latent_diffusion_models_for_high_resolution_image_synthesis_arXiv2024.md)
+- **FLUX.1 Kontext** — *FLUX.1 Kontext: Flow Matching for In-Context Image Generation and Editing in Latent Space*
+  [![arXiv](https://img.shields.io/badge/arXiv-2506.15742-b31b1b.svg)](https://arxiv.org/abs/2506.15742) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_2_image_generative/flux1_kontext_flow_matching_for_in_context_image_generation_and_editing_in_laten_arXiv2025.md)
+- **Zero-1-to-3** — *Zero-1-to-3: Zero-shot One Image to 3D Object*
+  [![Paper](https://img.shields.io/badge/Paper-DOI-4B5D67.svg)](https://ieeexplore.ieee.org/document/10378322/) [![DOI](https://img.shields.io/badge/DOI-10.1109/ICCV51070.2023.00853-4B5D67.svg)](https://doi.org/10.1109/ICCV51070.2023.00853) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_2_shape_completion/zero_1_to_3_zero_shot_one_image_to_3d_object_arXiv2023.md)
+- **ControlNet** — *Adding Conditional Control to Text-to-Image Diffusion Models*
+  [![arXiv](https://img.shields.io/badge/arXiv-2302.05543-b31b1b.svg)](https://arxiv.org/abs/2302.05543) [![GitHub](https://img.shields.io/badge/GitHub-code-181717.svg?logo=github)](https://github.com/lllyasviel/ControlNet) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_2_image_generative/adding_conditional_control_to_text_to_image_diffusion_models_arXiv2023.md)
 
-<a id="44-video-generation-priors"></a>
-### 4.4 Video Generation Priors
+<a id="43-video-generation-priors"></a>
+### 4.3 Video Generation Priors
 
-> Video diffusion models (SVD, AnimateDiff, CogVideoX, HunyuanVideo) provide temporal appearance and identity persistence priors for HOI video generation, inpainting, and reenactment.
+> Video diffusion models (DynamiCrafter, CogVideoX, Wan) provide temporal appearance and identity persistence priors for HOI video generation, inpainting, and reenactment.
 
 - **PAM** — *PAM: A Pose-Appearance-Motion Engine for Sim-to-Real HOI Video Generation*
   [![arXiv](https://img.shields.io/badge/arXiv-2603.22193-b31b1b.svg)](http://arxiv.org/abs/2603.22193) [![GitHub](https://img.shields.io/badge/GitHub-code-181717.svg?logo=github)](https://github.com/GasaiYU/PAM) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/PAM.md)
@@ -543,21 +508,15 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
   [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/ReHOLD.md)
 
 **Prior Source Papers:**
-- **HunyuanVideo** — *HunyuanVideo: A Systematic Framework For Large Video Generative Models*
-  [![arXiv](https://img.shields.io/badge/arXiv-2412.03603-b31b1b.svg)](https://arxiv.org/abs/2412.03603) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/hunyuanvideo_a_systematic_framework_for_large_video_generative_models_arXiv2025.md)
+- **DynamiCrafter** — *DynamiCrafter: Animating Open-domain Images with Video Diffusion Priors*
+  [![arXiv](https://img.shields.io/badge/arXiv-2310.12190-b31b1b.svg)](https://arxiv.org/abs/2310.12190) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/dynamicrafter_animating_open_domain_images_with_video_diffusion_priors_arXiv2024.md)
 - **CogVideoX** — *CogVideoX: Text-to-Video Diffusion Model*
   [![arXiv](https://img.shields.io/badge/arXiv-2408.06072-b31b1b.svg)](https://arxiv.org/abs/2408.06072) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/cogvideox_text_to_video_diffusion_model_arXiv2025.md)
-- **Open-Sora Plan** — *Open-Sora Plan: Open-Source Large Video Generation Model*
-  [![arXiv](https://img.shields.io/badge/arXiv-2412.00131-b31b1b.svg)](https://arxiv.org/abs/2412.00131) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/open_sora_plan_open_source_large_video_generation_model_arXiv2024.md)
-- **AnimateDiff** — *AnimateDiff: Animate Your Personalized Text-to-Image Diffusion Models without Specific Tuning*
-  [![arXiv](https://img.shields.io/badge/arXiv-2307.04785-b31b1b.svg)](https://arxiv.org/abs/2307.04785) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/animatediff_animate_your_personalized_text_to_image_diffusion_models_without_spe_arXiv2024.md)
-- **Stable Video Diffusion** — *Stable Video Diffusion: Scaling Latent Video Diffusion Models to Large Datasets*
-  [![arXiv](https://img.shields.io/badge/arXiv-2311.15127-b31b1b.svg)](https://arxiv.org/abs/2311.15127) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/stable_video_diffusion_scaling_latent_video_diffusion_models_to_large_datasets_arXiv2023.md)
-- **Frozen in Time** — *Frozen in Time: A Joint Video and Image Encoder for End-to-End Retrieval*
-  [![arXiv](https://img.shields.io/badge/arXiv-2104.00650-b31b1b.svg)](https://arxiv.org/abs/2104.00650) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/frozen_in_time_a_joint_video_and_image_encoder_for_end_to_end_retrieval_arXiv2021.md)
+- **Wan** — *Wan: Open and Advanced Large-Scale Video Generative Models*
+  [![arXiv](https://img.shields.io/badge/arXiv-2503.20314-b31b1b.svg)](https://arxiv.org/abs/2503.20314) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/wan_open_and_advanced_large_scale_video_generative_models_arXiv2025.md)
 
-<a id="441-from-hoi-video-generation-to-hoi-world-models"></a>
-#### 4.4.1 From HOI Video Generation to HOI World Models
+<a id="431-from-hoi-video-generation-to-hoi-world-models"></a>
+#### 4.3.1 From HOI Video Generation to HOI World Models
 
 > World-model methods that use video prediction or interaction dynamics to model future hand-object states. Include only papers with an explicit HOI world-model role.
 
@@ -715,13 +674,13 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 
 
 
-<a id="7-datasets-and-pretraining-sources-chapter-7"></a>
-## 7. Datasets and Pretraining Sources (Chapter 7)
+<a id="6-datasets-and-pretraining-sources-chapter-7"></a>
+## 6. Datasets and Pretraining Sources (Chapter 7)
 
 > Key benchmark datasets for HOI reconstruction, generation, and interaction understanding, organized by evaluation purpose. Each dataset comes with a detailed AI summary covering data composition, annotation types, supported evaluation tasks, strengths, and limitations.
 
-<a id="71-reconstruction-benchmarks"></a>
-### 7.1 Reconstruction Benchmarks
+<a id="61-reconstruction-benchmarks"></a>
+### 6.1 Reconstruction Benchmarks
 
 - **FreiHAND** — *FreiHAND: A Dataset for Markerless Capture of Hand Pose and Shape From Single RGB Images*
   [![Paper](https://img.shields.io/badge/Paper-ICCV-4B5D67.svg)](https://ieeexplore.ieee.org/document/9010946/) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://lmb.informatik.uni-freiburg.de/resources/datasets/FreihandDataset.en.html) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/FreiHAND_ICCV2019.md)
@@ -750,8 +709,8 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 - **GigaHands** — *GigaHands: A Massive Annotated Dataset of Bimanual Hand Activities*
   [![arXiv](https://img.shields.io/badge/arXiv-2412.04244-b31b1b.svg)](https://arxiv.org/abs/2412.04244) [![Paper](https://img.shields.io/badge/Paper-CVPR-4B5D67.svg)](https://ivl.cs.brown.edu/research/gigahands.html) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://ivl.cs.brown.edu/research/gigahands.html) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/GigaHands_CVPR2025.md)
 
-<a id="72-generation-benchmarks"></a>
-### 7.2 Generation Benchmarks
+<a id="62-generation-benchmarks"></a>
+### 6.2 Generation Benchmarks
 
 - **GRAB** — *GRAB: A Dataset of Whole-Body Human Grasping of Objects*
   [![Paper](https://img.shields.io/badge/Paper-ECCV-4B5D67.svg)](https://link.springer.com/chapter/10.1007/978-3-030-58574-7_21) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://grab.is.tue.mpg.de/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/GRAB_ECCV2020.md)
@@ -769,8 +728,8 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 - **HandX** — *HandX: Scaling Bimanual Motion and Interaction Generation*
   [![arXiv](https://img.shields.io/badge/arXiv-2603.28766-b31b1b.svg)](https://arxiv.org/abs/2603.28766) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://handx-project.github.io) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/HandX_arXiv2026.md)
 
-<a id="73-embodied-learning-data-sources"></a>
-### 7.3 Embodied Learning Data Sources
+<a id="63-embodied-learning-data-sources"></a>
+### 6.3 Embodied Learning Data Sources
 
 > Large-scale video and robot-learning datasets that provide egocentric interaction data for HOI-related pretraining and transfer learning.
 
