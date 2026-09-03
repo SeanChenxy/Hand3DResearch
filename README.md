@@ -1,9 +1,9 @@
 # Hand-Object Interaction in the Age of Large Foundation Models: Reconstruction, Generation, and Embodied Transfer – A Survey
 
-This repository accompanies our survey **Hand-Object Interaction in the Age of Large Foundation Models: Reconstruction, Generation, and Embodied Transfer – A Survey** — a prior-centric survey of foundation-model priors for HOI reconstruction, generation, and HOI for robot learning.
+This repository accompanies our survey **Hand-Object Interaction in the Age of Large Foundation Models: Reconstruction, Generation, and Embodied Transfer – A Survey** — a prior-centric survey of foundation-model priors for HOI reconstruction, generation, and HOI-derived embodied transfer.
 
 - 📄 Curated paper list with code, websites, models, benchmarks, and datasets.
-- 🤖 Organized around non-foundation-prior methods, three foundation-model prior families, HOI for robot learning, and datasets and pretraining sources.
+- 🤖 Organized around non-foundation-prior methods, three foundation-model prior families, HOI-derived embodied transfer, and datasets and pretraining sources.
 - 📝 **Each paper includes an paper summary document** for deep reading.
 - 🤝 If you find missing papers, outdated links, or incorrect metadata, please feel free to open an issue or submit a pull request!
 
@@ -18,26 +18,26 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
   - [1.4 Hand-Object Grasp Generation](#14-hand-object-grasp-generation)
   - [1.5 Hand-Object Motion Generation](#15-hand-object-motion-generation)
   - [1.6 Hand-Object Image/Video Generation](#16-hand-object-imagevideo-generation)
-- [2. 3D Geometry Priors for HOI (Chapter 3)](#2-3d-geometry-priors-for-hoi-chapter-3)
+- [2. Geometric Priors for HOI (Chapter 3)](#2-geometric-priors-for-hoi-chapter-3)
   - [2.1 Prior Sources](#21-prior-sources)
-  - [2.2 Shape Completion Priors](#22-shape-completion-priors)
-  - [2.3 Shape Retrieval Priors](#23-shape-retrieval-priors)
-  - [2.4 Spatial Geometry Priors](#24-spatial-geometry-priors)
+  - [2.2 Shape Retrieval Priors](#22-shape-retrieval-priors)
+  - [2.3 Shape Reconstruction Priors](#23-shape-reconstruction-priors)
+  - [2.4 Spatial Reconstruction Priors](#24-spatial-reconstruction-priors)
 - [3. Semantic Priors for HOI (Chapter 4)](#3-semantic-priors-for-hoi-chapter-4)
   - [3.1 Prior Sources](#31-prior-sources)
-  - [3.2 Visual Grounding Priors](#32-visual-grounding-priors)
+  - [3.2 Semantic Grounding Priors](#32-semantic-grounding-priors)
   - [3.3 Language Reasoning Priors](#33-language-reasoning-priors)
-- [4. Visual Generative Priors for HOI (Chapter 5)](#4-visual-and-motion-generative-priors-for-hoi-chapter-5)
+- [4. Visual Priors for HOI (Chapter 5)](#4-visual-priors-for-hoi-chapter-5)
   - [4.1 Prior Sources](#41-prior-sources)
-  - [4.2 Image Generative Priors](#42-image-generative-priors)
-  - [4.3 Video Generative Priors](#43-video-generative-priors)
-    - [4.3.1 From HOI Video Generation to HOI World Models](#431-from-hoi-video-generation-to-hoi-world-models)
-  - [4.4 Visual Representation Priors](#44-visual-representation-priors)
-- [5. HOI for Robot Learning (Chapter 6)](#5-hoi-for-robot-learning-chapter-6)
-  - [5.1 Generalist Policy Learning: Video-Based Pretraining](#51-generalist-policy-learning-video-based-pretraining)
-  - [5.2 Generalist Policy Learning: Structured HOI Supervision](#52-generalist-policy-learning-structured-hoi-supervision)
-  - [5.3 Task-Specific Skill Transfer: Dexterous Motion Retargeting](#53-task-specific-skill-transfer-dexterous-motion-retargeting)
-  - [5.4 Task-Specific Skill Transfer: Interaction-Guided Policy Learning](#54-task-specific-skill-transfer-interaction-guided-policy-learning)
+  - [4.2 Visual Representation Priors](#42-visual-representation-priors)
+  - [4.3 Image Generation Priors](#43-image-generation-priors)
+  - [4.4 Video Generation Priors](#44-video-generation-priors)
+    - [4.4.1 From HOI Video Generation to HOI World Models](#441-from-hoi-video-generation-to-hoi-world-models)
+- [5. HOI-Derived Embodied Transfer (Chapter 6)](#5-hoi-derived-embodied-transfer-chapter-6)
+  - [5.1 Human-Data Pretraining: Video-Based Pretraining](#51-human-data-pretraining-video-based-pretraining)
+  - [5.2 Human-Data Pretraining: Structured HOI Supervision](#52-human-data-pretraining-structured-hoi-supervision)
+  - [5.3 Human-to-Robot Skill Transfer: Demonstration Alignment and Retargeting](#53-human-to-robot-skill-transfer-demonstration-alignment-and-retargeting)
+  - [5.4 Human-to-Robot Skill Transfer: Interaction-Guided Robot Manipulation](#54-human-to-robot-skill-transfer-interaction-guided-robot-manipulation)
   - [5.5 HOI-to-Robot Data Engines](#55-hoi-to-robot-data-engines)
 - [7. Datasets and Pretraining Sources (Chapter 7)](#7-datasets-and-pretraining-sources-chapter-7)
   - [7.1 Reconstruction Benchmarks](#71-reconstruction-benchmarks)
@@ -219,8 +219,8 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 
 ---
 
-<a id="2-3d-geometry-priors-for-hoi-chapter-3"></a>
-## 2. 3D Geometry Priors for HOI (Chapter 3)
+<a id="2-geometric-priors-for-hoi-chapter-3"></a>
+## 2. Geometric Priors for HOI (Chapter 3)
 
 > Foundation models provide open-world 3D shape and spatial geometry knowledge to mitigate occlusion, unseen regions, and dynamic-camera geometry uncertainty.
 
@@ -231,8 +231,34 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 
 <!-- PAPER_LIST_PRIOR_SOURCES_CH3 -->
 
-<a id="22-shape-completion-priors"></a>
-### 2.2 Shape Completion Priors
+<a id="22-shape-retrieval-priors"></a>
+### 2.2 Shape Retrieval Priors
+
+> External 3D asset databases (Objaverse, ShapeNet, ABO) and vision-language embeddings (CLIP, DINOv2, OpenShape) provide topologically stable shape candidates for hand-held object reconstruction.
+
+- **GHOST** — *GHOST: Fast Category-agnostic Hand-Object Interaction Reconstruction from RGB Videos using Gaussian Splatting*
+  [![arXiv](https://img.shields.io/badge/arXiv-2603.18912-b31b1b.svg)](http://arxiv.org/abs/2603.18912) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/GHOST_arXiv2026.md)
+- **Reconstructing Hand-Held Objects in 3D from Images and Video** — *Reconstructing Hand-Held Objects in 3D from Images and Videos*
+  [![arXiv](https://img.shields.io/badge/arXiv-2404.06507-b31b1b.svg)](http://arxiv.org/abs/2404.06507) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://janehwu.github.io/mcc-ho) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/Reconstructing_Hand_Held_Objects_in_3D_from_arXiv2025.md)
+- **DynHOR** — *Hand-held Object Reconstruction from RGB Video with Dynamic Interaction*
+  [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/Hand_held_Object_Reconstruction_from_RGB_Video_arXiv.md)
+- **PICO** — *PICO: Reconstructing 3D People In Contact with Objects*
+  [![arXiv](https://img.shields.io/badge/arXiv-2504.17695-b31b1b.svg)](https://arxiv.org/abs/2504.17695) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/PICO_arXiv.md)
+
+**Prior Source Papers:**
+- **DINOv2** — *DINOv2: Learning Robust Visual Features without Supervision*
+  [![arXiv](https://img.shields.io/badge/arXiv-2304.07193-b31b1b.svg)](https://arxiv.org/abs/2304.07193) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/dinov2_learning_robust_visual_features_without_supervision_arXiv2024.md)
+- **Objaverse** — *Objaverse: A Universe of Annotated 3D Objects*
+  [![arXiv](https://img.shields.io/badge/arXiv-2212.08051-b31b1b.svg)](https://arxiv.org/abs/2212.08051) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_2_shape_completion/objaverse_a_universe_of_annotated_3d_objects_arXiv2023.md)
+- **ABO** — *Amazon Berkeley Objects (ABO): Dataset and Benchmarks for Real-World 3D Object Understanding*
+  [![arXiv](https://img.shields.io/badge/arXiv-2111.01078-b31b1b.svg)](https://arxiv.org/abs/2111.01078) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/abo_dataset_and_benchmarks_for_real_world_3d_object_understanding_arXiv2022.md)
+- **Google Scanned Objects** — *Google Scanned Objects: A High-Quality Dataset of 3D Scanned Household Items*
+  [![Paper](https://img.shields.io/badge/Paper-DOI-4B5D67.svg)](https://ieeexplore.ieee.org/document/9811809) [![DOI](https://img.shields.io/badge/DOI-10.1109/ICRA46639.2022.9811809-4B5D67.svg)](https://doi.org/10.1109/ICRA46639.2022.9811809) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/google_scanned_objects_a_high_quality_dataset_of_3d_scanned_household_items_arXiv2022.md)
+- **CLIP** — *Learning Transferable Visual Models From Natural Language Supervision*
+  [![arXiv](https://img.shields.io/badge/arXiv-2103.00020-b31b1b.svg)](https://arxiv.org/abs/2103.00020) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/learning_transferable_visual_models_from_natural_language_supervision_arXiv2021.md)
+
+<a id="23-shape-reconstruction-priors"></a>
+### 2.3 Shape Reconstruction Priors
 
 > Foundation models (Zero-1-to-3, Wonder3D, TripoSR, InstantMesh, etc.) provide open-world shape completion knowledge for occluded objects. These priors initialize complete object geometry before HOI-specific optimization with hand pose, silhouette, temporal, and contact constraints.
 
@@ -269,34 +295,8 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 - **ShapeNet** — *ShapeNet: An Information-Rich 3D Model Repository*
   [![arXiv](https://img.shields.io/badge/arXiv-1512.03012-b31b1b.svg)](https://arxiv.org/abs/1512.03012) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_2_shape_completion/shapenet_an_information_rich_3d_model_repository_arXiv2015.md)
 
-<a id="23-shape-retrieval-priors"></a>
-### 2.3 Shape Retrieval Priors
-
-> External 3D asset databases (Objaverse, ShapeNet, ABO) and vision-language embeddings (CLIP, DINOv2, OpenShape) provide topologically stable shape candidates for hand-held object reconstruction.
-
-- **GHOST** — *GHOST: Fast Category-agnostic Hand-Object Interaction Reconstruction from RGB Videos using Gaussian Splatting*
-  [![arXiv](https://img.shields.io/badge/arXiv-2603.18912-b31b1b.svg)](http://arxiv.org/abs/2603.18912) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/GHOST_arXiv2026.md)
-- **Reconstructing Hand-Held Objects in 3D from Images and Video** — *Reconstructing Hand-Held Objects in 3D from Images and Videos*
-  [![arXiv](https://img.shields.io/badge/arXiv-2404.06507-b31b1b.svg)](http://arxiv.org/abs/2404.06507) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://janehwu.github.io/mcc-ho) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/Reconstructing_Hand_Held_Objects_in_3D_from_arXiv2025.md)
-- **DynHOR** — *Hand-held Object Reconstruction from RGB Video with Dynamic Interaction*
-  [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/Hand_held_Object_Reconstruction_from_RGB_Video_arXiv.md)
-- **PICO** — *PICO: Reconstructing 3D People In Contact with Objects*
-  [![arXiv](https://img.shields.io/badge/arXiv-2504.17695-b31b1b.svg)](https://arxiv.org/abs/2504.17695) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/PICO_arXiv.md)
-
-**Prior Source Papers:**
-- **DINOv2** — *DINOv2: Learning Robust Visual Features without Supervision*
-  [![arXiv](https://img.shields.io/badge/arXiv-2304.07193-b31b1b.svg)](https://arxiv.org/abs/2304.07193) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/dinov2_learning_robust_visual_features_without_supervision_arXiv2024.md)
-- **Objaverse** — *Objaverse: A Universe of Annotated 3D Objects*
-  [![arXiv](https://img.shields.io/badge/arXiv-2212.08051-b31b1b.svg)](https://arxiv.org/abs/2212.08051) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_2_shape_completion/objaverse_a_universe_of_annotated_3d_objects_arXiv2023.md)
-- **ABO** — *Amazon Berkeley Objects (ABO): Dataset and Benchmarks for Real-World 3D Object Understanding*
-  [![arXiv](https://img.shields.io/badge/arXiv-2111.01078-b31b1b.svg)](https://arxiv.org/abs/2111.01078) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/abo_dataset_and_benchmarks_for_real_world_3d_object_understanding_arXiv2022.md)
-- **Google Scanned Objects** — *Google Scanned Objects: A High-Quality Dataset of 3D Scanned Household Items*
-  [![Paper](https://img.shields.io/badge/Paper-DOI-4B5D67.svg)](https://ieeexplore.ieee.org/document/9811809) [![DOI](https://img.shields.io/badge/DOI-10.1109/ICRA46639.2022.9811809-4B5D67.svg)](https://doi.org/10.1109/ICRA46639.2022.9811809) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/google_scanned_objects_a_high_quality_dataset_of_3d_scanned_household_items_arXiv2022.md)
-- **CLIP** — *Learning Transferable Visual Models From Natural Language Supervision*
-  [![arXiv](https://img.shields.io/badge/arXiv-2103.00020-b31b1b.svg)](https://arxiv.org/abs/2103.00020) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/learning_transferable_visual_models_from_natural_language_supervision_arXiv2021.md)
-
-<a id="24-spatial-geometry-priors"></a>
-### 2.4 Spatial Geometry Priors
+<a id="24-spatial-reconstruction-priors"></a>
+### 2.4 Spatial Reconstruction Priors
 
 > Pre-trained visual geometry models (DUSt3R, MASt3R, VGGT, MoGe2, Depth Anything 3) inject depth, camera, point maps, cross-view correspondence, and world-space alignment into HOI pipelines.
 
@@ -351,8 +351,8 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 
 <!-- PAPER_LIST_PRIOR_SOURCES_CH4 -->
 
-<a id="32-visual-grounding-priors"></a>
-### 3.2 Visual Grounding Priors
+<a id="32-semantic-grounding-priors"></a>
+### 3.2 Semantic Grounding Priors
 
 > Open-vocabulary detection, promptable segmentation, and region association models (Grounding DINO, SAM/SAM2, CLIP, Florence-2) convert semantic prompts into visual evidence (boxes, masks, region tracks) for HOI reconstruction.
 
@@ -442,7 +442,8 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 ---
 
 <a id="4-visual-and-motion-generative-priors-for-hoi-chapter-5"></a>
-## 4. Visual Generative Priors for HOI (Chapter 5)
+<a id="4-visual-priors-for-hoi-chapter-5"></a>
+## 4. Visual Priors for HOI (Chapter 5)
 
 > Foundation generative models provide image, video, and motion distribution priors to mitigate visual realism, temporal consistency, and motion diversity challenges.
 
@@ -453,8 +454,32 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 
 <!-- PAPER_LIST_PRIOR_SOURCES_CH5 -->
 
-<a id="42-image-generative-priors"></a>
-### 4.2 Image Generative Priors
+<a id="42-visual-representation-priors"></a>
+### 4.2 Visual Representation Priors
+
+> Pre-trained visual representations used to improve HOI reconstruction, grasping, or interaction understanding. Papers are listed here when representation transfer is central to their HOI use.
+
+<!-- PAPER_LIST_VISUAL_REPRESENTATION_PRIORS -->
+
+- **HopFormer** — *HopFormer: Sparse Graph Transformers with Explicit Receptive Field Control*
+  [![arXiv](https://img.shields.io/badge/arXiv-2602.02268-b31b1b.svg)](https://arxiv.org/abs/2602.02268) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_5_visual_representation_priors/HopFormer_arXiv2026.md)
+- **HORT** — *HORT: Monocular Hand-held Objects Reconstruction with Transformers*
+  [![Paper](https://img.shields.io/badge/Paper-IEEE-4B5D67.svg)](https://doi.org/10.1109/ICCV51701.2025.00571) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_5_visual_representation_priors/HORT_ICCV2025.md)
+- **ForeHOI** — *ForeHOI: Feed-forward 3D Object Reconstruction from Daily Hand-Object Interaction Videos*
+  [![arXiv](https://img.shields.io/badge/arXiv-2602.06226-b31b1b.svg)](https://arxiv.org/abs/2602.06226) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_5_visual_representation_priors/ForeHOI_arXiv2026.md)
+- **Reconstructing Hand-Held Objects in 3D from Images and Videos** — *Reconstructing Hand-Held Objects in 3D from Images and Videos*
+  [![arXiv](https://img.shields.io/badge/arXiv-2404.06507-b31b1b.svg)](https://arxiv.org/abs/2404.06507) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/Reconstructing_Hand_Held_Objects_in_3D_from_arXiv2025.md)
+- **Hand-held Object Reconstruction from RGB Video with Dynamic Interaction** — *Hand-held Object Reconstruction from RGB Video with Dynamic Interaction*
+  [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_2_shape_completion/Hand_held_Object_Reconstruction_from_RGB_Video_arXiv2025.md)
+- **HUG** — *Human Universal Grasping*
+  [![arXiv](https://img.shields.io/badge/arXiv-2606.17054-b31b1b.svg)](https://arxiv.org/abs/2606.17054) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_5_visual_representation_priors/HUG_arXiv2026.md)
+
+**Prior Source Papers:**
+- **DINOv2** — *DINOv2: Learning Robust Visual Features without Supervision*
+  [![arXiv](https://img.shields.io/badge/arXiv-2304.07193-b31b1b.svg)](https://arxiv.org/abs/2304.07193) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_5_visual_representation_priors/DINOv2_arXiv2024.md)
+
+<a id="43-image-generation-priors"></a>
+### 4.3 Image Generation Priors
 
 > Text/image-conditioned diffusion models (Stable Diffusion, SDXL, FLUX, ControlNet) provide single-frame visual distribution knowledge for HOI image synthesis, editing, and data augmentation.
 
@@ -491,8 +516,8 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 - **LDM / Stable Diffusion** — *High-Resolution Image Synthesis with Latent Diffusion Models*
   [![arXiv](https://img.shields.io/badge/arXiv-2112.10752-b31b1b.svg)](https://arxiv.org/abs/2112.10752) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_2_image_generative/high_resolution_image_synthesis_with_latent_diffusion_models_arXiv2022.md)
 
-<a id="43-video-generative-priors"></a>
-### 4.3 Video Generative Priors
+<a id="44-video-generation-priors"></a>
+### 4.4 Video Generation Priors
 
 > Video diffusion models (SVD, AnimateDiff, CogVideoX, HunyuanVideo) provide temporal appearance and identity persistence priors for HOI video generation, inpainting, and reenactment.
 
@@ -531,8 +556,8 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 - **Frozen in Time** — *Frozen in Time: A Joint Video and Image Encoder for End-to-End Retrieval*
   [![arXiv](https://img.shields.io/badge/arXiv-2104.00650-b31b1b.svg)](https://arxiv.org/abs/2104.00650) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/frozen_in_time_a_joint_video_and_image_encoder_for_end_to_end_retrieval_arXiv2021.md)
 
-<a id="431-from-hoi-video-generation-to-hoi-world-models"></a>
-#### 4.3.1 From HOI Video Generation to HOI World Models
+<a id="441-from-hoi-video-generation-to-hoi-world-models"></a>
+#### 4.4.1 From HOI Video Generation to HOI World Models
 
 > World-model methods that use video prediction or interaction dynamics to model future hand-object states. Include only papers with an explicit HOI world-model role.
 
@@ -551,39 +576,15 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 - **HandsOnWorld** — *HandsOnWorld: Unconstrained Egocentric Video Generation with Camera-Disentangled Hand Control*
   [![arXiv](https://img.shields.io/badge/arXiv-2607.02075-b31b1b.svg)](https://arxiv.org/abs/2607.02075) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/HandsOnWorld_arXiv2026.md)
 
-<a id="44-visual-representation-priors"></a>
-### 4.4 Visual Representation Priors
-
-> Pre-trained visual representations used to improve HOI reconstruction, grasping, or interaction understanding. Papers are listed here when representation transfer is central to their HOI use.
-
-<!-- PAPER_LIST_VISUAL_REPRESENTATION_PRIORS -->
-
-- **HopFormer** — *HopFormer: Sparse Graph Transformers with Explicit Receptive Field Control*
-  [![arXiv](https://img.shields.io/badge/arXiv-2602.02268-b31b1b.svg)](https://arxiv.org/abs/2602.02268) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_5_visual_representation_priors/HopFormer_arXiv2026.md)
-- **HORT** — *HORT: Monocular Hand-held Objects Reconstruction with Transformers*
-  [![Paper](https://img.shields.io/badge/Paper-IEEE-4B5D67.svg)](https://doi.org/10.1109/ICCV51701.2025.00571) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_5_visual_representation_priors/HORT_ICCV2025.md)
-- **ForeHOI** — *ForeHOI: Feed-forward 3D Object Reconstruction from Daily Hand-Object Interaction Videos*
-  [![arXiv](https://img.shields.io/badge/arXiv-2602.06226-b31b1b.svg)](https://arxiv.org/abs/2602.06226) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_5_visual_representation_priors/ForeHOI_arXiv2026.md)
-- **Reconstructing Hand-Held Objects in 3D from Images and Videos** — *Reconstructing Hand-Held Objects in 3D from Images and Videos*
-  [![arXiv](https://img.shields.io/badge/arXiv-2404.06507-b31b1b.svg)](https://arxiv.org/abs/2404.06507) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_3_shape_retrieval/Reconstructing_Hand_Held_Objects_in_3D_from_arXiv2025.md)
-- **Hand-held Object Reconstruction from RGB Video with Dynamic Interaction** — *Hand-held Object Reconstruction from RGB Video with Dynamic Interaction*
-  [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_2_shape_completion/Hand_held_Object_Reconstruction_from_RGB_Video_arXiv2025.md)
-- **HUG** — *Human Universal Grasping*
-  [![arXiv](https://img.shields.io/badge/arXiv-2606.17054-b31b1b.svg)](https://arxiv.org/abs/2606.17054) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_5_visual_representation_priors/HUG_arXiv2026.md)
-
-**Prior Source Papers:**
-- **DINOv2** — *DINOv2: Learning Robust Visual Features without Supervision*
-  [![arXiv](https://img.shields.io/badge/arXiv-2304.07193-b31b1b.svg)](https://arxiv.org/abs/2304.07193) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_5_visual_representation_priors/DINOv2_arXiv2024.md)
-
 ---
 
-<a id="5-hoi-for-robot-learning-chapter-6"></a>
-## 5. HOI for Robot Learning (Chapter 6)
+<a id="5-hoi-derived-embodied-transfer-chapter-6"></a>
+## 5. HOI-Derived Embodied Transfer (Chapter 6)
 
 > Visual HOI reconstruction/generation results serve as privileged information for robot policy learning. This chapter validates whether HOI outputs are physically executable.
 
-<a id="51-generalist-policy-learning-video-based-pretraining"></a>
-### 5.1 Generalist Policy Learning: Video-Based Pretraining
+<a id="51-human-data-pretraining-video-based-pretraining"></a>
+### 5.1 Human-Data Pretraining: Video-Based Pretraining
 
 > Learning reusable policies from web-scale or egocentric human interaction videos through latent actions, image-goal representations, or video dynamics — without explicit hand/object structure supervision.
 
@@ -616,8 +617,8 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 - **Moto** — *Moto: latent motion token as the bridging language for learning robot manipulation from videos*
   [![Paper](https://img.shields.io/badge/Paper-CVF-4B5D67.svg)](https://openaccess.thecvf.com/content/ICCV2025/html/Chen_Moto_Latent_Motion_Token_as_the_Bridging_Language_for_Learning_ICCV_2025_paper.html) [![DOI](https://img.shields.io/badge/DOI-10.1109/ICCV51701.2025.01837-4B5D67.svg)](https://doi.org/10.1109/ICCV51701.2025.01837) [📝 Paper Summary](papers_summaries/chapter6_robot_learning/6_2_1_video_based_pretraining/Moto_arXiv.md)
 
-<a id="52-generalist-policy-learning-structured-hoi-supervision"></a>
-### 5.2 Generalist Policy Learning: Structured HOI Supervision
+<a id="52-human-data-pretraining-structured-hoi-supervision"></a>
+### 5.2 Human-Data Pretraining: Structured HOI Supervision
 
 > Enhancing generalist VLA/policy pretraining with structured HOI signals: hand pose, object interaction, motion tokens, or frame-aligned action chunks.
 
@@ -640,8 +641,8 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 - **Gemini robotics** — *Gemini robotics: bringing AI into the physical world*
   [![arXiv](https://img.shields.io/badge/arXiv-2503.20020-b31b1b.svg)](http://arxiv.org/abs/2503.20020) [📝 Paper Summary](papers_summaries/chapter6_robot_learning/6_2_2_structured_hoi_supervision/Gemini_robotics_arXiv2025.md)
 
-<a id="53-task-specific-skill-transfer-dexterous-motion-retargeting"></a>
-### 5.3 Task-Specific Skill Transfer: Dexterous Motion Retargeting
+<a id="53-human-to-robot-skill-transfer-demonstration-alignment-and-retargeting"></a>
+### 5.3 Human-to-Robot Skill Transfer: Demonstration Alignment and Retargeting
 
 > Explicitly converting human hand-object demonstrations to robotized demonstrations, robot action trajectories, or cross-embodiment rollouts.
 
@@ -666,8 +667,8 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 - **DexMV** — *DexMV: imitation learning for dexterous manipulation from human videos*
   [![arXiv](https://img.shields.io/badge/arXiv-2108.05877-b31b1b.svg)](http://arxiv.org/abs/2108.05877) [📝 Paper Summary](papers_summaries/chapter6_robot_learning/6_3_1_dexterous_motion_retargeting/DexMV_arXiv2022.md)
 
-<a id="54-task-specific-skill-transfer-interaction-guided-policy-learning"></a>
-### 5.4 Task-Specific Skill Transfer: Interaction-Guided Policy Learning
+<a id="54-human-to-robot-skill-transfer-interaction-guided-robot-manipulation"></a>
+### 5.4 Human-to-Robot Skill Transfer: Interaction-Guided Robot Manipulation
 
 > Using visual affordance, contact, pixel/3D interaction trajectory, or generated interaction plans to guide robot grasping and policy execution — without per-frame human-to-robot motion mapping.
 
