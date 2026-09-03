@@ -675,26 +675,50 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 
 - **FreiHAND** — *FreiHAND: A Dataset for Markerless Capture of Hand Pose and Shape From Single RGB Images*
   [![Paper](https://img.shields.io/badge/Paper-ICCV-4B5D67.svg)](https://ieeexplore.ieee.org/document/9010946/) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://lmb.informatik.uni-freiburg.de/resources/datasets/FreihandDataset.en.html) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/FreiHAND_ICCV2019.md)
+- **ObMan** — *Learning Joint Reconstruction of Hands and Manipulated Objects*
+  [![arXiv](https://img.shields.io/badge/arXiv-1904.05767-b31b1b.svg)](https://arxiv.org/abs/1904.05767) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](http://www.di.ens.fr/willow/research/obman/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/ObMan_CVPR2019.md)
 - **HO3D** — *HOnnotate: A Method for 3D Annotation of Hand and Object Poses*
   [![Paper](https://img.shields.io/badge/Paper-CVPR-4B5D67.svg)](https://ieeexplore.ieee.org/document/9157405/) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://www.tugraz.at/index.php?id=40231) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/HO3D_CVPR2020.md)
 - **HOnnotate** — *HOnnotate: A Method for 3D Annotation of Hand and Object Poses*
   [![Paper](https://img.shields.io/badge/Paper-DOI-4B5D67.svg)](https://ieeexplore.ieee.org/document/9157405/) [![DOI](https://img.shields.io/badge/DOI-10.1109/CVPR42600.2020.00326-4B5D67.svg)](https://doi.org/10.1109/CVPR42600.2020.00326) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/HOnnotate_CVPR2020.md)
 - **HO-3D v3** — *HO-3D v3: Improving the Accuracy of Hand-Object Annotations of the HO-3D Dataset*
    [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/HO3Dv3_2021.md)
+- **MOW** — *Reconstructing Hand-Object Interactions in the Wild*
+  [![arXiv](https://img.shields.io/badge/arXiv-2012.09856-b31b1b.svg)](https://arxiv.org/abs/2012.09856) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/MOW_ICCV2021.md)
 - **DexYCB** — *DexYCB: A Benchmark for Capturing Hand Grasping of Objects*
   [![Paper](https://img.shields.io/badge/Paper-CVPR-4B5D67.svg)](https://ieeexplore.ieee.org/document/9578786/) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://dex-ycb.github.io/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/DexYCB_CVPR2021.md)
+- **Dexter+Object** — *Real-time Joint Tracking of a Hand Manipulating an Object from RGB-D Input*
+  [![arXiv](https://img.shields.io/badge/arXiv-1610.04889-b31b1b.svg)](https://arxiv.org/abs/1610.04889) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](http://handtracker.mpi-inf.mpg.de/projects/RealtimeHO/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/DexterObject_ECCV2016.md)
+- **EgoDexter** — *Real-time Hand Tracking under Occlusion from an Egocentric RGB-D Sensor*
+  [![arXiv](https://img.shields.io/badge/arXiv-1704.02201-b31b1b.svg)](https://arxiv.org/abs/1704.02201) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](http://handtracker.mpi-inf.mpg.de/projects/OccludedHands/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/EgoDexter_ICCV2017.md)
 - **ARCTIC** — *ARCTIC: A Dataset for Dexterous Bimanual Hand-Object Manipulation*
   [![Paper](https://img.shields.io/badge/Paper-CVPR-4B5D67.svg)](https://ieeexplore.ieee.org/document/10203858/) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://arctic.is.tue.mpg.de/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/ARCTIC_CVPR2023.md)
+- **SHOWMe** — *SHOWMe: Benchmarking Object-agnostic Hand-Object 3D Reconstruction*
+  [![arXiv](https://img.shields.io/badge/arXiv-2309.10748-b31b1b.svg)](https://arxiv.org/abs/2309.10748) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://europe.naverlabs.com/research/showme/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/SHOWMe_ICCV2023.md)
+- **HOGraspNet** — *Dense Hand-Object(HO) GraspNet with Full Grasping Taxonomy and Dynamics*
+  [![arXiv](https://img.shields.io/badge/arXiv-2409.04033-b31b1b.svg)](https://arxiv.org/abs/2409.04033) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://hograspnet2024.github.io/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/HOGraspNet_ECCV2024.md)
 - **HOT3D** — *HOT3D: Hand and Object Tracking in 3D from Egocentric Multi-View Videos*
   [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://facebookresearch.github.io/hot3d/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/HOT3D_CVPR2025.md)
+- **HO-Cap** — *HO-Cap: A Capture System and Dataset for 3D Reconstruction and Pose Tracking of Hand-Object Interaction*
+  [![arXiv](https://img.shields.io/badge/arXiv-2406.06843-b31b1b.svg)](https://arxiv.org/abs/2406.06843) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://irvlutd.github.io/HOCap) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/HOCap_NeurIPS2025.md)
+- **HOT** — *Dynamic Reconstruction of Hand-Object Interaction with Distributed Force-Aware Contact Representation*
+  [![arXiv](https://img.shields.io/badge/arXiv-2411.09572-b31b1b.svg)](https://arxiv.org/abs/2411.09572) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://sites.google.com/view/vitam-d/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/HOT_ICCV2025.md)
 - **H2O** — *H2O: Two Hands Manipulating Objects for First Person Interaction Recognition*
   [![Paper](https://img.shields.io/badge/Paper-ICCV-4B5D67.svg)](https://ieeexplore.ieee.org/document/9710699/) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://taeinkwon.com/projects/h2o/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/H2O_ICCV2021.md)
+- **H2O-3D** — *Keypoint Transformer: Solving Joint Identification in Challenging Hands and Object Interactions for Accurate 3D Pose Estimation*
+  [![arXiv](https://img.shields.io/badge/arXiv-2104.14639-b31b1b.svg)](https://arxiv.org/abs/2104.14639) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://www.tugraz.at/index.php?id=57823) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/H2O3D_CVPR2022.md)
 - **InterHand2.6M** — *InterHand2.6M: A Dataset and Baseline for 3D Interacting Hand Pose Estimation from a Single RGB Image*
   [![Paper](https://img.shields.io/badge/Paper-ECCV-4B5D67.svg)](https://link.springer.com/chapter/10.1007/978-3-030-58565-5_33) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://mks0601.github.io/InterHand2.6M/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/InterHand2_6M_ECCV2020.md)
 - **AssemblyHands** — *AssemblyHands: Towards Egocentric Activity Understanding via 3D Hand Pose Estimation*
   [![Paper](https://img.shields.io/badge/Paper-CVPR-4B5D67.svg)](https://ieeexplore.ieee.org/document/10203338/) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://assemblyhands.github.io/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/AssemblyHands_CVPR2023.md)
 - **ArtHOI Datasets** — *ArtHOI: Taming Foundation Models for Monocular 4D Reconstruction of Hand-Articulated-Object Interactions*
   [![arXiv](https://img.shields.io/badge/arXiv-2603.25791-b31b1b.svg)](https://arxiv.org/abs/2603.25791) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/ArtHOI_Datasets_2026.md)
+- **EPIC-Contact** — *Towards In-the-Wild Egocentric 3D Hand-Object Pose Estimation*
+  [![arXiv](https://img.shields.io/badge/arXiv-2606.30598-b31b1b.svg)](https://arxiv.org/abs/2606.30598) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://sid2697.github.io/epic-contact) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/EPICContact_ECCV2026.md)
+- **SHOW3D** — *SHOW3D: Capturing Scenes of 3D Hands and Objects in the Wild*
+  [![arXiv](https://img.shields.io/badge/arXiv-2603.28760-b31b1b.svg)](https://arxiv.org/abs/2603.28760) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://show3d-dataset.github.io/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/SHOW3D_CVPR2026.md)
+- **DexGloveHOI** — *AVI-HT: Adaptive Vision-IMU Fusion for 3D Hand Tracking*
+  [![arXiv](https://img.shields.io/badge/arXiv-2605.21714-b31b1b.svg)](https://arxiv.org/abs/2605.21714) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/AVIHT_arXiv2026.md)
 - **FPHA** — *First-Person Hand Action Benchmark with RGB-D Videos and 3D Hand Pose Annotations*
   [![Paper](https://img.shields.io/badge/Paper-DOI-4B5D67.svg)](https://ieeexplore.ieee.org/document/8578148/) [![DOI](https://img.shields.io/badge/DOI-10.1109/CVPR.2018.00050-4B5D67.svg)](https://doi.org/10.1109/CVPR.2018.00050) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/FPHA_2018.md)
 - **GigaHands** — *GigaHands: A Massive Annotated Dataset of Bimanual Hand Activities*
@@ -708,6 +732,8 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 - **OakInk** — *OakInk: A Large-scale Knowledge Repository for Understanding Hand-Object Interaction*
   [![Paper](https://img.shields.io/badge/Paper-CVPR-4B5D67.svg)](https://ieeexplore.ieee.org/document/9878658/) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://oakink.net/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/OakInk_CVPR2022.md)
 - **OakInk2** — *OakInk2: A Dataset of Bimanual Hands-Object Manipulation in Complex Task Completion* [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/OakInk2_CVPR2024.md)
+- **GazeHOI** — *Gaze-guided Hand-Object Interaction Synthesis: Dataset and Method*
+  [![arXiv](https://img.shields.io/badge/arXiv-2403.16169-b31b1b.svg)](https://arxiv.org/abs/2403.16169) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://takiee.github.io/gaze-hoi/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/GazeHOI_arXiv2024.md)
 - **ContactPose** — *ContactPose: A Dataset of Grasps with Object Contact and Hand Pose*
   [![Paper](https://img.shields.io/badge/Paper-ECCV-4B5D67.svg)](https://link.springer.com/chapter/10.1007/978-3-030-58568-6_21) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://contactpose.cc.gatech.edu/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/ContactPose_ECCV2020.md)
 - **ContactDB** — *ContactDB: Analyzing and Predicting Grasp Contact via Thermal Imaging*
@@ -718,6 +744,8 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
   [![arXiv](https://img.shields.io/badge/arXiv-2307.00595-b31b1b.svg)](https://arxiv.org/abs/2307.00595) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://rh20t.github.io/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/RH20T_2023.md)
 - **HandX** — *HandX: Scaling Bimanual Motion and Interaction Generation*
   [![arXiv](https://img.shields.io/badge/arXiv-2603.28766-b31b1b.svg)](https://arxiv.org/abs/2603.28766) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://handx-project.github.io) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/HandX_arXiv2026.md)
+- **HUG-Bench** — *Human Universal Grasping*
+  [![arXiv](https://img.shields.io/badge/arXiv-2606.17054-b31b1b.svg)](https://arxiv.org/abs/2606.17054) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://grasping.io) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/HUG_Bench_arXiv2026.md)
 
 <a id="63-embodied-learning-data-sources"></a>
 ### 6.3 Embodied Learning Data Sources
@@ -728,6 +756,10 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
   [![Paper](https://img.shields.io/badge/Paper-CVPR-4B5D67.svg)](https://ieeexplore.ieee.org/document/9879533/) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://hoi4d.github.io/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/HOI4D_CVPR2022.md)
 - **EgoDex** — *EgoDex: Learning Dexterous Manipulation from Large-Scale Egocentric Video*
   [![arXiv](https://img.shields.io/badge/arXiv-2505.11709-b31b1b.svg)](https://arxiv.org/abs/2505.11709) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/EgoDex_2026.md)
+- **OpenEgo** — *OpenEgo: A Large-Scale Multimodal Egocentric Dataset for Dexterous Manipulation*
+  [![arXiv](https://img.shields.io/badge/arXiv-2509.05513-b31b1b.svg)](https://arxiv.org/abs/2509.05513) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://www.openegocentric.com) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/OpenEgo_arXiv2025.md)
+- **VITRA** — *Scalable Vision-Language-Action Model Pretraining for Robotic Manipulation with Real-Life Human Activity Videos*
+  [![arXiv](https://img.shields.io/badge/arXiv-2510.21571-b31b1b.svg)](https://arxiv.org/abs/2510.21571) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://microsoft.github.io/VITRA/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/VITRA_arXiv2025.md)
 - **Ego4D** — *Ego4D: Around the World in 3,000 Hours of Egocentric Video*
   [![Paper](https://img.shields.io/badge/Paper-CVPR-4B5D67.svg)](https://ieeexplore.ieee.org/document/9878708/) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://ego4d-data.org/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/Ego4D_CVPR2022.md)
 - **Ego-Exo4D** — *Ego-Exo4D: Understanding Skilled Human Activity from First- and Third-Person Perspectives*
@@ -740,12 +772,40 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
   [![Paper](https://img.shields.io/badge/Paper-CVPR-4B5D67.svg)](https://ieeexplore.ieee.org/document/9880358/) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://assembly-101.github.io/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/Assembly101_CVPR2022.md)
 - **TACO** — *TACO: Benchmarking Generalizable Bimanual Tool-ACtion-Object Understanding*
   [![Paper](https://img.shields.io/badge/Paper-CVPR-4B5D67.svg)](https://ieeexplore.ieee.org/document/10655531/) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://taco2024.github.io/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/TACO_CVPR2024.md)
+- **ActivityNet** — *ActivityNet: A Large-Scale Video Benchmark for Human Activity Understanding*
+  [![Paper](https://img.shields.io/badge/Paper-CVPR-4B5D67.svg)](https://ieeexplore.ieee.org/document/7298698/) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](http://www.activity-net.org) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/ActivityNet_CVPR2015.md)
+- **Charades** — *Hollywood in Homes: Crowdsourcing Data Collection for Activity Understanding*
+  [![arXiv](https://img.shields.io/badge/arXiv-1604.01753-b31b1b.svg)](https://arxiv.org/abs/1604.01753) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](http://allenai.org/plato/charades/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/Charades_ECCV2016.md)
+- **Kinetics** — *The Kinetics Human Action Video Dataset*
+  [![arXiv](https://img.shields.io/badge/arXiv-1705.06950-b31b1b.svg)](https://arxiv.org/abs/1705.06950) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/Kinetics_arXiv2017.md)
+- **AVA** — *AVA: A Video Dataset of Spatio-temporally Localized Atomic Visual Actions*
+  [![arXiv](https://img.shields.io/badge/arXiv-1705.08421-b31b1b.svg)](https://arxiv.org/abs/1705.08421) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://research.google.com/ava/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/AVA_CVPR2018.md)
+- **HACS** — *HACS: Human Action Clips and Segments Dataset for Recognition and Temporal Localization*
+  [![arXiv](https://img.shields.io/badge/arXiv-1712.09374-b31b1b.svg)](https://arxiv.org/abs/1712.09374) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](http://hacs.csail.mit.edu) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/HACS_ICCV2019.md)
+- **FineGym** — *FineGym: A Hierarchical Video Dataset for Fine-grained Action Understanding*
+  [![arXiv](https://img.shields.io/badge/arXiv-2004.06704-b31b1b.svg)](https://arxiv.org/abs/2004.06704) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://sdolivia.github.io/FineGym/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/FineGym_CVPR2020.md)
 - **Something-Something** — *The "Something Something" Video Database for Learning and Evaluating Visual Common Sense*
   [![Paper](https://img.shields.io/badge/Paper-ICCV-4B5D67.svg)](https://ieeexplore.ieee.org/document/8237509/) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://developer.qualcomm.com/software/ai-datasets/something-something) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/SomethingSomething_ICCV2017.md)
 - **HowTo100M** — *HowTo100M: Learning a Text-Video Embedding by Watching Hundred Million Narrated Video Clips*
   [![Paper](https://img.shields.io/badge/Paper-ICCV-4B5D67.svg)](https://ieeexplore.ieee.org/document/9010066/) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://www.di.ens.fr/willow/research/howto100m/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/HowTo100M_ICCV2019.md)
 - **HumanNet** — *HumanNet: Scaling Human-centric Video Learning to One Million Hours*
   [![arXiv](https://img.shields.io/badge/arXiv-2605.06747-b31b1b.svg)](https://arxiv.org/abs/2605.06747) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://dagroup-pku.github.io/HumanNet/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/HumanNet_arXiv2026.md)
+- **EgoLive** — *EgoLive: A Large-Scale Egocentric Dataset from Real-World Human Tasks*
+  [![arXiv](https://img.shields.io/badge/arXiv-2604.23570-b31b1b.svg)](https://arxiv.org/abs/2604.23570) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://robotdata-market.jdcloud.com/console/market) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/EgoLive_arXiv2026.md)
+- **EgoScale** — *EgoScale: Scaling Dexterous Manipulation with Diverse Egocentric Human Data*
+  [![arXiv](https://img.shields.io/badge/arXiv-2602.16710-b31b1b.svg)](https://arxiv.org/abs/2602.16710) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://research.nvidia.com/labs/gear/egoscale/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/EgoScale_arXiv2026.md)
+- **EgoVerse** — *EgoVerse: An Egocentric Human Dataset for Robot Learning from Around the World*
+  [![arXiv](https://img.shields.io/badge/arXiv-2604.07607-b31b1b.svg)](https://arxiv.org/abs/2604.07607) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/EgoVerse_arXiv2026.md)
+- **FEEL** — *FEEL (Force-Enhanced Egocentric Learning): A Dataset for Physical Action Understanding*
+  [![arXiv](https://img.shields.io/badge/arXiv-2603.15847-b31b1b.svg)](https://arxiv.org/abs/2603.15847) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://www.cs.umd.edu/~edessale/feel) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/FEEL_arXiv2026.md)
+- **Open-AoE** — *Open-AoE: An Open Egocentric Manipulation Dataset and Toolchain for Embodied Learning*
+  [![arXiv](https://img.shields.io/badge/arXiv-2607.14183-b31b1b.svg)](https://arxiv.org/abs/2607.14183) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/OpenAoE_arXiv2026.md)
+- **ACE-Data-0** — *ACE-Data-0: Human-Centric Ambient Capture as Embodied Data Engine*
+  [![arXiv](https://img.shields.io/badge/arXiv-2607.28625-b31b1b.svg)](https://arxiv.org/abs/2607.28625) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://ace-data-engine.github.io/ACE-Data-0/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/ACEData0_arXiv2026.md)
+- **Ego2Robot** — *Ego2Robot: Scalable Robot Data Synthesis from Egocentric Human Data*
+  [![arXiv](https://img.shields.io/badge/arXiv-2608.02580-b31b1b.svg)](https://arxiv.org/abs/2608.02580) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://www-ye.github.io/ego2robot_blog/) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/Ego2Robot_arXiv2026.md)
+- **HandEdit** — *HandEdit: A Unified Benchmark for Egocentric Human-to-Robot Dexterous Hand Image Editing*
+  [![arXiv](https://img.shields.io/badge/arXiv-2608.12122-b31b1b.svg)](https://arxiv.org/abs/2608.12122) [📝 Paper Summary](papers_summaries/chapter7_datasets_metrics/datasets/HandEdit_arXiv2026.md)
 
 
 ## Citations
