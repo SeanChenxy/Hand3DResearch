@@ -455,7 +455,7 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 <a id="42-image-generation-priors"></a>
 ### 4.2 Image Generation Priors
 
-> Text/image-conditioned diffusion models (GLIDE, Stable Diffusion, SDXL, FLUX.1, Zero-1-to-3; ControlNet for spatial conditioning) provide single-frame visual distribution knowledge for HOI image synthesis, editing, and data augmentation.
+> Text/image-conditioned diffusion models (GLIDE, Stable Diffusion, SDXL, Zero-1-to-3; ControlNet for spatial conditioning) provide single-frame visual distribution knowledge for HOI image synthesis, editing, and data augmentation.
 
 - **Affordance Diffusion** — *Affordance Diffusion: Synthesizing Hand-Object Interactions*
   [![Paper](https://img.shields.io/badge/Paper-DOI-4B5D67.svg)](https://ieeexplore.ieee.org/document/10204191/) [![DOI](https://img.shields.io/badge/DOI-10.1109/CVPR52729.2023.02153-4B5D67.svg)](https://doi.org/10.1109/CVPR52729.2023.02153) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_2_image_generative/AffordanceDiffusion.md)
@@ -481,8 +481,6 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
   [![arXiv](https://img.shields.io/badge/arXiv-2112.10752-b31b1b.svg)](https://arxiv.org/abs/2112.10752) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_2_image_generative/high_resolution_image_synthesis_with_latent_diffusion_models_arXiv2022.md)
 - **SDXL** — *SDXL: Improving Latent Diffusion Models for High-Resolution Image Synthesis*
   [![arXiv](https://img.shields.io/badge/arXiv-2307.01952-b31b1b.svg)](https://arxiv.org/abs/2307.01952) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_2_image_generative/sdxl_improving_latent_diffusion_models_for_high_resolution_image_synthesis_arXiv2024.md)
-- **FLUX.1 Kontext** — *FLUX.1 Kontext: Flow Matching for In-Context Image Generation and Editing in Latent Space*
-  [![arXiv](https://img.shields.io/badge/arXiv-2506.15742-b31b1b.svg)](https://arxiv.org/abs/2506.15742) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_2_image_generative/flux1_kontext_flow_matching_for_in_context_image_generation_and_editing_in_laten_arXiv2025.md)
 - **Zero-1-to-3** — *Zero-1-to-3: Zero-shot One Image to 3D Object*
   [![Paper](https://img.shields.io/badge/Paper-DOI-4B5D67.svg)](https://ieeexplore.ieee.org/document/10378322/) [![DOI](https://img.shields.io/badge/DOI-10.1109/ICCV51070.2023.00853-4B5D67.svg)](https://doi.org/10.1109/ICCV51070.2023.00853) [📝 Paper Summary](papers_summaries/chapter3_3d_geometry_priors/3_2_shape_completion/zero_1_to_3_zero_shot_one_image_to_3d_object_arXiv2023.md)
 - **ControlNet** — *Adding Conditional Control to Text-to-Image Diffusion Models*
@@ -491,7 +489,7 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 <a id="43-video-generation-priors"></a>
 ### 4.3 Video Generation Priors
 
-> Video diffusion models (DynamiCrafter, CogVideoX, Wan) provide temporal appearance and identity persistence priors for HOI video generation, inpainting, and reenactment. Generative world-model methods further leverage video prediction and interaction dynamics to model future hand-object states.
+> Video diffusion models (DynamiCrafter, CogVideoX, Wan) provide temporal appearance and identity persistence priors for HOI video generation, inpainting, and reenactment, with FLUX.1 supplying image-prior appearance initialization and inpainting conditions within these video pipelines. Generative world-model methods further leverage video prediction and interaction dynamics to model future hand-object states.
 
 - **PAM** — *PAM: A Pose-Appearance-Motion Engine for Sim-to-Real HOI Video Generation*
   [![arXiv](https://img.shields.io/badge/arXiv-2603.22193-b31b1b.svg)](http://arxiv.org/abs/2603.22193) [![GitHub](https://img.shields.io/badge/GitHub-code-181717.svg?logo=github)](https://github.com/GasaiYU/PAM) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/PAM.md)
@@ -533,6 +531,8 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
   [![arXiv](https://img.shields.io/badge/arXiv-2408.06072-b31b1b.svg)](https://arxiv.org/abs/2408.06072) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/cogvideox_text_to_video_diffusion_model_arXiv2025.md)
 - **Wan** — *Wan: Open and Advanced Large-Scale Video Generative Models*
   [![arXiv](https://img.shields.io/badge/arXiv-2503.20314-b31b1b.svg)](https://arxiv.org/abs/2503.20314) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/wan_open_and_advanced_large_scale_video_generative_models_arXiv2025.md)
+- **FLUX.1 Kontext** — *FLUX.1 Kontext: Flow Matching for In-Context Image Generation and Editing in Latent Space*
+  [![arXiv](https://img.shields.io/badge/arXiv-2506.15742-b31b1b.svg)](https://arxiv.org/abs/2506.15742) [📝 Paper Summary](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/flux1_kontext_flow_matching_for_in_context_image_generation_and_editing_in_laten_arXiv2025.md)
 
 ---
 
