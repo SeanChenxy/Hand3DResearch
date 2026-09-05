@@ -49,7 +49,7 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 <a id="11-hand-object-reconstruction"></a>
 ### 1.1 Hand-Object Reconstruction
 
-> Recovering hand-only or hand-object spatial state from single-frame observations. Output: 2D/3D keypoints, joint angles, MANO parameters, hand mesh, object 6D pose, or hand-object spatial configuration. Methods with contact-field outputs are marked `[+contact]`.
+> Recovering hand-only or hand-object spatial state from single-frame observations. Output: 2D/3D keypoints, joint angles, MANO parameters, hand mesh, object 6D pose, or hand-object spatial configuration.
 
 - **[arXiv'24.03]HandGCAT** — *HandGCAT: Occlusion-Robust 3D Hand Mesh Reconstruction from Monocular Images*
   [![arXiv](https://img.shields.io/badge/arXiv-2403.07912-b31b1b.svg)](http://arxiv.org/abs/2403.07912) [![GitHub](https://img.shields.io/badge/GitHub-code-181717.svg?logo=github)](https://github.com/heartStrive/HandGCAT) [![Paper Summary](https://img.shields.io/badge/Paper_Summary-link-4B5D67.svg)](papers_summaries/chapter2_non_foundation/2_3_1_hand_object_recon/HandGCAT_arXiv2023.md)
