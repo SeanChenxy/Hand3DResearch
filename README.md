@@ -509,7 +509,7 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 - **[arXiv'24.06]HOI-Swap** — *HOI-Swap: Swapping Objects in Videos with Hand-Object Interaction Awareness*
   [![arXiv](https://img.shields.io/badge/arXiv-2406.07754-b31b1b.svg)](http://arxiv.org/abs/2406.07754) [![Paper Summary](https://img.shields.io/badge/Paper_Summary-link-4B5D67.svg)](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/HOISwap.md)
 - **[CVPR'25]Re-HOLD** — *Re-HOLD: Video Hand Object Interaction Reenactment via adaptive Layout-instructed Diffusion Model*
-  [![Paper Summary](https://img.shields.io/badge/Paper_Summary-link-4B5D67.svg)](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/ReHOLD.md)
+  [![arXiv](https://img.shields.io/badge/arXiv-2503.16942-b31b1b.svg)](https://arxiv.org/abs/2503.16942) [![Paper](https://img.shields.io/badge/Paper-CVPR-4B5D67.svg)](https://openaccess.thecvf.com/content/CVPR2025/html/Fan_Re-HOLD_Video_Hand_Object_Interaction_Reenactment_via_Adaptive_Layout-Instructed_Diffusion_Model_CVPR_2025_paper.html) [![Website](https://img.shields.io/badge/Website-page-0A66C2.svg)](https://fyycs.github.io/Re-HOLD/) [![Paper Summary](https://img.shields.io/badge/Paper_Summary-link-4B5D67.svg)](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/ReHOLD.md)
 - **[arXiv'25.12]Dexterous World Models** — *Dexterous World Models*
   [![arXiv](https://img.shields.io/badge/arXiv-2512.17907-b31b1b.svg)](https://arxiv.org/abs/2512.17907) [![Paper Summary](https://img.shields.io/badge/Paper_Summary-link-4B5D67.svg)](papers_summaries/chapter5_visual_motion_generative_priors/5_3_video_generative/Dexterous_World_Models_arXiv2025.md)
 - **[arXiv'26.02]Hand2World** — *Hand2World: Autoregressive Egocentric Interaction Generation via Free-Space Hand Gestures*
@@ -689,7 +689,7 @@ This repository accompanies our survey **Hand-Object Interaction in the Age of L
 - **[CVPR'20]HOnnotate** — *HOnnotate: A Method for 3D Annotation of Hand and Object Poses*
   [![Paper](https://img.shields.io/badge/Paper-CVPR-4B5D67.svg)](https://ieeexplore.ieee.org/document/9157405/) [![Paper Summary](https://img.shields.io/badge/Paper_Summary-link-4B5D67.svg)](papers_summaries/chapter7_datasets_metrics/datasets/HOnnotate_CVPR2020.md)
 - **[arXiv'21.07]HO-3D v3** — *HO-3D v3: Improving the Accuracy of Hand-Object Annotations of the HO-3D Dataset*
-   [![Paper Summary](https://img.shields.io/badge/Paper_Summary-link-4B5D67.svg)](papers_summaries/chapter7_datasets_metrics/datasets/HO3Dv3_2021.md)
+   [![arXiv](https://img.shields.io/badge/arXiv-2107.00887-b31b1b.svg)](https://arxiv.org/abs/2107.00887) [![GitHub](https://img.shields.io/badge/GitHub-code-181717.svg?logo=github)](https://github.com/shreyashampali/ho3d) [![Paper Summary](https://img.shields.io/badge/Paper_Summary-link-4B5D67.svg)](papers_summaries/chapter7_datasets_metrics/datasets/HO3Dv3_2021.md)
 - **[arXiv'20.12]MOW** — *Reconstructing Hand-Object Interactions in the Wild*
   [![arXiv](https://img.shields.io/badge/arXiv-2012.09856-b31b1b.svg)](https://arxiv.org/abs/2012.09856) [![Paper Summary](https://img.shields.io/badge/Paper_Summary-link-4B5D67.svg)](papers_summaries/chapter7_datasets_metrics/datasets/MOW_ICCV2021.md)
 - **[CVPR'21]DexYCB** — *DexYCB: A Benchmark for Capturing Hand Grasping of Objects*
