@@ -1,4 +1,10 @@
 <h1 align="center">Hand-Object Interaction in the Age of Large Foundation Models: Reconstruction, Generation, and Embodied Transfer – A Survey</h1>
+
+<p align="center">
+  <a href="https://arxiv.org/abs/2607.28394"><img src="https://img.shields.io/badge/arXiv-2607.28394-b31b1b.svg" alt="arXiv"></a>
+  <a href="https://zgca-hmi-lab.github.io/HOISurvey/"><img src="https://img.shields.io/badge/Website-page-0A66C2.svg" alt="Website"></a>
+</p>
+
 This repository accompanies our survey **Hand-Object Interaction in the Age of Large Foundation Models: Reconstruction, Generation, and Embodied Transfer – A Survey** — a prior-centric survey of foundation-model priors for HOI reconstruction, generation, and HOI-derived embodied transfer.
 
 - 📄 Curated paper list with code, websites, models, benchmarks, and datasets.
