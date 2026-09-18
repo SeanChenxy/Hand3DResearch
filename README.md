@@ -1,6 +1,6 @@
 # Recent Progress in 3D Hand Tasks ![Awesome](https://awesome.re/badge-flat.svg)
 
-A complete paper list for hand pose can be found [here](https://github.com/xinghaochen/awesome-hand-pose-estimation). This repo focuses on some subject areas, ideas, and works. Although some papers invloved do not study towards 3D hand scope, they are conceived presenting relavent and inspiring ideas. If there is any mistake or carelessness, please feel free to open an issue or send me email.
+A complete paper list for hand pose can be found [here](https://github.com/xinghaochen/awesome-hand-pose-estimation). This repo focuses on subject areas, ideas, and works. Although some papers invloved do not study towards 3D hand scope, they are conceived presenting relavent and inspiring ideas. If there is any mistake or carelessness, please feel free to open an issue or send me email.
 
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
@@ -267,7 +267,7 @@ The below indices are references to the above [overview](#overview).
   *Wencan Cheng, Jong Hwan Ko*
 
 + [H.GH.12] HaMuCo: Hand Pose Estimation via Multiview Collaborative
-Self-Supervised Learning. ICCV23.
+  Self-Supervised Learning. ICCV23.
   [[PDF](https://openaccess.thecvf.com/content/ICCV2023/papers/Zheng_HaMuCo_Hand_Pose_Estimation_via_Multiview_Collaborative_Self-Supervised_Learning_ICCV_2023_paper.pdf)]
   [[Project](https://zxz267.github.io/HaMuCo/)] \
   [[Code](https://github.com/zxz267/HaMuCo)] \
@@ -305,7 +305,7 @@ Self-Supervised Learning. ICCV23.
   [[PDF](https://arxiv.org/pdf/2103.02845.pdf)]
   [[Code](https://github.com/SeanChenxy/HandMesh)] \
   *Xingyu Chen, Yufeng Liu, Chongyang Ma, Jianlong Chang, Huayan Wang, Tian Chen, Xiaoyan Guo, Pengfei Wan, Wen Zheng*
- 
+
 + [H.GH.4] Pose2Mesh: Graph Convolutional Network for 3D Human Pose and Mesh Recovery from a 2D Human Pose. ECCV20.
   [[PDF](https://arxiv.org/pdf/2008.09047.pdf)]
   [[Code](https://github.com/hongsukchoi/Pose2Mesh_RELEASE?utm_source=catalyzex.com)] \
@@ -804,7 +804,7 @@ Cyclic Flow. MM22.
 + [H.WS.8] SO-HandNet: Self-Organizing Network for 3D Hand Pose Estimation with Semi-supervised Learning. ICCV19.
   [[PDF](https://openaccess.thecvf.com/content_ICCV_2019/papers/Chen_SO-HandNet_Self-Organizing_Network_for_3D_Hand_Pose_Estimation_With_Semi-Supervised_ICCV_2019_paper.pdf)] \
   *Yujin Chen, Zhigang Tu, Liuhao Ge, Dejun Zhang, Ruizhi Chen,
-Junsong Yuan*
+  Junsong Yuan*
 
 + [H.WS.7] PeCLR: Self-Supervised 3D Hand Pose Estimation from Monocular RGB via Contrastive Learning. ICCV21.
   [[PDF](https://arxiv.org/pdf/2106.05953.pdf)]
@@ -890,7 +890,7 @@ Junsong Yuan*
   [[PDF](https://arxiv.org/pdf/2011.08627.pdf)]
   [[Code](https://github.com/hongsukchoi/TCMR_RELEASE)] \
   *Hongsuk Choi, Gyeongsik Moon, Ju Yong Chang, Kyoung Mu Lee*
- 
+
 + [H.TP.3] Temporal-Aware Self-Supervised Learning for 3D Hand Pose and Mesh Estimation in Videos. WACV21.
   [[PDF](https://arxiv.org/pdf/2012.03205.pdf)] \
   *Liangjian Chen, Shih-Yao Lin, Yusheng Xie, Yen-Yu Lin, Xiaohui Xie*
@@ -1372,7 +1372,7 @@ Human-Object Interaction Synthesis. ICCV25.
 + [HO.WM.5] World Models for Learning Dexterous Hand-Object Interactions from Human Videos. arXiv26.
   [[PDF](https://arxiv.org/pdf/2512.13644)]
   [[Project](https://raktimgg.github.io/dexwm/)] \
- *Raktim Gautam Goswami, Amir Bar, David Fan, Tsung-Yen Yang, Gaoyue Zhou, Prashanth Krishnamurthy, Michael Rabbat, Farshad Khorrami, Yann LeCun*
+   *Raktim Gautam Goswami, Amir Bar, David Fan, Tsung-Yen Yang, Gaoyue Zhou, Prashanth Krishnamurthy, Michael Rabbat, Farshad Khorrami, Yann LeCun*
 
 + [HO.WM.4] Open-world Hand-Object Interaction Video Generation Based on Structure and Contact-aware Representation. CVPR26.
   [[PDF](https://arxiv.org/pdf/2512.01677)]
